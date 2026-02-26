@@ -147,6 +147,43 @@ window.FINANCIAL_SOURCE_DATA = {
 - 直接替换 `data.js`（保持字段结构一致）。
 - 刷新页面后看状态栏是否提示“加载完成”。
 
+### 7.5 自动获取最新财报数据（新增）
+
+项目已内置自动更新脚本：`scripts/auto-refresh-data.mjs`，会从 StockAnalysis 的季度财务页面抓取最新：
+
+- 营收（`revenue`）
+- 净利润（`netinc`）
+- 毛利率（`grossMargin`）
+
+并自动写回 `data.js`，同时：
+
+- 自动扩展新季度（例如从 `2025Q4` 扩展到 `2026Q1`）
+- 用真实值覆盖后，自动清理对应季度的预测标记（`forecastFlags`）
+- 更新 `meta.generatedAt` 与 `meta.periodRange`
+- 对 TWD 财务口径自动按 FRED 汇率换算为 USD（当前用于台积电）
+- 其他未配置的非 USD 口径会自动跳过，避免单位污染
+- 若无真实数据变化则不写入 `data.js`（避免空提交）
+
+本地手动执行：
+
+```bash
+node scripts/auto-refresh-data.mjs
+```
+
+仅验证不落盘（Dry Run）：
+
+```bash
+node scripts/auto-refresh-data.mjs --dry-run
+```
+
+仅更新单个公司（例如英伟达）：
+
+```bash
+node scripts/auto-refresh-data.mjs --company nvidia
+```
+
+`--company` 也支持 ticker / slug（例如 `--company nvda`、`--company tsm`）。
+
 ---
 
 ## 8. 发布到 GitHub Pages
@@ -162,6 +199,9 @@ git push origin main
 ```
 
 推送后等待 GitHub Pages 构建完成，线上地址通常在几十秒到几分钟内更新。
+
+> 仓库已新增 GitHub Actions 工作流：`.github/workflows/data-auto-refresh.yml`。  
+> 它会每日定时运行自动更新脚本，并在 `data.js` 有变化时自动提交到 `main`。
 
 ---
 

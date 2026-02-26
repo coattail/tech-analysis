@@ -183,6 +183,7 @@ const rangeLabelEl = document.getElementById("rangeLabel");
 const rangeSlidersEl = document.getElementById("rangeSliders");
 const rangeFillEl = document.getElementById("rangeFill");
 const themeToggleBtn = document.getElementById("themeToggleBtn");
+const periodRangeChipEl = document.getElementById("periodRangeChip");
 const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'));
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
 const THEME_STORAGE_KEY = "enterprise-finance-dashboard-theme";
@@ -341,6 +342,13 @@ function isFiniteNumber(value) {
 
 function getLabelsForFrequency(frequency) {
   return frequency === "annual" ? ANNUAL_LABELS : QUARTER_LABELS;
+}
+
+function syncPeriodRangeChip() {
+  if (!periodRangeChipEl) return;
+  const first = QUARTER_LABELS[0] ?? "-";
+  const last = QUARTER_LABELS[QUARTER_LABELS.length - 1] ?? "-";
+  periodRangeChipEl.textContent = `时间范围：${first}-${last}`;
 }
 
 function emptySeries(labels) {
@@ -1115,6 +1123,7 @@ function loadFromLocalData() {
 }
 
 function init() {
+  syncPeriodRangeChip();
   setupTogglePanel();
   initTheme();
   bindEvents();
