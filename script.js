@@ -194,7 +194,6 @@ const frequencyInputs = Array.from(document.querySelectorAll('input[name="freque
 const THEME_STORAGE_KEY = "enterprise-finance-dashboard-theme";
 
 const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
-const csvDecimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 });
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
 const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.6;
 
@@ -631,20 +630,6 @@ function buildYAxisTitle(metricKey, frequencyKey) {
   return [metricMeta.axisLabel, frequencyMeta.granularityLabel];
 }
 
-function formatCsvMetricValue(metricKey, value) {
-  if (!isFiniteNumber(value)) return "";
-  if (metricKey === "revenue" || metricKey === "netIncome") {
-    return csvDecimalFormatter.format(value / 1e9);
-  }
-  return csvDecimalFormatter.format(value);
-}
-
-function csvEscape(value) {
-  const text = String(value ?? "");
-  if (!/[",\n]/.test(text)) return text;
-  return `"${text.replace(/"/g, '""')}"`;
-}
-
 function toMetricFileToken(metricKey) {
   const map = {
     revenue: "revenue",
@@ -657,67 +642,18 @@ function toMetricFileToken(metricKey) {
   return map[metricKey] ?? metricKey;
 }
 
-function getVisibleLabels() {
-  const labels = getLabelsForFrequency(state.frequency);
-  return labels.slice(state.rangeStart, state.rangeEnd + 1);
-}
-
-function buildCurrentMetricCsv() {
-  const visibleCompanies = COMPANIES.filter((company) => state.visibleCompanies.has(company.id));
-  const exportCompanies = visibleCompanies.length > 0 ? visibleCompanies : COMPANIES;
-  const metricKey = state.metric;
-  const labels = getVisibleLabels();
-  const frequencyMeta = FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly;
-  const rows = [];
-
-  rows.push(["Metric", METRICS[metricKey].label]);
-  rows.push(["Unit", METRICS[metricKey].axisLabel]);
-  rows.push(["Periodicity", frequencyMeta.csvPeriodicity]);
-  rows.push(["Periods", `${labels[0]}-${labels[labels.length - 1]}`]);
-  rows.push([
-    "ExportedAt",
-    new Intl.DateTimeFormat("sv-SE", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }).format(new Date()),
-  ]);
-  rows.push([]);
-
-  rows.push([
-    frequencyMeta.csvPeriodColumn,
-    ...exportCompanies.map((company) => company.name),
-    ...exportCompanies.map((company) => `${company.name}_预测标记`),
-  ]);
-
-  labels.forEach((label) => {
-    const values = exportCompanies.map((company) => {
-      const series = state.dataByFrequency[state.frequency][metricKey].get(company.id);
-      return formatCsvMetricValue(metricKey, series?.get(label));
-    });
-
-    const flags = exportCompanies.map((company) => {
-      const set = state.forecastFlagsByFrequency[state.frequency][metricKey].get(company.id) ?? new Set();
-      return set.has(label) ? "Y" : "";
-    });
-
-    rows.push([label, ...values, ...flags]);
-  });
-
-  return rows.map((row) => row.map(csvEscape).join(",")).join("\r\n");
-}
-
-function downloadCurrentMetricCsv() {
+function downloadCurrentChartImage() {
   if (!state.chart) {
     setStatus("图表尚未加载完成，暂时无法下载。", true);
     return;
   }
 
-  const csv = buildCurrentMetricCsv();
+  const sourceCanvas = state.chart.canvas;
+  if (!sourceCanvas) {
+    setStatus("图表画布不可用，暂时无法下载。", true);
+    return;
+  }
+
   const metricToken = toMetricFileToken(state.metric);
   const freqToken = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).fileToken;
   const fileStamp = new Intl.DateTimeFormat("sv-SE", {
@@ -728,16 +664,33 @@ function downloadCurrentMetricCsv() {
     .format(new Date())
     .replaceAll("-", "");
 
-  const filename = `finance-${freqToken}-${metricToken}-${fileStamp}.csv`;
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
+  const filename = `finance-chart-${freqToken}-${metricToken}-${fileStamp}.png`;
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = sourceCanvas.width;
+  exportCanvas.height = sourceCanvas.height;
+  const exportCtx = exportCanvas.getContext("2d");
+  if (!exportCtx) {
+    setStatus("导出失败：无法创建图片上下文。", true);
+    return;
+  }
+
+  const chartWrap = sourceCanvas.closest(".chart-wrap");
+  const wrapStyle = chartWrap ? getComputedStyle(chartWrap) : null;
+  const backgroundColor = wrapStyle?.backgroundColor && wrapStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
+    ? wrapStyle.backgroundColor
+    : (document.body.dataset.theme === "deep" ? "#1b2550" : "#263567");
+
+  exportCtx.fillStyle = backgroundColor;
+  exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+  exportCtx.drawImage(sourceCanvas, 0, 0);
+
+  const url = exportCanvas.toDataURL("image/png");
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = filename;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  URL.revokeObjectURL(url);
 
   setStatus(`已下载：${filename}`, false);
 }
@@ -1069,7 +1022,7 @@ function bindEvents() {
 
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
-      downloadCurrentMetricCsv();
+      downloadCurrentChartImage();
     });
   }
 
