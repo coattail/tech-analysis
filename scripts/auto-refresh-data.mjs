@@ -9,7 +9,7 @@ const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const STOCK_ANALYSIS_BASE = "https://stockanalysis.com/stocks";
 const execFileAsync = promisify(execFile);
 const REQUEST_HEADERS = {
-  "user-agent": "Tech-Analysis-AutoUpdater/1.0 (+https://github.com/Sunny-1991/Tech-Analysis)",
+  "user-agent": "Tech-Analysis-AutoUpdater/1.0 (+https://github.com/coattail/tech-analysis)",
   accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   "accept-language": "en-US,en;q=0.9",
   "cache-control": "no-cache",
