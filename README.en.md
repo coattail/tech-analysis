@@ -2,14 +2,14 @@
 
 English | [简体中文](./README.md)
 
-[![Auto Refresh Financial Data](https://github.com/Sunny-1991/Tech-Analysis/actions/workflows/data-auto-refresh.yml/badge.svg)](https://github.com/Sunny-1991/Tech-Analysis/actions/workflows/data-auto-refresh.yml)
-[![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://sunny-1991.github.io/Tech-Analysis/)
+[![Auto Refresh Financial Data](https://github.com/coattail/tech-analysis/actions/workflows/data-auto-refresh.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/data-auto-refresh.yml)
+[![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
 An interactive financial analytics dashboard built with plain frontend + Chart.js, designed to compare key metrics across leading technology companies over multiple time granularities.
 
 ## Live Demo
 
-- [GitHub Pages](https://sunny-1991.github.io/Tech-Analysis/)
+- [GitHub Pages](https://coattail.github.io/tech-analysis/)
 
 ## Key Features
 
@@ -51,7 +51,7 @@ Apple, Microsoft, Alphabet, Amazon, Meta, NVIDIA, TSMC, Broadcom, Tesla
 ### 1) Clone
 
 ```bash
-git clone https://github.com/Sunny-1991/Tech-Analysis.git
+git clone https://github.com/coattail/tech-analysis.git
 cd Tech-Analysis
 ```
 

@@ -2,14 +2,14 @@
 
 [English](./README.en.md) | 简体中文
 
-[![Auto Refresh Financial Data](https://github.com/Sunny-1991/Tech-Analysis/actions/workflows/data-auto-refresh.yml/badge.svg)](https://github.com/Sunny-1991/Tech-Analysis/actions/workflows/data-auto-refresh.yml)
-[![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://sunny-1991.github.io/Tech-Analysis/)
+[![Auto Refresh Financial Data](https://github.com/coattail/tech-analysis/actions/workflows/data-auto-refresh.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/data-auto-refresh.yml)
+[![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
 基于纯前端与 Chart.js 的交互式财务分析页面，用于横向对比头部科技公司在不同时间粒度下的核心财务指标。
 
 ## 在线体验
 
-- [GitHub Pages 演示](https://sunny-1991.github.io/Tech-Analysis/)
+- [GitHub Pages 演示](https://coattail.github.io/tech-analysis/)
 
 ## 核心能力
 
@@ -51,7 +51,7 @@ Apple、Microsoft、Alphabet、Amazon、Meta、NVIDIA、TSMC、Broadcom、Tesla
 ### 1) 克隆仓库
 
 ```bash
-git clone https://github.com/Sunny-1991/Tech-Analysis.git
+git clone https://github.com/coattail/tech-analysis.git
 cd Tech-Analysis
 ```
 
