@@ -3,86 +3,113 @@
 English | [简体中文](./README.md)
 
 [![Auto Refresh Financial Data](https://github.com/coattail/tech-analysis/actions/workflows/data-auto-refresh.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/data-auto-refresh.yml)
+[![Deploy GitHub Pages](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml)
 [![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
-An interactive financial analytics dashboard built with plain frontend + Chart.js, designed to compare key metrics across leading technology companies over multiple time granularities.
+A static financial analytics dashboard built with plain frontend technologies and Chart.js. It is designed for comparing key metrics across leading technology companies over quarterly, annual, and rolling annual (TTM) views.
+
+The project focuses on three things:
+
+- fast analytical reading across companies, metrics, and time ranges
+- long-horizon trend analysis with full-history default views
+- simple deployment as a no-build static site
 
 ## Live Demo
 
-- [GitHub Pages](https://coattail.github.io/tech-analysis/)
+- [GitHub Pages demo](https://coattail.github.io/tech-analysis/)
 
-## Key Features
+## Features
 
 - Metric switching: Revenue, Net Income, Gross Margin, P/E, ROE, Revenue YoY Growth
-- Multi-frequency views: Quarterly / Annual / Rolling Annual (TTM)
-- Multi-company comparison: per-company toggles, Show All, Hide All
-- Time-range filtering: dual-handle slider for focused analysis windows
-- Forecast tagging: tooltips mark forecasted points (`(Forecast)`)
-- Right-side ticker labels: dynamic ticker tags on chart edge (AAPL, MSFT, etc.)
-- PNG export: download current chart as an image
+- Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
+- Multi-company comparison: per-company visibility toggles, Show All, Hide All
+- Enhanced single-company mode: switch between line and bar charts
+- Time-range filtering via dual-handle slider
+- Adaptive y-axis bounds based on the currently visible data
+- Trailing empty-period trimming: if the selected companies do not have data for the latest year or quarter, empty labels at the end are removed automatically
+- High-resolution PNG export
+- Refined dark UI tailored for data-product style presentation
 
 ## Covered Companies
 
-Apple, Microsoft, Alphabet, Amazon, Meta, NVIDIA, TSMC, Broadcom, Tesla
+- Apple
+- Microsoft
+- Alphabet
+- Amazon
+- Meta
+- NVIDIA
+- TSMC
+- Broadcom
+- Tesla
 
-## Metric Definitions and Aggregation Rules
+## Metric Definitions
 
-| Metric | Quarterly | Annual | Rolling Annual (TTM) |
-| --- | --- | --- | --- |
-| Revenue (`revenue`) | Raw quarterly value | Sum of Q1-Q4 | Sum of latest 4 quarters (annualized at dataset start if <4) |
-| Net Income (`earnings`) | Raw quarterly value | Sum of Q1-Q4 | Sum of latest 4 quarters (annualized at dataset start if <4) |
-| Gross Margin (`grossMargin`) | Raw quarterly value | Revenue-weighted recomputation | Revenue-weighted recomputation on trailing 4 quarters |
-| P/E (`pe`) | Raw quarterly value | Q4 snapshot | 4-quarter moving average |
-| ROE (`roe`) | Raw quarterly value | Q4 snapshot | 4-quarter moving average |
-| Revenue YoY (`revenueGrowth`) | Raw quarterly value | Calculated from annual revenue | Calculated from TTM revenue vs 4 quarters earlier |
+| Metric | Data Key | Quarterly | Annual | Rolling Annual (TTM) |
+| --- | --- | --- | --- | --- |
+| Revenue | `revenue` | Raw quarterly value | Sum of four quarters | Sum of latest four quarters |
+| Net Income | `earnings` | Raw quarterly value | Sum of four quarters | Sum of latest four quarters |
+| Gross Margin | `grossMargin` | Raw quarterly value | Revenue-weighted recomputation | Revenue-weighted recomputation over the latest four quarters |
+| P/E | `pe` | Raw quarterly value | Q4 snapshot | Four-quarter average |
+| ROE | `roe` | Raw quarterly value | Q4 snapshot | Four-quarter average |
+| Revenue YoY Growth | `revenueGrowth` | Raw quarterly value | Calculated from annual revenue | Calculated from TTM revenue |
 
-## Tech Stack
+## Stack
 
-- `index.html`: page layout and controls
-- `style.css`: dashboard styling and dark theme visuals
-- `script.js`: loading, aggregation, chart rendering, and interactions
-- `data.js`: local data source (`window.FINANCIAL_SOURCE_DATA`)
-- `Chart.js 4.4.1`: line chart engine
+- `index.html`: page structure
+- `style.css`: layout, colors, and visual system
+- `script.js`: data aggregation, interactions, and chart rendering
+- `data.js`: browser-loaded data source
+- `assets/logos/`: transparent company logos used in single-company views
+- `Chart.js 4.4.1`: charting engine
 
-> This is a no-build static project. No frontend dependency installation is required.
+This is a no-build static site. No frontend dependency installation is required for local preview.
 
 ## Quick Start
 
-### 1) Clone
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/coattail/tech-analysis.git
-cd Tech-Analysis
+cd tech-analysis
 ```
 
-### 2) Run a local static server
+### 2. Start a static server
+
+Use any static server you prefer, for example:
 
 ```bash
 python3 -m http.server 8110
 ```
 
-Open: `http://127.0.0.1:8110`
+or
 
-## Data Shape (`data.js`)
+```bash
+npx serve .
+```
+
+Then open the local server URL in your browser.
+
+## Data Shape
+
+`data.js` exposes data through `window.FINANCIAL_SOURCE_DATA`:
 
 ```js
 window.FINANCIAL_SOURCE_DATA = {
   meta: {
-    generatedAt: "2026-02-27T00:01:07.073Z",
-    periodRange: "2005Q1-2025Q4",
-    autoRefresh: { ... }
+    generatedAt: "2026-04-22T06:43:00.000Z",
+    periodRange: "2005Q1-2026Q1"
   },
-  periods: ["2005Q1", "2005Q2", ...],
+  periods: ["2005Q1", "2005Q2", "..."],
   companies: {
-    apple: {
-      revenue: { "2025Q4": 124300000000, ... },
-      earnings: { ... },
-      grossMargin: { ... },
-      pe: { ... },
-      roe: { ... },
-      revenueGrowth: { ... },
+    microsoft: {
+      revenue: { "2025Q4": 81273000000 },
+      earnings: { "2025Q4": 25824000000 },
+      grossMargin: { "2025Q4": 69.4 },
+      pe: { "2025Q4": 34.1 },
+      roe: { "2025Q4": 31.2 },
+      revenueGrowth: { "2025Q4": 15.7 },
       forecastFlags: {
-        revenue: ["2026Q1"],
+        revenue: [],
         netIncome: [],
         grossMargin: [],
         pe: [],
@@ -94,66 +121,88 @@ window.FINANCIAL_SOURCE_DATA = {
 };
 ```
 
-## Auto Refresh Script
+## Data Refresh
 
-Built-in updater: `scripts/auto-refresh-data.mjs`
+The updater script lives at `scripts/auto-refresh-data.mjs`.
 
-What it does:
-
-- Pulls quarterly revenue/net income/gross margin from StockAnalysis
-- Converts non-USD financials to USD via FRED FX series (TWD currently configured)
-- Applies official TSMC overrides for key quarters (`2024Q4` to `2025Q4`)
-- Expands `periods`, clears forecast flags replaced by actuals
-- Recomputes impacted `revenueGrowth` points
-- Skips file writes when there is no effective change
-
-Commands:
+Common commands:
 
 ```bash
 # Update data.js
 node scripts/auto-refresh-data.mjs
 
-# Dry run (no file write)
+# Dry run only
 node scripts/auto-refresh-data.mjs --dry-run
 
-# Update specific companies (id/ticker/slug, comma-separated)
+# Refresh selected companies only
 node scripts/auto-refresh-data.mjs --company nvidia
-node scripts/auto-refresh-data.mjs --company nvda,tsm
+node scripts/auto-refresh-data.mjs --company msft,tsm
 ```
 
-## GitHub Actions Automation
+The script currently handles:
+
+- financial data fetching
+- selected FX conversion for non-USD reporting
+- TSMC override corrections for key periods
+- `forecastFlags` cleanup
+- recomputation of impacted `revenueGrowth` ranges
+
+## Automation and Deployment
+
+### Automated Data Refresh
 
 Workflow: `.github/workflows/data-auto-refresh.yml`
 
-- Manual trigger via `workflow_dispatch`
-- Daily schedule at `23:15 UTC` (`cron: 15 23 * * *`)
-- Runs `node scripts/auto-refresh-data.mjs`
-- Auto-commits to `main` when `data.js` changes
+- supports manual runs
+- supports scheduled updates
+- auto-commits when `data.js` changes
+
+### GitHub Pages Deployment
+
+Workflow: `.github/workflows/pages.yml`
+
+- runs on pushes to `main`
+- publishes the static site to GitHub Pages
+- deploys `index.html`, `style.css`, `script.js`, and `data.js`
+
+If you fork this repository, update the badge links and demo URL in the README files accordingly.
 
 ## Project Structure
 
 ```text
-Tech-Analysis/
-├── .github/workflows/data-auto-refresh.yml  # Auto-refresh workflow
-├── data.js                                  # Financial data source
-├── index.html                               # UI and controls
-├── script.js                                # Core logic (aggregation/chart/interactions)
-├── style.css                                # Styles
-├── scripts/auto-refresh-data.mjs            # Data refresh script
-├── README.md                                # Chinese README
-└── README.en.md                             # This file
+.
+├── .github/workflows/
+│   ├── data-auto-refresh.yml
+│   └── pages.yml
+├── assets/logos/
+├── data.js
+├── index.html
+├── script.js
+├── style.css
+├── scripts/
+│   └── auto-refresh-data.mjs
+├── README.md
+└── README.en.md
 ```
 
 ## Troubleshooting
 
-- Blank page / missing chart
-  - Check browser Console for `data.js` loading errors
-  - Verify `window.FINANCIAL_SOURCE_DATA` exists
-- Empty values after metric switch
-  - Verify metric/company fields in `data.js`
-- PNG download does not trigger
-  - Ensure chart is loaded and browser download blocking is disabled
+### Blank page or missing chart
+
+- make sure `data.js` is loaded correctly
+- run the project from a static server instead of opening files directly
+- inspect the browser console for asset loading errors
+
+### Empty year or quarter at the end of the x-axis
+
+- the current version trims trailing empty labels automatically
+- if it still happens, inspect the last data points for the selected company set
+
+### PNG export is not sharp enough
+
+- current export uses a high-resolution re-render pass
+- the export multiplier can be increased further if needed
 
 ## Disclaimer
 
-This project is for visualization and technical research only, not investment advice.
+This project is for visualization, product demonstration, and technical research only. It is not investment advice.

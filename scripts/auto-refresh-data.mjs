@@ -175,26 +175,6 @@ function toQuarterLabel(dateKey) {
   return `${year}Q${quarter}`;
 }
 
-function toQuarterLabelWithFiscalQuarter(dateKey, fiscalQuarterToken) {
-  const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey);
-  const quarterMatch = /^Q([1-4])$/.exec(String(fiscalQuarterToken || ""));
-  if (!dateMatch || !quarterMatch) return null;
-
-  let year = Number(dateMatch[1]);
-  const month = Number(dateMatch[2]);
-  const quarter = Number(quarterMatch[1]);
-
-  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(quarter)) return null;
-
-  // For companies with non-calendar fiscal years (e.g. Jan year-end),
-  // fiscal Q4 that ends in Jan-Mar belongs to previous calendar year.
-  if (quarter === 4 && month <= 3) {
-    year -= 1;
-  }
-
-  return `${year}Q${quarter}`;
-}
-
 function parseDateKey(dateKey) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey);
   if (!match) return null;
@@ -243,6 +223,18 @@ function extractArrayRaw(block, key) {
   return match[1].trim();
 }
 
+function extractArrayRawWithFallback(block, keys) {
+  for (const key of keys) {
+    const regex = new RegExp(`${key}:\\[([^\\]]*)\\]`);
+    const match = block.match(regex);
+    if (match) {
+      return match[1].trim();
+    }
+  }
+
+  throw new Error(`缺少字段：${keys.join(" / ")}`);
+}
+
 function parseStringArray(raw) {
   if (!raw) return [];
   return JSON.parse(`[${raw}]`);
@@ -269,7 +261,7 @@ function extractFinancialSeries(html) {
   const dateKeys = parseStringArray(extractArrayRaw(block, "datekey"));
   const fiscalQuarter = parseStringArray(extractArrayRaw(block, "fiscalQuarter"));
   const revenue = parseNumberArray(extractArrayRaw(block, "revenue"));
-  const netIncome = parseNumberArray(extractArrayRaw(block, "netinc"));
+  const netIncome = parseNumberArray(extractArrayRawWithFallback(block, ["netIncome", "netinc"]));
   const grossMarginRatio = parseNumberArray(extractArrayRaw(block, "grossMargin"));
 
   const maxLength = Math.min(dateKeys.length, fiscalQuarter.length, revenue.length, netIncome.length, grossMarginRatio.length);
@@ -277,12 +269,13 @@ function extractFinancialSeries(html) {
 
   for (let index = 0; index < maxLength; index += 1) {
     const dateKey = dateKeys[index];
-    const period = toQuarterLabelWithFiscalQuarter(dateKey, fiscalQuarter[index]) ?? toQuarterLabel(dateKey);
+    const period = toQuarterLabel(dateKey);
     if (!period) continue;
 
     rows.push({
       period,
       dateKey,
+      fiscalQuarter: fiscalQuarter[index],
       revenue: revenue[index],
       netIncome: netIncome[index],
       grossMarginPct: Number.isFinite(grossMarginRatio[index]) ? grossMarginRatio[index] * 100 : null,
@@ -332,6 +325,10 @@ async function fetchFxSeries(currency) {
     "-sS",
     "--fail",
     "--compressed",
+    "--retry",
+    "3",
+    "--retry-delay",
+    "1",
     "-H",
     `User-Agent: ${REQUEST_HEADERS["user-agent"]}`,
     "-H",
@@ -493,6 +490,10 @@ async function fetchCompanyRows(slug) {
     "-sS",
     "--fail",
     "--compressed",
+    "--retry",
+    "3",
+    "--retry-delay",
+    "1",
     "-H",
     `User-Agent: ${REQUEST_HEADERS["user-agent"]}`,
     "-H",

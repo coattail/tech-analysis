@@ -42,23 +42,164 @@ const FREQUENCY_META = {
 };
 
 const COMPANIES = [
-  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c" },
-  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff" },
-  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0" },
-  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166" },
-  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87" },
-  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000" },
-  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff" },
-  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff" },
-  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d" },
+  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoPath: "assets/logos/apple.svg" },
+  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoPath: "assets/logos/microsoft.svg" },
+  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoPath: "assets/logos/alphabet.svg" },
+  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg" },
+  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg" },
+  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg" },
+  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg" },
+  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg" },
+  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
+const DEFAULT_VISIBLE_COMPANIES = ["apple", "microsoft", "nvidia", "amazon"];
+const COMPANY_PRESETS = {
+  focus: DEFAULT_VISIBLE_COMPANIES,
+  ai: ["microsoft", "nvidia", "amazon", "meta"],
+  all: COMPANIES.map((company) => company.id),
+};
+const BAR_CHART_LOGO_LEFT = 14;
+const BAR_CHART_LOGO_TARGET_AREA = 44 * 44 * 2;
+const BAR_CHART_LOGO_MAX_WIDTH = 170;
+const BAR_CHART_LOGO_MAX_HEIGHT = 62;
+const companyLogoCache = new Map();
+const companyLogoLoadState = new Map();
+
+function getCompanyLogo(companyId) {
+  return companyLogoCache.get(companyId) ?? null;
+}
+
+function loadCompanyLogo(company) {
+  if (!company?.id || !company.logoPath) return;
+  if (companyLogoCache.has(company.id) || companyLogoLoadState.has(company.id)) return;
+
+  const img = new Image();
+  const loadPromise = new Promise((resolve) => {
+    img.onload = () => {
+      companyLogoCache.set(company.id, img);
+      companyLogoLoadState.delete(company.id);
+      if (state.chart) state.chart.update("none");
+      resolve(img);
+    };
+    img.onerror = () => {
+      companyLogoLoadState.delete(company.id);
+      resolve(null);
+    };
+  });
+
+  companyLogoLoadState.set(company.id, loadPromise);
+  img.decoding = "async";
+  img.src = company.logoPath;
+}
+
+function preloadCompanyLogos() {
+  COMPANIES.forEach((company) => {
+    loadCompanyLogo(company);
+  });
+}
+
+function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
+  if (!image) return false;
+
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
+  if (!naturalWidth || !naturalHeight) return false;
+
+  let scale = Math.sqrt(targetArea / (naturalWidth * naturalHeight));
+  let width = Math.max(1, naturalWidth * scale);
+  let height = Math.max(1, naturalHeight * scale);
+
+  if (width > BAR_CHART_LOGO_MAX_WIDTH || height > BAR_CHART_LOGO_MAX_HEIGHT) {
+    scale *= Math.min(
+      BAR_CHART_LOGO_MAX_WIDTH / width,
+      BAR_CHART_LOGO_MAX_HEIGHT / height,
+    );
+    width = Math.max(1, naturalWidth * scale);
+    height = Math.max(1, naturalHeight * scale);
+  }
+
+  const offsetX = x;
+  const offsetY = y - height / 2;
+  const pixelRatio = Math.max(chart.currentDevicePixelRatio || window.devicePixelRatio || 1, 1);
+  const buffer = document.createElement("canvas");
+  const bufferCtx = buffer.getContext("2d");
+  if (!bufferCtx) return false;
+
+  buffer.width = Math.max(1, Math.round(width * pixelRatio));
+  buffer.height = Math.max(1, Math.round(height * pixelRatio));
+  bufferCtx.scale(pixelRatio, pixelRatio);
+  bufferCtx.clearRect(0, 0, width, height);
+  bufferCtx.drawImage(image, 0, 0, width, height);
+  bufferCtx.globalCompositeOperation = "source-in";
+  bufferCtx.fillStyle = color;
+  bufferCtx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.globalAlpha = 0.98;
+  ctx.drawImage(buffer, offsetX, offsetY, width, height);
+  ctx.restore();
+  return true;
+}
+
+function drawSingleCompanyLogoBadge(ctx, chart, chartArea, company, chartFontFamily, isDeepTheme) {
+  if (!company) return false;
+
+  const badgeX = chartArea.left + BAR_CHART_LOGO_LEFT;
+  const badgeY = chartArea.top + 32;
+  const logoImage = getCompanyLogo(company.id);
+  const logoColor = isDeepTheme ? "#f4f7fb" : "#f3f6fa";
+
+  if (
+    logoImage &&
+    drawMonochromeLogo(
+      ctx,
+      chart,
+      logoImage,
+      badgeX,
+      badgeY,
+      BAR_CHART_LOGO_TARGET_AREA,
+      logoColor,
+    )
+  ) {
+    return true;
+  }
+
+  ctx.save();
+  ctx.font = `700 12px ${chartFontFamily}`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = logoColor;
+  ctx.fillText(`${company.name} ${company.ticker}`, badgeX, badgeY);
+  ctx.restore();
+  return false;
+}
 
 const rightTickerLabelsPlugin = {
   id: "rightTickerLabels",
   afterDatasetsDraw(chart) {
     const { ctx, chartArea } = chart;
     if (!chartArea) return;
+
+    const effectiveChartMode = getEffectiveChartMode();
+    const singleCompanyId = getSingleVisibleCompanyId();
+    const css = getComputedStyle(document.body);
+    const tickerStroke = css.getPropertyValue("--ticker-stroke").trim() || "rgba(9, 14, 22, 0.88)";
+    const chartFontFamily =
+      css.getPropertyValue("--font-chart").trim() || css.getPropertyValue("--font-main").trim() || '"Plus Jakarta Sans", sans-serif';
+    const isDeepTheme = document.body.dataset.theme === "deep";
+
+    if (singleCompanyId) {
+      const company = COMPANY_META.get(singleCompanyId);
+      const hasVisibleDataset = chart.data.datasets.some((item) => item.companyId === singleCompanyId && !item.hidden);
+      if (!company || !hasVisibleDataset) return;
+
+      drawSingleCompanyLogoBadge(ctx, chart, chartArea, company, chartFontFamily, isDeepTheme);
+
+      if (effectiveChartMode === "bar") {
+        return;
+      }
+    }
 
     const labels = [];
 
@@ -84,7 +225,6 @@ const rightTickerLabelsPlugin = {
 
       labels.push({
         ticker: company.ticker,
-        color: dataset.borderColor || "#eaf2ff",
         y: endPoint.y,
       });
     });
@@ -113,11 +253,6 @@ const rightTickerLabelsPlugin = {
     }
 
     ctx.save();
-    const css = getComputedStyle(document.body);
-    const tickerStroke = css.getPropertyValue("--ticker-stroke").trim() || "rgba(9, 14, 22, 0.88)";
-    const chartFontFamily =
-      css.getPropertyValue("--font-chart").trim() || css.getPropertyValue("--font-main").trim() || '"Plus Jakarta Sans", sans-serif';
-    const isDeepTheme = document.body.dataset.theme === "deep";
     ctx.font = `600 11px ${chartFontFamily}`;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
@@ -129,7 +264,7 @@ const rightTickerLabelsPlugin = {
         ctx.strokeStyle = tickerStroke;
         ctx.strokeText(item.ticker, labelX, item.y);
       }
-      ctx.fillStyle = item.color;
+      ctx.fillStyle = isDeepTheme ? "#f4f7fb" : "#f3f6fa";
       ctx.fillText(item.ticker, labelX, item.y);
     });
 
@@ -188,20 +323,37 @@ const rangeLabelEl = document.getElementById("rangeLabel");
 const rangeSlidersEl = document.getElementById("rangeSliders");
 const rangeFillEl = document.getElementById("rangeFill");
 const periodRangeChipEl = document.getElementById("periodRangeChip");
+const activeMetricLabelEl = document.getElementById("activeMetricLabel");
+const activeFrequencyLabelEl = document.getElementById("activeFrequencyLabel");
+const visibleCompaniesLabelEl = document.getElementById("visibleCompaniesLabel");
+const generatedAtLabelEl = document.getElementById("generatedAtLabel");
+const chartModeControlEl = document.getElementById("chartModeControl");
 const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'));
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
+const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
+const presetButtons = Array.from(document.querySelectorAll("[data-company-preset]"));
 
 const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
-const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.6;
+const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.28;
+const CHART_PLOT_LEFT_NUDGE = 6;
+const SINGLE_COMPANY_CHART_RIGHT_PADDING = 52;
+const MULTI_COMPANY_CHART_RIGHT_PADDING = 52;
+const Y_AXIS_TICK_PADDING = 2;
+const Y_AXIS_TITLE_PADDING = 20;
+const Y_AXIS_RESERVED_EXTRA_WIDTH = 28;
+const Y_AXIS_MIN_RESERVED_WIDTH = 84;
+const EXPORT_DEVICE_PIXEL_RATIO = 8;
 
 const state = {
   chart: null,
   metric: "revenue",
   frequency: "quarterly",
-  visibleCompanies: new Set(COMPANIES.map((company) => company.id)),
+  chartMode: "line",
+  visibleCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   rangeStart: 0,
   rangeEnd: 0,
+  generatedAtLabel: "-",
   dataByFrequency: {
     quarterly: {
       revenue: new Map(),
@@ -258,7 +410,29 @@ const state = {
 
 function setStatus(text, isError = false) {
   statusEl.textContent = text;
-  statusEl.style.color = isError ? "#ff8c8c" : "";
+  statusEl.classList.toggle("is-error", isError);
+}
+
+function getSingleVisibleCompanyId() {
+  if (state.visibleCompanies.size !== 1) return null;
+  return state.visibleCompanies.values().next().value ?? null;
+}
+
+function getEffectiveChartMode() {
+  return getSingleVisibleCompanyId() ? state.chartMode : "line";
+}
+
+function colorToRgba(hexColor, alpha) {
+  if (typeof hexColor !== "string") return `rgba(255, 255, 255, ${alpha})`;
+  const hex = hexColor.replace("#", "");
+  if (hex.length !== 6) return `rgba(255, 255, 255, ${alpha})`;
+
+  const r = Number.parseInt(hex.slice(0, 2), 16);
+  const g = Number.parseInt(hex.slice(2, 4), 16);
+  const b = Number.parseInt(hex.slice(4, 6), 16);
+
+  if (![r, g, b].every(Number.isFinite)) return `rgba(255, 255, 255, ${alpha})`;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
 function getChartThemeTokens() {
@@ -300,7 +474,64 @@ function syncPeriodRangeChip() {
   if (!periodRangeChipEl) return;
   const first = QUARTER_LABELS[0] ?? "-";
   const last = QUARTER_LABELS[QUARTER_LABELS.length - 1] ?? "-";
-  periodRangeChipEl.textContent = `时间范围：${first}-${last}`;
+  periodRangeChipEl.textContent = `${first}-${last}`;
+}
+
+function setDefaultRangeForFrequency(frequency) {
+  const labels = getLabelsForFrequency(frequency);
+  state.rangeStart = 0;
+  state.rangeEnd = Math.max(0, labels.length - 1);
+}
+
+function setsMatch(currentSet, expectedItems) {
+  if (currentSet.size !== expectedItems.length) return false;
+  return expectedItems.every((item) => currentSet.has(item));
+}
+
+function syncPresetButtons() {
+  presetButtons.forEach((button) => {
+    const presetKey = button.dataset.companyPreset;
+    const presetItems = COMPANY_PRESETS[presetKey] ?? [];
+    button.classList.toggle("is-active", setsMatch(state.visibleCompanies, presetItems));
+  });
+}
+
+function syncChartModeControl() {
+  const shouldShow = Boolean(getSingleVisibleCompanyId());
+
+  if (!shouldShow) {
+    state.chartMode = "line";
+  }
+
+  if (chartModeControlEl) {
+    chartModeControlEl.hidden = !shouldShow;
+  }
+
+  chartModeInputs.forEach((input) => {
+    input.checked = input.value === state.chartMode;
+    input.disabled = !shouldShow;
+  });
+}
+
+function updateViewSummary() {
+  if (activeMetricLabelEl) {
+    activeMetricLabelEl.textContent = METRICS[state.metric]?.label ?? "-";
+  }
+
+  if (activeFrequencyLabelEl) {
+    activeFrequencyLabelEl.textContent = FREQUENCY_META[state.frequency]?.granularityLabel ?? "-";
+  }
+
+  if (visibleCompaniesLabelEl) {
+    visibleCompaniesLabelEl.textContent = `${state.visibleCompanies.size} / ${COMPANIES.length}`;
+  }
+
+  if (generatedAtLabelEl) {
+    generatedAtLabelEl.textContent = state.generatedAtLabel;
+  }
+
+  syncChartModeControl();
+  syncPresetButtons();
 }
 
 function emptySeries(labels) {
@@ -571,13 +802,20 @@ function toMetricFileToken(metricKey) {
   return map[metricKey] ?? metricKey;
 }
 
-function downloadCurrentChartImage() {
+function waitForNextPaint() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => resolve());
+  });
+}
+
+async function downloadCurrentChartImage() {
   if (!state.chart) {
     setStatus("图表尚未加载完成，暂时无法下载。", true);
     return;
   }
 
-  const sourceCanvas = state.chart.canvas;
+  const chart = state.chart;
+  const sourceCanvas = chart.canvas;
   if (!sourceCanvas) {
     setStatus("图表画布不可用，暂时无法下载。", true);
     return;
@@ -594,24 +832,55 @@ function downloadCurrentChartImage() {
     .replaceAll("-", "");
 
   const filename = `finance-chart-${freqToken}-${metricToken}-${fileStamp}.png`;
+  const chartWrap = sourceCanvas.closest(".chart-wrap");
+  const wrapStyle = chartWrap ? getComputedStyle(chartWrap) : null;
+  const backgroundColor = wrapStyle?.backgroundColor && wrapStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
+    ? wrapStyle.backgroundColor
+    : (document.body.dataset.theme === "deep" ? "#101823" : "#263567");
+
   const exportCanvas = document.createElement("canvas");
-  exportCanvas.width = sourceCanvas.width;
-  exportCanvas.height = sourceCanvas.height;
   const exportCtx = exportCanvas.getContext("2d");
   if (!exportCtx) {
     setStatus("导出失败：无法创建图片上下文。", true);
     return;
   }
 
-  const chartWrap = sourceCanvas.closest(".chart-wrap");
-  const wrapStyle = chartWrap ? getComputedStyle(chartWrap) : null;
-  const backgroundColor = wrapStyle?.backgroundColor && wrapStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
-    ? wrapStyle.backgroundColor
-    : (document.body.dataset.theme === "deep" ? "#1b2550" : "#263567");
+  const originalWidth = chart.width;
+  const originalHeight = chart.height;
+  const originalDevicePixelRatio = chart.options.devicePixelRatio;
+  const originalAnimation = chart.options.animation;
+  const originalResponsive = chart.options.responsive;
+  const targetDevicePixelRatio = Math.max(
+    EXPORT_DEVICE_PIXEL_RATIO,
+    Math.ceil(window.devicePixelRatio || 1),
+  );
 
-  exportCtx.fillStyle = backgroundColor;
-  exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-  exportCtx.drawImage(sourceCanvas, 0, 0);
+  try {
+    setStatus(`正在导出高清图片（${targetDevicePixelRatio}x）...`, false);
+
+    chart.options.animation = false;
+    chart.options.responsive = false;
+    chart.options.devicePixelRatio = targetDevicePixelRatio;
+    chart.resize(originalWidth, originalHeight);
+    chart.update("none");
+    await waitForNextPaint();
+
+    exportCanvas.width = chart.canvas.width;
+    exportCanvas.height = chart.canvas.height;
+    exportCtx.fillStyle = backgroundColor;
+    exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+    exportCtx.drawImage(chart.canvas, 0, 0);
+  } catch (error) {
+    console.error(error);
+    setStatus("导出失败：高清重绘未完成。", true);
+    return;
+  } finally {
+    chart.options.devicePixelRatio = originalDevicePixelRatio;
+    chart.options.animation = originalAnimation;
+    chart.options.responsive = originalResponsive;
+    chart.resize();
+    chart.update("none");
+  }
 
   const url = exportCanvas.toDataURL("image/png");
   const anchor = document.createElement("a");
@@ -689,34 +958,64 @@ function alignRangeWithChartAxis() {
 
 function buildDatasetsForView() {
   const fullLabels = getLabelsForFrequency(state.frequency);
-  const visibleLabels = fullLabels.slice(state.rangeStart, state.rangeEnd + 1);
+  const rangeLabels = fullLabels.slice(state.rangeStart, state.rangeEnd + 1);
   const metricKey = state.metric;
   const spanGapThreshold = metricKey === "pe" || metricKey === "roe" || metricKey === "grossMargin" ? 4 : false;
+  const singleCompanyId = getSingleVisibleCompanyId();
+  const useBarForSingleCompany = getEffectiveChartMode() === "bar" && Boolean(singleCompanyId);
 
   const datasets = COMPANIES.map((company) => {
     const series = state.dataByFrequency[state.frequency][metricKey].get(company.id) ?? emptySeries(fullLabels);
     const forecasted = state.forecastFlagsByFrequency[state.frequency][metricKey].get(company.id) ?? new Set();
 
     const fullData = fullLabels.map((label) => series.get(label) ?? null);
+    const useBarDataset = useBarForSingleCompany && singleCompanyId === company.id;
 
     return {
+      type: useBarDataset ? "bar" : "line",
       label: company.name,
       companyId: company.id,
       data: fullData.slice(state.rangeStart, state.rangeEnd + 1),
       forecastedLabels: [...forecasted],
       borderColor: company.color,
-      backgroundColor: company.color,
-      borderWidth: 2,
-      pointRadius: 1.4,
+      backgroundColor: useBarDataset ? colorToRgba(company.color, 0.78) : company.color,
+      borderWidth: useBarDataset ? 1.2 : 2,
+      borderRadius: useBarDataset ? 6 : 0,
+      borderSkipped: false,
+      barPercentage: useBarDataset ? 0.72 : 0.9,
+      categoryPercentage: useBarDataset ? 0.82 : 0.9,
+      maxBarThickness: useBarDataset ? 28 : undefined,
+      pointRadius: useBarDataset ? 0 : 1.4,
       pointHoverRadius: 4.2,
       pointHitRadius: 10,
       spanGaps: spanGapThreshold,
-      tension: 0.18,
+      tension: useBarDataset ? 0 : 0.18,
       hidden: !state.visibleCompanies.has(company.id),
     };
   });
 
-  return { labels: visibleLabels, datasets };
+  let lastVisibleValueIndex = -1;
+  datasets.forEach((dataset) => {
+    if (dataset.hidden) return;
+    for (let index = dataset.data.length - 1; index >= 0; index -= 1) {
+      if (!isFiniteNumber(dataset.data[index])) continue;
+      lastVisibleValueIndex = Math.max(lastVisibleValueIndex, index);
+      break;
+    }
+  });
+
+  const trimmedEndIndex = lastVisibleValueIndex >= 0 ? lastVisibleValueIndex : 0;
+  const visibleLabels = rangeLabels.slice(0, trimmedEndIndex + 1);
+  const trimmedDatasets = datasets.map((dataset) => ({
+    ...dataset,
+    data: dataset.data.slice(0, trimmedEndIndex + 1),
+  }));
+
+  return { labels: visibleLabels, datasets: trimmedDatasets };
+}
+
+function replaceArrayContents(target, nextValues) {
+  target.splice(0, target.length, ...nextValues);
 }
 
 function formatXAxisTick(label) {
@@ -751,17 +1050,205 @@ function buildXGridColorCallback(themeTokens) {
   };
 }
 
-function refreshChart() {
+function collectDatasetValues(datasets, includeHidden = false) {
+  const values = [];
+  datasets.forEach((dataset) => {
+    if (!includeHidden && dataset.hidden) return;
+    dataset.data.forEach((value) => {
+      if (isFiniteNumber(value)) values.push(value);
+    });
+  });
+
+  return values;
+}
+
+function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false) {
+  const values = collectDatasetValues(datasets, includeHidden);
+  const shouldClampMinToZero = state.metric === "revenue";
+
+  if (values.length === 0) {
+    return { min: 0, max: 1 };
+  }
+
+  let min = Math.min(...values);
+  let max = Math.max(...values);
+  const includesPositive = max > 0;
+  const includesNegative = min < 0;
+
+  if (min === max) {
+    const base = Math.abs(max) || 1;
+
+    if (shouldClampMinToZero) {
+      return {
+        min: 0,
+        max: Math.max(max + base * 0.12, base),
+      };
+    }
+
+    if (chartMode === "bar") {
+      if (max >= 0) {
+        return { min: 0, max: max + base * 0.18 };
+      }
+
+      return { min: min - base * 0.18, max: 0 };
+    }
+
+    return {
+      min: min - base * 0.08,
+      max: max + base * 0.08,
+    };
+  }
+
+  const span = max - min;
+  const minPadding = span * 0.08;
+  const maxPadding = span * 0.1;
+
+  if (shouldClampMinToZero) {
+    const safeMax = max > 0 ? max : 1;
+    return {
+      min: 0,
+      max: safeMax + Math.max(maxPadding, safeMax * 0.04),
+    };
+  }
+
+  if (chartMode === "bar") {
+    return {
+      min: includesNegative ? min - minPadding : 0,
+      max: includesPositive ? max + maxPadding : 0,
+    };
+  }
+
+  if (min >= 0) {
+    return {
+      min: Math.max(0, min - minPadding),
+      max: max + maxPadding,
+    };
+  }
+
+  if (max <= 0) {
+    return {
+      min: min - minPadding,
+      max: Math.min(0, max + maxPadding),
+    };
+  }
+
+  return {
+    min: min - minPadding,
+    max: max + maxPadding,
+  };
+}
+
+function measureTextWidth(text, font) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return 0;
+  ctx.font = font;
+  return ctx.measureText(text).width;
+}
+
+function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
+  const bounds = computeYAxisBounds(datasets, chartMode, true);
+  const sampleValues = [bounds.min, bounds.max, 0];
+  const font = `600 10px ${themeTokens.chartFontFamily}`;
+  const widestLabel = sampleValues.reduce((maxWidth, value) => {
+    const width = measureTextWidth(formatYAxisTick(state.metric, Number(value)), font);
+    return Math.max(maxWidth, width);
+  }, 0);
+
+  return Math.max(
+    Y_AXIS_MIN_RESERVED_WIDTH,
+    Math.ceil(widestLabel + Y_AXIS_RESERVED_EXTRA_WIDTH),
+  );
+}
+
+function syncChartDatasets(nextDatasets) {
+  const existingDatasets = new Map(
+    (state.chart?.data?.datasets ?? []).map((dataset) => [dataset.companyId, dataset]),
+  );
+
+  state.chart.data.datasets = nextDatasets.map((nextDataset) => {
+    const currentDataset = existingDatasets.get(nextDataset.companyId);
+    if (!currentDataset) return nextDataset;
+
+    if (!Array.isArray(currentDataset.data)) currentDataset.data = [];
+    replaceArrayContents(currentDataset.data, nextDataset.data);
+
+    currentDataset.label = nextDataset.label;
+    currentDataset.companyId = nextDataset.companyId;
+    currentDataset.type = nextDataset.type;
+    currentDataset.forecastedLabels = [...nextDataset.forecastedLabels];
+    currentDataset.borderColor = nextDataset.borderColor;
+    currentDataset.backgroundColor = nextDataset.backgroundColor;
+    currentDataset.borderWidth = nextDataset.borderWidth;
+    currentDataset.borderRadius = nextDataset.borderRadius;
+    currentDataset.borderSkipped = nextDataset.borderSkipped;
+    currentDataset.barPercentage = nextDataset.barPercentage;
+    currentDataset.categoryPercentage = nextDataset.categoryPercentage;
+    currentDataset.maxBarThickness = nextDataset.maxBarThickness;
+    currentDataset.pointRadius = nextDataset.pointRadius;
+    currentDataset.pointHoverRadius = nextDataset.pointHoverRadius;
+    currentDataset.pointHitRadius = nextDataset.pointHitRadius;
+    currentDataset.spanGaps = nextDataset.spanGaps;
+    currentDataset.tension = nextDataset.tension;
+    currentDataset.hidden = nextDataset.hidden;
+
+    return currentDataset;
+  });
+}
+
+function syncChartLabels(nextLabels) {
+  if (!Array.isArray(state.chart?.data?.labels)) {
+    state.chart.data.labels = [...nextLabels];
+    return;
+  }
+
+  replaceArrayContents(state.chart.data.labels, nextLabels);
+}
+
+function applyVisibilityStateToChart() {
+  if (!state.chart) return;
+  refreshChart("none");
+}
+
+function buildChartLayoutPadding(effectiveChartMode) {
+  if (getSingleVisibleCompanyId()) {
+    return {
+      left: 0,
+      right: SINGLE_COMPANY_CHART_RIGHT_PADDING,
+    };
+  }
+
+  return {
+    left: 0,
+    right: MULTI_COMPANY_CHART_RIGHT_PADDING,
+  };
+}
+
+function refreshChart(updateMode = undefined) {
   if (!state.chart) return;
 
   const { labels, datasets } = buildDatasetsForView();
-  state.chart.data.labels = labels;
-  state.chart.data.datasets = datasets;
+  const effectiveChartMode = getEffectiveChartMode();
+  const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
+  const themeTokens = getChartThemeTokens();
+  const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
+  syncChartLabels(labels);
+  syncChartDatasets(datasets);
+  state.chart.data.datasets.forEach((dataset, index) => {
+    state.chart.setDatasetVisibility(index, state.visibleCompanies.has(dataset.companyId));
+  });
   state.chart.options.scales.y.title.text = buildYAxisTitle(state.metric, state.frequency);
+  state.chart.options.scales.y.min = yBounds.min;
+  state.chart.options.scales.y.max = yBounds.max;
+  state.chart.options.scales.y.reservedWidth = yReservedWidth;
   state.chart.options.scales.x.title.text = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle;
-  state.chart.update();
+  state.chart.options.scales.x.offset = effectiveChartMode === "bar";
+  state.chart.options.scales.x.grid.offset = effectiveChartMode === "bar";
+  state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
+  state.chart.update(updateMode);
   alignRangeWithChartAxis();
   updateRangeVisual();
+  updateViewSummary();
 }
 
 function createToggle(company) {
@@ -786,7 +1273,7 @@ function createToggle(company) {
     } else {
       state.visibleCompanies.delete(company.id);
     }
-    refreshChart();
+    applyVisibilityStateToChart();
   });
 
   label.append(checkbox, dot, text);
@@ -798,23 +1285,37 @@ function setupTogglePanel() {
   COMPANIES.forEach((company) => {
     togglesEl.appendChild(createToggle(company));
   });
+  syncPresetButtons();
+}
+
+function syncTogglePanelSelection() {
+  const checkboxes = togglesEl.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = state.visibleCompanies.has(checkbox.dataset.companyId);
+  });
 }
 
 function setAllVisibility(visible) {
   state.visibleCompanies = visible ? new Set(COMPANIES.map((item) => item.id)) : new Set();
+  syncTogglePanelSelection();
+  applyVisibilityStateToChart();
+}
 
-  const checkboxes = togglesEl.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach((checkbox) => {
-    checkbox.checked = visible;
-  });
-
-  refreshChart();
+function applyCompanyPreset(presetKey) {
+  const companyIds = COMPANY_PRESETS[presetKey];
+  if (!companyIds) return;
+  state.visibleCompanies = new Set(companyIds);
+  syncTogglePanelSelection();
+  applyVisibilityStateToChart();
 }
 
 function buildChart() {
   const themeTokens = getChartThemeTokens();
 
   const { labels, datasets } = buildDatasetsForView();
+  const effectiveChartMode = getEffectiveChartMode();
+  const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
+  const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
 
   state.chart = new Chart(chartEl, {
     type: "line",
@@ -823,17 +1324,22 @@ function buildChart() {
       responsive: true,
       maintainAspectRatio: false,
       layout: {
-        padding: {
-          right: 52,
-        },
+        padding: buildChartLayoutPadding(effectiveChartMode),
       },
       onResize() {
         alignRangeWithChartAxis();
         updateRangeVisual();
       },
       interaction: { mode: "index", intersect: false },
+      elements: {
+        bar: {
+          borderRadius: 6,
+          borderSkipped: false,
+        },
+      },
       scales: {
         x: {
+          offset: effectiveChartMode === "bar",
           border: { color: "rgba(0,0,0,0)" },
           title: {
             display: true,
@@ -852,20 +1358,33 @@ function buildChart() {
           },
           grid: {
             color: buildXGridColorCallback(themeTokens),
+            offset: effectiveChartMode === "bar",
             borderDash: [],
           },
         },
         y: {
+          afterFit(scale) {
+            const reservedWidth = scale.options.reservedWidth ?? scale.width;
+            scale.width = Math.max(0, reservedWidth - CHART_PLOT_LEFT_NUDGE);
+          },
           border: { color: "rgba(0,0,0,0)" },
+          min: yBounds.min,
+          max: yBounds.max,
+          reservedWidth: yReservedWidth,
           title: {
             display: true,
             text: buildYAxisTitle(state.metric, state.frequency),
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: Y_AXIS_TITLE_FONT_SIZE, weight: "600" },
+            padding: {
+              top: Y_AXIS_TITLE_PADDING,
+              bottom: Y_AXIS_TITLE_PADDING,
+            },
           },
           ticks: {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+            padding: Y_AXIS_TICK_PADDING,
             callback(value) {
               return formatYAxisTick(state.metric, Number(value));
             },
@@ -925,11 +1444,23 @@ function bindEvents() {
     input.addEventListener("change", () => {
       if (!input.checked) return;
       state.frequency = input.value;
-      const labels = getLabelsForFrequency(state.frequency);
-      state.rangeStart = 0;
-      state.rangeEnd = labels.length - 1;
+      setDefaultRangeForFrequency(state.frequency);
       syncRangeControls();
       refreshChart();
+    });
+  });
+
+  chartModeInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+      if (!input.checked || !getSingleVisibleCompanyId()) return;
+      state.chartMode = input.value;
+      refreshChart("none");
+    });
+  });
+
+  presetButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      applyCompanyPreset(button.dataset.companyPreset);
     });
   });
 
@@ -938,7 +1469,7 @@ function bindEvents() {
     state.rangeStart = Number.isFinite(next) ? next : state.rangeStart;
     if (state.rangeStart > state.rangeEnd) state.rangeEnd = state.rangeStart;
     syncRangeControls();
-    refreshChart();
+    refreshChart("none");
   });
 
   rangeEndEl.addEventListener("input", () => {
@@ -946,12 +1477,12 @@ function bindEvents() {
     state.rangeEnd = Number.isFinite(next) ? next : state.rangeEnd;
     if (state.rangeEnd < state.rangeStart) state.rangeStart = state.rangeEnd;
     syncRangeControls();
-    refreshChart();
+    refreshChart("none");
   });
 
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
-      downloadCurrentChartImage();
+      void downloadCurrentChartImage();
     });
   }
 }
@@ -1066,6 +1597,7 @@ function init() {
   setupTogglePanel();
   initTheme();
   bindEvents();
+  preloadCompanyLogos();
 
   try {
     const { warnings, loadedCount, forecastCount, generatedAt } = loadFromLocalData();
@@ -1074,24 +1606,25 @@ function init() {
       throw new Error("本地数据为空，请重新生成 data.js");
     }
 
-    state.rangeStart = 0;
-    state.rangeEnd = getLabelsForFrequency(state.frequency).length - 1;
+    state.generatedAtLabel = formatGeneratedAt(generatedAt);
+    setDefaultRangeForFrequency(state.frequency);
     syncRangeControls();
     buildChart();
     alignRangeWithChartAxis();
     updateRangeVisual();
+    updateViewSummary();
 
-    const stamp = formatGeneratedAt(generatedAt);
+    const stamp = state.generatedAtLabel;
 
     if (warnings.length > 0) {
       setStatus(
-        `加载完成：${loadedCount}/${COMPANIES.length} 家公司可用（季度 + 年度 + 滚动年度（TTM）三模式，数据时间 ${stamp}），${warnings.length} 家缺失。预测补点 ${forecastCount} 个。`,
+        `已载入 ${loadedCount}/${COMPANIES.length} 家公司，数据更新于 ${stamp}。另有 ${warnings.length} 家存在缺失数据。`,
         true,
       );
       return;
     }
 
-    setStatus(`加载完成：季度 + 年度 + 滚动年度（TTM）三模式，数据时间 ${stamp}，预测补点 ${forecastCount} 个。`, false);
+    setStatus(`数据更新于 ${stamp}，共载入 ${COMPANIES.length} 家公司，预测补点 ${forecastCount} 个。`, false);
   } catch (error) {
     console.error(error);
     setStatus(`加载失败：${error.message}`, true);
