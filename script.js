@@ -48,7 +48,7 @@ const COMPANIES = [
   { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg" },
   { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg" },
   { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg" },
-  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg" },
+  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg?v=20260423d" },
   { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg" },
   { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg" },
 ];
@@ -142,6 +142,33 @@ function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
   return true;
 }
 
+function drawOriginalLogo(ctx, chart, image, x, y, targetArea) {
+  if (!image) return false;
+
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
+  if (!naturalWidth || !naturalHeight) return false;
+
+  let scale = Math.sqrt(targetArea / (naturalWidth * naturalHeight));
+  let width = Math.max(1, naturalWidth * scale);
+  let height = Math.max(1, naturalHeight * scale);
+
+  if (width > BAR_CHART_LOGO_MAX_WIDTH || height > BAR_CHART_LOGO_MAX_HEIGHT) {
+    scale *= Math.min(
+      BAR_CHART_LOGO_MAX_WIDTH / width,
+      BAR_CHART_LOGO_MAX_HEIGHT / height,
+    );
+    width = Math.max(1, naturalWidth * scale);
+    height = Math.max(1, naturalHeight * scale);
+  }
+
+  ctx.save();
+  ctx.globalAlpha = 1;
+  ctx.drawImage(image, x, y - height / 2, width, height);
+  ctx.restore();
+  return true;
+}
+
 function drawSingleCompanyLogoBadge(ctx, chart, chartArea, company, chartFontFamily, isDeepTheme) {
   if (!company) return false;
 
@@ -152,15 +179,24 @@ function drawSingleCompanyLogoBadge(ctx, chart, chartArea, company, chartFontFam
 
   if (
     logoImage &&
-    drawMonochromeLogo(
-      ctx,
-      chart,
-      logoImage,
-      badgeX,
-      badgeY,
-      BAR_CHART_LOGO_TARGET_AREA,
-      logoColor,
-    )
+    (company.preserveLogoColors
+      ? drawOriginalLogo(
+        ctx,
+        chart,
+        logoImage,
+        badgeX,
+        badgeY,
+        BAR_CHART_LOGO_TARGET_AREA,
+      )
+      : drawMonochromeLogo(
+        ctx,
+        chart,
+        logoImage,
+        badgeX,
+        badgeY,
+        BAR_CHART_LOGO_TARGET_AREA,
+        logoColor,
+      ))
   ) {
     return true;
   }
@@ -272,6 +308,91 @@ const rightTickerLabelsPlugin = {
   },
 };
 
+const singleCompanyTickerWatermarkPlugin = {
+  id: "singleCompanyTickerWatermark",
+  beforeDatasetsDraw(chart) {
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+
+    const singleCompanyId = getSingleVisibleCompanyId();
+    if (!singleCompanyId) return;
+
+    const company = COMPANY_META.get(singleCompanyId);
+    if (!company?.ticker) return;
+
+    const hasVisibleDataset = chart.data.datasets.some((item) => item.companyId === singleCompanyId && !item.hidden);
+    if (!hasVisibleDataset) return;
+
+    const themeTokens = getChartThemeTokens();
+    const ticker = company.ticker;
+    const plotWidth = chartArea.right - chartArea.left;
+    const plotHeight = chartArea.bottom - chartArea.top;
+    const maxTextWidth = plotWidth * 0.74;
+    const maxTextHeight = plotHeight * 0.34;
+    const baseFontSize = 100;
+    const baseFont = `800 ${baseFontSize}px ${themeTokens.chartFontFamily}`;
+    const measuredWidth = Math.max(measureTextWidth(ticker, baseFont), 1);
+    const fittedFontSize = Math.min(
+      maxTextHeight,
+      (maxTextWidth / measuredWidth) * baseFontSize,
+    );
+    const fontSize = Math.max(SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE, fittedFontSize);
+
+    ctx.save();
+    ctx.font = `800 ${fontSize}px ${themeTokens.chartFontFamily}`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = colorToRgba("#ffffff", SINGLE_COMPANY_WATERMARK_ALPHA);
+    ctx.fillText(
+      ticker,
+      (chartArea.left + chartArea.right) / 2,
+      (chartArea.top + chartArea.bottom) / 2,
+    );
+    ctx.restore();
+  },
+};
+
+const customYAxisTitlePlugin = {
+  id: "customYAxisTitle",
+  afterDraw(chart) {
+    const yScale = chart.scales?.y;
+    if (!yScale) return;
+
+    const { mainText, detailText } = buildYAxisTitleParts(state.metric, state.frequency);
+    if (!mainText) return;
+
+    const themeTokens = getChartThemeTokens();
+    const mainFont = `600 ${Y_AXIS_TITLE_MAIN_FONT_SIZE}px ${themeTokens.chartFontFamily}`;
+    const detailFont = `500 ${Y_AXIS_TITLE_DETAIL_FONT_SIZE}px ${themeTokens.chartFontFamily}`;
+    const mainWidth = measureTextWidth(mainText, mainFont);
+    const detailWidth = detailText ? measureTextWidth(detailText, detailFont) : 0;
+    const totalWidth = mainWidth + detailWidth;
+    const titleX = yScale.left + Y_AXIS_TITLE_HORIZONTAL_OFFSET;
+    const titleY = (yScale.top + yScale.bottom) / 2 + Y_AXIS_TITLE_VERTICAL_OFFSET;
+    const { ctx } = chart;
+
+    ctx.save();
+    ctx.translate(titleX, titleY);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = themeTokens.axisColor;
+
+    let cursorX = -totalWidth / 2;
+
+    ctx.font = mainFont;
+    ctx.fillText(mainText, cursorX, 0);
+    cursorX += mainWidth;
+
+    if (detailText) {
+      ctx.font = detailFont;
+      ctx.fillText(detailText, cursorX, 0);
+    }
+
+    ctx.restore();
+  },
+};
+
 const METRICS = {
   revenue: {
     label: "营收（十亿美元）",
@@ -340,9 +461,15 @@ const CHART_PLOT_LEFT_NUDGE = 6;
 const SINGLE_COMPANY_CHART_RIGHT_PADDING = 52;
 const MULTI_COMPANY_CHART_RIGHT_PADDING = 52;
 const Y_AXIS_TICK_PADDING = 2;
-const Y_AXIS_TITLE_PADDING = 20;
-const Y_AXIS_RESERVED_EXTRA_WIDTH = 28;
-const Y_AXIS_MIN_RESERVED_WIDTH = 84;
+const Y_AXIS_TITLE_PADDING = 28;
+const Y_AXIS_RESERVED_EXTRA_WIDTH = 44;
+const Y_AXIS_MIN_RESERVED_WIDTH = 104;
+const Y_AXIS_TITLE_MAIN_FONT_SIZE = 15.4;
+const Y_AXIS_TITLE_DETAIL_FONT_SIZE = 12.1;
+const Y_AXIS_TITLE_HORIZONTAL_OFFSET = 20;
+const Y_AXIS_TITLE_VERTICAL_OFFSET = -28;
+const SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE = 64;
+const SINGLE_COMPANY_WATERMARK_ALPHA = 0.1;
 const EXPORT_DEVICE_PIXEL_RATIO = 8;
 
 const state = {
@@ -477,10 +604,59 @@ function syncPeriodRangeChip() {
   periodRangeChipEl.textContent = `${first}-${last}`;
 }
 
-function setDefaultRangeForFrequency(frequency) {
+function getVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
   const labels = getLabelsForFrequency(frequency);
-  state.rangeStart = 0;
-  state.rangeEnd = Math.max(0, labels.length - 1);
+  const seriesMap = state.dataByFrequency[frequency]?.[metric];
+
+  if (!labels.length || !seriesMap) {
+    return { hasData: false, start: 0, end: 0 };
+  }
+
+  let firstIndex = Number.POSITIVE_INFINITY;
+  let lastIndex = -1;
+
+  state.visibleCompanies.forEach((companyId) => {
+    const series = seriesMap.get(companyId);
+    if (!series) return;
+
+    labels.forEach((label, index) => {
+      const value = series.get(label);
+      if (!isFiniteNumber(value)) return;
+      firstIndex = Math.min(firstIndex, index);
+      lastIndex = Math.max(lastIndex, index);
+    });
+  });
+
+  if (!Number.isFinite(firstIndex) || lastIndex < 0) {
+    return {
+      hasData: false,
+      start: 0,
+      end: Math.max(0, labels.length - 1),
+    };
+  }
+
+  return {
+    hasData: true,
+    start: firstIndex,
+    end: lastIndex,
+  };
+}
+
+function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
+  const labels = getLabelsForFrequency(frequency);
+  if (!labels.length) {
+    state.rangeStart = 0;
+    state.rangeEnd = 0;
+    return;
+  }
+
+  const bounds = getVisibleDataBounds(frequency, metric);
+  state.rangeStart = bounds.start;
+  state.rangeEnd = bounds.end;
+}
+
+function setDefaultRangeForFrequency(frequency) {
+  setRangeToVisibleDataBounds(frequency, state.metric);
 }
 
 function setsMatch(currentSet, expectedItems) {
@@ -784,10 +960,34 @@ function formatMetricValue(metricKey, value) {
   return `${decimalFormatter.format(value)}x`;
 }
 
-function buildYAxisTitle(metricKey, frequencyKey) {
+function buildYAxisTitleParts(metricKey, frequencyKey) {
   const metricMeta = METRICS[metricKey] ?? METRICS.revenue;
   const frequencyMeta = FREQUENCY_META[frequencyKey] ?? FREQUENCY_META.quarterly;
-  return [metricMeta.axisLabel, frequencyMeta.granularityLabel];
+  const match = /^(.+?)(（.+）)$/.exec(metricMeta.axisLabel);
+
+  if (!match) {
+    return {
+      mainText: `${frequencyMeta.granularityLabel}${metricMeta.axisLabel}`,
+      detailText: "",
+    };
+  }
+
+  const [, metricName, metricUnit] = match;
+  let detailText = metricUnit;
+
+  if (metricKey === "revenue" || metricKey === "netIncome") {
+    detailText = "（十亿美元，Billion USD）";
+  }
+
+  return {
+    mainText: `${frequencyMeta.granularityLabel}${metricName}`,
+    detailText,
+  };
+}
+
+function buildYAxisTitle(metricKey, frequencyKey) {
+  const { mainText, detailText } = buildYAxisTitleParts(metricKey, frequencyKey);
+  return `${mainText}${detailText}`;
 }
 
 function toMetricFileToken(metricKey) {
@@ -1062,6 +1262,121 @@ function collectDatasetValues(datasets, includeHidden = false) {
   return values;
 }
 
+function toAxisDisplayValue(metricKey, value) {
+  if (!isFiniteNumber(value)) return value;
+  if (metricKey === "revenue" || metricKey === "netIncome") {
+    return value / 1e9;
+  }
+  return value;
+}
+
+function fromAxisDisplayValue(metricKey, value) {
+  if (!isFiniteNumber(value)) return value;
+  if (metricKey === "revenue" || metricKey === "netIncome") {
+    return value * 1e9;
+  }
+  return value;
+}
+
+function getNiceStep(range, targetMaxTicks = 10) {
+  if (!isFiniteNumber(range) || range <= 0) return 1;
+
+  const magnitude = 10 ** Math.floor(Math.log10(range));
+  const multipliers = [1, 2, 2.5, 5, 10];
+
+  for (let powerOffset = -1; powerOffset <= 2; powerOffset += 1) {
+    const base = magnitude * (10 ** powerOffset);
+    for (const multiplier of multipliers) {
+      const step = base * multiplier;
+      if (range / step <= targetMaxTicks) {
+        return step;
+      }
+    }
+  }
+
+  return magnitude * 10;
+}
+
+function getTightPositiveAxisScale(max) {
+  if (!isFiniteNumber(max) || max <= 0) {
+    return { step: 1, max: 1 };
+  }
+
+  const magnitude = 10 ** Math.floor(Math.log10(max));
+  const multipliers = [1, 2, 5];
+  let bestCandidate = null;
+
+  for (let powerOffset = -2; powerOffset <= 2; powerOffset += 1) {
+    const base = magnitude * (10 ** powerOffset);
+
+    for (const multiplier of multipliers) {
+      const step = base * multiplier;
+      if (!isFiniteNumber(step) || step <= 0) continue;
+
+      const candidateMax = Math.ceil(max / step) * step;
+      const tickCount = Math.round(candidateMax / step);
+
+      if (tickCount < 5 || tickCount > 9) continue;
+
+      if (
+        !bestCandidate
+        || candidateMax < bestCandidate.max
+        || (candidateMax === bestCandidate.max && step < bestCandidate.step)
+      ) {
+        bestCandidate = { step, max: candidateMax };
+      }
+    }
+  }
+
+  if (bestCandidate) {
+    return bestCandidate;
+  }
+
+  const fallbackStep = getNiceStep(max, 8);
+  return {
+    step: fallbackStep,
+    max: Math.ceil(max / fallbackStep) * fallbackStep,
+  };
+}
+
+function roundPositiveAxisBounds(min, max, clampMinToZero = false) {
+  const safeMax = Math.max(max, 1);
+  const { step, max: niceMax } = getTightPositiveAxisScale(safeMax);
+  const niceMin = clampMinToZero ? 0 : Math.floor(min / step) * step;
+
+  if (niceMin === niceMax) {
+    return {
+      min: clampMinToZero ? 0 : niceMin - step,
+      max: niceMax,
+    };
+  }
+
+  return {
+    min: niceMin,
+    max: niceMax,
+  };
+}
+
+function roundAxisBoundsToNiceValues(min, max, clampMinToZero = false) {
+  const span = Math.max(max - min, Math.abs(max), 1);
+  const step = getNiceStep(span, 10);
+
+  const niceMin = clampMinToZero ? 0 : Math.floor(min / step) * step;
+  const niceMax = Math.ceil(max / step) * step;
+
+  if (niceMin === niceMax) {
+    return {
+      min: clampMinToZero ? 0 : niceMin - step,
+      max: niceMax + step,
+    };
+  }
+
+  return {
+    min: niceMin,
+    max: niceMax,
+  };
+}
+
 function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false) {
   const values = collectDatasetValues(datasets, includeHidden);
   const shouldClampMinToZero = state.metric === "revenue";
@@ -1079,62 +1394,137 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
     const base = Math.abs(max) || 1;
 
     if (shouldClampMinToZero) {
+      const rounded = roundPositiveAxisBounds(
+        0,
+        toAxisDisplayValue(state.metric, Math.max(max, base)),
+        true,
+      );
       return {
         min: 0,
-        max: Math.max(max + base * 0.12, base),
+        max: fromAxisDisplayValue(state.metric, rounded.max),
       };
     }
 
     if (chartMode === "bar") {
       if (max >= 0) {
-        return { min: 0, max: max + base * 0.18 };
+        const rounded = roundPositiveAxisBounds(
+          0,
+          toAxisDisplayValue(state.metric, max),
+          true,
+        );
+        return {
+          min: 0,
+          max: fromAxisDisplayValue(state.metric, rounded.max),
+        };
       }
 
-      return { min: min - base * 0.18, max: 0 };
+      const rounded = roundAxisBoundsToNiceValues(
+        toAxisDisplayValue(state.metric, min - base * 0.18),
+        0,
+        false,
+      );
+      return {
+        min: fromAxisDisplayValue(state.metric, rounded.min),
+        max: 0,
+      };
     }
 
+    if (min >= 0) {
+      const rounded = roundPositiveAxisBounds(
+        toAxisDisplayValue(state.metric, Math.max(0, min - base * 0.08)),
+        toAxisDisplayValue(state.metric, max),
+        false,
+      );
+      return {
+        min: fromAxisDisplayValue(state.metric, rounded.min),
+        max: fromAxisDisplayValue(state.metric, rounded.max),
+      };
+    }
+
+    const rounded = roundAxisBoundsToNiceValues(
+      toAxisDisplayValue(state.metric, min - base * 0.08),
+      toAxisDisplayValue(state.metric, max + base * 0.08),
+      false,
+    );
     return {
-      min: min - base * 0.08,
-      max: max + base * 0.08,
+      min: fromAxisDisplayValue(state.metric, rounded.min),
+      max: fromAxisDisplayValue(state.metric, rounded.max),
     };
   }
 
   const span = max - min;
   const minPadding = span * 0.08;
-  const maxPadding = span * 0.1;
+  const maxPadding = span * 0.06;
 
   if (shouldClampMinToZero) {
     const safeMax = max > 0 ? max : 1;
+    const rounded = roundPositiveAxisBounds(
+      0,
+      toAxisDisplayValue(state.metric, safeMax),
+      true,
+    );
     return {
       min: 0,
-      max: safeMax + Math.max(maxPadding, safeMax * 0.04),
+      max: fromAxisDisplayValue(state.metric, rounded.max),
     };
   }
 
   if (chartMode === "bar") {
+    if (!includesNegative) {
+      const rounded = roundPositiveAxisBounds(
+        0,
+        toAxisDisplayValue(state.metric, includesPositive ? max : 0),
+        true,
+      );
+      return {
+        min: 0,
+        max: includesPositive ? fromAxisDisplayValue(state.metric, rounded.max) : 0,
+      };
+    }
+
+    const rounded = roundAxisBoundsToNiceValues(
+      toAxisDisplayValue(state.metric, min - minPadding),
+      toAxisDisplayValue(state.metric, includesPositive ? max : 0),
+      false,
+    );
     return {
-      min: includesNegative ? min - minPadding : 0,
-      max: includesPositive ? max + maxPadding : 0,
+      min: fromAxisDisplayValue(state.metric, rounded.min),
+      max: includesPositive ? fromAxisDisplayValue(state.metric, rounded.max) : 0,
     };
   }
 
   if (min >= 0) {
+    const rounded = roundPositiveAxisBounds(
+      toAxisDisplayValue(state.metric, Math.max(0, min - minPadding)),
+      toAxisDisplayValue(state.metric, max),
+      false,
+    );
     return {
-      min: Math.max(0, min - minPadding),
-      max: max + maxPadding,
+      min: fromAxisDisplayValue(state.metric, rounded.min),
+      max: fromAxisDisplayValue(state.metric, rounded.max),
     };
   }
 
   if (max <= 0) {
+    const rounded = roundAxisBoundsToNiceValues(
+      toAxisDisplayValue(state.metric, min - minPadding),
+      toAxisDisplayValue(state.metric, Math.min(0, max + maxPadding)),
+      false,
+    );
     return {
-      min: min - minPadding,
-      max: Math.min(0, max + maxPadding),
+      min: fromAxisDisplayValue(state.metric, rounded.min),
+      max: fromAxisDisplayValue(state.metric, rounded.max),
     };
   }
 
+  const rounded = roundAxisBoundsToNiceValues(
+    toAxisDisplayValue(state.metric, min - minPadding),
+    toAxisDisplayValue(state.metric, max + maxPadding),
+    false,
+  );
   return {
-    min: min - minPadding,
-    max: max + maxPadding,
+    min: fromAxisDisplayValue(state.metric, rounded.min),
+    max: fromAxisDisplayValue(state.metric, rounded.max),
   };
 }
 
@@ -1207,6 +1597,8 @@ function syncChartLabels(nextLabels) {
 
 function applyVisibilityStateToChart() {
   if (!state.chart) return;
+  setRangeToVisibleDataBounds();
+  syncRangeControls();
   refreshChart("none");
 }
 
@@ -1372,7 +1764,7 @@ function buildChart() {
           max: yBounds.max,
           reservedWidth: yReservedWidth,
           title: {
-            display: true,
+            display: false,
             text: buildYAxisTitle(state.metric, state.frequency),
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: Y_AXIS_TITLE_FONT_SIZE, weight: "600" },
@@ -1424,7 +1816,7 @@ function buildChart() {
         },
       },
     },
-    plugins: [rightTickerLabelsPlugin],
+    plugins: [singleCompanyTickerWatermarkPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
   });
 }
 
@@ -1436,6 +1828,8 @@ function bindEvents() {
     input.addEventListener("change", () => {
       if (!input.checked) return;
       state.metric = input.value;
+      setRangeToVisibleDataBounds();
+      syncRangeControls();
       refreshChart();
     });
   });
@@ -1607,7 +2001,7 @@ function init() {
     }
 
     state.generatedAtLabel = formatGeneratedAt(generatedAt);
-    setDefaultRangeForFrequency(state.frequency);
+    setRangeToVisibleDataBounds(state.frequency, state.metric);
     syncRangeControls();
     buildChart();
     alignRangeWithChartAxis();
