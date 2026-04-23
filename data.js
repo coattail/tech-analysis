@@ -1,7 +1,7 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-04-23T00:00:21.463Z",
+    "generatedAt": "2026-04-23T00:07:09.121Z",
     "periodicity": "quarterly",
     "periodRange": "2005Q1-2026Q1",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM), with 2005Q1-Q3 rolling values annualized from available quarters at the sample start. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
@@ -5386,7 +5386,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 74653000000,
         "2025Q2": 77314000000,
         "2025Q3": 79970000000,
-        "2025Q4": 82137000000
+        "2025Q4": 82137000000,
+        "2026Q1": 84116000000
       },
       "roe": {
         "2005Q1": null,
@@ -5472,7 +5473,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 0.5478681365785703,
         "2025Q2": 1.5158962154331685,
         "2025Q3": 1.7168938351881955,
-        "2025Q4": 1.022681617297929
+        "2025Q4": 1.022681617297929,
+        "2026Q1": 0.5670740406105853
       },
       "revenueGrowth": {
         "2005Q1": null,
