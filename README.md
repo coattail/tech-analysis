@@ -6,7 +6,7 @@
 [![Deploy GitHub Pages](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml)
 [![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
-一个基于原生前端与 Chart.js 的静态财务分析看板，用来对比头部科技公司的核心财务指标，并支持季度、年度、滚动年度（TTM）三种时间粒度。
+一个基于原生前端与 Chart.js 的静态财务分析看板，用来对比美股头部市值公司的核心财务指标，并支持季度、年度、滚动年度（TTM）三种时间粒度。
 
 项目强调三件事：
 
@@ -32,15 +32,11 @@
 
 ## 覆盖公司
 
-- Apple
-- Microsoft
-- Alphabet
-- Amazon
-- Meta
-- NVIDIA
-- TSMC
-- Broadcom
-- Tesla
+截至 2026-04-23，样本扩展为当前美股前 30 大市值公司（按 StockAnalysis `Largest Companies` 列表）：
+
+- NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
+- Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
+- Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
 
 ## 指标说明
 
@@ -142,6 +138,8 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 脚本当前会处理：
 
 - 财务数据抓取
+- 季度 P/E 抓取
+- 净资产抓取与 ROE 自动回填
 - 部分非美元口径的汇率换算
 - 台积电关键季度覆盖修正
 - `forecastFlags` 清理

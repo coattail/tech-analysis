@@ -6,7 +6,7 @@ English | [简体中文](./README.md)
 [![Deploy GitHub Pages](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml)
 [![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
-A static financial analytics dashboard built with plain frontend technologies and Chart.js. It is designed for comparing key metrics across leading technology companies over quarterly, annual, and rolling annual (TTM) views.
+A static financial analytics dashboard built with plain frontend technologies and Chart.js. It is designed for comparing key metrics across the largest U.S.-listed companies over quarterly, annual, and rolling annual (TTM) views.
 
 The project focuses on three things:
 
@@ -32,15 +32,11 @@ The project focuses on three things:
 
 ## Covered Companies
 
-- Apple
-- Microsoft
-- Alphabet
-- Amazon
-- Meta
-- NVIDIA
-- TSMC
-- Broadcom
-- Tesla
+As of April 23, 2026, the sample is expanded to the current top 30 U.S.-listed companies by market cap (based on the StockAnalysis `Largest Companies` list):
+
+- NVIDIA, Alphabet, Apple, Microsoft, Amazon, Broadcom, Meta, TSMC, Tesla, Walmart
+- Berkshire Hathaway, JPMorgan Chase, Eli Lilly, Exxon Mobil, Visa, ASML, Micron, Johnson & Johnson, Oracle, AMD
+- Mastercard, Costco, Netflix, Bank of America, Caterpillar, Chevron, Palantir, Cisco, AbbVie, Home Depot
 
 ## Metric Definitions
 
@@ -142,6 +138,8 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 The script currently handles:
 
 - financial data fetching
+- quarterly P/E fetching
+- net asset fetching and ROE backfilling
 - selected FX conversion for non-USD reporting
 - TSMC override corrections for key periods
 - `forecastFlags` cleanup

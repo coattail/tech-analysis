@@ -1,0 +1,3049 @@
+{
+  "generatedAt": "2026-04-24T06:33:37.080Z",
+  "companies": {
+    "amd": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 1018769000,
+          "grossProfit": 211320000,
+          "netIncome": -17423000,
+          "grossMarginPct": 20.742680627306093
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 1037737000,
+          "grossProfit": 271783000,
+          "netIncome": 11319000,
+          "grossMarginPct": 26.189969134761505
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 1263866000,
+          "grossProfit": 367605000,
+          "netIncome": 76000000,
+          "grossMarginPct": 29.085757509103022
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 986000000,
+          "grossProfit": 0,
+          "netIncome": null,
+          "grossMarginPct": 0
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 1332000000,
+          "grossProfit": 779000000,
+          "netIncome": 185000000,
+          "grossMarginPct": 58.483483483483475
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 1216000000,
+          "grossProfit": 690000000,
+          "netIncome": 89000000,
+          "grossMarginPct": 56.74342105263158
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 1328000000,
+          "grossProfit": 683000000,
+          "netIncome": 136000000,
+          "grossMarginPct": 51.43072289156626
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 1132000000,
+          "grossProfit": 0,
+          "netIncome": 136000000,
+          "grossMarginPct": 0
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 1233000000,
+          "grossProfit": 347000000,
+          "netIncome": -611000000,
+          "grossMarginPct": 28.142741281427412
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 1309000000,
+          "grossProfit": 439000000,
+          "netIncome": -600000000,
+          "grossMarginPct": 33.537051184110005
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 1558000000,
+          "grossProfit": 635000000,
+          "netIncome": -396000000,
+          "grossMarginPct": 40.75738125802311
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 985000000,
+          "grossProfit": 0,
+          "netIncome": null,
+          "grossMarginPct": 0
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 1487000000,
+          "grossProfit": 621000000,
+          "netIncome": -351000000,
+          "grossMarginPct": 41.761936785474106
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 1362000000,
+          "grossProfit": 511000000,
+          "netIncome": -1188000000,
+          "grossMarginPct": 37.518355359765046
+        },
+        {
+          "period": "2008Q3",
+          "dateKey": "2008-09-30",
+          "revenue": 1797000000,
+          "grossProfit": 916000000,
+          "netIncome": -127000000,
+          "grossMarginPct": 50.97384529771843
+        },
+        {
+          "period": "2008Q4",
+          "dateKey": "2008-12-31",
+          "revenue": 890000000,
+          "grossProfit": 0,
+          "netIncome": -1430000000,
+          "grossMarginPct": 0
+        },
+        {
+          "period": "2009Q1",
+          "dateKey": "2009-03-31",
+          "revenue": 1177000000,
+          "grossProfit": 511000000,
+          "netIncome": -414000000,
+          "grossMarginPct": 43.41546304163126
+        }
+      ]
+    },
+    "costco": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 12658077000,
+          "grossProfit": null,
+          "netIncome": 305452000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 11996900000,
+          "grossProfit": null,
+          "netIncome": 209788000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-08-28",
+          "revenue": 16702248000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 12933346000,
+          "grossProfit": null,
+          "netIncome": 215818000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 14059012000,
+          "grossProfit": null,
+          "netIncome": 296203000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 13283648000,
+          "grossProfit": null,
+          "netIncome": 235595000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-03",
+          "revenue": 19875221000,
+          "grossProfit": null,
+          "netIncome": 355599000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 14151624000,
+          "grossProfit": null,
+          "netIncome": 236886000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 15112016000,
+          "grossProfit": null,
+          "netIncome": 249478000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 14659255000,
+          "grossProfit": null,
+          "netIncome": 223986000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-02",
+          "revenue": 20477260000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 15810000000,
+          "grossProfit": null,
+          "netIncome": 262000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 16959000000,
+          "grossProfit": null,
+          "netIncome": 328000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 16614000000,
+          "grossProfit": null,
+          "netIncome": 295000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q3",
+          "dateKey": "2008-08-31",
+          "revenue": 23100020000,
+          "grossProfit": null,
+          "netIncome": 398000000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "netflix": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 224126000,
+          "grossProfit": 75861000,
+          "netIncome": -8814000,
+          "grossMarginPct": 33.84747865040201
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 239351000,
+          "grossProfit": 88772000,
+          "netIncome": 5684000,
+          "grossMarginPct": 37.08862716261891
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 255950000,
+          "grossProfit": 97157000,
+          "netIncome": 6946000,
+          "grossMarginPct": 37.95936706387966
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 277233000,
+          "grossProfit": 107885000,
+          "netIncome": 38211000,
+          "grossMarginPct": 38.91491994098827
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 224126000,
+          "grossProfit": 75861000,
+          "netIncome": 4404000,
+          "grossMarginPct": 33.84747865040201
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 239351000,
+          "grossProfit": 88772000,
+          "netIncome": 17037000,
+          "grossMarginPct": 37.08862716261891
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 255950000,
+          "grossProfit": 97157000,
+          "netIncome": 12781000,
+          "grossMarginPct": 37.95936706387966
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 277233000,
+          "grossProfit": 107885000,
+          "netIncome": 14860000,
+          "grossMarginPct": 38.91491994098827
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 224126000,
+          "grossProfit": 75861000,
+          "netIncome": 4404000,
+          "grossMarginPct": 33.84747865040201
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 239351000,
+          "grossProfit": 88772000,
+          "netIncome": 17037000,
+          "grossMarginPct": 37.08862716261891
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 255950000,
+          "grossProfit": 97157000,
+          "netIncome": 12781000,
+          "grossMarginPct": 37.95936706387966
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 277233000,
+          "grossProfit": 107885000,
+          "netIncome": 14860000,
+          "grossMarginPct": 38.91491994098827
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 326183000,
+          "grossProfit": 103378000,
+          "netIncome": 13344000,
+          "grossMarginPct": 31.69325194752639
+        }
+      ]
+    },
+    "cisco": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 6062000000,
+          "grossProfit": 4053000000,
+          "netIncome": 1400000000,
+          "grossMarginPct": 66.85912240184757
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 6187000000,
+          "grossProfit": 4135000000,
+          "netIncome": 1405000000,
+          "grossMarginPct": 66.83368352998222
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-07-30",
+          "revenue": 6581000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 6550000000,
+          "grossProfit": 4410000000,
+          "netIncome": 1261000000,
+          "grossMarginPct": 67.32824427480915
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 6628000000,
+          "grossProfit": 4466000000,
+          "netIncome": 1375000000,
+          "grossMarginPct": 67.38080869040435
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 7322000000,
+          "grossProfit": 4726000000,
+          "netIncome": 1400000000,
+          "grossMarginPct": 64.5452062278066
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-07-29",
+          "revenue": 7984000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 8184000000,
+          "grossProfit": 5233000000,
+          "netIncome": 1608000000,
+          "grossMarginPct": 63.94183773216031
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 8439000000,
+          "grossProfit": 5388000000,
+          "netIncome": 1921000000,
+          "grossMarginPct": 63.846427301813016
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 8866000000,
+          "grossProfit": 5647000000,
+          "netIncome": 1874000000,
+          "grossMarginPct": 63.69275885404918
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-07-28",
+          "revenue": 9433000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 9554000000,
+          "grossProfit": 6140000000,
+          "netIncome": 2205000000,
+          "grossMarginPct": 64.26627590537994
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 9831000000,
+          "grossProfit": 6305000000,
+          "netIncome": 2060000000,
+          "grossMarginPct": 64.13386227240362
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 9791000000,
+          "grossProfit": 6270000000,
+          "netIncome": 1773000000,
+          "grossMarginPct": 64.0384026146461
+        }
+      ]
+    },
+    "walmart": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 70908000000,
+          "grossProfit": 16337000000,
+          "netIncome": 2461000000,
+          "grossMarginPct": 23.03971343148869
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 75932000000,
+          "grossProfit": 17843000000,
+          "netIncome": 2805000000,
+          "grossMarginPct": 23.498656692830426
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 74596000000,
+          "grossProfit": 17271000000,
+          "netIncome": 2374000000,
+          "grossMarginPct": 23.15271596332243
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-01-31",
+          "revenue": 90991000000,
+          "grossProfit": null,
+          "netIncome": 3591000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 78835000000,
+          "grossProfit": 18598000000,
+          "netIncome": 2615000000,
+          "grossMarginPct": 23.591044586795203
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 84524000000,
+          "grossProfit": 19939000000,
+          "netIncome": 2083000000,
+          "grossMarginPct": 23.589749656902182
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 83543000000,
+          "grossProfit": 19778000000,
+          "netIncome": 2647000000,
+          "grossMarginPct": 23.674036125109225
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-01-31",
+          "revenue": 98090000000,
+          "grossProfit": null,
+          "netIncome": 3939000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 85387000000,
+          "grossProfit": 20076000000,
+          "netIncome": 2826000000,
+          "grossMarginPct": 23.51177579725251
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 91990000000,
+          "grossProfit": 21401000000,
+          "netIncome": 2952000000,
+          "grossMarginPct": 23.264485270138056
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 90826000000,
+          "grossProfit": 21575000000,
+          "netIncome": 2857000000,
+          "grossMarginPct": 23.754211349173143
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-01-31",
+          "revenue": 108820000000,
+          "grossProfit": null,
+          "netIncome": 4096000000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "jpmorgan": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 13453000000,
+          "grossProfit": null,
+          "netIncome": 790000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 12548000000,
+          "grossProfit": null,
+          "netIncome": 340000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 14265000000,
+          "grossProfit": null,
+          "netIncome": 840000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 13482000000,
+          "grossProfit": null,
+          "netIncome": 890000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 15175000000,
+          "grossProfit": null,
+          "netIncome": 1000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 15086000000,
+          "grossProfit": null,
+          "netIncome": 1060000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 15545000000,
+          "grossProfit": null,
+          "netIncome": 1000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 16193000000,
+          "grossProfit": null,
+          "netIncome": 1320000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 18968000000,
+          "grossProfit": null,
+          "netIncome": 1410000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 18908000000,
+          "grossProfit": null,
+          "netIncome": 1190000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 16112000000,
+          "grossProfit": null,
+          "netIncome": 910000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 17384000000,
+          "grossProfit": null,
+          "netIncome": 770000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 16890000000,
+          "grossProfit": null,
+          "netIncome": 610000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "lilly": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 3497400000,
+          "grossProfit": 2638400000,
+          "netIncome": 736600000,
+          "grossMarginPct": 75.43889746668954
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 3667700000,
+          "grossProfit": 2796400000,
+          "netIncome": -252000000,
+          "grossMarginPct": 76.24396760912833
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 3601100000,
+          "grossProfit": 2755400000,
+          "netIncome": 794400000,
+          "grossMarginPct": 76.51550914998195
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 3879100000,
+          "grossProfit": 2980900000,
+          "netIncome": -1277190000,
+          "grossMarginPct": 76.84514449227913
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 3714700000,
+          "grossProfit": 2908200000,
+          "netIncome": 834800000,
+          "grossMarginPct": 78.28896007752981
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 3866900000,
+          "grossProfit": 3006300000,
+          "netIncome": 822000000,
+          "grossMarginPct": 77.74444645581731
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 3864100000,
+          "grossProfit": 3003700000,
+          "netIncome": 873600000,
+          "grossMarginPct": 77.73349550995057
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 4245300000,
+          "grossProfit": 3226300000,
+          "netIncome": -2527950000,
+          "grossMarginPct": 75.99698490094929
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 4226100000,
+          "grossProfit": 3303600000,
+          "netIncome": 508700000,
+          "grossMarginPct": 78.17136366863066
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 4631000000,
+          "grossProfit": 3632100000,
+          "netIncome": 663600000,
+          "grossMarginPct": 78.43014467717555
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 4586800000,
+          "grossProfit": 3532200000,
+          "netIncome": 926300000,
+          "grossMarginPct": 77.00793581581931
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 5189600000,
+          "grossProfit": 3916800000,
+          "netIncome": 854400000,
+          "grossMarginPct": 75.47402497302296
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 4709400000,
+          "grossProfit": 3598100000,
+          "netIncome": 1064300000,
+          "grossMarginPct": 76.40251412069478
+        }
+      ]
+    },
+    "exxon": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 7238000000,
+          "grossProfit": 141977000000,
+          "netIncome": 7860000000,
+          "grossMarginPct": 38.84810393277642
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 7515000000,
+          "grossProfit": 31525000000,
+          "netIncome": 7640000000,
+          "grossMarginPct": 39.66656181189053
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 8160000000,
+          "grossProfit": 32962000000,
+          "netIncome": 9920000000,
+          "grossMarginPct": 38.052688693403525
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 96731000000,
+          "grossProfit": 35336000000,
+          "netIncome": 9920000000,
+          "grossMarginPct": 36.53017129979014
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 7664000000,
+          "grossProfit": 146695000000,
+          "netIncome": 8400000000,
+          "grossMarginPct": 37.582494722387324
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 8211000000,
+          "grossProfit": 33428000000,
+          "netIncome": 10360000000,
+          "grossMarginPct": 38.727017852798404
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 7764000000,
+          "grossProfit": 37668000000,
+          "netIncome": 10490000000,
+          "grossMarginPct": 39.227693076730816
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 96268000000,
+          "grossProfit": 37117000000,
+          "netIncome": 10490000000,
+          "grossMarginPct": 38.55590642788881
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 7284000000,
+          "grossProfit": 159841000000,
+          "netIncome": 9280000000,
+          "grossMarginPct": 34.77987462438449
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 7810000000,
+          "grossProfit": 33907000000,
+          "netIncome": 10260000000,
+          "grossMarginPct": 40.282034832608645
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 7970000000,
+          "grossProfit": 36760000000,
+          "netIncome": 9410000000,
+          "grossMarginPct": 38.67072028950441
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 99130000000,
+          "grossProfit": 36114000000,
+          "netIncome": 9410000000,
+          "grossMarginPct": 36.430949258549376
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 8432000000,
+          "grossProfit": 103750000000,
+          "netIncome": 10890000000,
+          "grossMarginPct": 34.41127694859038
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 133776000000,
+          "grossProfit": 40255000000,
+          "netIncome": 11680000000,
+          "grossMarginPct": 35.55373024915433
+        },
+        {
+          "period": "2008Q3",
+          "dateKey": "2008-09-30",
+          "revenue": 132085000000,
+          "grossProfit": 43925000000,
+          "netIncome": 14830000000,
+          "grossMarginPct": 32.83473866762349
+        },
+        {
+          "period": "2008Q4",
+          "dateKey": "2008-12-31",
+          "revenue": 132085000000,
+          "grossProfit": 45901000000,
+          "netIncome": 14830000000,
+          "grossMarginPct": 34.751107241549
+        },
+        {
+          "period": "2009Q1",
+          "dateKey": "2009-03-31",
+          "revenue": 62128000000,
+          "grossProfit": 121614000000,
+          "netIncome": 4550000000,
+          "grossMarginPct": 32.85754812563324
+        },
+        {
+          "period": "2009Q2",
+          "dateKey": "2009-06-30",
+          "revenue": 72167000000,
+          "grossProfit": 23562000000,
+          "netIncome": 3950000000,
+          "grossMarginPct": 37.92492917847026
+        },
+        {
+          "period": "2009Q3",
+          "dateKey": "2009-09-30",
+          "revenue": 80090000000,
+          "grossProfit": 24231000000,
+          "netIncome": 4730000000,
+          "grossMarginPct": 33.57628833123172
+        },
+        {
+          "period": "2009Q4",
+          "dateKey": "2009-12-31",
+          "revenue": 80090000000,
+          "grossProfit": 27377000000,
+          "netIncome": 4730000000,
+          "grossMarginPct": 34.182794356349106
+        },
+        {
+          "period": "2010Q1",
+          "dateKey": "2010-03-31",
+          "revenue": 87037000000,
+          "grossProfit": 144644000000,
+          "netIncome": 6300000000,
+          "grossMarginPct": 30.97109601330967
+        },
+        {
+          "period": "2010Q2",
+          "dateKey": "2010-06-30",
+          "revenue": 89693000000,
+          "grossProfit": 28537000000,
+          "netIncome": 7560000000,
+          "grossMarginPct": 32.78720544136402
+        },
+        {
+          "period": "2010Q3",
+          "dateKey": "2010-09-30",
+          "revenue": 92353000000,
+          "grossProfit": 29482000000,
+          "netIncome": 7350000000,
+          "grossMarginPct": 32.86990066114412
+        },
+        {
+          "period": "2010Q4",
+          "dateKey": "2010-12-31",
+          "revenue": 92353000000,
+          "grossProfit": 30652000000,
+          "netIncome": 7350000000,
+          "grossMarginPct": 33.19004255411303
+        },
+        {
+          "period": "2011Q1",
+          "dateKey": "2011-03-31",
+          "revenue": 109251000000,
+          "grossProfit": 35473000000,
+          "netIncome": 10650000000,
+          "grossMarginPct": 32.4692680158534
+        },
+        {
+          "period": "2011Q2",
+          "dateKey": "2011-06-30",
+          "revenue": 121394000000,
+          "grossProfit": 37744000000,
+          "netIncome": 10680000000,
+          "grossMarginPct": 31.09214623457502
+        },
+        {
+          "period": "2011Q3",
+          "dateKey": "2011-09-30",
+          "revenue": 120475000000,
+          "grossProfit": 37121000000,
+          "netIncome": 10330000000,
+          "grossMarginPct": 30.812201701597843
+        },
+        {
+          "period": "2011Q4",
+          "dateKey": "2011-12-31",
+          "revenue": 115909000000,
+          "grossProfit": 34306000000,
+          "netIncome": 9400000000,
+          "grossMarginPct": 29.597356546946312
+        },
+        {
+          "period": "2012Q1",
+          "dateKey": "2012-03-31",
+          "revenue": 119189000000,
+          "grossProfit": 118973000000,
+          "netIncome": 9450000000,
+          "grossMarginPct": 99.81877522254571
+        },
+        {
+          "period": "2012Q2",
+          "dateKey": "2012-06-30",
+          "revenue": 112745000000,
+          "grossProfit": 35672000000,
+          "netIncome": 15910000000,
+          "grossMarginPct": 31.639540556122224
+        },
+        {
+          "period": "2012Q3",
+          "dateKey": "2012-09-30",
+          "revenue": 110989000000,
+          "grossProfit": 32715000000,
+          "netIncome": 9570000000,
+          "grossMarginPct": 29.47589400751426
+        },
+        {
+          "period": "2012Q4",
+          "dateKey": "2012-12-31",
+          "revenue": 110200000000,
+          "grossProfit": 33209000000,
+          "netIncome": -37377000000,
+          "grossMarginPct": 29.920983160493382
+        },
+        {
+          "period": "2013Q1",
+          "dateKey": "2013-03-31",
+          "revenue": 103378000000,
+          "grossProfit": 109977000000,
+          "netIncome": 9500000000,
+          "grossMarginPct": 106.38336976919653
+        },
+        {
+          "period": "2013Q2",
+          "dateKey": "2013-06-30",
+          "revenue": 103050000000,
+          "grossProfit": 30083000000,
+          "netIncome": 6860000000,
+          "grossMarginPct": 29.19262493934983
+        },
+        {
+          "period": "2013Q3",
+          "dateKey": "2013-09-30",
+          "revenue": 108390000000,
+          "grossProfit": 28689000000,
+          "netIncome": 7870000000,
+          "grossMarginPct": 26.468308884583447
+        },
+        {
+          "period": "2013Q4",
+          "dateKey": "2013-12-31",
+          "revenue": 106018000000,
+          "grossProfit": 30300000000,
+          "netIncome": -24802880000,
+          "grossMarginPct": 27.95460835870468
+        },
+        {
+          "period": "2014Q1",
+          "dateKey": "2014-03-31",
+          "revenue": 101312000000,
+          "grossProfit": 75850000000,
+          "netIncome": 9100000000,
+          "grossMarginPct": 74.86773531269742
+        },
+        {
+          "period": "2014Q2",
+          "dateKey": "2014-06-30",
+          "revenue": 105719000000,
+          "grossProfit": 29166000000,
+          "netIncome": 8780000000,
+          "grossMarginPct": 27.58822917356388
+        },
+        {
+          "period": "2014Q3",
+          "dateKey": "2014-09-30",
+          "revenue": 103206000000,
+          "grossProfit": 28746000000,
+          "netIncome": 8070000000,
+          "grossMarginPct": 27.853031800476717
+        },
+        {
+          "period": "2014Q4",
+          "dateKey": "2014-12-31",
+          "revenue": 83868000000,
+          "grossProfit": 28825000000,
+          "netIncome": -26830900000,
+          "grossMarginPct": 27.92957773772843
+        },
+        {
+          "period": "2015Q1",
+          "dateKey": "2015-03-31",
+          "revenue": 64758000000,
+          "grossProfit": 60202000000,
+          "netIncome": 4940000000,
+          "grossMarginPct": 92.9645758053059
+        },
+        {
+          "period": "2015Q2",
+          "dateKey": "2015-06-30",
+          "revenue": 71360000000,
+          "grossProfit": 19030000000,
+          "netIncome": 4190000000,
+          "grossMarginPct": 26.66760089686099
+        },
+        {
+          "period": "2015Q3",
+          "dateKey": "2015-09-30",
+          "revenue": 65679000000,
+          "grossProfit": 20362000000,
+          "netIncome": 4240000000,
+          "grossMarginPct": 31.002299060582526
+        },
+        {
+          "period": "2015Q4",
+          "dateKey": "2015-12-31",
+          "revenue": 57691000000,
+          "grossProfit": 20247000000,
+          "netIncome": 2429000000,
+          "grossMarginPct": 30.827205042707718
+        },
+        {
+          "period": "2016Q1",
+          "dateKey": "2016-03-31",
+          "revenue": 47105000000,
+          "grossProfit": 14072000000,
+          "netIncome": 1810000000,
+          "grossMarginPct": 29.87368644517567
+        },
+        {
+          "period": "2016Q2",
+          "dateKey": "2016-06-30",
+          "revenue": 56360000000,
+          "grossProfit": 16333000000,
+          "netIncome": 1700000000,
+          "grossMarginPct": 28.979772888573457
+        },
+        {
+          "period": "2016Q3",
+          "dateKey": "2016-09-30",
+          "revenue": 56767000000,
+          "grossProfit": 16418000000,
+          "netIncome": 2650000000,
+          "grossMarginPct": 28.92173269681329
+        },
+        {
+          "period": "2016Q4",
+          "dateKey": "2016-12-31",
+          "revenue": 58376000000,
+          "grossProfit": 13379000000,
+          "netIncome": 1489000000,
+          "grossMarginPct": 22.918665204878717
+        }
+      ]
+    },
+    "visa": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 845000000,
+          "grossProfit": null,
+          "netIncome": 205000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 813000000,
+          "grossProfit": null,
+          "netIncome": 180000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 941000000,
+          "grossProfit": null,
+          "netIncome": 223000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 991000000,
+          "grossProfit": null,
+          "netIncome": -1684000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 1488000000,
+          "grossProfit": null,
+          "netIncome": 424000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 1453000000,
+          "grossProfit": null,
+          "netIncome": 314000000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "asml": {
+      "reportingCurrency": "EUR",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 632135000,
+          "grossProfit": 270276000,
+          "netIncome": 100945000,
+          "grossMarginPct": 42.75605685494396
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 680534000,
+          "grossProfit": 298733000,
+          "netIncome": 111815000,
+          "grossMarginPct": 43.89685159007485
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 458992000,
+          "grossProfit": 197203000,
+          "netIncome": 47766000,
+          "grossMarginPct": 42.9643653919894
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 456016000,
+          "grossProfit": 204145000,
+          "netIncome": 51621000,
+          "grossMarginPct": 44.76706957650609
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 553101000,
+          "grossProfit": 251621000,
+          "netIncome": 80034000,
+          "grossMarginPct": 45.49277618373498
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 840817000,
+          "grossProfit": 380923000,
+          "netIncome": 167112000,
+          "grossMarginPct": 45.30391274201164
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 856556000,
+          "grossProfit": 390914000,
+          "netIncome": 172018000,
+          "grossMarginPct": 45.637880068553606
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 978590000,
+          "grossProfit": 438561000,
+          "netIncome": 205525000,
+          "grossMarginPct": 44.81560203966932
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 847376000,
+          "grossProfit": 391818000,
+          "netIncome": 152675000,
+          "grossMarginPct": 46.238977738335755
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 825817000,
+          "grossProfit": 383266000,
+          "netIncome": 159505000,
+          "grossMarginPct": 46.410524365567674
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 843232000,
+          "grossProfit": 384963000,
+          "netIncome": 166279000,
+          "grossMarginPct": 45.65327217183409
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 834857000,
+          "grossProfit": 389614000,
+          "netIncome": 192542000,
+          "grossMarginPct": 46.66835158596023
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 819986000,
+          "grossProfit": 373625000,
+          "netIncome": 145123000,
+          "grossMarginPct": 45.56480232589337
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 725586000,
+          "grossProfit": 337468000,
+          "netIncome": 191977000,
+          "grossMarginPct": 46.50971766268919
+        },
+        {
+          "period": "2008Q3",
+          "dateKey": "2008-09-30",
+          "revenue": 590723000,
+          "grossProfit": 265431000,
+          "netIncome": 73294000,
+          "grossMarginPct": 44.93324282277819
+        },
+        {
+          "period": "2008Q4",
+          "dateKey": "2008-12-31",
+          "revenue": 380466000,
+          "grossProfit": 38990000,
+          "netIncome": -88024000,
+          "grossMarginPct": 10.247959081757633
+        },
+        {
+          "period": "2009Q1",
+          "dateKey": "2009-03-31",
+          "revenue": 101100000,
+          "grossProfit": 12400000,
+          "netIncome": -117200000,
+          "grossMarginPct": 12.265084075173096
+        },
+        {
+          "period": "2009Q2",
+          "dateKey": "2009-06-30",
+          "revenue": 183300000,
+          "grossProfit": 34400000,
+          "netIncome": -104000000,
+          "grossMarginPct": 18.7670485542826
+        },
+        {
+          "period": "2009Q3",
+          "dateKey": "2009-09-30",
+          "revenue": 458700000,
+          "grossProfit": 191300000,
+          "netIncome": 19800000,
+          "grossMarginPct": 41.70481796381077
+        },
+        {
+          "period": "2009Q4",
+          "dateKey": "2009-12-31",
+          "revenue": 431800000,
+          "grossProfit": 220300000,
+          "netIncome": 50500000,
+          "grossMarginPct": 51.01899027327467
+        },
+        {
+          "period": "2010Q1",
+          "dateKey": "2010-03-31",
+          "revenue": 631600000,
+          "grossProfit": 298600000,
+          "netIncome": 107300000,
+          "grossMarginPct": 47.276757441418624
+        },
+        {
+          "period": "2010Q2",
+          "dateKey": "2010-06-30",
+          "revenue": 923000000,
+          "grossProfit": 459400000,
+          "netIncome": 239200000,
+          "grossMarginPct": 49.772481040086674
+        },
+        {
+          "period": "2010Q3",
+          "dateKey": "2010-09-30",
+          "revenue": 1027000000,
+          "grossProfit": 512500000,
+          "netIncome": 268500000,
+          "grossMarginPct": 49.90262901655307
+        },
+        {
+          "period": "2010Q4",
+          "dateKey": "2010-12-31",
+          "revenue": 1313100000,
+          "grossProfit": 684700000,
+          "netIncome": 406800000,
+          "grossMarginPct": 52.14378189018354
+        },
+        {
+          "period": "2011Q1",
+          "dateKey": "2011-03-31",
+          "revenue": 1284400000,
+          "grossProfit": 649600000,
+          "netIncome": 395000000,
+          "grossMarginPct": 50.57614450327
+        },
+        {
+          "period": "2011Q2",
+          "dateKey": "2011-06-30",
+          "revenue": 1529000000,
+          "grossProfit": 635800000,
+          "netIncome": 432000000,
+          "grossMarginPct": 41.58273381294964
+        },
+        {
+          "period": "2011Q3",
+          "dateKey": "2011-09-30",
+          "revenue": 1459000000,
+          "grossProfit": 585600000,
+          "netIncome": 355000000,
+          "grossMarginPct": 40.13708019191227
+        },
+        {
+          "period": "2011Q4",
+          "dateKey": "2011-12-31",
+          "revenue": 1211000000,
+          "grossProfit": 480700000,
+          "netIncome": 285000000,
+          "grossMarginPct": 39.694467382328654
+        },
+        {
+          "period": "2012Q1",
+          "dateKey": "2012-03-31",
+          "revenue": 1252000000,
+          "grossProfit": null,
+          "netIncome": 282000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2012Q2",
+          "dateKey": "2012-06-30",
+          "revenue": 984800000,
+          "grossProfit": 530400000,
+          "netIncome": 291900000,
+          "grossMarginPct": 53.858651502843216
+        },
+        {
+          "period": "2012Q3",
+          "dateKey": "2012-09-30",
+          "revenue": 1000300000,
+          "grossProfit": 531000000,
+          "netIncome": 274700000,
+          "grossMarginPct": 53.08407477756673
+        },
+        {
+          "period": "2012Q4",
+          "dateKey": "2012-12-31",
+          "revenue": 766500000,
+          "grossProfit": 420200000,
+          "netIncome": 297700000,
+          "grossMarginPct": 54.820613176777556
+        },
+        {
+          "period": "2013Q1",
+          "dateKey": "2013-03-31",
+          "revenue": 676900000,
+          "grossProfit": 340700000,
+          "netIncome": 96200000,
+          "grossMarginPct": 50.332397695375974
+        },
+        {
+          "period": "2013Q2",
+          "dateKey": "2013-06-30",
+          "revenue": 1187000000,
+          "grossProfit": 482000000,
+          "netIncome": 221000000,
+          "grossMarginPct": 40.60657118786858
+        },
+        {
+          "period": "2013Q3",
+          "dateKey": "2013-09-30",
+          "revenue": 1318000000,
+          "grossProfit": 531000000,
+          "netIncome": 193000000,
+          "grossMarginPct": 40.28831562974203
+        },
+        {
+          "period": "2013Q4",
+          "dateKey": "2013-12-31",
+          "revenue": 1848000000,
+          "grossProfit": 806000000,
+          "netIncome": 481000000,
+          "grossMarginPct": 43.61471861471862
+        },
+        {
+          "period": "2014Q1",
+          "dateKey": "2014-03-31",
+          "revenue": 1397000000,
+          "grossProfit": 610000000,
+          "netIncome": 249000000,
+          "grossMarginPct": 43.66499642090193
+        },
+        {
+          "period": "2014Q2",
+          "dateKey": "2014-06-30",
+          "revenue": 1644000000,
+          "grossProfit": 752000000,
+          "netIncome": 399000000,
+          "grossMarginPct": 45.742092457420924
+        },
+        {
+          "period": "2014Q3",
+          "dateKey": "2014-09-30",
+          "revenue": 884500000,
+          "grossProfit": 560200000,
+          "netIncome": 298200000,
+          "grossMarginPct": 63.3352176370831
+        },
+        {
+          "period": "2014Q4",
+          "dateKey": "2014-12-31",
+          "revenue": 1085300000,
+          "grossProfit": 639100000,
+          "netIncome": 385000000,
+          "grossMarginPct": 58.88694370220215
+        },
+        {
+          "period": "2015Q1",
+          "dateKey": "2015-03-31",
+          "revenue": 1246500000,
+          "grossProfit": 764500000,
+          "netIncome": 470000000,
+          "grossMarginPct": 61.33172884075411
+        },
+        {
+          "period": "2015Q2",
+          "dateKey": "2015-06-30",
+          "revenue": 1134500000,
+          "grossProfit": 737400000,
+          "netIncome": 421300000,
+          "grossMarginPct": 64.99779638607316
+        },
+        {
+          "period": "2015Q3",
+          "dateKey": "2015-09-30",
+          "revenue": 975300000,
+          "grossProfit": 689200000,
+          "netIncome": 383900000,
+          "grossMarginPct": 70.66543627601763
+        },
+        {
+          "period": "2015Q4",
+          "dateKey": "2015-12-31",
+          "revenue": 880900000,
+          "grossProfit": 642000000,
+          "netIncome": 344300000,
+          "grossMarginPct": 72.88000908162107
+        },
+        {
+          "period": "2016Q1",
+          "dateKey": "2016-03-31",
+          "revenue": 1333200000,
+          "grossProfit": 548800000,
+          "netIncome": 230800000,
+          "grossMarginPct": 41.16411641164117
+        },
+        {
+          "period": "2016Q2",
+          "dateKey": "2016-06-30",
+          "revenue": 1739600000,
+          "grossProfit": 721500000,
+          "netIncome": 370400000,
+          "grossMarginPct": 41.47505173603127
+        },
+        {
+          "period": "2016Q3",
+          "dateKey": "2016-09-30",
+          "revenue": 1814600000,
+          "grossProfit": 798200000,
+          "netIncome": 425500000,
+          "grossMarginPct": 43.987655681692935
+        },
+        {
+          "period": "2016Q4",
+          "dateKey": "2016-12-31",
+          "revenue": 1907400000,
+          "grossProfit": 829300000,
+          "netIncome": 8212000000,
+          "grossMarginPct": 43.478032924399706
+        },
+        {
+          "period": "2017Q1",
+          "dateKey": "2017-03-31",
+          "revenue": 1215800000,
+          "grossProfit": 853900000,
+          "netIncome": 8212000000,
+          "grossMarginPct": 70.23359105115972
+        },
+        {
+          "period": "2017Q2",
+          "dateKey": "2017-06-30",
+          "revenue": 1384100000,
+          "grossProfit": 872900000,
+          "netIncome": 8212000000,
+          "grossMarginPct": 63.06625243840763
+        },
+        {
+          "period": "2017Q3",
+          "dateKey": "2017-09-30",
+          "revenue": 1818900000,
+          "grossProfit": 1049500000,
+          "netIncome": 8212000000,
+          "grossMarginPct": 57.69970861509704
+        },
+        {
+          "period": "2017Q4",
+          "dateKey": "2017-12-31",
+          "revenue": 2560400000,
+          "grossProfit": 1083800000,
+          "netIncome": -16700000,
+          "grossMarginPct": 42.329323543196374
+        },
+        {
+          "period": "2018Q1",
+          "dateKey": "2018-03-31",
+          "revenue": 1667700000,
+          "grossProfit": 1052000000,
+          "netIncome": -17600000,
+          "grossMarginPct": 63.08088984829405
+        },
+        {
+          "period": "2018Q2",
+          "dateKey": "2018-06-30",
+          "revenue": 2086500000,
+          "grossProfit": 1125600000,
+          "netIncome": 4300000,
+          "grossMarginPct": 53.94680086268872
+        },
+        {
+          "period": "2018Q3",
+          "dateKey": "2018-09-30",
+          "revenue": 2080600000,
+          "grossProfit": 1335900000,
+          "netIncome": 300000,
+          "grossMarginPct": 64.20744016149187
+        },
+        {
+          "period": "2018Q4",
+          "dateKey": "2018-12-31",
+          "revenue": 5109200000,
+          "grossProfit": 1392900000,
+          "netIncome": 2604600000,
+          "grossMarginPct": 57.455760425689895
+        },
+        {
+          "period": "2019Q1",
+          "dateKey": "2019-03-31",
+          "revenue": 1689000000,
+          "grossProfit": 928000000,
+          "netIncome": 12000000,
+          "grossMarginPct": 54.94375370041445
+        },
+        {
+          "period": "2019Q2",
+          "dateKey": "2019-06-30",
+          "revenue": 1850800000,
+          "grossProfit": 1105200000,
+          "netIncome": 7700000,
+          "grossMarginPct": 59.71471795980116
+        },
+        {
+          "period": "2019Q3",
+          "dateKey": "2019-09-30",
+          "revenue": 2325600000,
+          "grossProfit": 1306400000,
+          "netIncome": 11600000,
+          "grossMarginPct": 56.174750601995186
+        },
+        {
+          "period": "2019Q4",
+          "dateKey": "2019-12-31",
+          "revenue": 3198300000,
+          "grossProfit": 2211100000,
+          "netIncome": 25000000,
+          "grossMarginPct": 69.13360222618266
+        },
+        {
+          "period": "2020Q1",
+          "dateKey": "2020-03-31",
+          "revenue": 3128800000,
+          "grossProfit": 2352400000,
+          "netIncome": 1331400000,
+          "grossMarginPct": 75.18537458450524
+        },
+        {
+          "period": "2020Q2",
+          "dateKey": "2020-06-30",
+          "revenue": 2949600000,
+          "grossProfit": 2044600000,
+          "netIncome": 1038200000,
+          "grossMarginPct": 69.31787360998102
+        },
+        {
+          "period": "2020Q3",
+          "dateKey": "2020-09-30",
+          "revenue": 4111100000,
+          "grossProfit": 2711400000,
+          "netIncome": 1740200000,
+          "grossMarginPct": 65.95315122473305
+        },
+        {
+          "period": "2020Q4",
+          "dateKey": "2020-12-31",
+          "revenue": 3463200000,
+          "grossProfit": 2700600000,
+          "netIncome": 1773400000,
+          "grossMarginPct": 77.97990297990299
+        },
+        {
+          "period": "2021Q1",
+          "dateKey": "2021-03-31",
+          "revenue": 4364000000,
+          "grossProfit": 2352200000,
+          "netIncome": 1331000000,
+          "grossMarginPct": 53.9
+        }
+      ]
+    },
+    "micron": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 1307900000,
+          "grossProfit": 354000000,
+          "netIncome": 117900000,
+          "grossMarginPct": 27.066289471672146
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 1054200000,
+          "grossProfit": 86600000,
+          "netIncome": -127900000,
+          "grossMarginPct": 8.214760007588692
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 1054200000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 1362000000,
+          "grossProfit": 311000000,
+          "netIncome": 63000000,
+          "grossMarginPct": 22.834067547723937
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 1225000000,
+          "grossProfit": 236000000,
+          "netIncome": 193000000,
+          "grossMarginPct": 19.26530612244898
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 1312000000,
+          "grossProfit": 329000000,
+          "netIncome": 88000000,
+          "grossMarginPct": 25.07621951219512
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-08-31",
+          "revenue": 1373000000,
+          "grossProfit": null,
+          "netIncome": 46800000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 1530000000,
+          "grossProfit": 442000000,
+          "netIncome": 115000000,
+          "grossMarginPct": 28.888888888888886
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 1427000000,
+          "grossProfit": 357000000,
+          "netIncome": -52000000,
+          "grossMarginPct": 25.017519271198317
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 1294000000,
+          "grossProfit": 106000000,
+          "netIncome": -39000000,
+          "grossMarginPct": 8.191653786707882
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-08-30",
+          "revenue": 1437000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 1535000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 1359000000,
+          "grossProfit": -43000000,
+          "netIncome": -6000000,
+          "grossMarginPct": -3.164091243561442
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 1498000000,
+          "grossProfit": 48000000,
+          "netIncome": 8000000,
+          "grossMarginPct": 3.204272363150868
+        },
+        {
+          "period": "2008Q3",
+          "dateKey": "2008-08-28",
+          "revenue": 1449000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q4",
+          "dateKey": "2008-12-31",
+          "revenue": 1402000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2009Q1",
+          "dateKey": "2009-03-31",
+          "revenue": 993000000,
+          "grossProfit": -267000000,
+          "netIncome": -814000000,
+          "grossMarginPct": -26.888217522658607
+        },
+        {
+          "period": "2009Q2",
+          "dateKey": "2009-06-30",
+          "revenue": 1106000000,
+          "grossProfit": 107000000,
+          "netIncome": -334000000,
+          "grossMarginPct": 9.674502712477397
+        },
+        {
+          "period": "2009Q3",
+          "dateKey": "2009-09-03",
+          "revenue": 1302000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "oracle": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 2950000000,
+          "grossProfit": 2395000000,
+          "netIncome": 540000000,
+          "grossMarginPct": 81.1864406779661
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 3878000000,
+          "grossProfit": 3268000000,
+          "netIncome": 1022000000,
+          "grossMarginPct": 84.27024239298608
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 2768000000,
+          "grossProfit": 2206000000,
+          "netIncome": 519000000,
+          "grossMarginPct": 79.6965317919075
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 3292000000,
+          "grossProfit": 2710000000,
+          "netIncome": 798000000,
+          "grossMarginPct": 82.32077764277035
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 3470000000,
+          "grossProfit": 2858000000,
+          "netIncome": 765000000,
+          "grossMarginPct": 82.36311239193084
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 4850000000,
+          "grossProfit": 4090000000,
+          "netIncome": 1299000000,
+          "grossMarginPct": 84.3298969072165
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 3591000000,
+          "grossProfit": 2811000000,
+          "netIncome": 670000000,
+          "grossMarginPct": 78.27903091060986
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 4163000000,
+          "grossProfit": 3343000000,
+          "netIncome": 967000000,
+          "grossMarginPct": 80.30266634638483
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 4414000000,
+          "grossProfit": 3594000000,
+          "netIncome": 1033000000,
+          "grossMarginPct": 81.42274580879021
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 5828000000,
+          "grossProfit": 4899000000,
+          "netIncome": 1604000000,
+          "grossMarginPct": 84.05971173644475
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 4529000000,
+          "grossProfit": 3598000000,
+          "netIncome": 840000000,
+          "grossMarginPct": 79.44358578052551
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 5313000000,
+          "grossProfit": 4321000000,
+          "netIncome": 1303000000,
+          "grossMarginPct": 81.3288161114248
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 5349000000,
+          "grossProfit": 4360000000,
+          "netIncome": 1340000000,
+          "grossMarginPct": 81.51056272200411
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 7239000000,
+          "grossProfit": 6167000000,
+          "netIncome": 2038000000,
+          "grossMarginPct": 85.19132476861445
+        }
+      ]
+    },
+    "mastercard": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 658238000,
+          "grossProfit": null,
+          "netIncome": 93294000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 771867000,
+          "grossProfit": null,
+          "netIncome": 120248000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 791605000,
+          "grossProfit": null,
+          "netIncome": 106085000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 715918000,
+          "grossProfit": null,
+          "netIncome": -52908000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 738453000,
+          "grossProfit": null,
+          "netIncome": 126744000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 846489000,
+          "grossProfit": null,
+          "netIncome": -310460000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 901969000,
+          "grossProfit": null,
+          "netIncome": 193004000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 839163000,
+          "grossProfit": null,
+          "netIncome": 40902000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 915103000,
+          "grossProfit": null,
+          "netIncome": 214906000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 996959000,
+          "grossProfit": null,
+          "netIncome": 252286000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 1082850000,
+          "grossProfit": null,
+          "netIncome": 314461000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 1072687000,
+          "grossProfit": null,
+          "netIncome": 304233000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 1182084000,
+          "grossProfit": null,
+          "netIncome": 446878000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "bankofamerica": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 13538000000,
+          "grossProfit": null,
+          "netIncome": 4393000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 14592000000,
+          "grossProfit": null,
+          "netIncome": 4657000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 14151000000,
+          "grossProfit": null,
+          "netIncome": 3841000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 13810000000,
+          "grossProfit": null,
+          "netIncome": 3574000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 17677000000,
+          "grossProfit": null,
+          "netIncome": 4986000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 18219000000,
+          "grossProfit": null,
+          "netIncome": 5475000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 18184000000,
+          "grossProfit": null,
+          "netIncome": 5416000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 18500000000,
+          "grossProfit": null,
+          "netIncome": 5256000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 18155000000,
+          "grossProfit": null,
+          "netIncome": 5255000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 19625000000,
+          "grossProfit": null,
+          "netIncome": 5761000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 16097000000,
+          "grossProfit": null,
+          "netIncome": 3698000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 12956000000,
+          "grossProfit": null,
+          "netIncome": 268000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 17071000000,
+          "grossProfit": null,
+          "netIncome": 1210000000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "caterpillar": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 8339000000,
+          "grossProfit": 2124000000,
+          "netIncome": 14000000,
+          "grossMarginPct": 25.470679937642405
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 9360000000,
+          "grossProfit": 2470000000,
+          "netIncome": 29000000,
+          "grossMarginPct": 26.38888888888889
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 8977000000,
+          "grossProfit": 2430000000,
+          "netIncome": 18000000,
+          "grossMarginPct": 27.06917678511752
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 9663000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 9392000000,
+          "grossProfit": 2840000000,
+          "netIncome": 17000000,
+          "grossMarginPct": 30.238500851788757
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 10605000000,
+          "grossProfit": 3189000000,
+          "netIncome": 32000000,
+          "grossMarginPct": 30.070721357850072
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 10517000000,
+          "grossProfit": 2907000000,
+          "netIncome": 25000000,
+          "grossMarginPct": 27.64096225159266
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 11003000000,
+          "grossProfit": null,
+          "netIncome": 18000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 10016000000,
+          "grossProfit": 2880000000,
+          "netIncome": 19000000,
+          "grossMarginPct": 28.753993610223645
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 11356000000,
+          "grossProfit": 3056000000,
+          "netIncome": 5000000,
+          "grossMarginPct": 26.910884114124688
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 11442000000,
+          "grossProfit": 3172000000,
+          "netIncome": 27000000,
+          "grossMarginPct": 27.722426149274604
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 12144000000,
+          "grossProfit": null,
+          "netIncome": 44000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 11796000000,
+          "grossProfit": 3187000000,
+          "netIncome": 922000000,
+          "grossMarginPct": 27.017633095964733
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 13624000000,
+          "grossProfit": 3588000000,
+          "netIncome": 8000000,
+          "grossMarginPct": 26.33587786259542
+        }
+      ]
+    },
+    "chevron": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 40490000000,
+          "grossProfit": null,
+          "netIncome": 2677000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 47265000000,
+          "grossProfit": null,
+          "netIncome": 3684000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 53429000000,
+          "grossProfit": null,
+          "netIncome": 3594000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 52457000000,
+          "grossProfit": null,
+          "netIncome": 4144000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 53524000000,
+          "grossProfit": null,
+          "netIncome": 3996000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 52153000000,
+          "grossProfit": null,
+          "netIncome": 4353000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 52977000000,
+          "grossProfit": null,
+          "netIncome": 5017000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 46238000000,
+          "grossProfit": null,
+          "netIncome": 3772000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 46302000000,
+          "grossProfit": null,
+          "netIncome": 4715000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 54344000000,
+          "grossProfit": null,
+          "netIncome": 5380000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 53545000000,
+          "grossProfit": null,
+          "netIncome": 3718000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 66713000000,
+          "grossProfit": null,
+          "netIncome": -13794312000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "homedepot": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 18973000000,
+          "grossProfit": 6355000000,
+          "netIncome": 1986000000,
+          "grossMarginPct": 33.49496653138671
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 22305000000,
+          "grossProfit": 7409000000,
+          "netIncome": 2823000000,
+          "grossMarginPct": 33.216767540910105
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 20744000000,
+          "grossProfit": 6963000000,
+          "netIncome": 2452000000,
+          "grossMarginPct": 33.56633243347474
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 19489000000,
+          "grossProfit": 5211000000,
+          "netIncome": 1706000000,
+          "grossMarginPct": 26.73815998768536
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 21461000000,
+          "grossProfit": 7228000000,
+          "netIncome": 2370000000,
+          "grossMarginPct": 33.6796980569405
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 22592000000,
+          "grossProfit": 7456000000,
+          "netIncome": 2817000000,
+          "grossMarginPct": 33.0028328611898
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 19648000000,
+          "grossProfit": 6604000000,
+          "netIncome": 2130000000,
+          "grossMarginPct": 33.61156351791531
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 17404000000,
+          "grossProfit": 5258000000,
+          "netIncome": 1334000000,
+          "grossMarginPct": 30.211445644679387
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 18545000000,
+          "grossProfit": 6263000000,
+          "netIncome": 1512000000,
+          "grossMarginPct": 33.77190617417094
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 22184000000,
+          "grossProfit": 7341000000,
+          "netIncome": 2412000000,
+          "grossMarginPct": 33.091417237648756
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 18961000000,
+          "grossProfit": 6339000000,
+          "netIncome": 1639000000,
+          "grossMarginPct": 33.43178102420759
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 17659000000,
+          "grossProfit": 6054000000,
+          "netIncome": 1057000000,
+          "grossMarginPct": 34.28280197066652
+        }
+      ]
+    },
+    "jnj": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 12832000000,
+          "grossProfit": 9350000000,
+          "netIncome": 2927000000,
+          "grossMarginPct": 72.86471321695761
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 12762000000,
+          "grossProfit": 9254000000,
+          "netIncome": 2676000000,
+          "grossMarginPct": 72.51214543175051
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 12310000000,
+          "grossProfit": 8970000000,
+          "netIncome": 2625000000,
+          "grossMarginPct": 72.86758732737611
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 12992000000,
+          "grossProfit": 9380000000,
+          "netIncome": 3305000000,
+          "grossMarginPct": 72.19827586206897
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 13363000000,
+          "grossProfit": 9575000000,
+          "netIncome": 2820000000,
+          "grossMarginPct": 71.65307191498916
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 13287000000,
+          "grossProfit": 9637000000,
+          "netIncome": 2760000000,
+          "grossMarginPct": 72.52954015202829
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 17473000000,
+          "grossProfit": null,
+          "netIncome": 1885000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 15037000000,
+          "grossProfit": 10652000000,
+          "netIncome": 2573000000,
+          "grossMarginPct": 70.83859812462592
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 15131000000,
+          "grossProfit": 10773000000,
+          "netIncome": 3081000000,
+          "grossMarginPct": 71.19820236600357
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 14970000000,
+          "grossProfit": 10696000000,
+          "netIncome": 2548000000,
+          "grossMarginPct": 71.4495657982632
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-30",
+          "revenue": 15957000000,
+          "grossProfit": null,
+          "netIncome": 5081000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 16194000000,
+          "grossProfit": 11580000000,
+          "netIncome": 3598000000,
+          "grossMarginPct": 71.50796591330122
+        }
+      ]
+    },
+    "avgo": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2009Q4",
+          "dateKey": "2009-12-31",
+          "revenue": 428000000,
+          "grossProfit": 192000000,
+          "netIncome": -90000,
+          "grossMarginPct": 44.85981308411215
+        },
+        {
+          "period": "2010Q1",
+          "dateKey": "2010-03-31",
+          "revenue": 456000000,
+          "grossProfit": 209000000,
+          "netIncome": 38000000,
+          "grossMarginPct": 45.83333333333333
+        },
+        {
+          "period": "2010Q2",
+          "dateKey": "2010-06-30",
+          "revenue": 515000000,
+          "grossProfit": 247000000,
+          "netIncome": 90000000,
+          "grossMarginPct": 47.96116504854369
+        },
+        {
+          "period": "2010Q3",
+          "dateKey": "2010-09-30",
+          "revenue": 550000000,
+          "grossProfit": 279000000,
+          "netIncome": 123000000,
+          "grossMarginPct": 50.727272727272734
+        },
+        {
+          "period": "2010Q4",
+          "dateKey": "2010-12-31",
+          "revenue": 572000000,
+          "grossProfit": 290000000,
+          "netIncome": 164000000,
+          "grossMarginPct": 50.6993006993007
+        },
+        {
+          "period": "2011Q1",
+          "dateKey": "2011-03-31",
+          "revenue": 550000000,
+          "grossProfit": 285000000,
+          "netIncome": 119000000,
+          "grossMarginPct": 51.81818181818182
+        },
+        {
+          "period": "2011Q2",
+          "dateKey": "2011-06-30",
+          "revenue": 560000000,
+          "grossProfit": 289000000,
+          "netIncome": 135000000,
+          "grossMarginPct": 51.60714285714286
+        },
+        {
+          "period": "2011Q3",
+          "dateKey": "2011-09-30",
+          "revenue": 603000000,
+          "grossProfit": 311000000,
+          "netIncome": 144000000,
+          "grossMarginPct": 51.575456053067995
+        },
+        {
+          "period": "2011Q4",
+          "dateKey": "2011-12-31",
+          "revenue": 623000000,
+          "grossProfit": 318000000,
+          "netIncome": 154000000,
+          "grossMarginPct": 51.04333868378812
+        },
+        {
+          "period": "2012Q1",
+          "dateKey": "2012-03-31",
+          "revenue": 563000000,
+          "grossProfit": 284000000,
+          "netIncome": 125000000,
+          "grossMarginPct": 50.44404973357016
+        },
+        {
+          "period": "2012Q2",
+          "dateKey": "2012-06-30",
+          "revenue": 577000000,
+          "grossProfit": 293000000,
+          "netIncome": 134000000,
+          "grossMarginPct": 50.77989601386482
+        },
+        {
+          "period": "2012Q3",
+          "dateKey": "2012-09-30",
+          "revenue": 606000000,
+          "grossProfit": 309000000,
+          "netIncome": 145000000,
+          "grossMarginPct": 50.99009900990099
+        },
+        {
+          "period": "2012Q4",
+          "dateKey": "2012-12-31",
+          "revenue": 618000000,
+          "grossProfit": 314000000,
+          "netIncome": 159000000,
+          "grossMarginPct": 50.80906148867314
+        },
+        {
+          "period": "2013Q1",
+          "dateKey": "2013-03-31",
+          "revenue": 576000000,
+          "grossProfit": 290000000,
+          "netIncome": 125000000,
+          "grossMarginPct": 50.34722222222222
+        },
+        {
+          "period": "2013Q2",
+          "dateKey": "2013-06-30",
+          "revenue": 562000000,
+          "grossProfit": 286000000,
+          "netIncome": 113000000,
+          "grossMarginPct": 50.88967971530249
+        },
+        {
+          "period": "2013Q3",
+          "dateKey": "2013-09-30",
+          "revenue": 644000000,
+          "grossProfit": 319000000,
+          "netIncome": 142000000,
+          "grossMarginPct": 49.53416149068323
+        },
+        {
+          "period": "2013Q4",
+          "dateKey": "2013-12-31",
+          "revenue": 738000000,
+          "grossProfit": 365000000,
+          "netIncome": 172000000,
+          "grossMarginPct": 49.457994579945805
+        },
+        {
+          "period": "2014Q1",
+          "dateKey": "2014-03-31",
+          "revenue": 709000000,
+          "grossProfit": 362000000,
+          "netIncome": 134000000,
+          "grossMarginPct": 51.05782792665726
+        },
+        {
+          "period": "2014Q2",
+          "dateKey": "2014-06-30",
+          "revenue": 701000000,
+          "grossProfit": 375000000,
+          "netIncome": 158000000,
+          "grossMarginPct": 53.49500713266762
+        },
+        {
+          "period": "2014Q3",
+          "dateKey": "2014-09-30",
+          "revenue": 104000000,
+          "grossProfit": 509000000,
+          "netIncome": -164000000,
+          "grossMarginPct": 489.4230769230769
+        },
+        {
+          "period": "2014Q4",
+          "dateKey": "2014-12-31",
+          "revenue": 1590000000,
+          "grossProfit": 902000000,
+          "netIncome": 135000000,
+          "grossMarginPct": 56.72955974842767
+        },
+        {
+          "period": "2015Q1",
+          "dateKey": "2015-03-31",
+          "revenue": 1635000000,
+          "grossProfit": 941000000,
+          "netIncome": 351000000,
+          "grossMarginPct": 57.55351681957187
+        },
+        {
+          "period": "2015Q2",
+          "dateKey": "2015-06-30",
+          "revenue": 12000000,
+          "grossProfit": 960000000,
+          "netIncome": 344000000,
+          "grossMarginPct": 8000
+        },
+        {
+          "period": "2015Q3",
+          "dateKey": "2015-09-30",
+          "revenue": 6000000,
+          "grossProfit": 1041000000,
+          "netIncome": 240000000,
+          "grossMarginPct": 17350
+        },
+        {
+          "period": "2015Q4",
+          "dateKey": "2015-12-31",
+          "revenue": 1840000000,
+          "grossProfit": 1128000000,
+          "netIncome": 429000000,
+          "grossMarginPct": 61.30434782608696
+        },
+        {
+          "period": "2016Q1",
+          "dateKey": "2016-03-31",
+          "revenue": 1771000000,
+          "grossProfit": 1072000000,
+          "netIncome": 377000000,
+          "grossMarginPct": 60.53077357425184
+        },
+        {
+          "period": "2016Q2",
+          "dateKey": "2016-06-30",
+          "revenue": 3538000000,
+          "grossProfit": 2104000000,
+          "netIncome": -1255000000,
+          "grossMarginPct": 59.468626342566424
+        },
+        {
+          "period": "2016Q3",
+          "dateKey": "2016-09-30",
+          "revenue": 3789000000,
+          "grossProfit": 2272000000,
+          "netIncome": -315000000,
+          "grossMarginPct": 59.96305093692267
+        },
+        {
+          "period": "2016Q4",
+          "dateKey": "2016-12-31",
+          "revenue": 4136000000,
+          "grossProfit": 2497000000,
+          "netIncome": -668000000,
+          "grossMarginPct": 60.37234042553191
+        }
+      ]
+    },
+    "berkshire": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 10607000000,
+          "grossProfit": 1773000000,
+          "netIncome": 1832000000,
+          "grossMarginPct": 16.7153766380692
+        },
+        {
+          "period": "2005Q2",
+          "dateKey": "2005-06-30",
+          "revenue": 11239000000,
+          "grossProfit": 1960000000,
+          "netIncome": 2054000000,
+          "grossMarginPct": 17.43927395675772
+        },
+        {
+          "period": "2005Q3",
+          "dateKey": "2005-09-30",
+          "revenue": 11947000000,
+          "grossProfit": 1974000000,
+          "netIncome": 694000000,
+          "grossMarginPct": 16.522976479450907
+        },
+        {
+          "period": "2005Q4",
+          "dateKey": "2005-12-31",
+          "revenue": 12345000000,
+          "grossProfit": 2143000000,
+          "netIncome": 7688000000,
+          "grossMarginPct": 17.359254759011748
+        },
+        {
+          "period": "2006Q1",
+          "dateKey": "2006-03-31",
+          "revenue": 11992000000,
+          "grossProfit": 2009000000,
+          "netIncome": 3613000000,
+          "grossMarginPct": 16.75283522348232
+        },
+        {
+          "period": "2006Q2",
+          "dateKey": "2006-06-30",
+          "revenue": 12736000000,
+          "grossProfit": 2299000000,
+          "netIncome": 3602000000,
+          "grossMarginPct": 18.051193467336685
+        },
+        {
+          "period": "2006Q3",
+          "dateKey": "2006-09-30",
+          "revenue": 13514000000,
+          "grossProfit": 2404000000,
+          "netIncome": 4301000000,
+          "grossMarginPct": 17.788959597454493
+        },
+        {
+          "period": "2006Q4",
+          "dateKey": "2006-12-31",
+          "revenue": 13561000000,
+          "grossProfit": 2675000000,
+          "netIncome": 5262000000,
+          "grossMarginPct": 19.725683946611607
+        },
+        {
+          "period": "2007Q1",
+          "dateKey": "2007-03-31",
+          "revenue": 13223000000,
+          "grossProfit": 2358000000,
+          "netIncome": 4072000000,
+          "grossMarginPct": 17.832564470997507
+        },
+        {
+          "period": "2007Q2",
+          "dateKey": "2007-06-30",
+          "revenue": 14758000000,
+          "grossProfit": 2773000000,
+          "netIncome": 4816000000,
+          "grossMarginPct": 18.789808917197455
+        },
+        {
+          "period": "2007Q3",
+          "dateKey": "2007-09-30",
+          "revenue": 15092000000,
+          "grossProfit": 2773000000,
+          "netIncome": 6847000000,
+          "grossMarginPct": 18.373972965809703
+        },
+        {
+          "period": "2007Q4",
+          "dateKey": "2007-12-31",
+          "revenue": 15170000000,
+          "grossProfit": 2862000000,
+          "netIncome": 4426000000,
+          "grossMarginPct": 18.866183256427156
+        },
+        {
+          "period": "2008Q1",
+          "dateKey": "2008-03-31",
+          "revenue": 14760000000,
+          "grossProfit": 2652000000,
+          "netIncome": 1453000000,
+          "grossMarginPct": 17.96747967479675
+        },
+        {
+          "period": "2008Q2",
+          "dateKey": "2008-06-30",
+          "revenue": 17332000000,
+          "grossProfit": 3226000000,
+          "netIncome": 4471000000,
+          "grossMarginPct": 18.612970228479114
+        }
+      ]
+    }
+  }
+}
