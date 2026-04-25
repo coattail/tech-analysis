@@ -263,9 +263,17 @@ async function fetchJsonWithCurl(url, headers = REQUEST_HEADERS, maxBuffer = 20 
 async function loadCuratedQuarterlyDataset() {
   if (curatedQuarterlyDatasetCache) return curatedQuarterlyDatasetCache;
 
-  const raw = await readFile(CURATED_EARNINGS_DATASET_PATH, "utf8");
-  const parsed = JSON.parse(raw);
   const byTicker = new Map();
+
+  let parsed;
+  try {
+    const raw = await readFile(CURATED_EARNINGS_DATASET_PATH, "utf8");
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    console.warn(`读取本地季度校验数据失败，已跳过：${error.message}`);
+    curatedQuarterlyDatasetCache = byTicker;
+    return byTicker;
+  }
 
   (parsed?.companies || []).forEach((company) => {
     const ticker = normalizeTickerForSec(company?.ticker);
