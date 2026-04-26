@@ -33,7 +33,7 @@ const FREQUENCY_META = {
   },
   rollingAnnual: {
     axisTitle: "TTM QTR",
-    granularityLabel: "滚动年度（TTM）",
+    granularityLabel: "滚动年化",
     tooltipPrefix: "TTM",
     csvPeriodicity: "RollingAnnual (TTM)",
     csvPeriodColumn: "Period",
