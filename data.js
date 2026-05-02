@@ -1,13 +1,13 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-05-01T00:05:24.972Z",
+    "generatedAt": "2026-05-02T00:05:00.622Z",
     "periodicity": "quarterly",
     "periodRange": "2005Q1-2026Q1",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM), with 2005Q1-Q3 rolling values annualized from available quarters at the sample start. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet",
-      "refreshedAt": "2026-05-01T00:05:24.972Z",
+      "refreshedAt": "2026-05-02T00:05:00.622Z",
       "updatedCompanies": [
         "nvidia",
         "apple",
@@ -28,11 +28,12 @@ window.FINANCIAL_SOURCE_DATA = {
         "netflix",
         "bankofamerica",
         "caterpillar",
+        "chevron",
         "palantir",
         "cisco",
         "homedepot"
       ],
-      "changedPoints": 1368,
+      "changedPoints": 1358,
       "changedPeriods": [
         "2005Q1",
         "2005Q2",
@@ -7340,7 +7341,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 81058000000,
         "2025Q2": 79477000000,
         "2025Q3": 83331000000,
-        "2025Q4": 80039000000
+        "2025Q4": 80039000000,
+        "2026Q1": 83161000000
       },
       "earnings": {
         "2005Q1": 7860000000,
@@ -7426,7 +7428,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 7713000000,
         "2025Q2": 7082000000,
         "2025Q3": 7548000000,
-        "2025Q4": 6501000000
+        "2025Q4": 6501000000,
+        "2026Q1": 4183000000
       },
       "pe": {
         "2021Q2": -20.283,
@@ -7447,7 +7450,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 15.7732,
         "2025Q2": 15.3125,
         "2025Q3": 16.3881,
-        "2025Q4": 17.988
+        "2025Q4": 17.988,
+        "2026Q1": 28.6105
       },
       "netAssets": {
         "2021Q1": 156974000000,
@@ -7469,7 +7473,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 262720000000,
         "2025Q2": 262593000000,
         "2025Q3": 260561000000,
-        "2025Q4": 259386000000
+        "2025Q4": 259386000000,
+        "2026Q1": 254381000000
       },
       "roe": {
         "2005Q1": null,
@@ -7497,7 +7502,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 2.9358252131546894,
         "2025Q2": 2.696949271305785,
         "2025Q3": 2.8968264629012017,
-        "2025Q4": 2.506303347135158
+        "2025Q4": 2.506303347135158,
+        "2026Q1": 1.6443838179738268
       },
       "grossMargin": {
         "2005Q1": 38.84810393277642,
@@ -7579,7 +7585,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 29.839100000000002,
         "2025Q2": 30.257800000000003,
         "2025Q3": 30.3717,
-        "2025Q4": 29.5968
+        "2025Q4": 29.5968,
+        "2026Q1": 24.848200000000002
       },
       "revenueGrowth": {
         "2005Q1": null,
@@ -7666,7 +7673,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": -11.678483319627498,
         "2025Q3": -5.0813285948605795,
         "2025Q4": -1.2571245281156702,
-        "2026Q1": null
+        "2026Q1": 2.5944385501739493
       },
       "forecastFlags": {
         "revenue": [],
@@ -12168,7 +12175,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 46101000000,
         "2025Q2": 44375000000,
         "2025Q3": 48169000000,
-        "2025Q4": 45787000000
+        "2025Q4": 45787000000,
+        "2026Q1": 47556000000
       },
       "earnings": {
         "2005Q1": 2677000000,
@@ -12254,7 +12262,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 3500000000,
         "2025Q2": 2490000000,
         "2025Q3": 3539000000,
-        "2025Q4": 2770000000
+        "2025Q4": 2770000000,
+        "2026Q1": 2210000000
       },
       "pe": {
         "2021Q2": 56.0107,
@@ -12275,7 +12284,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 19.1189,
         "2025Q2": 18.4286,
         "2025Q3": 21.8411,
-        "2025Q4": 22.8844
+        "2025Q4": 22.8844,
+        "2026Q1": 35.8579
       },
       "netAssets": {
         "2021Q1": 131888000000,
@@ -12353,7 +12363,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q1": 37.9406,
         "2025Q2": 39.474900000000005,
         "2025Q3": 43.1211,
-        "2025Q4": 44.6393
+        "2025Q4": 44.6393,
+        "2026Q1": 22.220100000000002
       },
       "revenueGrowth": {
         "2005Q1": null,
@@ -12440,7 +12451,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": -10.487352241094122,
         "2025Q3": -1.5472345991906145,
         "2025Q4": -5.2695824885174,
-        "2026Q1": null
+        "2026Q1": 3.1561137502440295
       },
       "forecastFlags": {
         "revenue": [],
