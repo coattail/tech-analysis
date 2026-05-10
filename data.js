@@ -1,13 +1,13 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-05-09T00:09:38.318Z",
+    "generatedAt": "2026-05-10T00:02:57.877Z",
     "periodicity": "quarterly",
     "periodRange": "2005Q1-2026Q1",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM), with 2005Q1-Q3 rolling values annualized from available quarters at the sample start. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet",
-      "refreshedAt": "2026-05-09T00:09:38.318Z",
+      "refreshedAt": "2026-05-10T00:02:57.877Z",
       "updatedCompanies": [
         "nvidia",
         "alphabet",
@@ -22,6 +22,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "exxon",
         "micron",
         "jnj",
+        "oracle",
         "amd",
         "mastercard",
         "costco",
@@ -30,10 +31,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "caterpillar",
         "palantir",
         "cisco",
-        "abbvie",
         "homedepot"
       ],
-      "changedPoints": 1338,
+      "changedPoints": 1335,
       "changedPeriods": [
         "2005Q1",
         "2005Q2",
@@ -9487,7 +9487,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 3427000000,
         "2025Q3": 2927000000,
         "2025Q4": 6135000000,
-        "2026Q1": 3721000000
+        "2026Q1": 3699000000
       },
       "pe": {
         "2021Q2": 16.517,
@@ -9554,7 +9554,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 16.3431732557585,
         "2025Q3": 11.866536933430634,
         "2025Q4": 20.143152641428898,
-        "2026Q1": 9.528565209597705
+        "2026Q1": 9.472228624106938
       },
       "grossMargin": {
         "2005Q1": 81.1864406779661,
@@ -9593,26 +9593,26 @@ window.FINANCIAL_SOURCE_DATA = {
         "2020Q3": null,
         "2020Q4": null,
         "2021Q1": null,
-        "2021Q2": 81.099,
+        "2021Q2": 81.0991,
         "2021Q3": 78.38199999999999,
-        "2021Q4": 79.16,
-        "2022Q1": 78.902,
-        "2022Q2": 79.755,
-        "2022Q3": 73.464,
-        "2022Q4": 72.64399999999999,
-        "2023Q1": 72.262,
-        "2023Q2": 73.041,
+        "2021Q4": 79.1602,
+        "2022Q1": 78.9023,
+        "2022Q2": 79.7551,
+        "2022Q3": 73.4644,
+        "2022Q4": 72.64359999999999,
+        "2023Q1": 72.26169999999999,
+        "2023Q2": 73.04129999999999,
         "2023Q3": 71.011,
-        "2023Q4": 71.1,
+        "2023Q4": 71.0996,
         "2024Q1": 70.866,
-        "2024Q2": 72.53399999999999,
+        "2024Q2": 72.53450000000001,
         "2024Q3": 70.647,
-        "2024Q4": 70.944,
-        "2025Q1": 70.311,
+        "2024Q4": 70.9439,
+        "2025Q1": 70.3114,
         "2025Q2": 70.18799999999999,
-        "2025Q3": 67.279,
-        "2025Q4": 66.534,
-        "2026Q1": 64.561
+        "2025Q3": 67.2786,
+        "2025Q4": 66.5338,
+        "2026Q1": 64.5608
       },
       "revenueGrowth": {
         "2005Q1": null,
