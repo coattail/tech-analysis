@@ -23,7 +23,7 @@
 
 ## Data-Source Decision
 
-Use a provider that exposes daily adjusted-close history explicitly. The implementation should normalize provider output into the local `price-data.js` schema so the frontend is provider-agnostic. If the chosen provider changes later, only `scripts/auto-refresh-price-data.mjs` should need to change.
+Use Alpha Vantage `TIME_SERIES_DAILY_ADJUSTED` for the first implementation. The refresh script reads `ALPHAVANTAGE_API_KEY` from the environment, requests `outputsize=full`, and normalizes the provider payload into the local `price-data.js` schema so the frontend remains provider-agnostic. If the provider changes later, only `scripts/auto-refresh-price-data.mjs` should need to change.
 
 ## Task 1: Add a testable price-comparison utility module
 
@@ -270,8 +270,28 @@ const COMPANY_SOURCES = [
   // keep the remaining 26 companies aligned with script.js
 ];
 
+const ALPHA_VANTAGE_BASE = 'https://www.alphavantage.co/query';
+
 async function fetchDailyAdjustedSeries(company) {
-  throw new Error(`Provider integration not configured for ${company.ticker}`);
+  const apiKey = process.env.ALPHAVANTAGE_API_KEY;
+  if (!apiKey) throw new Error('缺少 ALPHAVANTAGE_API_KEY');
+
+  const url = new URL(ALPHA_VANTAGE_BASE);
+  url.searchParams.set('function', 'TIME_SERIES_DAILY_ADJUSTED');
+  url.searchParams.set('symbol', company.ticker);
+  url.searchParams.set('outputsize', 'full');
+  url.searchParams.set('apikey', apiKey);
+
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Alpha Vantage 请求失败：${response.status}`);
+  const payload = await response.json();
+  const series = payload['Time Series (Daily)'];
+  if (!series || typeof series !== 'object') throw new Error(`Alpha Vantage 响应缺少日线数据：${company.ticker}`);
+
+  return Object.entries(series).map(([date, row]) => ({
+    date,
+    adjustedClose: row['5. adjusted close'],
+  }));
 }
 
 function formatPriceDataJs(data) {
@@ -288,7 +308,7 @@ async function main() {
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
-      source: '<provider>',
+      source: 'Alpha Vantage TIME_SERIES_DAILY_ADJUSTED',
       priceType: 'adjusted-close',
     },
     companies,
@@ -715,7 +735,7 @@ git commit -m "docs: document stock price comparison"
 ### Placeholder scan
 
 - No `TODO`, `TBD`, or unspecified implementation steps remain.
-- The only intentionally abstracted piece is the eventual provider integration inside `scripts/auto-refresh-price-data.mjs`; the frontend remains provider-agnostic by design.
+- The refresh provider is explicit: Alpha Vantage `TIME_SERIES_DAILY_ADJUSTED` with `ALPHAVANTAGE_API_KEY`.
 
 ### Type consistency
 
