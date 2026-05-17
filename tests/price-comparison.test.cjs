@@ -15,6 +15,18 @@ const {
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
 } = require("../price-refresh-helpers.cjs");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+
+function loadFinancialSourceData() {
+  const dataJs = fs.readFileSync(path.join(__dirname, "../data.js"), "utf8");
+  const context = { window: {}, globalThis: {} };
+  context.window = context;
+  context.globalThis = context;
+  vm.runInNewContext(dataJs, context);
+  return context.FINANCIAL_SOURCE_DATA;
+}
 
 test("shows price comparison only for one visible company in revenue/net-income bar mode", () => {
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "revenue" }), true);
@@ -103,6 +115,124 @@ test("anchors quarterly financial bars at the period-end date on the shared pric
       },
     ],
   );
+});
+
+test("anchors financial bars at reported fiscal period-end dates when provided", () => {
+  const result = buildFinancialPeriodEndSeries({
+    values: [68_127_000_000],
+    visibleLabels: ["2026Q1"],
+    frequency: "quarterly",
+    periodEndDates: {
+      "2026Q1": "2026-01-25",
+    },
+  });
+
+  assert.equal(result[0].periodEndDate, "2026-01-25");
+  assert.equal(result[0].y, 68_127_000_000);
+  assert.ok(Math.abs(result[0].x - (-0.2303370786516854)) < 1e-12);
+});
+
+test("falls back to calendar period ends when reported period-end dates are incomplete", () => {
+  const result = buildFinancialPeriodEndSeries({
+    values: [57_006_000_000, 68_127_000_000],
+    visibleLabels: ["2025Q4", "2026Q1"],
+    frequency: "quarterly",
+    periodEndDates: {
+      "2026Q1": "2026-01-25",
+    },
+  });
+
+  assert.deepEqual(result.map((point) => ({
+    x: point.x,
+    periodEndDate: point.periodEndDate,
+  })), [
+    { x: 0.5, periodEndDate: "2025-12-31" },
+    { x: 1.5, periodEndDate: "2026-03-31" },
+  ]);
+});
+
+test("does not let price-only extension periods force financial bars back to calendar dates", () => {
+  const result = buildFinancialPeriodEndSeries({
+    values: [57_006_000_000, 68_127_000_000, null],
+    visibleLabels: ["2025Q4", "2026Q1", "2026Q2"],
+    frequency: "quarterly",
+    periodEndDates: {
+      "2025Q4": "2025-10-26",
+      "2026Q1": "2026-01-25",
+    },
+  });
+
+  assert.deepEqual(result.map((point) => ({
+    x: point.x,
+    y: point.y,
+    periodEndDate: point.periodEndDate,
+  })), [
+    { x: -0.22527472527472525, y: 57_006_000_000, periodEndDate: "2025-10-26" },
+    { x: 0.7696629213483146, y: 68_127_000_000, periodEndDate: "2026-01-25" },
+    { x: 2.5, y: null, periodEndDate: "2026-06-30" },
+  ]);
+});
+
+test("includes Apple latest reported quarter and fiscal period-end metadata", () => {
+  const data = loadFinancialSourceData();
+  const apple = data.companies.apple;
+
+  assert.equal(apple.revenue["2026Q1"], 111_184_000_000);
+  assert.equal(apple.earnings["2026Q1"], 29_578_000_000);
+  assert.equal(apple.periodEndDates["2026Q1"], "2026-03-28");
+  assert.ok(Math.abs(apple.revenueGrowth["2026Q1"] - 16.595182415922984) < 1e-12);
+});
+
+test("stores Nvidia fiscal period ends for every available quarter", () => {
+  const data = loadFinancialSourceData();
+  const nvidia = data.companies.nvidia;
+  const availablePeriods = data.periods.filter((period) => nvidia.revenue[period] != null);
+
+  assert.equal(Object.keys(nvidia.periodEndDates).length, availablePeriods.length);
+  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-01-30");
+  assert.equal(nvidia.periodEndDates["2025Q4"], "2025-10-26");
+  assert.equal(nvidia.periodEndDates["2026Q1"], "2026-01-25");
+});
+
+test("uses Nvidia fiscal period ends without collapsing bar spacing", () => {
+  const data = loadFinancialSourceData();
+  const nvidia = data.companies.nvidia;
+  const result = buildFinancialPeriodEndSeries({
+    values: ["2025Q3", "2025Q4", "2026Q1"].map((period) => nvidia.revenue[period]),
+    visibleLabels: ["2025Q3", "2025Q4", "2026Q1"],
+    frequency: "quarterly",
+    periodEndDates: nvidia.periodEndDates,
+  });
+
+  assert.deepEqual(result.map((point) => point.periodEndDate), [
+    "2025-07-27",
+    "2025-10-26",
+    "2026-01-25",
+  ]);
+  assert.ok(result[1].x - result[0].x > 0.9);
+  assert.ok(result[2].x - result[1].x > 0.9);
+});
+
+test("keeps latest quarter populated across companies except non-applicable bank gross margin", () => {
+  const data = loadFinancialSourceData();
+  const metricKeys = ["revenue", "earnings", "grossMargin", "pe", "roe", "revenueGrowth"];
+  const allowedMissing = new Set([
+    "bankofamerica:grossMargin",
+    "jpmorgan:grossMargin",
+  ]);
+  const missing = [];
+
+  for (const [companyId, company] of Object.entries(data.companies)) {
+    for (const metricKey of metricKeys) {
+      const value = company[metricKey]?.["2026Q1"];
+      if (value == null || Number.isNaN(value)) {
+        const key = `${companyId}:${metricKey}`;
+        if (!allowedMissing.has(key)) missing.push(key);
+      }
+    }
+  }
+
+  assert.deepEqual(missing, []);
 });
 
 test("keeps the price overlay above financial bars in mixed charts", () => {

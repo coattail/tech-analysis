@@ -89,10 +89,17 @@
       .filter(Boolean);
   }
 
-  function buildFinancialPeriodEndSeries({ values, visibleLabels, frequency }) {
+  function buildFinancialPeriodEndSeries({ values, visibleLabels, frequency, periodEndDates }) {
     if (!Array.isArray(values) || !Array.isArray(visibleLabels)) return [];
 
     const slots = buildVisiblePeriodSlots(visibleLabels, frequency);
+    const useReportedPeriodEndDates = Boolean(periodEndDates)
+      && visibleLabels.every((label, index) => {
+        const rawValue = values[index];
+        const hasFinancialValue = rawValue != null && rawValue !== "" && Number.isFinite(Number(rawValue));
+        return !hasFinancialValue || dateToUtcMs(periodEndDates[label]) != null;
+      });
+
     return values.map((rawValue, index) => {
       const slot = slots.find((candidate) => candidate.index === index);
       const label = visibleLabels[index];
@@ -101,12 +108,16 @@
       const range = frequency === "annual" ? annualToDateRange(label) : quarterToDateRange(label);
       if (!range) return null;
 
+      const reportedEndDate = useReportedPeriodEndDates ? periodEndDates[label] : null;
+      const periodEndDate = dateToUtcMs(reportedEndDate) == null ? range.endDate : reportedEndDate;
+      const periodEndMs = dateToUtcMs(periodEndDate);
+      const ratio = periodEndMs == null ? 1 : (periodEndMs - slot.startMs) / (slot.endMs - slot.startMs);
       const value = rawValue == null || rawValue === "" ? null : Number(rawValue);
       return {
-        x: index + 0.5,
+        x: (index - 0.5) + ratio,
         y: Number.isFinite(value) ? value : null,
         periodLabel: label,
-        periodEndDate: range.endDate,
+        periodEndDate,
       };
     });
   }

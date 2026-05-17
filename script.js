@@ -508,6 +508,7 @@ const state = {
   generatedAtLabel: "-",
   loadedStatusText: "",
   loadedStatusIsError: false,
+  pendingVisibilityRefreshId: null,
   dataByFrequency: {
     quarterly: {
       revenue: new Map(),
@@ -534,6 +535,7 @@ const state = {
       revenueGrowth: new Map(),
     },
   },
+  periodEndDatesByCompany: new Map(),
   forecastFlagsByFrequency: {
     quarterly: {
       revenue: new Map(),
@@ -1299,6 +1301,7 @@ function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, use
     values,
     visibleLabels,
     frequency: state.frequency,
+    periodEndDates: state.periodEndDatesByCompany.get(dataset.companyId),
   });
 }
 
@@ -1818,9 +1821,20 @@ function syncChartLabels(nextLabels) {
 
 function applyVisibilityStateToChart() {
   if (!state.chart) return;
-  setRangeToVisibleDataBounds();
-  syncRangeControls();
-  refreshChart("none");
+
+  if (state.visibleCompanies.size === 0) {
+    setRangeToVisibleDataBounds();
+    syncRangeControls();
+  }
+
+  if (state.pendingVisibilityRefreshId != null) {
+    cancelAnimationFrame(state.pendingVisibilityRefreshId);
+  }
+
+  state.pendingVisibilityRefreshId = requestAnimationFrame(() => {
+    state.pendingVisibilityRefreshId = null;
+    refreshChart("none");
+  });
 }
 
 function buildChartLayoutPadding(effectiveChartMode) {
@@ -2216,6 +2230,7 @@ function loadFromLocalData() {
     }
 
     loadedCount += 1;
+    state.periodEndDatesByCompany.set(company.id, rawCompany.periodEndDates ?? {});
 
     const quarterRevenue = objectToSeries(QUARTER_LABELS, rawCompany.revenue);
     const quarterNetIncome = objectToSeries(QUARTER_LABELS, rawCompany.earnings);
