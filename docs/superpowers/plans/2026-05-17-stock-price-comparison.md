@@ -23,7 +23,7 @@
 
 ## Data-Source Decision
 
-Use Alpha Vantage `TIME_SERIES_DAILY_ADJUSTED` for the first implementation. The refresh script reads `ALPHAVANTAGE_API_KEY` from the environment, requests `outputsize=full`, and normalizes the provider payload into the local `price-data.js` schema so the frontend remains provider-agnostic. If the provider changes later, only `scripts/auto-refresh-price-data.mjs` should need to change.
+Use the Yahoo Finance chart endpoint for the first implementation. The refresh script requests daily history with adjusted-close data and normalizes the provider payload into the local `price-data.js` schema so the frontend remains provider-agnostic. If the provider changes later, only `scripts/auto-refresh-price-data.mjs` should need to change.
 
 ## Task 1: Add a testable price-comparison utility module
 
@@ -270,28 +270,15 @@ const COMPANY_SOURCES = [
   // keep the remaining 26 companies aligned with script.js
 ];
 
-const ALPHA_VANTAGE_BASE = 'https://www.alphavantage.co/query';
-
 async function fetchDailyAdjustedSeries(company) {
-  const apiKey = process.env.ALPHAVANTAGE_API_KEY;
-  if (!apiKey) throw new Error('缺少 ALPHAVANTAGE_API_KEY');
-
-  const url = new URL(ALPHA_VANTAGE_BASE);
-  url.searchParams.set('function', 'TIME_SERIES_DAILY_ADJUSTED');
-  url.searchParams.set('symbol', company.ticker);
-  url.searchParams.set('outputsize', 'full');
-  url.searchParams.set('apikey', apiKey);
-
+  const url = new URL(`https://query1.finance.yahoo.com/v8/finance/chart/${company.ticker}`);
+  url.searchParams.set('interval', '1d');
+  url.searchParams.set('events', 'div,splits');
+  url.searchParams.set('includeAdjustedClose', 'true');
   const response = await fetch(url);
-  if (!response.ok) throw new Error(`Alpha Vantage 请求失败：${response.status}`);
+  if (!response.ok) throw new Error(`Yahoo Finance 请求失败：${response.status}`);
   const payload = await response.json();
-  const series = payload['Time Series (Daily)'];
-  if (!series || typeof series !== 'object') throw new Error(`Alpha Vantage 响应缺少日线数据：${company.ticker}`);
-
-  return Object.entries(series).map(([date, row]) => ({
-    date,
-    adjustedClose: row['5. adjusted close'],
-  }));
+  return normalizeYahooChartPayload(payload);
 }
 
 function formatPriceDataJs(data) {
@@ -308,7 +295,7 @@ async function main() {
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
-      source: 'Alpha Vantage TIME_SERIES_DAILY_ADJUSTED',
+      source: 'Yahoo Finance chart API',
       priceType: 'adjusted-close',
     },
     companies,
@@ -735,7 +722,7 @@ git commit -m "docs: document stock price comparison"
 ### Placeholder scan
 
 - No `TODO`, `TBD`, or unspecified implementation steps remain.
-- The refresh provider is explicit: Alpha Vantage `TIME_SERIES_DAILY_ADJUSTED` with `ALPHAVANTAGE_API_KEY`.
+- The refresh provider is explicit: Yahoo Finance chart endpoint with adjusted-close data.
 
 ### Type consistency
 

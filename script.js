@@ -68,7 +68,7 @@ const COMPANIES = [
   { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff" },
   { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c" },
   { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9" },
-  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#c9d1d9" },
+  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff" },
   { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2" },
   { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2" },
   { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316" },
@@ -470,6 +470,8 @@ const activeFrequencyLabelEl = document.getElementById("activeFrequencyLabel");
 const visibleCompaniesLabelEl = document.getElementById("visibleCompaniesLabel");
 const generatedAtLabelEl = document.getElementById("generatedAtLabel");
 const chartModeControlEl = document.getElementById("chartModeControl");
+const priceComparisonControlEl = document.getElementById("priceComparisonControl");
+const priceComparisonToggleEl = document.getElementById("priceComparisonToggle");
 const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'));
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
 const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
@@ -498,10 +500,14 @@ const state = {
   metric: "revenue",
   frequency: "quarterly",
   chartMode: "line",
+  priceComparisonEnabled: false,
+  lastPriceOverlayPointCount: 0,
   visibleCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   rangeStart: 0,
   rangeEnd: 0,
   generatedAtLabel: "-",
+  loadedStatusText: "",
+  loadedStatusIsError: false,
   dataByFrequency: {
     quarterly: {
       revenue: new Map(),
@@ -710,6 +716,61 @@ function syncChartModeControl() {
   });
 }
 
+function syncPriceComparisonControl() {
+  const effectiveChartMode = getEffectiveChartMode();
+  const visibleCompanyCount = state.visibleCompanies.size;
+  const hasDailyPrices = Boolean(getSingleCompanyDailyPrices());
+  const canShow = PriceComparisonUtils.canShowPriceComparison({
+    visibleCompanyCount,
+    chartMode: effectiveChartMode,
+    metric: state.metric,
+  }) && hasDailyPrices;
+
+  if (PriceComparisonUtils.shouldResetPriceComparison({
+    enabled: state.priceComparisonEnabled,
+    visibleCompanyCount,
+    chartMode: effectiveChartMode,
+    metric: state.metric,
+  }) || (state.priceComparisonEnabled && !hasDailyPrices)) {
+    state.priceComparisonEnabled = false;
+  }
+
+  if (priceComparisonControlEl) {
+    priceComparisonControlEl.hidden = !canShow;
+  }
+
+  if (priceComparisonToggleEl) {
+    priceComparisonToggleEl.checked = canShow && state.priceComparisonEnabled;
+    priceComparisonToggleEl.disabled = !canShow;
+  }
+}
+
+function canEnablePriceComparisonForCurrentView() {
+  return PriceComparisonUtils.canShowPriceComparison({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode: getEffectiveChartMode(),
+    metric: state.metric,
+  }) && Boolean(getSingleCompanyDailyPrices());
+}
+
+function setPriceComparisonEnabled(enabled, updateMode = "none") {
+  const nextEnabled = Boolean(enabled) && canEnablePriceComparisonForCurrentView();
+  state.priceComparisonEnabled = nextEnabled;
+  if (priceComparisonToggleEl) {
+    priceComparisonToggleEl.checked = nextEnabled;
+  }
+  try {
+    refreshChart(updateMode);
+  } catch (error) {
+    state.priceComparisonEnabled = false;
+    if (priceComparisonToggleEl) {
+      priceComparisonToggleEl.checked = false;
+    }
+    console.error(error);
+    setStatus(`股价对比开启失败：${error.message}`, true);
+  }
+}
+
 function updateViewSummary() {
   if (activeMetricLabelEl) {
     activeMetricLabelEl.textContent = METRICS[state.metric]?.label ?? "-";
@@ -728,6 +789,7 @@ function updateViewSummary() {
   }
 
   syncChartModeControl();
+  syncPriceComparisonControl();
   syncPresetButtons();
 }
 
@@ -1177,6 +1239,69 @@ function alignRangeWithChartAxis() {
   rangeSlidersEl.style.setProperty("--axis-right-pad", `${rightPad}px`);
 }
 
+function getSingleCompanyDailyPrices() {
+  const singleCompanyId = getSingleVisibleCompanyId();
+  return window.STOCK_PRICE_SOURCE_DATA?.companies?.[singleCompanyId]?.daily ?? null;
+}
+
+function getPriceComparisonUnavailableReason() {
+  const singleCompanyId = getSingleVisibleCompanyId();
+  if (!window.STOCK_PRICE_SOURCE_DATA?.companies) {
+    return "股价数据文件尚未载入，请刷新页面后重试。";
+  }
+  if (!singleCompanyId) {
+    return "请选择单一公司后再开启股价对比。";
+  }
+  if (!window.STOCK_PRICE_SOURCE_DATA.companies[singleCompanyId]?.daily) {
+    const company = COMPANY_META.get(singleCompanyId);
+    return `暂无 ${company?.name ?? singleCompanyId} 的股价日线数据。`;
+  }
+  return "当前区间暂无可用股价数据，已保留财务柱状图。";
+}
+
+function buildPriceOverlayDataset(visibleLabels) {
+  if (!state.priceComparisonEnabled) return null;
+
+  const projected = PriceComparisonUtils.buildProjectedPriceSeries({
+    dailyPrices: getSingleCompanyDailyPrices(),
+    visibleLabels,
+    frequency: state.frequency,
+  });
+
+  state.lastPriceOverlayPointCount = projected.length;
+  if (projected.length === 0) return null;
+
+  return {
+    type: "line",
+    label: "股价",
+    priceOverlay: true,
+    order: PriceComparisonUtils.getPriceOverlayDatasetOrder(),
+    data: projected,
+    parsing: false,
+    yAxisID: "yPrice",
+    borderColor: "#ffffff",
+    backgroundColor: "#ffffff",
+    borderWidth: 2,
+    pointRadius: 0,
+    pointHoverRadius: 3,
+    pointHitRadius: 8,
+    spanGaps: false,
+    tension: 0.12,
+    hidden: false,
+  };
+}
+
+function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, usePeriodEndPoints) {
+  const values = dataset.data.slice(0, visibleLabels.length);
+  if (!usePeriodEndPoints || dataset.priceOverlay) return values;
+
+  return PriceComparisonUtils.buildFinancialPeriodEndSeries({
+    values,
+    visibleLabels,
+    frequency: state.frequency,
+  });
+}
+
 function buildDatasetsForView() {
   const fullLabels = getLabelsForFrequency(state.frequency);
   const rangeLabels = fullLabels.slice(state.rangeStart, state.rangeEnd + 1);
@@ -1194,8 +1319,11 @@ function buildDatasetsForView() {
 
     return {
       type: useBarDataset ? "bar" : "line",
-      label: company.name,
+      label: useBarDataset && state.priceComparisonEnabled
+        ? `${company.name} · ${METRICS[metricKey]?.label ?? ""}`
+        : company.name,
       companyId: company.id,
+      order: useBarDataset ? PriceComparisonUtils.getFinancialBarDatasetOrder() : 0,
       data: fullData.slice(state.rangeStart, state.rangeEnd + 1),
       forecastedLabels: [...forecasted],
       borderColor: company.color,
@@ -1226,13 +1354,38 @@ function buildDatasetsForView() {
   });
 
   const trimmedEndIndex = lastVisibleValueIndex >= 0 ? lastVisibleValueIndex : 0;
-  const visibleLabels = rangeLabels.slice(0, trimmedEndIndex + 1);
-  const trimmedDatasets = datasets.map((dataset) => ({
+  const financialVisibleLabels = rangeLabels.slice(0, trimmedEndIndex + 1);
+  const visibleLabels = state.priceComparisonEnabled
+    ? PriceComparisonUtils.extendVisibleLabelsThroughLatestPrice({
+      visibleLabels: financialVisibleLabels,
+      allLabels: fullLabels,
+      dailyPrices: getSingleCompanyDailyPrices(),
+      frequency: state.frequency,
+    })
+    : financialVisibleLabels;
+  const paddedDatasets = datasets.map((dataset) => ({
     ...dataset,
-    data: dataset.data.slice(0, trimmedEndIndex + 1),
+    data: [
+      ...dataset.data.slice(0, trimmedEndIndex + 1),
+      ...Array(Math.max(0, visibleLabels.length - financialVisibleLabels.length)).fill(null),
+    ],
+  }));
+  const shouldAnchorFinancialBarsAtPeriodEnd = state.priceComparisonEnabled && useBarForSingleCompany;
+  const trimmedDatasets = paddedDatasets.map((dataset) => ({
+    ...dataset,
+    data: buildFinancialDatasetValuesForVisibleLabels(
+      dataset,
+      visibleLabels,
+      shouldAnchorFinancialBarsAtPeriodEnd && dataset.type === "bar",
+    ),
+    parsing: shouldAnchorFinancialBarsAtPeriodEnd && dataset.type === "bar" ? false : dataset.parsing,
   }));
 
-  return { labels: visibleLabels, datasets: trimmedDatasets };
+  const priceOverlayDataset = buildPriceOverlayDataset(visibleLabels);
+  return {
+    labels: visibleLabels,
+    datasets: priceOverlayDataset ? [...trimmedDatasets, priceOverlayDataset] : trimmedDatasets,
+  };
 }
 
 function replaceArrayContents(target, nextValues) {
@@ -1274,12 +1427,25 @@ function buildXGridColorCallback(themeTokens) {
 function collectDatasetValues(datasets, includeHidden = false) {
   const values = [];
   datasets.forEach((dataset) => {
+    if (dataset.priceOverlay) return;
     if (!includeHidden && dataset.hidden) return;
     dataset.data.forEach((value) => {
-      if (isFiniteNumber(value)) values.push(value);
+      const yValue = typeof value === "object" && value !== null ? value.y : value;
+      if (isFiniteNumber(yValue)) values.push(yValue);
     });
   });
 
+  return values;
+}
+
+function collectPriceOverlayValues(datasets) {
+  const values = [];
+  datasets.forEach((dataset) => {
+    if (!dataset.priceOverlay) return;
+    dataset.data.forEach((point) => {
+      if (isFiniteNumber(point?.y)) values.push(point.y);
+    });
+  });
   return values;
 }
 
@@ -1549,6 +1715,32 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
   };
 }
 
+function computePriceYAxisBounds(datasets) {
+  const values = collectPriceOverlayValues(datasets);
+  if (values.length === 0) return { min: 0, max: 1 };
+
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (min === max) {
+    const base = Math.abs(max) || 1;
+    return roundPositiveAxisBounds(Math.max(0, min - base * 0.08), max + base * 0.08, false);
+  }
+
+  const span = max - min;
+  return roundPositiveAxisBounds(
+    Math.max(0, min - span * 0.08),
+    max + span * 0.06,
+    false,
+  );
+}
+
+function computeAlignedPriceYAxisBounds(datasets, primaryBounds) {
+  return PriceComparisonUtils.alignSecondaryAxisZero({
+    primaryBounds,
+    secondaryBounds: computePriceYAxisBounds(datasets),
+  });
+}
+
 function measureTextWidth(text, font) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -1574,11 +1766,11 @@ function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
 
 function syncChartDatasets(nextDatasets) {
   const existingDatasets = new Map(
-    (state.chart?.data?.datasets ?? []).map((dataset) => [dataset.companyId, dataset]),
+    (state.chart?.data?.datasets ?? []).map((dataset) => [getDatasetKey(dataset), dataset]),
   );
 
   state.chart.data.datasets = nextDatasets.map((nextDataset) => {
-    const currentDataset = existingDatasets.get(nextDataset.companyId);
+    const currentDataset = existingDatasets.get(getDatasetKey(nextDataset));
     if (!currentDataset) return nextDataset;
 
     if (!Array.isArray(currentDataset.data)) currentDataset.data = [];
@@ -1586,8 +1778,12 @@ function syncChartDatasets(nextDatasets) {
 
     currentDataset.label = nextDataset.label;
     currentDataset.companyId = nextDataset.companyId;
+    currentDataset.priceOverlay = nextDataset.priceOverlay;
+    currentDataset.order = nextDataset.order;
     currentDataset.type = nextDataset.type;
-    currentDataset.forecastedLabels = [...nextDataset.forecastedLabels];
+    currentDataset.forecastedLabels = [...(nextDataset.forecastedLabels ?? [])];
+    currentDataset.parsing = nextDataset.parsing;
+    currentDataset.yAxisID = nextDataset.yAxisID;
     currentDataset.borderColor = nextDataset.borderColor;
     currentDataset.backgroundColor = nextDataset.backgroundColor;
     currentDataset.borderWidth = nextDataset.borderWidth;
@@ -1605,6 +1801,10 @@ function syncChartDatasets(nextDatasets) {
 
     return currentDataset;
   });
+}
+
+function getDatasetKey(dataset) {
+  return dataset.priceOverlay ? "__price_overlay__" : dataset.companyId;
 }
 
 function syncChartLabels(nextLabels) {
@@ -1643,25 +1843,39 @@ function refreshChart(updateMode = undefined) {
   const { labels, datasets } = buildDatasetsForView();
   const effectiveChartMode = getEffectiveChartMode();
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
+  const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
+  const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
   const themeTokens = getChartThemeTokens();
   const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
   syncChartLabels(labels);
   syncChartDatasets(datasets);
   state.chart.data.datasets.forEach((dataset, index) => {
-    state.chart.setDatasetVisibility(index, state.visibleCompanies.has(dataset.companyId));
+    state.chart.setDatasetVisibility(index, dataset.priceOverlay || state.visibleCompanies.has(dataset.companyId));
   });
   state.chart.options.scales.y.title.text = buildYAxisTitle(state.metric, state.frequency);
   state.chart.options.scales.y.min = yBounds.min;
   state.chart.options.scales.y.max = yBounds.max;
   state.chart.options.scales.y.reservedWidth = yReservedWidth;
+  state.chart.options.scales.yPrice.display = hasPriceOverlay;
+  state.chart.options.scales.yPrice.min = priceBounds.min;
+  state.chart.options.scales.yPrice.max = priceBounds.max;
   state.chart.options.scales.x.title.text = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle;
   state.chart.options.scales.x.offset = effectiveChartMode === "bar";
   state.chart.options.scales.x.grid.offset = effectiveChartMode === "bar";
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
+  state.chart.options.plugins.legend.display = hasPriceOverlay;
   state.chart.update(updateMode);
   alignRangeWithChartAxis();
   updateRangeVisual();
   updateViewSummary();
+
+  if (state.priceComparisonEnabled && hasPriceOverlay && state.loadedStatusText) {
+    setStatus(`${state.loadedStatusText} 股价对比已开启：${state.lastPriceOverlayPointCount} 个日线点。`, state.loadedStatusIsError);
+  } else if (state.priceComparisonEnabled && !hasPriceOverlay) {
+    setStatus(getPriceComparisonUnavailableReason(), true);
+  } else if (state.loadedStatusText) {
+    setStatus(state.loadedStatusText, state.loadedStatusIsError);
+  }
 }
 
 function createToggle(company) {
@@ -1807,9 +2021,51 @@ function buildChart() {
             borderDash: [4, 6],
           },
         },
+        yPrice: {
+          display: false,
+          position: "right",
+          border: { color: "rgba(0,0,0,0)" },
+          title: {
+            display: true,
+            text: "股价（USD）",
+            color: themeTokens.axisColor,
+            font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
+          },
+          ticks: {
+            color: themeTokens.axisColor,
+            font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+            callback(value) {
+              return `$${decimalFormatter.format(Number(value))}`;
+            },
+          },
+          grid: {
+            drawOnChartArea: false,
+          },
+        },
       },
       plugins: {
-        legend: { display: false },
+        legend: {
+          display: false,
+          labels: {
+            color: themeTokens.axisColor,
+            font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
+            boxWidth: 12,
+            boxHeight: 12,
+            generateLabels(chart) {
+              const defaults = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+              return defaults
+                .filter((item) => {
+                  const dataset = chart.data.datasets[item.datasetIndex];
+                  return dataset?.priceOverlay || state.visibleCompanies.has(dataset?.companyId);
+                })
+                .sort((left, right) => {
+                  const leftDataset = chart.data.datasets[left.datasetIndex];
+                  const rightDataset = chart.data.datasets[right.datasetIndex];
+                  return Number(Boolean(leftDataset?.priceOverlay)) - Number(Boolean(rightDataset?.priceOverlay));
+                });
+            },
+          },
+        },
         tooltip: {
           backgroundColor: themeTokens.tooltipBg,
           titleColor: themeTokens.tooltipTitle,
@@ -1822,11 +2078,22 @@ function buildChart() {
           bodyFont: { family: themeTokens.chartFontFamily, size: 11, weight: "500" },
           callbacks: {
             title(context) {
+              const priceContext = context.find((item) => item.dataset.priceOverlay);
+              if (priceContext?.raw?.date) {
+                return `DATE：${priceContext.raw.date}`;
+              }
+              const periodEndContext = context.find((item) => item.raw?.periodEndDate);
+              if (periodEndContext?.raw?.periodEndDate) {
+                return `DATE：${periodEndContext.raw.periodEndDate}`;
+              }
               const prefix = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).tooltipPrefix;
               return `${prefix}：${context[0].label}`;
             },
             label(context) {
-              const label = String(context.label);
+              if (context.dataset.priceOverlay) {
+                return `股价：$${decimalFormatter.format(context.parsed.y)}`;
+              }
+              const label = String(context.raw?.periodLabel ?? context.label);
               const isForecast =
                 Array.isArray(context.dataset.forecastedLabels) &&
                 context.dataset.forecastedLabels.includes(label);
@@ -1872,6 +2139,12 @@ function bindEvents() {
       refreshChart("none");
     });
   });
+
+  if (priceComparisonToggleEl) {
+    priceComparisonToggleEl.addEventListener("change", () => {
+      setPriceComparisonEnabled(priceComparisonToggleEl.checked, "none");
+    });
+  }
 
   presetButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -2032,14 +2305,15 @@ function init() {
     const stamp = state.generatedAtLabel;
 
     if (warnings.length > 0) {
-      setStatus(
-        `已载入 ${loadedCount}/${COMPANIES.length} 家公司，数据更新于 ${stamp}。另有 ${warnings.length} 家存在缺失数据。`,
-        true,
-      );
+      state.loadedStatusText = `已载入 ${loadedCount}/${COMPANIES.length} 家公司，数据更新于 ${stamp}。另有 ${warnings.length} 家存在缺失数据。`;
+      state.loadedStatusIsError = true;
+      setStatus(state.loadedStatusText, state.loadedStatusIsError);
       return;
     }
 
-    setStatus(`数据更新于 ${stamp}，共载入 ${COMPANIES.length} 家公司，预测补点 ${forecastCount} 个。`, false);
+    state.loadedStatusText = `数据更新于 ${stamp}，共载入 ${COMPANIES.length} 家公司，预测补点 ${forecastCount} 个。`;
+    state.loadedStatusIsError = false;
+    setStatus(state.loadedStatusText, state.loadedStatusIsError);
   } catch (error) {
     console.error(error);
     setStatus(`加载失败：${error.message}`, true);

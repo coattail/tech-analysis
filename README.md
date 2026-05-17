@@ -24,6 +24,7 @@
 - 多时间粒度：季度、年度、滚动年度（TTM）
 - 多公司对比：支持单独显隐、全部显示、全部隐藏
 - 单公司增强视图：单公司时可切换折线图与柱状图
+- 单公司股价对比：在营收/净利润柱状图中叠加每日复权股价曲线
 - 时间区间过滤：底部双端滑块快速聚焦任意时间窗
 - 自适应纵轴：根据当前可见数据动态计算上下界
 - 尾部空区间裁剪：当当前样本公司在末尾年份或季度无数据时，横轴会自动裁掉尾部空标签
@@ -55,6 +56,7 @@
 - `style.css`：布局、配色与视觉样式
 - `script.js`：数据聚合、交互逻辑、图表渲染
 - `data.js`：浏览器直接加载的数据源
+- `price-data.js`：浏览器直接加载的每日复权股价数据源
 - `assets/logos/`：单公司视图使用的透明底公司 Logo
 - `Chart.js 4.4.1`：图表引擎
 
@@ -145,6 +147,14 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 - `forecastFlags` 清理
 - `revenueGrowth` 受影响区间重算
 
+股价数据使用独立刷新脚本：
+
+```bash
+node scripts/auto-refresh-price-data.mjs
+```
+
+脚本会从 Yahoo Finance chart 端点拉取每日复权收盘价并写入 `price-data.js`，供单公司营收/净利润柱状图的“股价对比”功能使用。
+
 ## 自动化与部署
 
 ### 自动刷新数据
@@ -153,7 +163,7 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 
 - 支持手动触发
 - 支持定时更新
-- 当 `data.js` 发生变化时自动提交到 `main`
+- 当 `data.js` 或 `price-data.js` 发生变化时自动提交到 `main`
 
 ### GitHub Pages 发布
 
@@ -162,6 +172,7 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 - `main` 分支有新提交时自动触发
 - 将静态文件发布到 GitHub Pages
 - 默认发布文件：`index.html`、`style.css`、`script.js`、`data.js`
+- 新增股价对比功能后，Pages 还会发布 `price-data.js` 与 `price-comparison.js`
 
 如果你 fork 本项目，请同步调整 README 中的徽章链接与 Pages 地址。
 
@@ -174,11 +185,13 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 │   └── pages.yml
 ├── assets/logos/
 ├── data.js
+├── price-data.js
 ├── index.html
 ├── script.js
 ├── style.css
 ├── scripts/
-│   └── auto-refresh-data.mjs
+│   ├── auto-refresh-data.mjs
+│   └── auto-refresh-price-data.mjs
 ├── README.md
 └── README.en.md
 ```

@@ -27,15 +27,18 @@ jobs:
       - name: Refresh data.js
         run: node scripts/auto-refresh-data.mjs
 
+      - name: Refresh price-data.js
+        run: node scripts/auto-refresh-price-data.mjs
+
       - name: Commit changes if data updated
         run: |
-          if git diff --quiet -- data.js; then
+          if git diff --quiet -- data.js price-data.js; then
             echo "No data update."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data.js
-          git commit -m "chore(data): auto refresh quarterly financials"
+          git add data.js price-data.js
+          git commit -m "chore(data): auto refresh dashboard datasets"
           git push

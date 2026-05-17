@@ -294,7 +294,7 @@ body:not([data-theme="deep"]) .panel {
 }
 
 .header-panel {
-  padding: 18px 20px 16px;
+  padding: 14px 18px 14px;
   background: var(--header-gradient);
   box-shadow: var(--shadow-lg);
   isolation: isolate;
@@ -303,13 +303,14 @@ body:not([data-theme="deep"]) .panel {
 .header-shell {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(280px, 380px);
-  gap: 18px;
-  align-items: start;
+  gap: 16px;
+  align-items: center;
 }
 
 .header-intro {
   display: grid;
-  gap: 12px;
+  gap: 0;
+  align-content: center;
 }
 
 .header-rail {
@@ -371,9 +372,9 @@ body:not([data-theme="deep"]) .header-panel {
 }
 
 .header-panel h1 {
-  margin: 4px 0 0;
-  font-size: clamp(1.72rem, 2.85vw, 2.95rem);
-  line-height: 1.16;
+  margin: 0;
+  font-size: clamp(1.62rem, 2.6vw, 2.72rem);
+  line-height: 1.12;
   letter-spacing: 0.005em;
   max-width: 860px;
   color: var(--chart-head-ink);
@@ -985,6 +986,8 @@ body:not([data-theme="deep"]) .chart-panel {
 .chart-side-tools {
   display: flex;
   align-items: flex-start;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -1019,7 +1022,8 @@ body:not([data-theme="deep"]) .chart-panel {
   align-items: center;
 }
 
-.chart-mode-control {
+.chart-mode-control,
+.price-comparison-control {
   display: grid;
   gap: 7px;
   min-width: 188px;
@@ -1074,6 +1078,48 @@ body:not([data-theme="deep"]) .chart-panel {
 .chart-mode-pill:hover span {
   border-color: var(--line-strong);
   background: var(--surface-hover);
+}
+
+.price-comparison-toggle {
+  display: block;
+}
+
+.price-comparison-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.price-comparison-toggle span {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  border: 1px solid rgba(112, 128, 151, 0.18);
+  background: linear-gradient(180deg, rgba(22, 30, 42, 0.92), rgba(17, 24, 34, 0.96));
+  color: var(--text-body);
+  font-size: 0.86rem;
+  font-weight: 580;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.price-comparison-toggle:hover span {
+  border-color: rgba(150, 163, 182, 0.28);
+  color: var(--option-active-text);
+}
+
+.price-comparison-toggle input:checked + span {
+  border-color: var(--option-active-border);
+  background: var(--option-active-bg);
+  color: var(--option-active-text);
+  box-shadow: var(--option-active-shadow);
+}
+
+.price-comparison-toggle input:focus-visible + span {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .chart-mode-pill input:checked + span {
@@ -1545,7 +1591,8 @@ body:not([data-theme="deep"]) .range-panel {
     flex-direction: column;
   }
 
-  .chart-mode-control {
+  .chart-mode-control,
+  .price-comparison-control {
     min-width: 0;
   }
 

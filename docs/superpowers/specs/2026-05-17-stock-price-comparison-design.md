@@ -105,7 +105,7 @@
 window.STOCK_PRICE_SOURCE_DATA = {
   meta: {
     generatedAt: "2026-05-17T00:00:00.000Z",
-    source: "<provider>",
+    source: "Yahoo Finance chart API",
     priceType: "adjusted-close"
   },
   companies: {
@@ -145,6 +145,8 @@ window.STOCK_PRICE_SOURCE_DATA = {
 - 两类数据的来源、频率、失败模式不同；
 - 独立脚本更容易排错；
 - 后续若要接入 GitHub Actions，也能独立控制刷新频率。
+
+第一版行情来源采用无需密钥的 Yahoo Finance chart 端点；前端只依赖本地 `price-data.js`，不直接耦合具体供应商。
 
 ## 错误处理与降级
 

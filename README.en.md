@@ -24,6 +24,7 @@ The project focuses on three things:
 - Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
 - Enhanced single-company mode: switch between line and bar charts
+- Single-company stock-price comparison for revenue/net-income bar charts
 - Time-range filtering via dual-handle slider
 - Adaptive y-axis bounds based on the currently visible data
 - Trailing empty-period trimming: if the selected companies do not have data for the latest year or quarter, empty labels at the end are removed automatically
@@ -55,6 +56,7 @@ As of April 23, 2026, the sample is expanded to the current top 30 U.S.-listed c
 - `style.css`: layout, colors, and visual system
 - `script.js`: data aggregation, interactions, and chart rendering
 - `data.js`: browser-loaded data source
+- `price-data.js`: browser-loaded daily adjusted-close stock-price data source
 - `assets/logos/`: transparent company logos used in single-company views
 - `Chart.js 4.4.1`: charting engine
 
@@ -145,6 +147,14 @@ The script currently handles:
 - `forecastFlags` cleanup
 - recomputation of impacted `revenueGrowth` ranges
 
+Stock-price data uses a standalone refresh script:
+
+```bash
+node scripts/auto-refresh-price-data.mjs
+```
+
+The script pulls daily adjusted-close values from the Yahoo Finance chart endpoint and writes them into `price-data.js` for the single-company stock-price comparison view.
+
 ## Automation and Deployment
 
 ### Automated Data Refresh
@@ -153,7 +163,7 @@ Workflow: `.github/workflows/data-auto-refresh.yml`
 
 - supports manual runs
 - supports scheduled updates
-- auto-commits when `data.js` changes
+- auto-commits when `data.js` or `price-data.js` changes
 
 ### GitHub Pages Deployment
 
@@ -161,7 +171,7 @@ Workflow: `.github/workflows/pages.yml`
 
 - runs on pushes to `main`
 - publishes the static site to GitHub Pages
-- deploys `index.html`, `style.css`, `script.js`, and `data.js`
+- deploys `index.html`, `style.css`, `script.js`, `data.js`, `price-data.js`, and `price-comparison.js`
 
 If you fork this repository, update the badge links and demo URL in the README files accordingly.
 
@@ -174,11 +184,13 @@ If you fork this repository, update the badge links and demo URL in the README f
 │   └── pages.yml
 ├── assets/logos/
 ├── data.js
+├── price-data.js
 ├── index.html
 ├── script.js
 ├── style.css
 ├── scripts/
-│   └── auto-refresh-data.mjs
+│   ├── auto-refresh-data.mjs
+│   └── auto-refresh-price-data.mjs
 ├── README.md
 └── README.en.md
 ```
