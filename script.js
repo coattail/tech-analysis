@@ -456,6 +456,7 @@ const METRICS = {
 const chartEl = document.getElementById("financeChart");
 const statusEl = document.getElementById("statusText");
 const togglesEl = document.getElementById("companyToggles");
+const generateBtn = document.getElementById("generateBtn");
 const showAllBtn = document.getElementById("showAllBtn");
 const hideAllBtn = document.getElementById("hideAllBtn");
 const downloadBtn = document.getElementById("downloadBtn");
@@ -476,6 +477,12 @@ const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
 const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
 const presetButtons = Array.from(document.querySelectorAll("[data-company-preset]"));
+const {
+  cloneCompanySet,
+  setPendingCompanyVisibility,
+  setAllPendingCompanyVisibility,
+  applyPendingCompanies,
+} = window.CompanySelectionUtils;
 
 const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
@@ -503,6 +510,7 @@ const state = {
   priceComparisonEnabled: false,
   lastPriceOverlayPointCount: 0,
   visibleCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
+  pendingCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   rangeStart: 0,
   rangeEnd: 0,
   generatedAtLabel: "-",
@@ -697,7 +705,7 @@ function syncPresetButtons() {
   presetButtons.forEach((button) => {
     const presetKey = button.dataset.companyPreset;
     const presetItems = COMPANY_PRESETS[presetKey] ?? [];
-    button.classList.toggle("is-active", setsMatch(state.visibleCompanies, presetItems));
+    button.classList.toggle("is-active", setsMatch(state.pendingCompanies, presetItems));
   });
 }
 
@@ -1898,7 +1906,7 @@ function createToggle(company) {
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
-  checkbox.checked = state.visibleCompanies.has(company.id);
+  checkbox.checked = state.pendingCompanies.has(company.id);
   checkbox.dataset.companyId = company.id;
 
   const dot = document.createElement("span");
@@ -1909,12 +1917,12 @@ function createToggle(company) {
   text.textContent = company.name;
 
   checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
-      state.visibleCompanies.add(company.id);
-    } else {
-      state.visibleCompanies.delete(company.id);
-    }
-    applyVisibilityStateToChart();
+    state.pendingCompanies = setPendingCompanyVisibility(
+      state.pendingCompanies,
+      company.id,
+      checkbox.checked,
+    );
+    syncPresetButtons();
   });
 
   label.append(checkbox, dot, text);
@@ -1932,21 +1940,26 @@ function setupTogglePanel() {
 function syncTogglePanelSelection() {
   const checkboxes = togglesEl.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox) => {
-    checkbox.checked = state.visibleCompanies.has(checkbox.dataset.companyId);
+    checkbox.checked = state.pendingCompanies.has(checkbox.dataset.companyId);
   });
 }
 
 function setAllVisibility(visible) {
-  state.visibleCompanies = visible ? new Set(COMPANIES.map((item) => item.id)) : new Set();
+  state.pendingCompanies = setAllPendingCompanyVisibility(COMPANIES, visible);
   syncTogglePanelSelection();
-  applyVisibilityStateToChart();
+  syncPresetButtons();
 }
 
 function applyCompanyPreset(presetKey) {
   const companyIds = COMPANY_PRESETS[presetKey];
   if (!companyIds) return;
-  state.visibleCompanies = new Set(companyIds);
+  state.pendingCompanies = cloneCompanySet(companyIds);
   syncTogglePanelSelection();
+  syncPresetButtons();
+}
+
+function generateSelectedCompanies() {
+  state.visibleCompanies = applyPendingCompanies(state.pendingCompanies);
   applyVisibilityStateToChart();
 }
 
@@ -2123,6 +2136,7 @@ function buildChart() {
 }
 
 function bindEvents() {
+  generateBtn.addEventListener("click", generateSelectedCompanies);
   showAllBtn.addEventListener("click", () => setAllVisibility(true));
   hideAllBtn.addEventListener("click", () => setAllVisibility(false));
 

@@ -10,12 +10,13 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20260430a" />
+    <link rel="stylesheet" href="style.css?v=20260519-generate-button" />
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script defer src="data.js?v=20260423c"></script>
     <script defer src="price-data.js?v=20260517-period-end-bars"></script>
     <script defer src="price-comparison.js?v=20260517-period-end-bars"></script>
-    <script defer src="script.js?v=20260517-period-end-bars"></script>
+    <script defer src="company-selection.js?v=20260519-generate-flow"></script>
+    <script defer src="script.js?v=20260519-generate-flow"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
@@ -73,11 +74,12 @@
             </div>
           </section>
 
-          <section class="control-group">
+          <section class="control-group company-control-group">
             <h3>公司显示</h3>
             <div id="companyToggles" class="toggle-list" aria-label="公司显示开关"></div>
 
             <div class="control-actions">
+              <button id="generateBtn" type="button">生成</button>
               <button id="showAllBtn" type="button">全部显示</button>
               <button id="hideAllBtn" type="button">全部隐藏</button>
             </div>

@@ -183,13 +183,13 @@ body[data-theme="deep"] {
   --btn-muted-bg-hover: linear-gradient(180deg, #1d2530 0%, #151c24 100%);
   --btn-muted-border: rgba(116, 131, 151, 0.18);
   --btn-muted-text: #d5dee9;
-  --btn-primary-bg: linear-gradient(180deg, #bf9a63 0%, #91683d 100%);
-  --btn-primary-bg-hover: linear-gradient(180deg, #cba670 0%, #9d754b 100%);
-  --btn-primary-border: rgba(196, 162, 108, 0.64);
-  --btn-primary-text: #1f160a;
+  --btn-primary-bg: linear-gradient(180deg, #ffd98a 0%, #e39b32 100%);
+  --btn-primary-bg-hover: linear-gradient(180deg, #ffe4a8 0%, #efad48 100%);
+  --btn-primary-border: rgba(255, 216, 145, 0.92);
+  --btn-primary-text: #241607;
   --btn-primary-shadow:
-    inset 0 1px 0 rgba(255, 244, 225, 0.18),
-    0 10px 20px rgba(65, 48, 24, 0.24);
+    inset 0 1px 0 rgba(255, 247, 230, 0.44),
+    0 10px 22px rgba(190, 124, 35, 0.36);
   --option-active-bg: linear-gradient(180deg, #2b3642 0%, #212a34 100%);
   --option-active-border: rgba(150, 163, 182, 0.28);
   --option-active-text: #eef3f8;
@@ -594,6 +594,13 @@ body:not([data-theme="deep"]) .control-panel {
     0 1px 0 rgba(255, 255, 255, 0.01);
 }
 
+.company-control-group {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
 body:not([data-theme="deep"]) .control-group {
   border-color: rgba(86, 117, 178, 0.54);
   background:
@@ -714,7 +721,8 @@ body:not([data-theme="deep"]) .control-group {
 .toggle-list {
   display: grid;
   gap: 8px;
-  max-height: 320px;
+  flex: 1 1 auto;
+  min-height: 420px;
   overflow: auto;
   padding-right: 4px;
 }
@@ -830,6 +838,19 @@ body:not([data-theme="deep"]) .control-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+}
+
+#generateBtn {
+  grid-column: 1 / -1;
+  border-color: var(--btn-primary-border);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--btn-primary-shadow);
+}
+
+#generateBtn:hover {
+  border-color: rgba(255, 222, 167, 0.98);
+  background: var(--btn-primary-bg-hover);
 }
 
 .control-actions button {
@@ -1620,6 +1641,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .toggle-list {
+    min-height: 0;
     max-height: none;
     overflow: visible;
   }
