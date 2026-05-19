@@ -380,12 +380,13 @@ test("initial chart build applies the same price overlay options as refresh", ()
   assert.match(buildChartBody, /max: priceBounds\.max,/);
 });
 
-test("company generation refreshes chart immediately after applying pending selection", () => {
+test("company generation rebuilds the chart after applying pending selection", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const generateBody = script.match(/function generateSelectedCompanies\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
 
   assert.match(generateBody, /state\.visibleCompanies = applyPendingCompanies\(state\.pendingCompanies\);/);
-  assert.match(generateBody, /refreshChart\("none"\);/);
+  assert.match(generateBody, /rebuildChartForCurrentView\(\);/);
+  assert.doesNotMatch(generateBody, /refreshChart\("none"\);/);
   assert.doesNotMatch(generateBody, /applyVisibilityStateToChart\(\);/);
 });
 

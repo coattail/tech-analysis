@@ -5,7 +5,7 @@ const assert = require("node:assert/strict");
 
 test("cache-busts local assets that changed the default chart and switching behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260519-switch-refresh";
+  const expectedVersion = "20260519-rebuild-chart";
 
   for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
     assert.match(
@@ -17,6 +17,7 @@ test("cache-busts local assets that changed the default chart and switching beha
 
   assert.doesNotMatch(html, /v=20260519-generate-applies/);
   assert.doesNotMatch(html, /v=20260519-nvidia-default/);
+  assert.doesNotMatch(html, /v=20260519-switch-refresh/);
 });
 
 test("publishes every local script referenced by the page", () => {

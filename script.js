@@ -1892,7 +1892,10 @@ function refreshChart(updateMode = undefined) {
   alignRangeWithChartAxis();
   updateRangeVisual();
   updateViewSummary();
+  updateChartStatus(hasPriceOverlay);
+}
 
+function updateChartStatus(hasPriceOverlay = false) {
   if (state.priceComparisonEnabled && hasPriceOverlay && state.loadedStatusText) {
     setStatus(`${state.loadedStatusText} 股价对比已开启：${state.lastPriceOverlayPointCount} 个日线点。`, state.loadedStatusIsError);
   } else if (state.priceComparisonEnabled && !hasPriceOverlay) {
@@ -1900,6 +1903,26 @@ function refreshChart(updateMode = undefined) {
   } else if (state.loadedStatusText) {
     setStatus(state.loadedStatusText, state.loadedStatusIsError);
   }
+}
+
+function rebuildChartForCurrentView() {
+  if (state.pendingVisibilityRefreshId != null) {
+    cancelAnimationFrame(state.pendingVisibilityRefreshId);
+    state.pendingVisibilityRefreshId = null;
+  }
+
+  syncPriceComparisonControl();
+
+  if (state.chart && typeof state.chart.destroy === "function") {
+    state.chart.destroy();
+  }
+  state.chart = null;
+
+  buildChart();
+  alignRangeWithChartAxis();
+  updateRangeVisual();
+  updateViewSummary();
+  updateChartStatus(Boolean(state.chart?.data?.datasets?.some((dataset) => dataset.priceOverlay)));
 }
 
 function createToggle(company) {
@@ -1976,7 +1999,7 @@ function generateSelectedCompanies() {
     syncRangeControls();
   }
 
-  refreshChart("none");
+  rebuildChartForCurrentView();
 }
 
 function buildChart() {
