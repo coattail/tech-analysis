@@ -1985,6 +1985,8 @@ function buildChart() {
   const { labels, datasets } = buildDatasetsForView();
   const effectiveChartMode = getEffectiveChartMode();
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
+  const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
+  const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
   const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
 
   state.chart = new Chart(chartEl, {
@@ -2065,9 +2067,11 @@ function buildChart() {
           },
         },
         yPrice: {
-          display: false,
+          display: hasPriceOverlay,
           position: "right",
           border: { color: "rgba(0,0,0,0)" },
+          min: priceBounds.min,
+          max: priceBounds.max,
           title: {
             display: true,
             text: "股价（USD）",
@@ -2088,7 +2092,7 @@ function buildChart() {
       },
       plugins: {
         legend: {
-          display: false,
+          display: hasPriceOverlay,
           labels: {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },

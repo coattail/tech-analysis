@@ -369,6 +369,17 @@ test("allows price labels to extend when range ends at the latest financial valu
   );
 });
 
+test("initial chart build applies the same price overlay options as refresh", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const buildChartBody = script.match(/function buildChart\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
+
+  assert.match(buildChartBody, /const priceBounds = computeAlignedPriceYAxisBounds\(datasets, yBounds\);/);
+  assert.match(buildChartBody, /const hasPriceOverlay = datasets\.some\(\(dataset\) => dataset\.priceOverlay\);/);
+  assert.match(buildChartBody, /display: hasPriceOverlay,/);
+  assert.match(buildChartBody, /min: priceBounds\.min,/);
+  assert.match(buildChartBody, /max: priceBounds\.max,/);
+});
+
 test("aligns the secondary-axis zero baseline with the primary axis", () => {
   assert.deepEqual(
     alignSecondaryAxisZero({
