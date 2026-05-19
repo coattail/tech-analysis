@@ -226,38 +226,6 @@
     );
   }
 
-  function getXAxisScaleMode({ chartMode, hasPriceOverlay, labelCount }) {
-    const normalizedLabelCount = Math.max(0, Number(labelCount) || 0);
-    if (hasPriceOverlay) {
-      return {
-        type: "linear",
-        offset: false,
-        gridOffset: false,
-        min: -0.5,
-        max: Math.max(-0.5, normalizedLabelCount - 0.5),
-      };
-    }
-
-    const useBarOffset = chartMode === "bar";
-    return {
-      type: "category",
-      offset: useBarOffset,
-      gridOffset: useBarOffset,
-      min: undefined,
-      max: undefined,
-    };
-  }
-
-  function formatContinuousXAxisTick(value, labels) {
-    const numericValue = Number(value);
-    if (!Number.isFinite(numericValue) || !Array.isArray(labels)) return "";
-
-    const index = Math.round(numericValue);
-    if (Math.abs(numericValue - index) > 1e-9) return "";
-    if (index < 0 || index >= labels.length) return "";
-    return labels[index] ?? "";
-  }
-
   function aggregateFlowRollingAnnualEntries(entries) {
     if (!Array.isArray(entries)) return [];
 
@@ -336,8 +304,6 @@
     getVisiblePeriodDateRange,
     extendVisibleLabelsThroughLatestPrice,
     shouldExtendPriceComparisonLabels,
-    getXAxisScaleMode,
-    formatContinuousXAxisTick,
     buildFinancialPeriodEndSeries,
     buildProjectedPriceSeries,
     getPriceOverlayDatasetOrder,

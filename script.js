@@ -1409,40 +1409,6 @@ function formatXAxisTick(label) {
   return label.endsWith("Q1") ? label.slice(0, 4) : "";
 }
 
-function getXAxisTickLabel(scale, value) {
-  const labels = scale?.chart?.data?.labels ?? [];
-  if (scale?.options?.type === "linear") {
-    return PriceComparisonUtils.formatContinuousXAxisTick(value, labels);
-  }
-  return scale?.getLabelForValue ? scale.getLabelForValue(value) : "";
-}
-
-function applyXAxisScaleMode(xScaleOptions, { labels, effectiveChartMode, hasPriceOverlay }) {
-  if (!xScaleOptions) return;
-  const scaleMode = PriceComparisonUtils.getXAxisScaleMode({
-    chartMode: effectiveChartMode,
-    hasPriceOverlay,
-    labelCount: labels.length,
-  });
-
-  xScaleOptions.type = scaleMode.type;
-  xScaleOptions.offset = scaleMode.offset;
-  if (!xScaleOptions.grid) xScaleOptions.grid = {};
-  xScaleOptions.grid.offset = scaleMode.gridOffset;
-
-  if (scaleMode.min == null) {
-    delete xScaleOptions.min;
-  } else {
-    xScaleOptions.min = scaleMode.min;
-  }
-
-  if (scaleMode.max == null) {
-    delete xScaleOptions.max;
-  } else {
-    xScaleOptions.max = scaleMode.max;
-  }
-}
-
 function resolveXGridColor(themeTokens, label, tickIndex) {
   const hidden = "rgba(0,0,0,0)";
 
@@ -1918,11 +1884,8 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.yPrice.min = priceBounds.min;
   state.chart.options.scales.yPrice.max = priceBounds.max;
   state.chart.options.scales.x.title.text = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle;
-  applyXAxisScaleMode(state.chart.options.scales.x, {
-    labels,
-    effectiveChartMode,
-    hasPriceOverlay,
-  });
+  state.chart.options.scales.x.offset = effectiveChartMode === "bar";
+  state.chart.options.scales.x.grid.offset = effectiveChartMode === "bar";
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
   state.chart.options.plugins.legend.display = hasPriceOverlay;
   state.chart.update(updateMode);
@@ -2023,12 +1986,6 @@ function buildChart() {
   const effectiveChartMode = getEffectiveChartMode();
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
   const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
-  const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
-  const initialXAxisScaleMode = PriceComparisonUtils.getXAxisScaleMode({
-    chartMode: effectiveChartMode,
-    hasPriceOverlay,
-    labelCount: labels.length,
-  });
 
   state.chart = new Chart(chartEl, {
     type: "line",
@@ -2052,16 +2009,8 @@ function buildChart() {
       },
       scales: {
         x: {
-          type: initialXAxisScaleMode.type,
-          offset: initialXAxisScaleMode.offset,
-          min: initialXAxisScaleMode.min,
-          max: initialXAxisScaleMode.max,
+          offset: effectiveChartMode === "bar",
           border: { color: "rgba(0,0,0,0)" },
-          afterBuildTicks(axis) {
-            if (axis.options.type !== "linear") return;
-            const chartLabels = axis.chart?.data?.labels ?? [];
-            axis.ticks = chartLabels.map((_, index) => ({ value: index }));
-          },
           title: {
             display: true,
             text: (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle,
@@ -2073,13 +2022,13 @@ function buildChart() {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
             callback(value) {
-              const label = getXAxisTickLabel(this, value);
+              const label = this.getLabelForValue(value);
               return formatXAxisTick(label);
             },
           },
           grid: {
             color: buildXGridColorCallback(themeTokens),
-            offset: initialXAxisScaleMode.gridOffset,
+            offset: effectiveChartMode === "bar",
             borderDash: [],
           },
         },

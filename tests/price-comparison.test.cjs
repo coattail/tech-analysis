@@ -7,8 +7,6 @@ const {
   getVisiblePeriodDateRange,
   extendVisibleLabelsThroughLatestPrice,
   shouldExtendPriceComparisonLabels,
-  getXAxisScaleMode,
-  formatContinuousXAxisTick,
   buildFinancialPeriodEndSeries,
   buildProjectedPriceSeries,
   getPriceOverlayDatasetOrder,
@@ -369,37 +367,6 @@ test("allows price labels to extend when range ends at the latest financial valu
     }),
     false,
   );
-});
-
-test("uses a continuous x-axis when price comparison overlays fractional date positions", () => {
-  assert.deepEqual(
-    getXAxisScaleMode({ chartMode: "bar", hasPriceOverlay: true, labelCount: 86 }),
-    {
-      type: "linear",
-      offset: false,
-      gridOffset: false,
-      min: -0.5,
-      max: 85.5,
-    },
-  );
-
-  assert.deepEqual(
-    getXAxisScaleMode({ chartMode: "bar", hasPriceOverlay: false, labelCount: 86 }),
-    {
-      type: "category",
-      offset: true,
-      gridOffset: true,
-      min: undefined,
-      max: undefined,
-    },
-  );
-});
-
-test("formats continuous x-axis ticks from integer period indexes only", () => {
-  assert.equal(formatContinuousXAxisTick(0, ["2025Q1", "2025Q2"]), "2025Q1");
-  assert.equal(formatContinuousXAxisTick(1, ["2025Q1", "2025Q2"]), "2025Q2");
-  assert.equal(formatContinuousXAxisTick(0.5, ["2025Q1", "2025Q2"]), "");
-  assert.equal(formatContinuousXAxisTick(-0.5, ["2025Q1", "2025Q2"]), "");
 });
 
 test("aligns the secondary-axis zero baseline with the primary axis", () => {
