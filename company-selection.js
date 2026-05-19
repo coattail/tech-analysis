@@ -1,4 +1,12 @@
 (function attachCompanySelection(globalScope) {
+  const DEFAULT_INITIAL_COMPANIES = ["nvidia"];
+  const DEFAULT_INITIAL_VIEW = {
+    metric: "netIncome",
+    frequency: "quarterly",
+    chartMode: "bar",
+    priceComparisonEnabled: true,
+  };
+
   function cloneCompanySet(companyIds) {
     return new Set(companyIds ?? []);
   }
@@ -47,13 +55,23 @@
       && hasCompanySelectionChanged(appliedCompanies, pendingCompanies);
   }
 
+  function shouldResetRangeAfterApplyingCompanies({
+    appliedCompanies,
+    pendingCompanies,
+  }) {
+    return hasCompanySelectionChanged(appliedCompanies, pendingCompanies);
+  }
+
   const api = {
+    DEFAULT_INITIAL_COMPANIES,
+    DEFAULT_INITIAL_VIEW,
     cloneCompanySet,
     setPendingCompanyVisibility,
     setAllPendingCompanyVisibility,
     applyPendingCompanies,
     hasCompanySelectionChanged,
     shouldKeepSelectionPendingUntilGenerate,
+    shouldResetRangeAfterApplyingCompanies,
   };
 
   if (typeof module !== "undefined" && module.exports) {

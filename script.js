@@ -74,7 +74,17 @@ const COMPANIES = [
   { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
-const DEFAULT_VISIBLE_COMPANIES = ["apple", "microsoft", "nvidia", "amazon"];
+const {
+  DEFAULT_INITIAL_COMPANIES,
+  DEFAULT_INITIAL_VIEW,
+  cloneCompanySet,
+  setPendingCompanyVisibility,
+  setAllPendingCompanyVisibility,
+  applyPendingCompanies,
+  shouldResetRangeAfterApplyingCompanies,
+} = window.CompanySelectionUtils;
+
+const DEFAULT_VISIBLE_COMPANIES = DEFAULT_INITIAL_COMPANIES;
 const COMPANY_PRESETS = {
   focus: DEFAULT_VISIBLE_COMPANIES,
   ai: ["microsoft", "nvidia", "amazon", "meta"],
@@ -477,13 +487,6 @@ const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
 const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
 const presetButtons = Array.from(document.querySelectorAll("[data-company-preset]"));
-const {
-  cloneCompanySet,
-  setPendingCompanyVisibility,
-  setAllPendingCompanyVisibility,
-  applyPendingCompanies,
-} = window.CompanySelectionUtils;
-
 const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
 const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.28;
@@ -504,10 +507,10 @@ const EXPORT_DEVICE_PIXEL_RATIO = 8;
 
 const state = {
   chart: null,
-  metric: "revenue",
-  frequency: "quarterly",
-  chartMode: "line",
-  priceComparisonEnabled: false,
+  metric: DEFAULT_INITIAL_VIEW.metric,
+  frequency: DEFAULT_INITIAL_VIEW.frequency,
+  chartMode: DEFAULT_INITIAL_VIEW.chartMode,
+  priceComparisonEnabled: DEFAULT_INITIAL_VIEW.priceComparisonEnabled,
   lastPriceOverlayPointCount: 0,
   visibleCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   pendingCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
@@ -1963,7 +1966,18 @@ function applyCompanyPreset(presetKey) {
 }
 
 function generateSelectedCompanies() {
+  const shouldResetRange = shouldResetRangeAfterApplyingCompanies({
+    appliedCompanies: state.visibleCompanies,
+    pendingCompanies: state.pendingCompanies,
+  });
+
   state.visibleCompanies = applyPendingCompanies(state.pendingCompanies);
+
+  if (shouldResetRange) {
+    setRangeToVisibleDataBounds(state.frequency, state.metric);
+    syncRangeControls();
+  }
+
   applyVisibilityStateToChart();
 }
 

@@ -15,8 +15,8 @@
     <script defer src="data.js?v=20260423c"></script>
     <script defer src="price-data.js?v=20260517-period-end-bars"></script>
     <script defer src="price-comparison.js?v=20260519-range-boundary"></script>
-    <script defer src="company-selection.js?v=20260519-generate-applies"></script>
-    <script defer src="script.js?v=20260519-generate-applies"></script>
+    <script defer src="company-selection.js?v=20260519-nvidia-default"></script>
+    <script defer src="script.js?v=20260519-nvidia-default"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
@@ -105,11 +105,11 @@
                 <span class="chart-mode-caption">单公司视图</span>
                 <div class="chart-mode-switch" role="radiogroup" aria-label="图表类型切换">
                   <label class="chart-mode-pill">
-                    <input type="radio" name="chartMode" value="line" checked />
+                    <input type="radio" name="chartMode" value="line" />
                     <span>折线</span>
                   </label>
                   <label class="chart-mode-pill">
-                    <input type="radio" name="chartMode" value="bar" />
+                    <input type="radio" name="chartMode" value="bar" checked />
                     <span>柱状</span>
                   </label>
                 </div>
@@ -117,7 +117,7 @@
               <div id="priceComparisonControl" class="price-comparison-control" hidden>
                 <span class="chart-mode-caption">辅助阅读</span>
                 <label class="price-comparison-toggle">
-                  <input id="priceComparisonToggle" type="checkbox" />
+                  <input id="priceComparisonToggle" type="checkbox" checked />
                   <span>股价对比</span>
                 </label>
               </div>
@@ -129,7 +129,7 @@
           <div class="chart-summary" aria-label="当前视图摘要">
             <div class="summary-card">
               <span class="summary-label">当前指标</span>
-              <strong id="activeMetricLabel">营收（十亿美元）</strong>
+              <strong id="activeMetricLabel">净利润</strong>
             </div>
             <div class="summary-card">
               <span class="summary-label">时间粒度</span>
@@ -137,7 +137,7 @@
             </div>
             <div class="summary-card">
               <span class="summary-label">当前公司</span>
-              <strong id="visibleCompaniesLabel">4 / 30</strong>
+              <strong id="visibleCompaniesLabel">1 / 30</strong>
             </div>
             <div class="summary-card">
               <span class="summary-label">数据更新</span>
@@ -146,11 +146,11 @@
           </div>
           <div class="metric-toolbar" role="radiogroup" aria-label="指标切换">
             <label class="metric-pill">
-              <input type="radio" name="metric" value="revenue" checked />
+              <input type="radio" name="metric" value="revenue" />
               <span>营收</span>
             </label>
             <label class="metric-pill">
-              <input type="radio" name="metric" value="netIncome" />
+              <input type="radio" name="metric" value="netIncome" checked />
               <span>净利润</span>
             </label>
             <label class="metric-pill">
