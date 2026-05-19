@@ -18,3 +18,19 @@ test("cache-busts local assets that changed the default chart and switching beha
   assert.doesNotMatch(html, /v=20260519-generate-applies/);
   assert.doesNotMatch(html, /v=20260519-nvidia-default/);
 });
+
+test("publishes every local script referenced by the page", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const workflow = fs.readFileSync(path.join(__dirname, "..", ".github/workflows/pages.yml"), "utf8");
+  const localScripts = [...html.matchAll(/<script defer src="([^":]+?\.js)\?v=/g)]
+    .map((match) => match[1])
+    .filter((asset) => !asset.startsWith("http"));
+
+  for (const script of localScripts) {
+    assert.match(
+      workflow,
+      new RegExp(`\\b${script.replace(".", "\\.")}\\b`),
+      `${script} should be copied into the Pages artifact`,
+    );
+  }
+});
