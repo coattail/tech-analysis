@@ -6,6 +6,7 @@ const {
   normalizePriceComparisonEnabled,
   getVisiblePeriodDateRange,
   extendVisibleLabelsThroughLatestPrice,
+  shouldExtendPriceComparisonLabels,
   buildFinancialPeriodEndSeries,
   buildProjectedPriceSeries,
   getPriceOverlayDatasetOrder,
@@ -252,7 +253,7 @@ test("uses Nvidia fiscal period ends without collapsing bar spacing", () => {
 });
 
 
-test("annualizes rolling flow windows with one missing quarter", () => {
+test("does not annualize rolling flow windows across missing source quarters", () => {
   const result = aggregateFlowRollingAnnualEntries([
     ["2005Q1", 100],
     ["2005Q2", 200],
@@ -261,23 +262,34 @@ test("annualizes rolling flow windows with one missing quarter", () => {
   ]);
 
   assert.deepEqual(result, [
-    ["2005Q1", 400],
-    ["2005Q2", 600],
-    ["2005Q3", 600],
-    ["2005Q4", 933.3333333333334],
+    ["2005Q1", 100],
+    ["2005Q2", 300],
+    ["2005Q3", null],
+    ["2005Q4", null],
   ]);
 });
 
 
-test("keeps Costco rolling net income visible across isolated source gaps", () => {
+test("keeps quarterly net income populated without internal source gaps", () => {
   const data = loadFinancialSourceData();
-  const labels = data.periods.filter((period) => period >= "2005Q1" && period <= "2008Q4");
-  const entries = labels.map((label) => [label, data.companies.costco.earnings[label] ?? null]);
-  const nullLabels = aggregateFlowRollingAnnualEntries(entries)
-    .filter(([, value]) => value == null)
-    .map(([label]) => label);
+  const missing = [];
 
-  assert.equal(nullLabels.length, 0);
+  for (const [companyId, company] of Object.entries(data.companies)) {
+    const populatedPeriods = data.periods.filter((period) => company.earnings?.[period] != null);
+    if (populatedPeriods.length === 0) continue;
+
+    const firstIndex = data.periods.indexOf(populatedPeriods[0]);
+    const lastIndex = data.periods.indexOf(populatedPeriods.at(-1));
+    for (let index = firstIndex; index <= lastIndex; index += 1) {
+      const period = data.periods[index];
+      const value = company.earnings?.[period];
+      if (value == null || Number.isNaN(value)) {
+        missing.push(`${companyId}:${period}`);
+      }
+    }
+  }
+
+  assert.deepEqual(missing, []);
 });
 
 test("keeps latest quarter populated across companies except non-applicable bank gross margin", () => {
@@ -334,6 +346,26 @@ test("does not extend price comparison labels beyond a user-limited range", () =
       allowExtension: false,
     }),
     ["2022Q1", "2022Q2"],
+  );
+});
+
+test("allows price labels to extend when range ends at the latest financial value", () => {
+  assert.equal(
+    shouldExtendPriceComparisonLabels({
+      rangeEnd: 84,
+      latestVisibleFinancialIndex: 84,
+      allLabelsLength: 86,
+    }),
+    true,
+  );
+
+  assert.equal(
+    shouldExtendPriceComparisonLabels({
+      rangeEnd: 60,
+      latestVisibleFinancialIndex: 84,
+      allLabelsLength: 86,
+    }),
+    false,
   );
 });
 

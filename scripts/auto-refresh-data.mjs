@@ -139,6 +139,52 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   jnj: {
     "2005Q4": { revenue: 12_610_000_000, earnings: 2_183_000_000 },
   },
+  // Historical net-income backfills below are sourced from company SEC annual-report
+  // "Selected/Supplementary/Quarterly Financial Data" tables. Values are reported
+  // in millions unless Costco reports in thousands; all values here are USD.
+  micron: {
+    // FY2005/FY2007-FY2009 Form 10-K quarterly financial information.
+    "2005Q3": { earnings: 43_100_000 },
+    "2007Q3": { earnings: -158_000_000 },
+    "2007Q4": { earnings: -262_000_000 },
+    "2008Q3": { earnings: -344_000_000 },
+    "2009Q3": { earnings: -88_000_000 },
+  },
+  oracle: {
+    // FY2009-FY2011 Form 10-K selected quarterly financial data.
+    "2008Q3": { earnings: 1_077_000_000 },
+    "2008Q4": { earnings: 1_296_000_000 },
+    "2009Q1": { earnings: 1_329_000_000 },
+    "2009Q2": { earnings: 1_891_000_000 },
+    "2009Q3": { earnings: 1_124_000_000 },
+    "2009Q4": { earnings: 1_458_000_000 },
+    "2010Q1": { earnings: 1_189_000_000 },
+    "2010Q2": { earnings: 2_364_000_000 },
+    "2010Q3": { earnings: 1_352_000_000 },
+    "2010Q4": { earnings: 1_870_000_000 },
+    "2011Q1": { earnings: 2_116_000_000 },
+    "2011Q2": { earnings: 3_209_000_000 },
+  },
+  amd: {
+    // FY2005/FY2007 Form 10-K selected quarterly financial data.
+    "2005Q4": { earnings: 95_588_000 },
+    "2007Q4": { earnings: -1_772_000_000 },
+  },
+  costco: {
+    // FY2005/FY2007 Form 10-K quarterly financial data.
+    "2005Q3": { earnings: 354_699_000 },
+    "2007Q3": { earnings: 372_422_000 },
+  },
+  caterpillar: {
+    // FY2005 Form 10-K annual-report quarterly profit table.
+    "2005Q4": { earnings: 846_000_000 },
+  },
+  cisco: {
+    // FY2005-FY2007 Form 10-K exhibit 13 supplementary financial data.
+    "2005Q3": { earnings: 1_540_000_000 },
+    "2006Q3": { earnings: 1_544_000_000 },
+    "2007Q3": { earnings: 1_930_000_000 },
+  },
   netflix: {
     "2005Q1": { revenue: 152_446_000 },
     "2005Q2": { revenue: 164_027_000 },

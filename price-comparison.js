@@ -205,6 +205,27 @@
     return labels;
   }
 
+  function shouldExtendPriceComparisonLabels({
+    rangeEnd,
+    latestVisibleFinancialIndex,
+    allLabelsLength,
+  }) {
+    const normalizedRangeEnd = Number(rangeEnd);
+    const normalizedLatestFinancialIndex = Number(latestVisibleFinancialIndex);
+    const normalizedAllLabelsLength = Number(allLabelsLength);
+
+    if (!Number.isFinite(normalizedRangeEnd) || normalizedRangeEnd < 0) return false;
+    if (!Number.isFinite(normalizedAllLabelsLength) || normalizedAllLabelsLength <= 0) return false;
+    if (!Number.isFinite(normalizedLatestFinancialIndex) || normalizedLatestFinancialIndex < 0) {
+      return normalizedRangeEnd >= normalizedAllLabelsLength - 1;
+    }
+
+    return normalizedRangeEnd >= Math.min(
+      normalizedLatestFinancialIndex,
+      normalizedAllLabelsLength - 1,
+    );
+  }
+
   function aggregateFlowRollingAnnualEntries(entries) {
     if (!Array.isArray(entries)) return [];
 
@@ -214,14 +235,13 @@
       const values = windowEntries
         .map(([, value]) => (value == null || value === "" ? null : Number(value)))
         .filter((value) => Number.isFinite(value));
-      const missingCount = windowEntries.length - values.length;
 
-      if (values.length === 0 || missingCount > 1) {
+      if (values.length !== windowEntries.length) {
         return [label, null];
       }
 
       const sum = values.reduce((total, value) => total + value, 0);
-      return [label, (sum * 4) / values.length];
+      return [label, sum];
     });
   }
 
@@ -283,6 +303,7 @@
     normalizePriceComparisonEnabled,
     getVisiblePeriodDateRange,
     extendVisibleLabelsThroughLatestPrice,
+    shouldExtendPriceComparisonLabels,
     buildFinancialPeriodEndSeries,
     buildProjectedPriceSeries,
     getPriceOverlayDatasetOrder,

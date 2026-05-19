@@ -1323,6 +1323,7 @@ function buildDatasetsForView() {
         : company.name,
       companyId: company.id,
       order: useBarDataset ? PriceComparisonUtils.getFinancialBarDatasetOrder() : 0,
+      fullData,
       data: fullData.slice(state.rangeStart, state.rangeEnd + 1),
       forecastedLabels: [...forecasted],
       borderColor: company.color,
@@ -1343,8 +1344,14 @@ function buildDatasetsForView() {
   });
 
   let lastVisibleValueIndex = -1;
+  let latestVisibleFinancialIndex = -1;
   datasets.forEach((dataset) => {
     if (dataset.hidden) return;
+    for (let index = dataset.fullData.length - 1; index >= 0; index -= 1) {
+      if (!isFiniteNumber(dataset.fullData[index])) continue;
+      latestVisibleFinancialIndex = Math.max(latestVisibleFinancialIndex, index);
+      break;
+    }
     for (let index = dataset.data.length - 1; index >= 0; index -= 1) {
       if (!isFiniteNumber(dataset.data[index])) continue;
       lastVisibleValueIndex = Math.max(lastVisibleValueIndex, index);
@@ -1360,7 +1367,11 @@ function buildDatasetsForView() {
       allLabels: fullLabels,
       dailyPrices: getSingleCompanyDailyPrices(),
       frequency: state.frequency,
-      allowExtension: state.rangeEnd >= fullLabels.length - 1,
+      allowExtension: PriceComparisonUtils.shouldExtendPriceComparisonLabels({
+        rangeEnd: state.rangeEnd,
+        latestVisibleFinancialIndex,
+        allLabelsLength: fullLabels.length,
+      }),
     })
     : financialVisibleLabels;
   const paddedDatasets = datasets.map((dataset) => ({
