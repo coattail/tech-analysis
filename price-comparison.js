@@ -161,10 +161,12 @@
     allLabels,
     dailyPrices,
     frequency,
+    allowExtension = true,
   }) {
     if (!Array.isArray(visibleLabels) || visibleLabels.length === 0) return [];
     if (!Array.isArray(allLabels) || allLabels.length === 0) return [...visibleLabels];
     if (!dailyPrices || typeof dailyPrices !== "object") return [...visibleLabels];
+    if (!allowExtension) return [...visibleLabels];
 
     const latestPriceDate = Object.keys(dailyPrices)
       .filter((date) => dateToUtcMs(date) != null)

@@ -25,11 +25,35 @@
     return cloneCompanySet(pendingCompanies);
   }
 
+  function hasCompanySelectionChanged(appliedCompanies, pendingCompanies) {
+    const applied = cloneCompanySet(appliedCompanies);
+    const pending = cloneCompanySet(pendingCompanies);
+
+    if (applied.size !== pending.size) return true;
+
+    for (const companyId of applied) {
+      if (!pending.has(companyId)) return true;
+    }
+
+    return false;
+  }
+
+  function shouldKeepSelectionPendingUntilGenerate({
+    priceComparisonEnabled,
+    appliedCompanies,
+    pendingCompanies,
+  }) {
+    return Boolean(priceComparisonEnabled)
+      && hasCompanySelectionChanged(appliedCompanies, pendingCompanies);
+  }
+
   const api = {
     cloneCompanySet,
     setPendingCompanyVisibility,
     setAllPendingCompanyVisibility,
     applyPendingCompanies,
+    hasCompanySelectionChanged,
+    shouldKeepSelectionPendingUntilGenerate,
   };
 
   if (typeof module !== "undefined" && module.exports) {

@@ -254,6 +254,22 @@ test("extends visible period labels through the latest available stock price", (
   );
 });
 
+test("does not extend price comparison labels beyond a user-limited range", () => {
+  assert.deepEqual(
+    extendVisibleLabelsThroughLatestPrice({
+      visibleLabels: ["2022Q1", "2022Q2"],
+      allLabels: ["2022Q1", "2022Q2", "2022Q3", "2022Q4", "2023Q1"],
+      dailyPrices: {
+        "2022-06-30": 100,
+        "2023-02-15": 120,
+      },
+      frequency: "quarterly",
+      allowExtension: false,
+    }),
+    ["2022Q1", "2022Q2"],
+  );
+});
+
 test("aligns the secondary-axis zero baseline with the primary axis", () => {
   assert.deepEqual(
     alignSecondaryAxisZero({

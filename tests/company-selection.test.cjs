@@ -5,6 +5,8 @@ const {
   setPendingCompanyVisibility,
   setAllPendingCompanyVisibility,
   applyPendingCompanies,
+  hasCompanySelectionChanged,
+  shouldKeepSelectionPendingUntilGenerate,
 } = require('../company-selection.js');
 
 test('company toggles change pending selection without mutating applied selection', () => {
@@ -35,4 +37,33 @@ test('applying pending companies returns an isolated visible-company set', () =>
 
   assert.deepEqual([...applied].sort(), ['apple', 'meta']);
   assert.deepEqual([...pending].sort(), ['apple', 'meta', 'nvidia']);
+});
+
+test('detects when pending selection differs from the applied company view', () => {
+  const applied = cloneCompanySet(['apple']);
+  const samePending = cloneCompanySet(['apple']);
+  const changedPending = cloneCompanySet(['microsoft']);
+
+  assert.equal(hasCompanySelectionChanged(applied, samePending), false);
+  assert.equal(hasCompanySelectionChanged(applied, changedPending), true);
+});
+
+test('keeps a changed company selection pending until generate is clicked', () => {
+  assert.equal(
+    shouldKeepSelectionPendingUntilGenerate({
+      priceComparisonEnabled: true,
+      appliedCompanies: cloneCompanySet(['nvidia']),
+      pendingCompanies: cloneCompanySet(['alphabet']),
+    }),
+    true,
+  );
+
+  assert.equal(
+    shouldKeepSelectionPendingUntilGenerate({
+      priceComparisonEnabled: true,
+      appliedCompanies: cloneCompanySet(['nvidia']),
+      pendingCompanies: cloneCompanySet(['nvidia']),
+    }),
+    false,
+  );
 });

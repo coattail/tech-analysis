@@ -1372,6 +1372,7 @@ function buildDatasetsForView() {
       allLabels: fullLabels,
       dailyPrices: getSingleCompanyDailyPrices(),
       frequency: state.frequency,
+      allowExtension: state.rangeEnd >= fullLabels.length - 1,
     })
     : financialVisibleLabels;
   const paddedDatasets = datasets.map((dataset) => ({
@@ -1917,11 +1918,12 @@ function createToggle(company) {
   text.textContent = company.name;
 
   checkbox.addEventListener("change", () => {
-    state.pendingCompanies = setPendingCompanyVisibility(
+    const nextPendingCompanies = setPendingCompanyVisibility(
       state.pendingCompanies,
       company.id,
       checkbox.checked,
     );
+    state.pendingCompanies = nextPendingCompanies;
     syncPresetButtons();
   });
 
@@ -1945,7 +1947,8 @@ function syncTogglePanelSelection() {
 }
 
 function setAllVisibility(visible) {
-  state.pendingCompanies = setAllPendingCompanyVisibility(COMPANIES, visible);
+  const nextPendingCompanies = setAllPendingCompanyVisibility(COMPANIES, visible);
+  state.pendingCompanies = nextPendingCompanies;
   syncTogglePanelSelection();
   syncPresetButtons();
 }
@@ -1953,7 +1956,8 @@ function setAllVisibility(visible) {
 function applyCompanyPreset(presetKey) {
   const companyIds = COMPANY_PRESETS[presetKey];
   if (!companyIds) return;
-  state.pendingCompanies = cloneCompanySet(companyIds);
+  const nextPendingCompanies = cloneCompanySet(companyIds);
+  state.pendingCompanies = nextPendingCompanies;
   syncTogglePanelSelection();
   syncPresetButtons();
 }
