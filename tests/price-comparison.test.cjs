@@ -9,6 +9,7 @@ const {
   shouldExtendPriceComparisonLabels,
   buildFinancialPeriodEndSeries,
   buildProjectedPriceSeries,
+  extendRangeEndThroughLatestPrice,
   getPriceOverlayDatasetOrder,
   getFinancialBarDatasetOrder,
   alignSecondaryAxisZero,
@@ -369,6 +370,21 @@ test("allows price labels to extend when range ends at the latest financial valu
   );
 });
 
+test("extends the range control end through the latest price period", () => {
+  assert.equal(
+    extendRangeEndThroughLatestPrice({
+      rangeStart: 0,
+      rangeEnd: 1,
+      allLabels: ["2025Q4", "2026Q1", "2026Q2"],
+      dailyPrices: {
+        "2026-05-18": 120,
+      },
+      frequency: "quarterly",
+    }),
+    2,
+  );
+});
+
 test("initial chart build applies the same price overlay options as refresh", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const buildChartBody = script.match(/function buildChart\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
@@ -378,6 +394,13 @@ test("initial chart build applies the same price overlay options as refresh", ()
   assert.match(buildChartBody, /display: hasPriceOverlay,/);
   assert.match(buildChartBody, /min: priceBounds\.min,/);
   assert.match(buildChartBody, /max: priceBounds\.max,/);
+});
+
+test("visible-data range includes latest price period for price comparison", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const setRangeBody = script.match(/function setRangeToVisibleDataBounds\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(setRangeBody, /extendRangeEndThroughLatestPrice/);
 });
 
 test("company generation rebuilds the chart after applying pending selection", () => {

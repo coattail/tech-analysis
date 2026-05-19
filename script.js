@@ -692,7 +692,16 @@ function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state
 
   const bounds = getVisibleDataBounds(frequency, metric);
   state.rangeStart = bounds.start;
-  state.rangeEnd = bounds.end;
+  state.rangeEnd = canEnablePriceComparisonForCurrentView()
+    ? PriceComparisonUtils.extendRangeEndThroughLatestPrice({
+      rangeStart: bounds.start,
+      rangeEnd: bounds.end,
+      allLabels: labels,
+      dailyPrices: getSingleCompanyDailyPrices(),
+      frequency,
+      allowExtension: true,
+    })
+    : bounds.end;
 }
 
 function setDefaultRangeForFrequency(frequency) {

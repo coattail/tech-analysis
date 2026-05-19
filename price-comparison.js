@@ -205,6 +205,36 @@
     return labels;
   }
 
+  function extendRangeEndThroughLatestPrice({
+    rangeStart,
+    rangeEnd,
+    allLabels,
+    dailyPrices,
+    frequency,
+    allowExtension = true,
+  }) {
+    const normalizedStart = Number(rangeStart);
+    const normalizedEnd = Number(rangeEnd);
+
+    if (!Number.isInteger(normalizedStart) || !Number.isInteger(normalizedEnd)) return rangeEnd;
+    if (!Array.isArray(allLabels) || allLabels.length === 0) return normalizedEnd;
+    if (!allowExtension || !dailyPrices || typeof dailyPrices !== "object") return normalizedEnd;
+
+    const boundedStart = Math.max(0, Math.min(normalizedStart, allLabels.length - 1));
+    const boundedEnd = Math.max(boundedStart, Math.min(normalizedEnd, allLabels.length - 1));
+    const visibleLabels = allLabels.slice(boundedStart, boundedEnd + 1);
+    const extendedLabels = extendVisibleLabelsThroughLatestPrice({
+      visibleLabels,
+      allLabels,
+      dailyPrices,
+      frequency,
+      allowExtension,
+    });
+    const extendedEnd = allLabels.indexOf(extendedLabels.at(-1));
+
+    return extendedEnd > boundedEnd ? extendedEnd : boundedEnd;
+  }
+
   function shouldExtendPriceComparisonLabels({
     rangeEnd,
     latestVisibleFinancialIndex,
@@ -303,6 +333,7 @@
     normalizePriceComparisonEnabled,
     getVisiblePeriodDateRange,
     extendVisibleLabelsThroughLatestPrice,
+    extendRangeEndThroughLatestPrice,
     shouldExtendPriceComparisonLabels,
     buildFinancialPeriodEndSeries,
     buildProjectedPriceSeries,
