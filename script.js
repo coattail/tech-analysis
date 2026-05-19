@@ -1976,7 +1976,7 @@ function generateSelectedCompanies() {
     syncRangeControls();
   }
 
-  applyVisibilityStateToChart();
+  refreshChart("none");
 }
 
 function buildChart() {
