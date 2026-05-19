@@ -739,14 +739,13 @@ function syncPriceComparisonControl() {
     metric: state.metric,
   }) && hasDailyPrices;
 
-  if (PriceComparisonUtils.shouldResetPriceComparison({
+  state.priceComparisonEnabled = PriceComparisonUtils.normalizePriceComparisonEnabled({
     enabled: state.priceComparisonEnabled,
     visibleCompanyCount,
     chartMode: effectiveChartMode,
     metric: state.metric,
-  }) || (state.priceComparisonEnabled && !hasDailyPrices)) {
-    state.priceComparisonEnabled = false;
-  }
+    hasDailyPrices,
+  });
 
   if (priceComparisonControlEl) {
     priceComparisonControlEl.hidden = !canShow;
@@ -859,24 +858,10 @@ function aggregatePointAnnual(quarterSeries) {
 
 function aggregateFlowRollingAnnual(quarterSeries) {
   const rolling = emptySeries(QUARTER_LABELS);
+  const entries = QUARTER_LABELS.map((label) => [label, quarterSeries.get(label)]);
 
-  QUARTER_LABELS.forEach((period, index) => {
-    const windowStart = Math.max(0, index - 3);
-    const windowKeys = QUARTER_LABELS.slice(windowStart, index + 1);
-    const values = windowKeys.map((key) => quarterSeries.get(key));
-    if (!values.every((v) => isFiniteNumber(v))) {
-      rolling.set(period, null);
-      return;
-    }
-
-    const sum = values.reduce((sum, v) => sum + v, 0);
-    if (windowKeys.length < 4) {
-      // For the first three quarters (2005Q1-Q3), annualize available quarters.
-      rolling.set(period, (sum * 4) / windowKeys.length);
-      return;
-    }
-
-    rolling.set(period, sum);
+  PriceComparisonUtils.aggregateFlowRollingAnnualEntries(entries).forEach(([label, value]) => {
+    rolling.set(label, isFiniteNumber(value) ? value : null);
   });
 
   return rolling;
@@ -1865,6 +1850,8 @@ function buildChartLayoutPadding(effectiveChartMode) {
 
 function refreshChart(updateMode = undefined) {
   if (!state.chart) return;
+
+  syncPriceComparisonControl();
 
   const { labels, datasets } = buildDatasetsForView();
   const effectiveChartMode = getEffectiveChartMode();

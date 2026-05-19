@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const {
   canShowPriceComparison,
   shouldResetPriceComparison,
+  normalizePriceComparisonEnabled,
   getVisiblePeriodDateRange,
   extendVisibleLabelsThroughLatestPrice,
   buildFinancialPeriodEndSeries,
@@ -10,6 +11,7 @@ const {
   getPriceOverlayDatasetOrder,
   getFinancialBarDatasetOrder,
   alignSecondaryAxisZero,
+  aggregateFlowRollingAnnualEntries,
 } = require("../price-comparison.js");
 const {
   normalizeAdjustedCloseRows,
@@ -34,6 +36,42 @@ test("shows price comparison only for one visible company in revenue/net-income 
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 2, chartMode: "bar", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "line", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "grossMargin" }), false);
+});
+
+
+test("normalizes price comparison before chart data is rebuilt", () => {
+  assert.equal(
+    normalizePriceComparisonEnabled({
+      enabled: true,
+      visibleCompanyCount: 2,
+      chartMode: "line",
+      metric: "netIncome",
+      hasDailyPrices: true,
+    }),
+    false,
+  );
+
+  assert.equal(
+    normalizePriceComparisonEnabled({
+      enabled: true,
+      visibleCompanyCount: 1,
+      chartMode: "bar",
+      metric: "netIncome",
+      hasDailyPrices: false,
+    }),
+    false,
+  );
+
+  assert.equal(
+    normalizePriceComparisonEnabled({
+      enabled: true,
+      visibleCompanyCount: 1,
+      chartMode: "bar",
+      metric: "netIncome",
+      hasDailyPrices: true,
+    }),
+    true,
+  );
 });
 
 test("resets price comparison when the current chart context becomes invalid", () => {
@@ -211,6 +249,35 @@ test("uses Nvidia fiscal period ends without collapsing bar spacing", () => {
   ]);
   assert.ok(result[1].x - result[0].x > 0.9);
   assert.ok(result[2].x - result[1].x > 0.9);
+});
+
+
+test("annualizes rolling flow windows with one missing quarter", () => {
+  const result = aggregateFlowRollingAnnualEntries([
+    ["2005Q1", 100],
+    ["2005Q2", 200],
+    ["2005Q3", null],
+    ["2005Q4", 400],
+  ]);
+
+  assert.deepEqual(result, [
+    ["2005Q1", 400],
+    ["2005Q2", 600],
+    ["2005Q3", 600],
+    ["2005Q4", 933.3333333333334],
+  ]);
+});
+
+
+test("keeps Costco rolling net income visible across isolated source gaps", () => {
+  const data = loadFinancialSourceData();
+  const labels = data.periods.filter((period) => period >= "2005Q1" && period <= "2008Q4");
+  const entries = labels.map((label) => [label, data.companies.costco.earnings[label] ?? null]);
+  const nullLabels = aggregateFlowRollingAnnualEntries(entries)
+    .filter(([, value]) => value == null)
+    .map(([label]) => label);
+
+  assert.equal(nullLabels.length, 0);
 });
 
 test("keeps latest quarter populated across companies except non-applicable bank gross margin", () => {

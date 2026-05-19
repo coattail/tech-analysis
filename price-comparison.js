@@ -9,6 +9,18 @@
       && ALLOWED_PRICE_COMPARISON_METRICS.has(metric);
   }
 
+  function normalizePriceComparisonEnabled({
+    enabled,
+    visibleCompanyCount,
+    chartMode,
+    metric,
+    hasDailyPrices,
+  }) {
+    return Boolean(enabled)
+      && Boolean(hasDailyPrices)
+      && canShowPriceComparison({ visibleCompanyCount, chartMode, metric });
+  }
+
   function shouldResetPriceComparison({
     enabled,
     visibleCompanyCount,
@@ -193,6 +205,26 @@
     return labels;
   }
 
+  function aggregateFlowRollingAnnualEntries(entries) {
+    if (!Array.isArray(entries)) return [];
+
+    return entries.map(([label], index) => {
+      const windowStart = Math.max(0, index - 3);
+      const windowEntries = entries.slice(windowStart, index + 1);
+      const values = windowEntries
+        .map(([, value]) => (value == null || value === "" ? null : Number(value)))
+        .filter((value) => Number.isFinite(value));
+      const missingCount = windowEntries.length - values.length;
+
+      if (values.length === 0 || missingCount > 1) {
+        return [label, null];
+      }
+
+      const sum = values.reduce((total, value) => total + value, 0);
+      return [label, (sum * 4) / values.length];
+    });
+  }
+
   function buildProjectedPriceSeries({ dailyPrices, visibleLabels, frequency }) {
     const slots = buildVisiblePeriodSlots(visibleLabels, frequency);
     if (slots.length === 0 || !dailyPrices || typeof dailyPrices !== "object") return [];
@@ -248,6 +280,7 @@
   const api = {
     canShowPriceComparison,
     shouldResetPriceComparison,
+    normalizePriceComparisonEnabled,
     getVisiblePeriodDateRange,
     extendVisibleLabelsThroughLatestPrice,
     buildFinancialPeriodEndSeries,
@@ -255,6 +288,7 @@
     getPriceOverlayDatasetOrder,
     getFinancialBarDatasetOrder,
     alignSecondaryAxisZero,
+    aggregateFlowRollingAnnualEntries,
   };
 
   if (typeof module !== "undefined" && module.exports) {
