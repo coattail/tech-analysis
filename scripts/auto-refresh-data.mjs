@@ -1255,6 +1255,7 @@ function ensureCompanyShape(company) {
   if (!company.roe || typeof company.roe !== "object") company.roe = {};
   if (!company.grossMargin || typeof company.grossMargin !== "object") company.grossMargin = {};
   if (!company.revenueGrowth || typeof company.revenueGrowth !== "object") company.revenueGrowth = {};
+  if (!company.periodEndDates || typeof company.periodEndDates !== "object") company.periodEndDates = {};
 
   if (!company.forecastFlags || typeof company.forecastFlags !== "object") {
     company.forecastFlags = {};
@@ -1284,6 +1285,14 @@ function setSeriesValueIfMissing(series, key, value) {
     return false;
   }
   series[key] = value;
+  return true;
+}
+
+function setPeriodEndDate(companyData, period, dateKey) {
+  if (!isPeriodLabel(period)) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dateKey || ""))) return false;
+  if (companyData.periodEndDates[period] === dateKey) return false;
+  companyData.periodEndDates[period] = dateKey;
   return true;
 }
 
@@ -1861,6 +1870,7 @@ function summarizeCompanyStats(companyStats) {
       companyStats.netAssetChanges +
       companyStats.roeChanges +
       companyStats.grossMarginChanges +
+      companyStats.periodEndDateChanges +
       companyStats.qualityFixChanges,
     changedPeriods: [...companyStats.changedPeriods].sort(comparePeriods),
   };
@@ -2030,6 +2040,7 @@ async function run() {
       roeChanges: 0,
       grossMarginChanges: 0,
       qualityFixChanges: 0,
+      periodEndDateChanges: 0,
       changedPeriods: new Set(),
     };
 
@@ -2125,6 +2136,10 @@ async function run() {
 
     rows.forEach((row) => {
       periodSet.add(row.period);
+      if (setPeriodEndDate(companyData, row.period, row.dateKey)) {
+        companyStats.periodEndDateChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
 
       if (Number.isFinite(row.revenue)) {
         const currentRevenue = companyData.revenue[row.period];
@@ -2278,6 +2293,7 @@ async function run() {
     companyData.netAssets = sortObjectByPeriodKeys(companyData.netAssets);
     companyData.roe = sortObjectByPeriodKeys(companyData.roe);
     companyData.grossMargin = sortObjectByPeriodKeys(companyData.grossMargin);
+    companyData.periodEndDates = sortObjectByPeriodKeys(companyData.periodEndDates);
 
     const detail = summarizeCompanyStats(companyStats);
     if (detail.changedPoints > 0) {
