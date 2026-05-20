@@ -383,6 +383,33 @@
     };
   }
 
+  const COMPACT_ZERO_BASELINE_METRICS = new Set(["netIncome"]);
+  const COMPACT_ZERO_BASELINE_RATIO = 0.025;
+  const COMPACT_NEGATIVE_VALUE_PADDING_RATIO = 0.15;
+  const COMPACT_NEGATIVE_MAX_SHARE = 0.12;
+
+  function computeCompactBarZeroBaselineMin({ metricKey, chartMode, min, max }) {
+    const numericMin = Number(min);
+    const numericMax = Number(max);
+    if (chartMode !== "bar") return null;
+    if (!COMPACT_ZERO_BASELINE_METRICS.has(metricKey)) return null;
+    if (!Number.isFinite(numericMin) || !Number.isFinite(numericMax) || numericMax <= 0) return null;
+
+    if (numericMin >= 0) {
+      return -(numericMax * COMPACT_ZERO_BASELINE_RATIO);
+    }
+
+    const negativeMagnitude = Math.abs(numericMin);
+    if (negativeMagnitude / numericMax > COMPACT_NEGATIVE_MAX_SHARE) {
+      return null;
+    }
+
+    return -Math.max(
+      numericMax * COMPACT_ZERO_BASELINE_RATIO,
+      negativeMagnitude * (1 + COMPACT_NEGATIVE_VALUE_PADDING_RATIO),
+    );
+  }
+
   const api = {
     canShowPriceComparison,
     shouldResetPriceComparison,
@@ -396,6 +423,7 @@
     getPriceOverlayDatasetOrder,
     getFinancialBarDatasetOrder,
     alignSecondaryAxisZero,
+    computeCompactBarZeroBaselineMin,
     aggregateFlowRollingAnnualEntries,
     aggregatePointRollingAverageEntries,
     aggregateMarginRollingAnnualEntries,

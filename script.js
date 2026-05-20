@@ -1586,6 +1586,15 @@ function roundAxisBoundsToNiceValues(min, max, clampMinToZero = false) {
   };
 }
 
+function computeCompactBarZeroBaselineMin(min, max, chartMode) {
+  return PriceComparisonUtils.computeCompactBarZeroBaselineMin({
+    metricKey: state.metric,
+    chartMode,
+    min: toAxisDisplayValue(state.metric, min),
+    max: toAxisDisplayValue(state.metric, max),
+  });
+}
+
 function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false) {
   const values = collectDatasetValues(datasets, includeHidden);
   const shouldClampMinToZero = state.metric === "revenue";
@@ -1616,13 +1625,14 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
 
     if (chartMode === "bar") {
       if (max >= 0) {
+        const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
         const rounded = roundPositiveAxisBounds(
           0,
           toAxisDisplayValue(state.metric, max),
           true,
         );
         return {
-          min: 0,
+          min: compactMin == null ? 0 : fromAxisDisplayValue(state.metric, compactMin),
           max: fromAxisDisplayValue(state.metric, rounded.max),
         };
       }
@@ -1680,14 +1690,28 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
 
   if (chartMode === "bar") {
     if (!includesNegative) {
+      const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
       const rounded = roundPositiveAxisBounds(
         0,
         toAxisDisplayValue(state.metric, includesPositive ? max : 0),
         true,
       );
       return {
-        min: 0,
+        min: compactMin == null ? 0 : fromAxisDisplayValue(state.metric, compactMin),
         max: includesPositive ? fromAxisDisplayValue(state.metric, rounded.max) : 0,
+      };
+    }
+
+    const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+    if (compactMin != null) {
+      const rounded = roundPositiveAxisBounds(
+        0,
+        toAxisDisplayValue(state.metric, max),
+        true,
+      );
+      return {
+        min: fromAxisDisplayValue(state.metric, compactMin),
+        max: fromAxisDisplayValue(state.metric, rounded.max),
       };
     }
 

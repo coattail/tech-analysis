@@ -13,6 +13,7 @@ const {
   getPriceOverlayDatasetOrder,
   getFinancialBarDatasetOrder,
   alignSecondaryAxisZero,
+  computeCompactBarZeroBaselineMin,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
   aggregateMarginRollingAnnualEntries,
@@ -521,6 +522,42 @@ test("aligns the secondary-axis zero baseline with the primary axis", () => {
       secondaryBounds: { min: 0, max: 250 },
     }),
     { min: -35.714285714285715, max: 250 },
+  );
+});
+
+test("keeps positive net-income bar charts slightly below zero for stable slider baseline", () => {
+  assert.equal(
+    computeCompactBarZeroBaselineMin({
+      metricKey: "netIncome",
+      chartMode: "bar",
+      min: 0.2,
+      max: 43,
+    }),
+    -1.075,
+  );
+});
+
+test("compresses tiny negative net-income history instead of rounding it to a large floor", () => {
+  assert.equal(
+    computeCompactBarZeroBaselineMin({
+      metricKey: "netIncome",
+      chartMode: "bar",
+      min: -0.201338,
+      max: 42.96,
+    }),
+    -1.074,
+  );
+});
+
+test("preserves substantial net-income losses instead of hiding them in a compact baseline", () => {
+  assert.equal(
+    computeCompactBarZeroBaselineMin({
+      metricKey: "netIncome",
+      chartMode: "bar",
+      min: -49.746,
+      max: 39.8,
+    }),
+    null,
   );
 });
 
