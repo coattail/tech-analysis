@@ -14,6 +14,8 @@ const {
   getFinancialBarDatasetOrder,
   alignSecondaryAxisZero,
   aggregateFlowRollingAnnualEntries,
+  aggregatePointRollingAverageEntries,
+  aggregateMarginRollingAnnualEntries,
 } = require("../price-comparison.js");
 const {
   normalizeAdjustedCloseRows,
@@ -260,13 +262,65 @@ test("does not annualize rolling flow windows across missing source quarters", (
     ["2005Q2", 200],
     ["2005Q3", null],
     ["2005Q4", 400],
+    ["2006Q1", 500],
+    ["2006Q2", 600],
+    ["2006Q3", 700],
+    ["2006Q4", 800],
   ]);
 
   assert.deepEqual(result, [
-    ["2005Q1", 100],
-    ["2005Q2", 300],
+    ["2005Q1", null],
+    ["2005Q2", null],
     ["2005Q3", null],
     ["2005Q4", null],
+    ["2006Q1", null],
+    ["2006Q2", null],
+    ["2006Q3", 2200],
+    ["2006Q4", 2600],
+  ]);
+});
+
+test("does not average rolling point metrics until four quarters are available", () => {
+  const result = aggregatePointRollingAverageEntries([
+    ["2005Q1", 10],
+    ["2005Q2", 20],
+    ["2005Q3", 30],
+    ["2005Q4", 40],
+    ["2006Q1", 50],
+  ]);
+
+  assert.deepEqual(result, [
+    ["2005Q1", null],
+    ["2005Q2", null],
+    ["2005Q3", null],
+    ["2005Q4", 25],
+    ["2006Q1", 35],
+  ]);
+});
+
+test("does not compute rolling margin until four revenue/margin quarters are available", () => {
+  const result = aggregateMarginRollingAnnualEntries([
+    ["2005Q1", { margin: 50, revenue: 100 }],
+    ["2005Q2", { margin: 40, revenue: 200 }],
+    ["2005Q3", { margin: 30, revenue: 300 }],
+    ["2005Q4", { margin: 20, revenue: 400 }],
+    ["2006Q1", { margin: 10, revenue: null }],
+    ["2006Q2", { margin: 60, revenue: 600 }],
+    ["2006Q3", { margin: 70, revenue: 700 }],
+    ["2006Q4", { margin: 80, revenue: 800 }],
+    ["2007Q1", { margin: 90, revenue: 900 }],
+  ]);
+
+  assert.deepEqual(result, [
+    ["2005Q1", null],
+    ["2005Q2", null],
+    ["2005Q3", null],
+    ["2005Q4", 30],
+    ["2006Q1", null],
+    ["2006Q2", null],
+    ["2006Q3", null],
+    ["2006Q4", null],
+    ["2007Q1", 76.66666666666667],
   ]);
 });
 
@@ -274,9 +328,11 @@ test("does not annualize rolling flow windows across missing source quarters", (
 test("keeps quarterly net income populated without internal source gaps", () => {
   const data = loadFinancialSourceData();
   const missing = [];
+  const firstDisplayPeriod = "2005Q1";
 
   for (const [companyId, company] of Object.entries(data.companies)) {
-    const populatedPeriods = data.periods.filter((period) => company.earnings?.[period] != null);
+    const displayPeriods = data.periods.filter((period) => period >= firstDisplayPeriod);
+    const populatedPeriods = displayPeriods.filter((period) => company.earnings?.[period] != null);
     if (populatedPeriods.length === 0) continue;
 
     const firstIndex = data.periods.indexOf(populatedPeriods[0]);
@@ -291,6 +347,32 @@ test("keeps quarterly net income populated without internal source gaps", () => 
   }
 
   assert.deepEqual(missing, []);
+});
+
+test("real rolling annual flow values only appear after four complete source quarters", () => {
+  const data = loadFinancialSourceData();
+  const missingWindows = [];
+
+  for (const [companyId, company] of Object.entries(data.companies)) {
+    for (const [metricKey, sourceKey] of [["revenue", "revenue"], ["netIncome", "earnings"]]) {
+      const rolling = aggregateFlowRollingAnnualEntries(
+        data.periods.map((period) => [period, company[sourceKey]?.[period]]),
+      );
+
+      rolling.forEach(([period, value], index) => {
+        if (!Number.isFinite(value)) return;
+        const windowPeriods = data.periods.slice(index - 3, index + 1);
+        const hasCompleteSourceWindow =
+          windowPeriods.length === 4 &&
+          windowPeriods.every((windowPeriod) => Number.isFinite(company[sourceKey]?.[windowPeriod]));
+        if (!hasCompleteSourceWindow) {
+          missingWindows.push(`${companyId}:${metricKey}:${period}`);
+        }
+      });
+    }
+  }
+
+  assert.deepEqual(missingWindows, []);
 });
 
 test("keeps latest quarter populated across companies except non-applicable bank gross margin", () => {

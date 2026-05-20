@@ -5,6 +5,7 @@ import process from "node:process";
 
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const OUTPUT_PATH = new URL("../data/historical-sec-backfill.json", import.meta.url);
+const DEFAULT_TTM_CONTEXT_START_PERIOD = "2004Q2";
 const SEC_COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json";
 const SEC_COMPANYFACTS_BASE = "https://data.sec.gov/api/xbrl/companyfacts";
 const SEC_SUBMISSIONS_BASE = "https://data.sec.gov/submissions";
@@ -1954,8 +1955,14 @@ async function run() {
       .filter((period) => Number.isFinite(revenueSeries[period]))
       .sort(comparePeriods)
       .at(-1) || null;
-    const targetStartPeriod = COMPANY_START_OVERRIDES[company.id] || "2005Q1";
-    const forceRefresh = Boolean(COMPANY_END_OVERRIDES[company.id]);
+    const targetStartPeriod = COMPANY_START_OVERRIDES[company.id] || DEFAULT_TTM_CONTEXT_START_PERIOD;
+    const existingRows = output.companies?.[company.id]?.rows || [];
+    const existingEndPeriod = existingRows.at(-1)?.period || null;
+    const companyEndOverride = COMPANY_END_OVERRIDES[company.id] || null;
+    const forceRefresh = Boolean(
+      companyEndOverride &&
+      (!existingEndPeriod || comparePeriods(existingEndPeriod, companyEndOverride) < 0),
+    );
     const latestMissingPeriod =
       earliestRevenuePeriod && latestRevenuePeriod
         ? (data?.periods || [])
@@ -1968,7 +1975,7 @@ async function run() {
       ? [
         output.companies?.[company.id]?.rows?.at(-1)?.period || null,
         latestMissingPeriod,
-        COMPANY_END_OVERRIDES[company.id] || null,
+        companyEndOverride,
         previousPeriod(earliestRevenuePeriod),
       ]
         .filter(Boolean)
@@ -1979,8 +1986,12 @@ async function run() {
       continue;
     }
 
-    console.log(`补抓 ${company.ticker}：${targetStartPeriod} -> ${explicitTargetEndPeriod || COMPANY_END_OVERRIDES[company.id] || previousPeriod(earliestRevenuePeriod)}`);
-    const backfill = await buildCompanyBackfill(company, earliestRevenuePeriod, targetStartPeriod, explicitTargetEndPeriod);
+    const effectiveTargetEndPeriod =
+      explicitTargetEndPeriod ||
+      (forceRefresh ? companyEndOverride : null) ||
+      previousPeriod(earliestRevenuePeriod);
+    console.log(`补抓 ${company.ticker}：${targetStartPeriod} -> ${effectiveTargetEndPeriod}`);
+    const backfill = await buildCompanyBackfill(company, earliestRevenuePeriod, targetStartPeriod, effectiveTargetEndPeriod);
     if (backfill.rows.length === 0) {
       console.log("  未解析到可用历史季度");
       continue;

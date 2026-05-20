@@ -1,9 +1,33 @@
 {
-  "generatedAt": "2026-04-24T06:33:37.080Z",
+  "generatedAt": "2026-05-19T17:11:41.750Z",
   "companies": {
     "amd": {
       "reportingCurrency": "USD",
       "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 956288000,
+          "grossProfit": 173219000,
+          "netIncome": 32180000,
+          "grossMarginPct": 18.113685416945522
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 988560000,
+          "grossProfit": 250534000,
+          "netIncome": 43848000,
+          "grossMarginPct": 25.34332766852796
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 1264000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
         {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
@@ -146,6 +170,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 10897239000,
+          "grossProfit": null,
+          "netIncome": 198658000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-08-29",
+          "revenue": 15139301000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 11578003000,
+          "grossProfit": null,
+          "netIncome": 193153000,
+          "grossMarginPct": null
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 12658077000,
@@ -271,6 +319,22 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 120321000,
+          "grossProfit": 50533000,
+          "netIncome": 2891000,
+          "grossMarginPct": 41.99848737959292
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 141644000,
+          "grossProfit": 70043000,
+          "netIncome": 18925000,
+          "grossMarginPct": 49.45002965180311
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 224126000,
@@ -379,6 +443,30 @@
     "cisco": {
       "reportingCurrency": "USD",
       "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 5620000000,
+          "grossProfit": 3867000000,
+          "netIncome": 1211000000,
+          "grossMarginPct": 68.80782918149467
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-07-31",
+          "revenue": 5926000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 5971000000,
+          "grossProfit": 4015000000,
+          "netIncome": 1396000000,
+          "grossMarginPct": 67.24166806230112
+        },
         {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
@@ -497,6 +585,38 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 64763000000,
+          "grossProfit": 14794000000,
+          "netIncome": 2166000000,
+          "grossMarginPct": 22.843290150240104
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 69722000000,
+          "grossProfit": 16189000000,
+          "netIncome": 2651000000,
+          "grossMarginPct": 23.219356874444223
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 68520000000,
+          "grossProfit": 15953000000,
+          "netIncome": 2286000000,
+          "grossMarginPct": 23.28225335668418
+        },
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-01-31",
+          "revenue": 82217000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
           "period": "2005Q2",
           "dateKey": "2005-06-30",
           "revenue": 70908000000,
@@ -597,6 +717,30 @@
     "jpmorgan": {
       "reportingCurrency": "USD",
       "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 8631000000,
+          "grossProfit": null,
+          "netIncome": -548000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 12505000000,
+          "grossProfit": null,
+          "netIncome": 1418000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 12950000000,
+          "grossProfit": null,
+          "netIncome": 1666000000,
+          "grossMarginPct": null
+        },
         {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
@@ -706,6 +850,30 @@
     "lilly": {
       "reportingCurrency": "USD",
       "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 3556300000,
+          "grossProfit": 2759900000,
+          "netIncome": 656900000,
+          "grossMarginPct": 77.60593875657284
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 3280400000,
+          "grossProfit": 2470300000,
+          "netIncome": 755200000,
+          "grossMarginPct": 75.30484087306426
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 3644300000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
         {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
@@ -1258,6 +1426,30 @@
       "reportingCurrency": "EUR",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 616258000,
+          "grossProfit": 219542000,
+          "netIncome": 65358000,
+          "grossMarginPct": 35.625014198598635
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 610472000,
+          "grossProfit": 232292000,
+          "netIncome": 40912000,
+          "grossMarginPct": 38.05121283203816
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 785162000,
+          "grossProfit": 307836000,
+          "netIncome": 108637000,
+          "grossMarginPct": 39.20668600874724
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 632135000,
@@ -1783,6 +1975,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 1116800000,
+          "grossProfit": 387900000,
+          "netIncome": 90900000,
+          "grossMarginPct": 34.73316618911175
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 100000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 1260300000,
+          "grossProfit": 423000000,
+          "netIncome": 154900000,
+          "grossMarginPct": 33.56343727683885
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 1307900000,
@@ -1940,6 +2156,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 3077000000,
+          "grossProfit": 2355000000,
+          "netIncome": 989000000,
+          "grossMarginPct": 76.53558661033473
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 2215000000,
+          "grossProfit": 1796000000,
+          "netIncome": 509000000,
+          "grossMarginPct": 81.08352144469526
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 2756000000,
+          "grossProfit": 2307000000,
+          "netIncome": 815000000,
+          "grossMarginPct": 83.70827285921627
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 2950000000,
@@ -2057,6 +2297,14 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 667841000,
+          "grossProfit": null,
+          "netIncome": 97515000,
+          "grossMarginPct": null
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 658238000,
@@ -2166,6 +2414,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 13048000000,
+          "grossProfit": null,
+          "netIncome": 3849000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 12587000000,
+          "grossProfit": null,
+          "netIncome": 3764000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 13728000000,
+          "grossProfit": null,
+          "netIncome": 3849000000,
+          "grossMarginPct": null
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 13538000000,
@@ -2274,6 +2546,30 @@
     "caterpillar": {
       "reportingCurrency": "USD",
       "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 7583000000,
+          "grossProfit": 2020000000,
+          "netIncome": 14000000,
+          "grossMarginPct": 26.638533561914805
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 7659000000,
+          "grossProfit": 1914000000,
+          "netIncome": 17000000,
+          "grossMarginPct": 24.990207598903254
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 8529000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
         {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
@@ -2392,6 +2688,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 36579000000,
+          "grossProfit": null,
+          "netIncome": 4125000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 39611000000,
+          "grossProfit": null,
+          "netIncome": 3201000000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 41612000000,
+          "grossProfit": null,
+          "netIncome": 3440000000,
+          "grossMarginPct": null
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 40490000000,
@@ -2493,6 +2813,38 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 17550000000,
+          "grossProfit": 5768000000,
+          "netIncome": 1098000000,
+          "grossMarginPct": 32.86609686609687
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 19960000000,
+          "grossProfit": 6661000000,
+          "netIncome": 1545000000,
+          "grossMarginPct": 33.37174348697395
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 18772000000,
+          "grossProfit": 6252000000,
+          "netIncome": 1317000000,
+          "grossMarginPct": 33.304922224589816
+        },
+        {
+          "period": "2005Q1",
+          "dateKey": "2005-03-31",
+          "revenue": 16812000000,
+          "grossProfit": 5749000000,
+          "netIncome": 1041000000,
+          "grossMarginPct": 34.19581251487033
+        },
+        {
           "period": "2005Q2",
           "dateKey": "2005-06-30",
           "revenue": 18973000000,
@@ -2593,6 +2945,22 @@
     "jnj": {
       "reportingCurrency": "USD",
       "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 11484000000,
+          "grossProfit": 8322000000,
+          "netIncome": 2458000000,
+          "grossMarginPct": 72.46603970741901
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 11553000000,
+          "grossProfit": 8366000000,
+          "netIncome": 2341000000,
+          "grossMarginPct": 72.41409157794513
+        },
         {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
@@ -2932,6 +3300,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 11050000000,
+          "grossProfit": 1864000000,
+          "netIncome": 1282000000,
+          "grossMarginPct": 16.868778280542987
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 11396000000,
+          "grossProfit": 1867000000,
+          "netIncome": 1137000000,
+          "grossMarginPct": 16.382941382941382
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 10714000000,
+          "grossProfit": 1977000000,
+          "netIncome": 3339000000,
+          "grossMarginPct": 18.452492066455108
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 10607000000,
@@ -3042,6 +3434,143 @@
           "grossProfit": 3226000000,
           "netIncome": 4471000000,
           "grossMarginPct": 18.612970228479114
+        }
+      ]
+    },
+    "nvidia": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 471905000000,
+          "grossProfit": 148836000000,
+          "netIncome": 21349000000,
+          "grossMarginPct": 31.53939881967769
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 456061,
+          "grossProfit": 140093,
+          "netIncome": 5119,
+          "grossMarginPct": 30.71803991132765
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 515591,
+          "grossProfit": 166742,
+          "netIncome": 25879,
+          "grossMarginPct": 32.339974902587514
+        }
+      ]
+    },
+    "apple": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 2014000000,
+          "grossProfit": 559000000,
+          "netIncome": 61000000,
+          "grossMarginPct": 27.75571002979146
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-25",
+          "revenue": 2350000000,
+          "grossProfit": null,
+          "netIncome": null,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 3490000000,
+          "grossProfit": 996000000,
+          "netIncome": 295000000,
+          "grossMarginPct": 28.538681948424067
+        }
+      ]
+    },
+    "microsoft": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 9189000000,
+          "grossProfit": 7784000000,
+          "netIncome": 2528000000,
+          "grossMarginPct": 84.70997932310371
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 10818000000,
+          "grossProfit": 8896000000,
+          "netIncome": 3463000000,
+          "grossMarginPct": 82.23331484562766
+        }
+      ]
+    },
+    "amazon": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 1387000000,
+          "grossProfit": 341000000,
+          "netIncome": 76000000,
+          "grossMarginPct": 24.585436193222783
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 1463000000,
+          "grossProfit": 356000000,
+          "netIncome": 54000000,
+          "grossMarginPct": 24.33356117566644
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": null,
+          "grossProfit": -1005817000,
+          "netIncome": -244652000,
+          "grossMarginPct": null
+        }
+      ]
+    },
+    "tsmc": {
+      "reportingCurrency": "TWD",
+      "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 58516000000,
+          "grossProfit": 23205000000,
+          "netIncome": 18369000000,
+          "grossMarginPct": 39.65582063025497
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 69258000000,
+          "grossProfit": 30525000000,
+          "netIncome": 24488000000,
+          "grossMarginPct": 44.07433076323313
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 1936000000,
+          "grossProfit": 823000000,
+          "netIncome": 672000000,
+          "grossMarginPct": 42.510330578512395
         }
       ]
     }

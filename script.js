@@ -878,18 +878,10 @@ function aggregateFlowRollingAnnual(quarterSeries) {
 
 function aggregatePointRollingAverage(quarterSeries) {
   const rolling = emptySeries(QUARTER_LABELS);
+  const entries = QUARTER_LABELS.map((label) => [label, quarterSeries.get(label)]);
 
-  QUARTER_LABELS.forEach((period, index) => {
-    const windowStart = Math.max(0, index - 3);
-    const windowKeys = QUARTER_LABELS.slice(windowStart, index + 1);
-    const values = windowKeys.map((key) => quarterSeries.get(key));
-    if (!values.every((v) => isFiniteNumber(v))) {
-      rolling.set(period, null);
-      return;
-    }
-
-    const avg = values.reduce((sum, v) => sum + v, 0) / windowKeys.length;
-    rolling.set(period, avg);
+  PriceComparisonUtils.aggregatePointRollingAverageEntries(entries).forEach(([label, value]) => {
+    rolling.set(label, isFiniteNumber(value) ? value : null);
   });
 
   return rolling;
@@ -925,28 +917,16 @@ function aggregateMarginAnnual(quarterMarginSeries, quarterRevenueSeries) {
 
 function aggregateMarginRollingAnnual(quarterMarginSeries, quarterRevenueSeries) {
   const rolling = emptySeries(QUARTER_LABELS);
+  const entries = QUARTER_LABELS.map((label) => [
+    label,
+    {
+      margin: quarterMarginSeries.get(label),
+      revenue: quarterRevenueSeries.get(label),
+    },
+  ]);
 
-  QUARTER_LABELS.forEach((period, index) => {
-    const windowStart = Math.max(0, index - 3);
-    const windowKeys = QUARTER_LABELS.slice(windowStart, index + 1);
-    const pairs = windowKeys.map((key) => ({
-      margin: quarterMarginSeries.get(key),
-      revenue: quarterRevenueSeries.get(key),
-    }));
-
-    if (!pairs.every((pair) => isFiniteNumber(pair.margin) && isFiniteNumber(pair.revenue))) {
-      rolling.set(period, null);
-      return;
-    }
-
-    const revenueSum = pairs.reduce((sum, pair) => sum + pair.revenue, 0);
-    if (!isFiniteNumber(revenueSum) || revenueSum === 0) {
-      rolling.set(period, null);
-      return;
-    }
-
-    const grossProfitSum = pairs.reduce((sum, pair) => sum + (pair.margin / 100) * pair.revenue, 0);
-    rolling.set(period, (grossProfitSum / revenueSum) * 100);
+  PriceComparisonUtils.aggregateMarginRollingAnnualEntries(entries).forEach(([label, value]) => {
+    rolling.set(label, isFiniteNumber(value) ? value : null);
   });
 
   return rolling;

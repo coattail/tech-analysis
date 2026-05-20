@@ -1491,6 +1491,37 @@ function isConflictingActualValue(existingValue, nextValue, upperRatio = 2.5, lo
   return nextValue > existingValue * upperRatio || nextValue < existingValue * lowerRatio;
 }
 
+function findNearestFiniteSeriesValue(series, periods, targetPeriod) {
+  const sortedPeriods = [...new Set([...periods, targetPeriod])]
+    .filter(isPeriodLabel)
+    .sort(comparePeriods);
+  const targetIndex = sortedPeriods.indexOf(targetPeriod);
+  if (targetIndex < 0) return null;
+
+  for (let offset = 1; offset < sortedPeriods.length; offset += 1) {
+    const after = sortedPeriods[targetIndex + offset];
+    if (after && Number.isFinite(series?.[after])) return series[after];
+
+    const before = sortedPeriods[targetIndex - offset];
+    if (before && Number.isFinite(series?.[before])) return series[before];
+  }
+
+  return null;
+}
+
+function isCompatibleHistoricalBackfillValue(series, periods, period, value, upperRatio = 4, lowerRatio = 0.25) {
+  if (!Number.isFinite(value)) return false;
+  const referenceValue = findNearestFiniteSeriesValue(series, periods, period);
+  if (!Number.isFinite(referenceValue)) return true;
+  if (value === 0 || referenceValue === 0) return true;
+
+  const absValue = Math.abs(value);
+  const absReference = Math.abs(referenceValue);
+  if (absValue < 1 || absReference < 1) return true;
+
+  return absValue <= absReference * upperRatio && absValue >= absReference * lowerRatio;
+}
+
 function sanitizeSeriesQuality(companyData) {
   const changedPeriods = new Set();
   const revenuePeriods = new Set();
@@ -2005,11 +2036,27 @@ async function run() {
     const revenueActual = new Set();
     const netIncomeActual = new Set();
     const grossMarginActual = new Set();
+    const qualityReferencePeriods = [...periodSet].sort(comparePeriods);
 
     historicalBackfillRows.forEach((row) => {
       periodSet.add(row.period);
 
-      if (Number.isFinite(row.revenue)) {
+      const useRevenue = isCompatibleHistoricalBackfillValue(
+        companyData.revenue,
+        qualityReferencePeriods,
+        row.period,
+        row.revenue,
+      );
+      const useNetIncome = isCompatibleHistoricalBackfillValue(
+        companyData.earnings,
+        qualityReferencePeriods,
+        row.period,
+        row.netIncome,
+        6,
+        0.15,
+      );
+
+      if (useRevenue && Number.isFinite(row.revenue)) {
         revenueActual.add(row.period);
         const changed = setSeriesValue(companyData.revenue, row.period, row.revenue);
         if (changed) {
@@ -2018,7 +2065,7 @@ async function run() {
         }
       }
 
-      if (Number.isFinite(row.netIncome)) {
+      if (useNetIncome && Number.isFinite(row.netIncome)) {
         netIncomeActual.add(row.period);
         const changed = setSeriesValue(companyData.earnings, row.period, row.netIncome);
         if (changed) {
@@ -2027,7 +2074,7 @@ async function run() {
         }
       }
 
-      if (Number.isFinite(row.grossMarginPct)) {
+      if (useRevenue && Number.isFinite(row.grossMarginPct)) {
         grossMarginActual.add(row.period);
         const changed = setSeriesValue(companyData.grossMargin, row.period, row.grossMarginPct);
         if (changed) {

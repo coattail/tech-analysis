@@ -43,12 +43,12 @@ As of April 23, 2026, the sample is expanded to the current top 30 U.S.-listed c
 
 | Metric | Data Key | Quarterly | Annual | Rolling Annual (TTM) |
 | --- | --- | --- | --- | --- |
-| Revenue | `revenue` | Raw quarterly value | Sum of four quarters | Sum of latest four quarters |
-| Net Income | `earnings` | Raw quarterly value | Sum of four quarters | Sum of latest four quarters |
-| Gross Margin | `grossMargin` | Raw quarterly value | Revenue-weighted recomputation | Revenue-weighted recomputation over the latest four quarters |
-| P/E | `pe` | Raw quarterly value | Q4 snapshot | Four-quarter average |
-| ROE | `roe` | Raw quarterly value | Q4 snapshot | Four-quarter average |
-| Revenue YoY Growth | `revenueGrowth` | Raw quarterly value | Calculated from annual revenue | Calculated from TTM revenue |
+| Revenue | `revenue` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
+| Net Income | `earnings` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
+| Gross Margin | `grossMargin` | Raw quarterly value | Revenue-weighted recomputation | Revenue-weighted recomputation over the latest complete four quarters; null until four quarters are present |
+| P/E | `pe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
+| ROE | `roe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
+| Revenue YoY Growth | `revenueGrowth` | Raw quarterly value | Calculated from annual revenue | Calculated from complete TTM revenue; null until four quarters are present |
 
 ## Stack
 
@@ -95,9 +95,9 @@ Then open the local server URL in your browser.
 window.FINANCIAL_SOURCE_DATA = {
   meta: {
     generatedAt: "2026-04-22T06:43:00.000Z",
-    periodRange: "2005Q1-2026Q1"
+    periodRange: "2004Q2-2026Q2"
   },
-  periods: ["2005Q1", "2005Q2", "..."],
+  periods: ["2004Q2", "2004Q3", "..."],
   companies: {
     microsoft: {
       revenue: { "2025Q4": 81273000000 },

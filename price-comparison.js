@@ -260,18 +260,74 @@
     if (!Array.isArray(entries)) return [];
 
     return entries.map(([label], index) => {
-      const windowStart = Math.max(0, index - 3);
+      const windowStart = index - 3;
+      if (windowStart < 0) {
+        return [label, null];
+      }
       const windowEntries = entries.slice(windowStart, index + 1);
       const values = windowEntries
         .map(([, value]) => (value == null || value === "" ? null : Number(value)))
         .filter((value) => Number.isFinite(value));
 
-      if (values.length !== windowEntries.length) {
+      if (windowEntries.length !== 4 || values.length !== windowEntries.length) {
         return [label, null];
       }
 
       const sum = values.reduce((total, value) => total + value, 0);
       return [label, sum];
+    });
+  }
+
+  function aggregatePointRollingAverageEntries(entries) {
+    if (!Array.isArray(entries)) return [];
+
+    return entries.map(([label], index) => {
+      const windowStart = index - 3;
+      if (windowStart < 0) {
+        return [label, null];
+      }
+      const windowEntries = entries.slice(windowStart, index + 1);
+      const values = windowEntries
+        .map(([, value]) => (value == null || value === "" ? null : Number(value)))
+        .filter((value) => Number.isFinite(value));
+
+      if (windowEntries.length !== 4 || values.length !== windowEntries.length) {
+        return [label, null];
+      }
+
+      const sum = values.reduce((total, value) => total + value, 0);
+      return [label, sum / values.length];
+    });
+  }
+
+  function aggregateMarginRollingAnnualEntries(entries) {
+    if (!Array.isArray(entries)) return [];
+
+    return entries.map(([label], index) => {
+      const windowStart = index - 3;
+      if (windowStart < 0) {
+        return [label, null];
+      }
+      const windowEntries = entries.slice(windowStart, index + 1);
+      const pairs = windowEntries.map(([, pair]) => ({
+        margin: pair?.margin == null || pair?.margin === "" ? null : Number(pair.margin),
+        revenue: pair?.revenue == null || pair?.revenue === "" ? null : Number(pair.revenue),
+      }));
+
+      if (
+        windowEntries.length !== 4 ||
+        !pairs.every((pair) => Number.isFinite(pair.margin) && Number.isFinite(pair.revenue))
+      ) {
+        return [label, null];
+      }
+
+      const revenueSum = pairs.reduce((sum, pair) => sum + pair.revenue, 0);
+      if (!Number.isFinite(revenueSum) || revenueSum === 0) {
+        return [label, null];
+      }
+
+      const grossProfitSum = pairs.reduce((sum, pair) => sum + (pair.margin / 100) * pair.revenue, 0);
+      return [label, (grossProfitSum / revenueSum) * 100];
     });
   }
 
@@ -341,6 +397,8 @@
     getFinancialBarDatasetOrder,
     alignSecondaryAxisZero,
     aggregateFlowRollingAnnualEntries,
+    aggregatePointRollingAverageEntries,
+    aggregateMarginRollingAnnualEntries,
   };
 
   if (typeof module !== "undefined" && module.exports) {
