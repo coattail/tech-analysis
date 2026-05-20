@@ -410,6 +410,14 @@
     );
   }
 
+  function shouldHidePrimaryYAxisTickLabel({ metricKey, chartMode, value }) {
+    const numericValue = Number(value);
+    return metricKey === "netIncome"
+      && chartMode === "bar"
+      && Number.isFinite(numericValue)
+      && numericValue < 0;
+  }
+
   const api = {
     canShowPriceComparison,
     shouldResetPriceComparison,
@@ -424,6 +432,7 @@
     getFinancialBarDatasetOrder,
     alignSecondaryAxisZero,
     computeCompactBarZeroBaselineMin,
+    shouldHidePrimaryYAxisTickLabel,
     aggregateFlowRollingAnnualEntries,
     aggregatePointRollingAverageEntries,
     aggregateMarginRollingAnnualEntries,

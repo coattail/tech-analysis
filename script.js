@@ -1037,6 +1037,14 @@ function formatYAxisTick(metricKey, value) {
   return `${decimalFormatter.format(value)}x`;
 }
 
+function formatPrimaryYAxisTick(metricKey, value, chartMode = getEffectiveChartMode()) {
+  if (PriceComparisonUtils.shouldHidePrimaryYAxisTickLabel({ metricKey, chartMode, value })) {
+    return "";
+  }
+
+  return formatYAxisTick(metricKey, value);
+}
+
 function formatMetricValue(metricKey, value) {
   if (!isFiniteNumber(value)) return "无数据";
 
@@ -1800,7 +1808,7 @@ function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
   const sampleValues = [bounds.min, bounds.max, 0];
   const font = `600 10px ${themeTokens.chartFontFamily}`;
   const widestLabel = sampleValues.reduce((maxWidth, value) => {
-    const width = measureTextWidth(formatYAxisTick(state.metric, Number(value)), font);
+    const width = measureTextWidth(formatPrimaryYAxisTick(state.metric, Number(value), chartMode), font);
     return Math.max(maxWidth, width);
   }, 0);
 
@@ -2117,7 +2125,7 @@ function buildChart() {
             font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
             padding: Y_AXIS_TICK_PADDING,
             callback(value) {
-              return formatYAxisTick(state.metric, Number(value));
+              return formatPrimaryYAxisTick(state.metric, Number(value), effectiveChartMode);
             },
           },
           grid: {

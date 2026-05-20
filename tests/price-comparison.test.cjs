@@ -14,6 +14,7 @@ const {
   getFinancialBarDatasetOrder,
   alignSecondaryAxisZero,
   computeCompactBarZeroBaselineMin,
+  shouldHidePrimaryYAxisTickLabel,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
   aggregateMarginRollingAnnualEntries,
@@ -558,6 +559,33 @@ test("preserves substantial net-income losses instead of hiding them in a compac
       max: 39.8,
     }),
     null,
+  );
+});
+
+test("hides below-zero primary y-axis tick labels for net-income bar charts", () => {
+  assert.equal(
+    shouldHidePrimaryYAxisTickLabel({
+      metricKey: "netIncome",
+      chartMode: "bar",
+      value: -1_000_000_000,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldHidePrimaryYAxisTickLabel({
+      metricKey: "netIncome",
+      chartMode: "bar",
+      value: 0,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldHidePrimaryYAxisTickLabel({
+      metricKey: "revenueGrowth",
+      chartMode: "line",
+      value: -10,
+    }),
+    false,
   );
 });
 
