@@ -506,6 +506,14 @@ test("metric changes rebuild the chart to avoid stale dataset shapes", () => {
   assert.doesNotMatch(metricHandlerBody, /refreshChart\(\);/);
 });
 
+test("single-company bars pin thickness when price overlay is dense", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+
+  assert.match(script, /function computeSingleCompanyBarThickness/);
+  assert.match(script, /barThickness:\s*useBarDataset\s*\?\s*computeSingleCompanyBarThickness\(rangeLabels\.length\)/);
+  assert.match(script, /currentDataset\.barThickness = nextDataset\.barThickness;/);
+});
+
 test("aligns the secondary-axis zero baseline with the primary axis", () => {
   assert.deepEqual(
     alignSecondaryAxisZero({

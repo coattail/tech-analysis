@@ -504,6 +504,11 @@ const Y_AXIS_TITLE_VERTICAL_OFFSET = -28;
 const SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE = 64;
 const SINGLE_COMPANY_WATERMARK_ALPHA = 0.1;
 const EXPORT_DEVICE_PIXEL_RATIO = 8;
+const SINGLE_COMPANY_BAR_MIN_THICKNESS = 6;
+const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
+const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.62;
+const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
+const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
 
 const state = {
   chart: null,
@@ -574,6 +579,22 @@ const state = {
     },
   },
 };
+
+function computeSingleCompanyBarThickness(visibleLabelCount) {
+  const count = Math.max(1, Number(visibleLabelCount) || 1);
+  const containerWidth =
+    chartEl?.parentElement?.clientWidth ||
+    chartEl?.clientWidth ||
+    SINGLE_COMPANY_BAR_FALLBACK_WIDTH;
+  const usableWidth = Math.max(320, containerWidth - SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE);
+  const slotWidth = usableWidth / count;
+  const nextThickness = slotWidth * SINGLE_COMPANY_BAR_WIDTH_RATIO;
+
+  return Math.max(
+    SINGLE_COMPANY_BAR_MIN_THICKNESS,
+    Math.min(SINGLE_COMPANY_BAR_MAX_THICKNESS, nextThickness),
+  );
+}
 
 function setStatus(text, isError = false) {
   statusEl.textContent = text;
@@ -1322,6 +1343,7 @@ function buildDatasetsForView() {
       borderSkipped: false,
       barPercentage: useBarDataset ? 0.72 : 0.9,
       categoryPercentage: useBarDataset ? 0.82 : 0.9,
+      barThickness: useBarDataset ? computeSingleCompanyBarThickness(rangeLabels.length) : undefined,
       maxBarThickness: useBarDataset ? 28 : undefined,
       pointRadius: useBarDataset ? 0 : 1.4,
       pointHoverRadius: 4.2,
@@ -1791,6 +1813,7 @@ function syncChartDatasets(nextDatasets) {
     currentDataset.borderSkipped = nextDataset.borderSkipped;
     currentDataset.barPercentage = nextDataset.barPercentage;
     currentDataset.categoryPercentage = nextDataset.categoryPercentage;
+    currentDataset.barThickness = nextDataset.barThickness;
     currentDataset.maxBarThickness = nextDataset.maxBarThickness;
     currentDataset.pointRadius = nextDataset.pointRadius;
     currentDataset.pointHoverRadius = nextDataset.pointHoverRadius;
