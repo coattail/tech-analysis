@@ -511,6 +511,9 @@ const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.62;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
+const BAR_TOOLTIP_COLLISION_PADDING = 8;
+const BAR_TOOLTIP_FALLBACK_WIDTH = 190;
+const BAR_TOOLTIP_FALLBACK_HEIGHT = 78;
 
 const state = {
   chart: null,
@@ -656,13 +659,126 @@ function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+function clampNumber(value, min, max) {
+  if (!isFiniteNumber(value)) return min;
+  return Math.max(min, Math.min(value, max));
+}
+
+function collectVisibleBarRects(chart) {
+  const rects = [];
+  if (!chart || typeof chart.getSortedVisibleDatasetMetas !== "function") return rects;
+
+  chart.getSortedVisibleDatasetMetas().forEach((meta) => {
+    const dataset = chart.data?.datasets?.[meta.index];
+    if (dataset?.priceOverlay || dataset?.type !== "bar") return;
+
+    (meta.data || []).forEach((element) => {
+      if (!element) return;
+
+      const props = typeof element.getProps === "function"
+        ? element.getProps(["x", "y", "base", "width"], true)
+        : element;
+      const x = Number(props.x);
+      const y = Number(props.y);
+      const base = Number(props.base);
+      const width = Number(props.width);
+
+      if (![x, y, base, width].every(Number.isFinite) || width <= 0) return;
+
+      rects.push({
+        left: x - width / 2 - BAR_TOOLTIP_COLLISION_PADDING,
+        right: x + width / 2 + BAR_TOOLTIP_COLLISION_PADDING,
+        top: Math.min(y, base) - BAR_TOOLTIP_COLLISION_PADDING,
+        bottom: Math.max(y, base) + BAR_TOOLTIP_COLLISION_PADDING,
+      });
+    });
+  });
+
+  return rects;
+}
+
+function getTooltipBoxSize(tooltip) {
+  return {
+    width: Math.max(BAR_TOOLTIP_FALLBACK_WIDTH, Number(tooltip?.width) || 0),
+    height: Math.max(BAR_TOOLTIP_FALLBACK_HEIGHT, Number(tooltip?.height) || 0),
+  };
+}
+
+function buildTooltipRectFromAnchor(anchor, tooltipSize) {
+  const caretSize = 8;
+  return {
+    left: anchor.x - tooltipSize.width / 2,
+    right: anchor.x + tooltipSize.width / 2,
+    top: anchor.y - tooltipSize.height - caretSize,
+    bottom: anchor.y,
+  };
+}
+
+function tooltipRectIntersectsBar(tooltipRect, barRect) {
+  return tooltipRect.left < barRect.right
+    && tooltipRect.right > barRect.left
+    && tooltipRect.top < barRect.bottom
+    && tooltipRect.bottom > barRect.top;
+}
+
+function isTooltipRectInsideChart(tooltipRect, chartArea) {
+  return tooltipRect.left >= chartArea.left
+    && tooltipRect.right <= chartArea.right
+    && tooltipRect.top >= chartArea.top
+    && tooltipRect.bottom <= chartArea.bottom;
+}
+
+function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, preferredY, tooltip }) {
+  const chartArea = chart?.chartArea;
+  if (!chartArea) return { x: preferredX, y: preferredY };
+
+  const tooltipSize = getTooltipBoxSize(tooltip);
+  const activeWidth = Math.max(Number(activeElement?.width) || 0, SINGLE_COMPANY_BAR_MIN_THICKNESS);
+  const safeMinX = chartArea.left + tooltipSize.width / 2;
+  const safeMaxX = chartArea.right - tooltipSize.width / 2;
+  const safeMinY = chartArea.top + tooltipSize.height + BAR_TOOLTIP_VERTICAL_OFFSET;
+  const safeMaxY = chartArea.bottom;
+  const topAnchorY = safeMinY;
+  const aboveAnchorY = clampNumber(preferredY, safeMinY, safeMaxY);
+  const leftX = preferredX - tooltipSize.width * 0.72 - activeWidth;
+  const rightX = preferredX + tooltipSize.width * 0.72 + activeWidth;
+  const candidateAnchors = [
+    { x: preferredX, y: aboveAnchorY },
+    { x: leftX, y: aboveAnchorY },
+    { x: rightX, y: aboveAnchorY },
+    { x: chartArea.left + tooltipSize.width / 2, y: topAnchorY },
+    { x: chartArea.right - tooltipSize.width / 2, y: topAnchorY },
+    { x: chartArea.left + tooltipSize.width / 2, y: aboveAnchorY },
+    { x: chartArea.right - tooltipSize.width / 2, y: aboveAnchorY },
+  ].map((candidate) => ({
+    x: clampNumber(candidate.x, safeMinX, safeMaxX),
+    y: clampNumber(candidate.y, safeMinY, safeMaxY),
+  }));
+
+  const barRects = collectVisibleBarRects(chart);
+  const nonOverlapping = candidateAnchors.find((candidate) => {
+    const rect = buildTooltipRectFromAnchor(candidate, tooltipSize);
+    return isTooltipRectInsideChart(rect, chartArea)
+      && !barRects.some((barRect) => tooltipRectIntersectsBar(rect, barRect));
+  });
+
+  return nonOverlapping || candidateAnchors[0] || { x: preferredX, y: preferredY };
+}
+
 function registerTooltipPositioners() {
   if (!window.Chart?.Tooltip?.positioners) return;
 
   Chart.Tooltip.positioners.barAbove = function positionBarTooltipAbove(activeItems, eventPosition) {
     const fallback = eventPosition || { x: 0, y: 0 };
+    const chart = this?.chart;
     const activeItem = Array.isArray(activeItems)
-      ? activeItems.find((item) => isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y))
+      ? (
+        activeItems.find((item) => {
+          const dataset = chart?.data?.datasets?.[item?.datasetIndex];
+          return dataset?.type === "bar" && isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y);
+        }) ||
+        activeItems.find((item) => isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y))
+      )
       : null;
 
     if (!activeItem) return fallback;
@@ -672,10 +788,13 @@ function registerTooltipPositioners() {
       ? chartArea.top + BAR_TOOLTIP_VERTICAL_OFFSET
       : BAR_TOOLTIP_VERTICAL_OFFSET;
 
-    return {
-      x: activeItem.element.x,
-      y: Math.max(minY, activeItem.element.y - BAR_TOOLTIP_VERTICAL_OFFSET),
-    };
+    return findNonOverlappingTooltipPosition({
+      chart,
+      activeElement: activeItem.element,
+      preferredX: activeItem.element.x,
+      preferredY: Math.max(minY, activeItem.element.y - BAR_TOOLTIP_VERTICAL_OFFSET),
+      tooltip: this,
+    });
   };
 }
 
