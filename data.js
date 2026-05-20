@@ -1,13 +1,13 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-05-19T17:31:47.494Z",
+    "generatedAt": "2026-05-20T08:10:54.752Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q2",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet",
-      "refreshedAt": "2026-05-19T17:31:47.494Z",
+      "refreshedAt": "2026-05-20T08:10:54.752Z",
       "updatedCompanies": [
         "nvidia",
         "alphabet",
@@ -15,7 +15,6 @@ window.FINANCIAL_SOURCE_DATA = {
         "microsoft",
         "amazon",
         "avgo",
-        "meta",
         "tsmc",
         "tsla",
         "walmart",
@@ -40,11 +39,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "abbvie",
         "homedepot"
       ],
-      "changedPoints": 2894,
+      "changedPoints": 3167,
       "changedPeriods": [
         "2004Q2",
-        "2004Q3",
-        "2004Q4",
         "2005Q1",
         "2005Q2",
         "2005Q3",
@@ -284,6 +281,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q1": 111184000000
       },
       "earnings": {
+        "2004Q2": 61000000,
         "2004Q4": 295000000,
         "2005Q1": 499000000,
         "2005Q2": 499000000,
@@ -13321,7 +13319,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 45935000000,
         "2025Q3": 46843000000,
         "2025Q4": 46873000000,
-        "2026Q1": 47723000000
+        "2026Q1": 47723000000,
+        "2026Q2": 48861000000
       },
       "roe": {
         "2005Q1": null,
@@ -13351,7 +13350,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 5.422880156743224,
         "2025Q3": 5.443716243622313,
         "2025Q4": 6.101593667996501,
-        "2026Q1": 6.652976552186576
+        "2026Q1": 6.652976552186576,
+        "2026Q2": 6.903256175682036
       },
       "grossMargin": {
         "2004Q2": 68.80782918149467,
