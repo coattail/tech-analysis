@@ -521,6 +521,8 @@ test("bar chart tooltips are positioned above bars to avoid covering columns", (
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
   assert.match(script, /Chart\.Tooltip\.positioners\.barAbove/);
+  assert.match(script, /const barActiveItem =/);
+  assert.match(script, /Chart\.Tooltip\.positioners\.nearest\.call\(this, activeItems, eventPosition\)/);
   assert.match(script, /function collectVisibleBarRects/);
   assert.match(script, /function tooltipRectIntersectsBar/);
   assert.match(script, /findNonOverlappingTooltipPosition/);

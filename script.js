@@ -798,17 +798,16 @@ function registerTooltipPositioners() {
   Chart.Tooltip.positioners.barAbove = function positionBarTooltipAbove(activeItems, eventPosition) {
     const fallback = eventPosition || { x: 0, y: 0 };
     const chart = this?.chart;
-    const activeItem = Array.isArray(activeItems)
-      ? (
-        activeItems.find((item) => {
-          const dataset = chart?.data?.datasets?.[item?.datasetIndex];
-          return dataset?.type === "bar" && isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y);
-        }) ||
-        activeItems.find((item) => isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y))
-      )
+    const barActiveItem = Array.isArray(activeItems)
+      ? activeItems.find((item) => {
+        const dataset = chart?.data?.datasets?.[item?.datasetIndex];
+        return dataset?.type === "bar" && isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y);
+      })
       : null;
 
-    if (!activeItem) return fallback;
+    if (!barActiveItem) {
+      return Chart.Tooltip.positioners.nearest.call(this, activeItems, eventPosition) || fallback;
+    }
 
     const chartArea = this?.chart?.chartArea;
     const minY = isFiniteNumber(chartArea?.top)
@@ -817,9 +816,9 @@ function registerTooltipPositioners() {
 
     return findNonOverlappingTooltipPosition({
       chart,
-      activeElement: activeItem.element,
-      preferredX: activeItem.element.x,
-      preferredY: Math.max(minY, activeItem.element.y - BAR_TOOLTIP_VERTICAL_OFFSET),
+      activeElement: barActiveItem.element,
+      preferredX: barActiveItem.element.x,
+      preferredY: Math.max(minY, barActiveItem.element.y - BAR_TOOLTIP_VERTICAL_OFFSET),
       tooltip: this,
     });
   };
