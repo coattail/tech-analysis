@@ -510,6 +510,7 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.62;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
+const PRICE_AXIS_RESERVED_WIDTH = 92;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
 const BAR_TOOLTIP_COLLISION_PADDING = 8;
@@ -978,6 +979,10 @@ function canEnablePriceComparisonForCurrentView() {
   }) && Boolean(getSingleCompanyDailyPrices());
 }
 
+function shouldReservePriceComparisonLayout(hasPriceOverlay = false) {
+  return Boolean(hasPriceOverlay) || canEnablePriceComparisonForCurrentView();
+}
+
 function setPriceComparisonEnabled(enabled) {
   const nextEnabled = Boolean(enabled) && canEnablePriceComparisonForCurrentView();
   state.priceComparisonEnabled = nextEnabled;
@@ -985,7 +990,7 @@ function setPriceComparisonEnabled(enabled) {
     priceComparisonToggleEl.checked = nextEnabled;
   }
   try {
-    rebuildChartForCurrentView();
+    refreshChart("none");
   } catch (error) {
     state.priceComparisonEnabled = false;
     if (priceComparisonToggleEl) {
@@ -1586,7 +1591,7 @@ function buildDatasetsForView() {
       ...Array(Math.max(0, visibleLabels.length - financialVisibleLabels.length)).fill(null),
     ],
   }));
-  const shouldAnchorFinancialBarsAtPeriodEnd = state.priceComparisonEnabled && useBarForSingleCompany;
+  const shouldAnchorFinancialBarsAtPeriodEnd = useBarForSingleCompany;
   const trimmedDatasets = paddedDatasets.map((dataset) => ({
     ...dataset,
     data: buildFinancialDatasetValuesForVisibleLabels(
@@ -2099,6 +2104,7 @@ function refreshChart(updateMode = undefined) {
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
   const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
+  const reservePriceComparisonLayout = shouldReservePriceComparisonLayout(hasPriceOverlay);
   const themeTokens = getChartThemeTokens();
   const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
   syncChartLabels(labels);
@@ -2110,14 +2116,17 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.y.min = yBounds.min;
   state.chart.options.scales.y.max = yBounds.max;
   state.chart.options.scales.y.reservedWidth = yReservedWidth;
-  state.chart.options.scales.yPrice.display = hasPriceOverlay;
+  state.chart.options.scales.yPrice.display = reservePriceComparisonLayout;
+  state.chart.options.scales.yPrice.reservedWidth = reservePriceComparisonLayout ? PRICE_AXIS_RESERVED_WIDTH : 0;
+  state.chart.options.scales.yPrice.title.display = hasPriceOverlay;
+  state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.min = priceBounds.min;
   state.chart.options.scales.yPrice.max = priceBounds.max;
   state.chart.options.scales.x.title.text = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle;
   state.chart.options.scales.x.offset = effectiveChartMode === "bar";
   state.chart.options.scales.x.grid.offset = effectiveChartMode === "bar";
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
-  state.chart.options.plugins.legend.display = hasPriceOverlay;
+  state.chart.options.plugins.legend.display = reservePriceComparisonLayout;
   state.chart.update(updateMode);
   alignRangeWithChartAxis();
   updateRangeVisual();
@@ -2240,6 +2249,7 @@ function buildChart() {
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
   const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
+  const reservePriceComparisonLayout = shouldReservePriceComparisonLayout(hasPriceOverlay);
   const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
 
   state.chart = new Chart(chartEl, {
@@ -2320,18 +2330,23 @@ function buildChart() {
           },
         },
         yPrice: {
-          display: hasPriceOverlay,
+          display: reservePriceComparisonLayout,
           position: "right",
+          afterFit(scale) {
+            scale.width = scale.options.reservedWidth ?? scale.width;
+          },
           border: { color: "rgba(0,0,0,0)" },
           min: priceBounds.min,
           max: priceBounds.max,
+          reservedWidth: reservePriceComparisonLayout ? PRICE_AXIS_RESERVED_WIDTH : 0,
           title: {
-            display: true,
+            display: hasPriceOverlay,
             text: "股价（USD）",
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
           },
           ticks: {
+            display: hasPriceOverlay,
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
             callback(value) {
@@ -2345,7 +2360,7 @@ function buildChart() {
       },
       plugins: {
         legend: {
-          display: hasPriceOverlay,
+          display: reservePriceComparisonLayout,
           labels: {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },

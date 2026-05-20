@@ -5,7 +5,7 @@ const assert = require("node:assert/strict");
 
 test("cache-busts local assets that changed chart baseline behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260521-price-tooltip-nearest";
+  const expectedVersion = "20260521-toggle-stable-layout";
 
   for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
     assert.match(

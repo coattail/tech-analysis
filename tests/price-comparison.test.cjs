@@ -509,12 +509,28 @@ test("metric changes rebuild the chart to avoid stale dataset shapes", () => {
   assert.doesNotMatch(metricHandlerBody, /refreshChart\(\);/);
 });
 
-test("price comparison toggle rebuilds the chart to avoid stale mixed-axis dataset shapes", () => {
+test("price comparison toggle refreshes in place without rebuilding the chart", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const priceComparisonBody = script.match(/function setPriceComparisonEnabled\([\s\S]*?\n\}/)?.[0] ?? "";
 
-  assert.match(priceComparisonBody, /rebuildChartForCurrentView\(\);/);
-  assert.doesNotMatch(priceComparisonBody, /refreshChart\(updateMode\);/);
+  assert.match(priceComparisonBody, /refreshChart\("none"\);/);
+  assert.doesNotMatch(priceComparisonBody, /rebuildChartForCurrentView\(\);/);
+});
+
+test("price comparison layout reserves a stable right axis and legend area", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+
+  assert.match(script, /function shouldReservePriceComparisonLayout/);
+  assert.match(script, /const PRICE_AXIS_RESERVED_WIDTH/);
+  assert.match(script, /state\.chart\.options\.scales\.yPrice\.display = reservePriceComparisonLayout;/);
+  assert.match(script, /state\.chart\.options\.plugins\.legend\.display = reservePriceComparisonLayout;/);
+});
+
+test("single-company financial bars keep period-end anchors when price comparison is toggled", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+
+  assert.match(script, /const shouldAnchorFinancialBarsAtPeriodEnd = useBarForSingleCompany;/);
+  assert.doesNotMatch(script, /const shouldAnchorFinancialBarsAtPeriodEnd = state\.priceComparisonEnabled && useBarForSingleCompany;/);
 });
 
 test("bar chart tooltips are positioned above bars to avoid covering columns", () => {
