@@ -6,6 +6,11 @@
     chartMode: "bar",
     priceComparisonEnabled: true,
   };
+  const DISPLAY_PERIOD_STARTS = {
+    quarterly: "2005Q1",
+    rollingAnnual: "2005Q1",
+    annual: "2005",
+  };
 
   function cloneCompanySet(companyIds) {
     return new Set(companyIds ?? []);
@@ -62,6 +67,10 @@
     return hasCompanySelectionChanged(appliedCompanies, pendingCompanies);
   }
 
+  function getDisplayPeriodStart(frequency) {
+    return DISPLAY_PERIOD_STARTS[frequency] ?? DISPLAY_PERIOD_STARTS.quarterly;
+  }
+
   const api = {
     DEFAULT_INITIAL_COMPANIES,
     DEFAULT_INITIAL_VIEW,
@@ -72,6 +81,7 @@
     hasCompanySelectionChanged,
     shouldKeepSelectionPendingUntilGenerate,
     shouldResetRangeAfterApplyingCompanies,
+    getDisplayPeriodStart,
   };
 
   if (typeof module !== "undefined" && module.exports) {

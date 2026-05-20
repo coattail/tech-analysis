@@ -509,6 +509,14 @@ test("metric changes rebuild the chart to avoid stale dataset shapes", () => {
   assert.doesNotMatch(metricHandlerBody, /refreshChart\(\);/);
 });
 
+test("price comparison toggle rebuilds the chart to avoid stale mixed-axis dataset shapes", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const priceComparisonBody = script.match(/function setPriceComparisonEnabled\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(priceComparisonBody, /rebuildChartForCurrentView\(\);/);
+  assert.doesNotMatch(priceComparisonBody, /refreshChart\(updateMode\);/);
+});
+
 test("single-company bars pin thickness when price overlay is dense", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 

@@ -82,6 +82,7 @@ const {
   setAllPendingCompanyVisibility,
   applyPendingCompanies,
   shouldResetRangeAfterApplyingCompanies,
+  getDisplayPeriodStart,
 } = window.CompanySelectionUtils;
 
 const DEFAULT_VISIBLE_COMPANIES = DEFAULT_INITIAL_COMPANIES;
@@ -658,6 +659,15 @@ function getLabelsForFrequency(frequency) {
   return frequency === "annual" ? ANNUAL_LABELS : QUARTER_LABELS;
 }
 
+function getDisplayStartIndex(frequency = state.frequency) {
+  const labels = getLabelsForFrequency(frequency);
+  if (!labels.length) return 0;
+
+  const displayStart = getDisplayPeriodStart(frequency);
+  const index = labels.indexOf(displayStart);
+  return index >= 0 ? index : 0;
+}
+
 function syncPeriodRangeChip() {
   if (!periodRangeChipEl) return;
   const first = QUARTER_LABELS[0] ?? "-";
@@ -668,9 +678,10 @@ function syncPeriodRangeChip() {
 function getVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
   const labels = getLabelsForFrequency(frequency);
   const seriesMap = state.dataByFrequency[frequency]?.[metric];
+  const displayStartIndex = getDisplayStartIndex(frequency);
 
   if (!labels.length || !seriesMap) {
-    return { hasData: false, start: 0, end: 0 };
+    return { hasData: false, start: displayStartIndex, end: displayStartIndex };
   }
 
   let firstIndex = Number.POSITIVE_INFINITY;
@@ -691,20 +702,22 @@ function getVisibleDataBounds(frequency = state.frequency, metric = state.metric
   if (!Number.isFinite(firstIndex) || lastIndex < 0) {
     return {
       hasData: false,
-      start: 0,
+      start: displayStartIndex,
       end: Math.max(0, labels.length - 1),
     };
   }
 
+  const start = Math.max(displayStartIndex, firstIndex);
   return {
     hasData: true,
-    start: firstIndex,
-    end: lastIndex,
+    start,
+    end: Math.max(start, lastIndex),
   };
 }
 
 function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
   const labels = getLabelsForFrequency(frequency);
+  const displayStartIndex = getDisplayStartIndex(frequency);
   if (!labels.length) {
     state.rangeStart = 0;
     state.rangeEnd = 0;
@@ -712,10 +725,10 @@ function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state
   }
 
   const bounds = getVisibleDataBounds(frequency, metric);
-  state.rangeStart = bounds.start;
+  state.rangeStart = Math.max(displayStartIndex, bounds.start);
   state.rangeEnd = canEnablePriceComparisonForCurrentView()
     ? PriceComparisonUtils.extendRangeEndThroughLatestPrice({
-      rangeStart: bounds.start,
+      rangeStart: state.rangeStart,
       rangeEnd: bounds.end,
       allLabels: labels,
       dailyPrices: getSingleCompanyDailyPrices(),
@@ -723,6 +736,7 @@ function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state
       allowExtension: true,
     })
     : bounds.end;
+  state.rangeEnd = Math.max(state.rangeStart, state.rangeEnd);
 }
 
 function setDefaultRangeForFrequency(frequency) {
@@ -795,14 +809,14 @@ function canEnablePriceComparisonForCurrentView() {
   }) && Boolean(getSingleCompanyDailyPrices());
 }
 
-function setPriceComparisonEnabled(enabled, updateMode = "none") {
+function setPriceComparisonEnabled(enabled) {
   const nextEnabled = Boolean(enabled) && canEnablePriceComparisonForCurrentView();
   state.priceComparisonEnabled = nextEnabled;
   if (priceComparisonToggleEl) {
     priceComparisonToggleEl.checked = nextEnabled;
   }
   try {
-    refreshChart(updateMode);
+    rebuildChartForCurrentView();
   } catch (error) {
     state.priceComparisonEnabled = false;
     if (priceComparisonToggleEl) {
@@ -1194,18 +1208,19 @@ async function downloadCurrentChartImage() {
 
 function syncRangeControls() {
   const labels = getLabelsForFrequency(state.frequency);
+  const displayStartIndex = getDisplayStartIndex(state.frequency);
   const max = labels.length - 1;
 
-  state.rangeStart = Math.max(0, Math.min(state.rangeStart, max));
-  state.rangeEnd = Math.max(0, Math.min(state.rangeEnd, max));
+  state.rangeStart = Math.max(displayStartIndex, Math.min(state.rangeStart, max));
+  state.rangeEnd = Math.max(displayStartIndex, Math.min(state.rangeEnd, max));
   if (state.rangeStart > state.rangeEnd) {
-    state.rangeStart = 0;
+    state.rangeStart = displayStartIndex;
     state.rangeEnd = max;
   }
 
-  rangeStartEl.min = "0";
+  rangeStartEl.min = String(displayStartIndex);
   rangeStartEl.max = String(max);
-  rangeEndEl.min = "0";
+  rangeEndEl.min = String(displayStartIndex);
   rangeEndEl.max = String(max);
 
   rangeStartEl.value = String(state.rangeStart);
@@ -1220,14 +1235,16 @@ function syncRangeControls() {
 function updateRangeVisual() {
   if (!rangeFillEl) return;
   const labels = getLabelsForFrequency(state.frequency);
+  const displayStartIndex = getDisplayStartIndex(state.frequency);
   const max = labels.length - 1;
+  const displaySpan = max - displayStartIndex;
 
   let startPct = 0;
   let endPct = 100;
 
-  if (max > 0) {
-    startPct = (state.rangeStart / max) * 100;
-    endPct = (state.rangeEnd / max) * 100;
+  if (displaySpan > 0) {
+    startPct = ((state.rangeStart - displayStartIndex) / displaySpan) * 100;
+    endPct = ((state.rangeEnd - displayStartIndex) / displaySpan) * 100;
   }
 
   const left = Math.max(0, Math.min(startPct, 100));
@@ -2269,7 +2286,8 @@ function bindEvents() {
 
   rangeStartEl.addEventListener("input", () => {
     const next = Number(rangeStartEl.value);
-    state.rangeStart = Number.isFinite(next) ? next : state.rangeStart;
+    const displayStartIndex = getDisplayStartIndex(state.frequency);
+    state.rangeStart = Number.isFinite(next) ? Math.max(displayStartIndex, next) : state.rangeStart;
     if (state.rangeStart > state.rangeEnd) state.rangeEnd = state.rangeStart;
     syncRangeControls();
     refreshChart("none");
@@ -2277,8 +2295,9 @@ function bindEvents() {
 
   rangeEndEl.addEventListener("input", () => {
     const next = Number(rangeEndEl.value);
-    state.rangeEnd = Number.isFinite(next) ? next : state.rangeEnd;
-    if (state.rangeEnd < state.rangeStart) state.rangeStart = state.rangeEnd;
+    const displayStartIndex = getDisplayStartIndex(state.frequency);
+    state.rangeEnd = Number.isFinite(next) ? Math.max(displayStartIndex, next) : state.rangeEnd;
+    if (state.rangeEnd < state.rangeStart) state.rangeStart = Math.max(displayStartIndex, state.rangeEnd);
     syncRangeControls();
     refreshChart("none");
   });

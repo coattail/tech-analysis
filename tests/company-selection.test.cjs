@@ -10,6 +10,7 @@ const {
   hasCompanySelectionChanged,
   shouldKeepSelectionPendingUntilGenerate,
   shouldResetRangeAfterApplyingCompanies,
+  getDisplayPeriodStart,
   DEFAULT_INITIAL_COMPANIES,
   DEFAULT_INITIAL_VIEW,
 } = require('../company-selection.js');
@@ -114,4 +115,18 @@ test('keeps a changed company selection pending until generate is clicked', () =
     }),
     false,
   );
+});
+
+test('display range starts at 2005Q1 even when earlier quarters exist for calculations', () => {
+  assert.equal(getDisplayPeriodStart('quarterly'), '2005Q1');
+  assert.equal(getDisplayPeriodStart('rollingAnnual'), '2005Q1');
+  assert.equal(getDisplayPeriodStart('annual'), '2005');
+});
+
+test('script clamps range slider controls to the display period start', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+
+  assert.match(script, /function getDisplayStartIndex/);
+  assert.match(script, /rangeStartEl\.min = String\(displayStartIndex\);/);
+  assert.match(script, /rangeEndEl\.min = String\(displayStartIndex\);/);
 });
