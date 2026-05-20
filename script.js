@@ -2178,7 +2178,7 @@ function bindEvents() {
       state.metric = input.value;
       setRangeToVisibleDataBounds();
       syncRangeControls();
-      refreshChart();
+      rebuildChartForCurrentView();
     });
   });
 
