@@ -3,9 +3,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts local assets that changed chart baseline behavior", () => {
+test("cache-busts local assets that changed chart tooltip behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260521-toggle-stable-layout";
+  const expectedVersion = "20260521-tooltip-metric-scope";
 
   for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
     assert.match(

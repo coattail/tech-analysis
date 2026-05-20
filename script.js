@@ -751,7 +751,29 @@ function isTooltipRectInsideChart(tooltipRect, chartArea) {
     && tooltipRect.bottom <= chartArea.bottom;
 }
 
-function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, preferredY, tooltip }) {
+function shouldAvoidBarTooltipCollisions(metricKey) {
+  return metricKey === "revenue" || metricKey === "netIncome";
+}
+
+function buildNearbyTooltipPosition({ chartArea, activeElement, preferredX, preferredY, tooltipSize }) {
+  const halfWidth = tooltipSize.width / 2;
+  const x = clampNumber(preferredX, chartArea.left + halfWidth, chartArea.right - halfWidth);
+  const y = clampNumber(
+    preferredY,
+    chartArea.top + tooltipSize.height + BAR_TOOLTIP_VERTICAL_OFFSET,
+    chartArea.bottom,
+  );
+
+  return {
+    x,
+    y,
+    xAlign: "center",
+    yAlign: "bottom",
+    caretX: clampNumber(activeElement?.x, chartArea.left, chartArea.right),
+  };
+}
+
+function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, preferredY, tooltip, avoidBarCollisions = true }) {
   const chartArea = chart?.chartArea;
   if (!chartArea) return { x: preferredX, y: preferredY };
 
@@ -763,6 +785,17 @@ function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, p
   const safeMaxY = chartArea.bottom;
   const topAnchorY = safeMinY;
   const aboveAnchorY = clampNumber(preferredY, safeMinY, safeMaxY);
+
+  if (!avoidBarCollisions) {
+    return buildNearbyTooltipPosition({
+      chartArea,
+      activeElement,
+      preferredX,
+      preferredY: aboveAnchorY,
+      tooltipSize,
+    });
+  }
+
   const candidateAnchors = [
     {
       x: activeLeft - BAR_TOOLTIP_SIDE_OFFSET,
@@ -821,6 +854,7 @@ function registerTooltipPositioners() {
       preferredX: barActiveItem.element.x,
       preferredY: Math.max(minY, barActiveItem.element.y - BAR_TOOLTIP_VERTICAL_OFFSET),
       tooltip: this,
+      avoidBarCollisions: shouldAvoidBarTooltipCollisions(state.metric),
     });
   };
 }

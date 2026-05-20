@@ -533,7 +533,7 @@ test("single-company financial bars keep period-end anchors when price compariso
   assert.doesNotMatch(script, /const shouldAnchorFinancialBarsAtPeriodEnd = state\.priceComparisonEnabled && useBarForSingleCompany;/);
 });
 
-test("bar chart tooltips are positioned above bars to avoid covering columns", () => {
+test("bar chart tooltips avoid columns only for revenue and net income", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
   assert.match(script, /Chart\.Tooltip\.positioners\.barAbove/);
@@ -541,6 +541,9 @@ test("bar chart tooltips are positioned above bars to avoid covering columns", (
   assert.match(script, /Chart\.Tooltip\.positioners\.nearest\.call\(this, activeItems, eventPosition\)/);
   assert.match(script, /function collectVisibleBarRects/);
   assert.match(script, /function tooltipRectIntersectsBar/);
+  assert.match(script, /function shouldAvoidBarTooltipCollisions/);
+  assert.match(script, /return metricKey === "revenue" \|\| metricKey === "netIncome";/);
+  assert.match(script, /avoidBarCollisions:\s*shouldAvoidBarTooltipCollisions\(state\.metric\)/);
   assert.match(script, /findNonOverlappingTooltipPosition/);
   assert.match(script, /xAlign:\s*"right"/);
   assert.match(script, /xAlign:\s*"left"/);
