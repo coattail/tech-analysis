@@ -510,6 +510,7 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.62;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
+const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 
 const state = {
   chart: null,
@@ -653,6 +654,29 @@ function initTheme() {
 
 function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+function registerTooltipPositioners() {
+  if (!window.Chart?.Tooltip?.positioners) return;
+
+  Chart.Tooltip.positioners.barAbove = function positionBarTooltipAbove(activeItems, eventPosition) {
+    const fallback = eventPosition || { x: 0, y: 0 };
+    const activeItem = Array.isArray(activeItems)
+      ? activeItems.find((item) => isFiniteNumber(item?.element?.x) && isFiniteNumber(item?.element?.y))
+      : null;
+
+    if (!activeItem) return fallback;
+
+    const chartArea = this?.chart?.chartArea;
+    const minY = isFiniteNumber(chartArea?.top)
+      ? chartArea.top + BAR_TOOLTIP_VERTICAL_OFFSET
+      : BAR_TOOLTIP_VERTICAL_OFFSET;
+
+    return {
+      x: activeItem.element.x,
+      y: Math.max(minY, activeItem.element.y - BAR_TOOLTIP_VERTICAL_OFFSET),
+    };
+  };
 }
 
 function getLabelsForFrequency(frequency) {
@@ -2198,6 +2222,8 @@ function buildChart() {
           },
         },
         tooltip: {
+          position: "barAbove",
+          yAlign: "bottom",
           backgroundColor: themeTokens.tooltipBg,
           titleColor: themeTokens.tooltipTitle,
           bodyColor: themeTokens.tooltipBody,
@@ -2416,6 +2442,7 @@ function loadFromLocalData() {
 }
 
 function init() {
+  registerTooltipPositioners();
   syncPeriodRangeChip();
   setupTogglePanel();
   initTheme();

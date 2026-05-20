@@ -517,6 +517,14 @@ test("price comparison toggle rebuilds the chart to avoid stale mixed-axis datas
   assert.doesNotMatch(priceComparisonBody, /refreshChart\(updateMode\);/);
 });
 
+test("bar chart tooltips are positioned above bars to avoid covering columns", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+
+  assert.match(script, /Chart\.Tooltip\.positioners\.barAbove/);
+  assert.match(script, /position:\s*"barAbove"/);
+  assert.match(script, /yAlign:\s*"bottom"/);
+});
+
 test("single-company bars pin thickness when price overlay is dense", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
