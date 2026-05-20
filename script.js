@@ -511,6 +511,7 @@ const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.62;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
+const BAR_TOOLTIP_SIDE_OFFSET = 10;
 const BAR_TOOLTIP_COLLISION_PADDING = 8;
 const BAR_TOOLTIP_FALLBACK_WIDTH = 190;
 const BAR_TOOLTIP_FALLBACK_HEIGHT = 78;
@@ -706,11 +707,32 @@ function getTooltipBoxSize(tooltip) {
 
 function buildTooltipRectFromAnchor(anchor, tooltipSize) {
   const caretSize = 8;
+  let left = anchor.x - tooltipSize.width / 2;
+  let right = anchor.x + tooltipSize.width / 2;
+  let top = anchor.y - tooltipSize.height - caretSize;
+  let bottom = anchor.y;
+
+  if (anchor.xAlign === "left") {
+    left = anchor.x;
+    right = anchor.x + tooltipSize.width;
+  } else if (anchor.xAlign === "right") {
+    left = anchor.x - tooltipSize.width;
+    right = anchor.x;
+  }
+
+  if (anchor.yAlign === "center") {
+    top = anchor.y - tooltipSize.height / 2;
+    bottom = anchor.y + tooltipSize.height / 2;
+  } else if (anchor.yAlign === "top") {
+    top = anchor.y;
+    bottom = anchor.y + tooltipSize.height;
+  }
+
   return {
-    left: anchor.x - tooltipSize.width / 2,
-    right: anchor.x + tooltipSize.width / 2,
-    top: anchor.y - tooltipSize.height - caretSize,
-    bottom: anchor.y,
+    left,
+    right,
+    top,
+    bottom,
   };
 }
 
@@ -734,26 +756,31 @@ function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, p
 
   const tooltipSize = getTooltipBoxSize(tooltip);
   const activeWidth = Math.max(Number(activeElement?.width) || 0, SINGLE_COMPANY_BAR_MIN_THICKNESS);
-  const safeMinX = chartArea.left + tooltipSize.width / 2;
-  const safeMaxX = chartArea.right - tooltipSize.width / 2;
+  const activeLeft = preferredX - activeWidth / 2;
+  const activeRight = preferredX + activeWidth / 2;
   const safeMinY = chartArea.top + tooltipSize.height + BAR_TOOLTIP_VERTICAL_OFFSET;
   const safeMaxY = chartArea.bottom;
   const topAnchorY = safeMinY;
   const aboveAnchorY = clampNumber(preferredY, safeMinY, safeMaxY);
-  const leftX = preferredX - tooltipSize.width * 0.72 - activeWidth;
-  const rightX = preferredX + tooltipSize.width * 0.72 + activeWidth;
   const candidateAnchors = [
-    { x: preferredX, y: aboveAnchorY },
-    { x: leftX, y: aboveAnchorY },
-    { x: rightX, y: aboveAnchorY },
-    { x: chartArea.left + tooltipSize.width / 2, y: topAnchorY },
-    { x: chartArea.right - tooltipSize.width / 2, y: topAnchorY },
-    { x: chartArea.left + tooltipSize.width / 2, y: aboveAnchorY },
-    { x: chartArea.right - tooltipSize.width / 2, y: aboveAnchorY },
-  ].map((candidate) => ({
-    x: clampNumber(candidate.x, safeMinX, safeMaxX),
-    y: clampNumber(candidate.y, safeMinY, safeMaxY),
-  }));
+    {
+      x: activeLeft - BAR_TOOLTIP_SIDE_OFFSET,
+      y: clampNumber(activeElement?.y, chartArea.top + tooltipSize.height / 2, chartArea.bottom - tooltipSize.height / 2),
+      xAlign: "right",
+      yAlign: "center",
+    },
+    {
+      x: activeRight + BAR_TOOLTIP_SIDE_OFFSET,
+      y: clampNumber(activeElement?.y, chartArea.top + tooltipSize.height / 2, chartArea.bottom - tooltipSize.height / 2),
+      xAlign: "left",
+      yAlign: "center",
+    },
+    { x: preferredX, y: aboveAnchorY, xAlign: "center", yAlign: "bottom" },
+    { x: activeLeft - BAR_TOOLTIP_SIDE_OFFSET, y: topAnchorY, xAlign: "right", yAlign: "bottom" },
+    { x: activeRight + BAR_TOOLTIP_SIDE_OFFSET, y: topAnchorY, xAlign: "left", yAlign: "bottom" },
+    { x: chartArea.left, y: topAnchorY, xAlign: "left", yAlign: "bottom" },
+    { x: chartArea.right, y: topAnchorY, xAlign: "right", yAlign: "bottom" },
+  ];
 
   const barRects = collectVisibleBarRects(chart);
   const nonOverlapping = candidateAnchors.find((candidate) => {
@@ -762,7 +789,7 @@ function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, p
       && !barRects.some((barRect) => tooltipRectIntersectsBar(rect, barRect));
   });
 
-  return nonOverlapping || candidateAnchors[0] || { x: preferredX, y: preferredY };
+  return nonOverlapping || candidateAnchors[2] || { x: preferredX, y: preferredY, xAlign: "center", yAlign: "bottom" };
 }
 
 function registerTooltipPositioners() {
@@ -2342,7 +2369,6 @@ function buildChart() {
         },
         tooltip: {
           position: "barAbove",
-          yAlign: "bottom",
           backgroundColor: themeTokens.tooltipBg,
           titleColor: themeTokens.tooltipTitle,
           bodyColor: themeTokens.tooltipBody,

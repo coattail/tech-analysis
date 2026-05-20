@@ -524,8 +524,9 @@ test("bar chart tooltips are positioned above bars to avoid covering columns", (
   assert.match(script, /function collectVisibleBarRects/);
   assert.match(script, /function tooltipRectIntersectsBar/);
   assert.match(script, /findNonOverlappingTooltipPosition/);
+  assert.match(script, /xAlign:\s*"right"/);
+  assert.match(script, /xAlign:\s*"left"/);
   assert.match(script, /position:\s*"barAbove"/);
-  assert.match(script, /yAlign:\s*"bottom"/);
 });
 
 test("single-company bars pin thickness when price overlay is dense", () => {
