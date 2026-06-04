@@ -2,6 +2,10 @@
   const ALLOWED_PRICE_COMPARISON_METRICS = new Set(["revenue", "netIncome"]);
   const PRICE_OVERLAY_DATASET_ORDER = 0;
   const FINANCIAL_BAR_DATASET_ORDER = 1;
+  const DEFAULT_DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
+  const DATE_AXIS_FALLBACK_PADDING_RATIO = 0.018;
+  const DATE_AXIS_BAR_SLOT_PADDING_RATIO = 0.31;
+  const DATE_AXIS_MIN_PADDING_DAYS = 12;
 
   function canShowPriceComparison({ visibleCompanyCount, chartMode, metric }) {
     return visibleCompanyCount === 1
@@ -79,6 +83,140 @@
     return Number.isFinite(ms) ? ms : null;
   }
 
+  function uniqueSortedFiniteValues(values) {
+    if (!Array.isArray(values)) return [];
+    return [...new Set(values.map(Number).filter(Number.isFinite))]
+      .sort((left, right) => left - right);
+  }
+
+  function median(values) {
+    if (!Array.isArray(values) || values.length === 0) return null;
+    const sorted = [...values].sort((left, right) => left - right);
+    const middle = Math.floor(sorted.length / 2);
+    if (sorted.length % 2 === 1) return sorted[middle];
+    return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  function computeDateAxisPadding({ values, barValues, dayMs = DEFAULT_DATE_AXIS_DAY_MS } = {}) {
+    const sortedValues = uniqueSortedFiniteValues(values);
+    if (sortedValues.length === 0) return 0;
+
+    const min = sortedValues[0];
+    const max = sortedValues.at(-1);
+    const span = Math.max(max - min, dayMs);
+    const minPadding = dayMs * DATE_AXIS_MIN_PADDING_DAYS;
+    const fallbackPadding = Math.max(minPadding, span * DATE_AXIS_FALLBACK_PADDING_RATIO);
+
+    const sortedBarValues = uniqueSortedFiniteValues(barValues);
+    if (sortedBarValues.length < 2) return fallbackPadding;
+
+    const barGaps = sortedBarValues
+      .slice(1)
+      .map((value, index) => value - sortedBarValues[index])
+      .filter((gap) => Number.isFinite(gap) && gap > 0);
+    const typicalBarGap = median(barGaps);
+    if (!Number.isFinite(typicalBarGap)) return fallbackPadding;
+
+    const barPadding = Math.max(minPadding, typicalBarGap * DATE_AXIS_BAR_SLOT_PADDING_RATIO);
+    return Math.min(fallbackPadding, barPadding);
+  }
+
+  function formatUtcDateKey(ms) {
+    if (!Number.isFinite(ms)) return null;
+    const date = new Date(ms);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  function parseQuarterLabel(label) {
+    const match = /^(\d{4})Q([1-4])$/.exec(label);
+    if (!match) return null;
+    return {
+      year: Number(match[1]),
+      quarter: Number(match[2]),
+    };
+  }
+
+  function parseDateParts(dateKey) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey ?? "");
+    if (!match) return null;
+    return {
+      year: Number(match[1]),
+      month: Number(match[2]),
+      day: Number(match[3]),
+    };
+  }
+
+  function daysInUtcMonth(year, month) {
+    return new Date(Date.UTC(year, month, 0)).getUTCDate();
+  }
+
+  function copyMonthDayToYear(dateKey, targetYear) {
+    const parts = parseDateParts(dateKey);
+    if (!parts || !Number.isFinite(targetYear)) return null;
+
+    const day = Math.min(parts.day, daysInUtcMonth(targetYear, parts.month));
+    return formatUtcDateKey(Date.UTC(targetYear, parts.month - 1, day));
+  }
+
+  function inferDateFromCompanyPattern(label, frequency, dateMap) {
+    if (frequency === "annual" || !dateMap || typeof dateMap !== "object") return null;
+
+    const target = parseQuarterLabel(label);
+    if (!target) return null;
+
+    const candidates = Object.entries(dateMap)
+      .map(([candidateLabel, dateKey]) => {
+        const parsedLabel = parseQuarterLabel(candidateLabel);
+        const dateParts = parseDateParts(dateKey);
+        if (!parsedLabel || !dateParts || parsedLabel.quarter !== target.quarter) return null;
+        if (dateToUtcMs(dateKey) == null) return null;
+
+        return {
+          labelYear: parsedLabel.year,
+          yearOffset: dateParts.year - parsedLabel.year,
+          dateKey,
+        };
+      })
+      .filter(Boolean)
+      .sort((left, right) => (
+        Math.abs(left.labelYear - target.year) - Math.abs(right.labelYear - target.year)
+      ) || (right.labelYear - left.labelYear));
+
+    const nearest = candidates[0];
+    if (!nearest) return null;
+
+    return copyMonthDayToYear(nearest.dateKey, target.year + nearest.yearOffset);
+  }
+
+  function resolveFinancialPointDate({ label, frequency, reportDates, periodEndDates }) {
+    const range = frequency === "annual" ? annualToDateRange(label) : quarterToDateRange(label);
+    if (!range) return null;
+
+    const reportDate = reportDates?.[label];
+    if (dateToUtcMs(reportDate) != null) return reportDate;
+
+    const inferredReportDate = inferDateFromCompanyPattern(label, frequency, reportDates);
+    if (dateToUtcMs(inferredReportDate) != null) return inferredReportDate;
+
+    const periodEndDate = periodEndDates?.[label];
+    if (dateToUtcMs(periodEndDate) != null) return periodEndDate;
+
+    return inferDateFromCompanyPattern(label, frequency, periodEndDates) ?? range.endDate;
+  }
+
+  function resolveFinancialPeriodEndDate({ label, frequency, periodEndDates }) {
+    const range = frequency === "annual" ? annualToDateRange(label) : quarterToDateRange(label);
+    if (!range) return null;
+
+    const periodEndDate = periodEndDates?.[label];
+    if (dateToUtcMs(periodEndDate) != null) return periodEndDate;
+
+    return inferDateFromCompanyPattern(label, frequency, periodEndDates) ?? range.endDate;
+  }
+
   function buildVisiblePeriodSlots(visibleLabels, frequency) {
     if (!Array.isArray(visibleLabels)) return [];
 
@@ -101,34 +239,26 @@
       .filter(Boolean);
   }
 
-  function buildFinancialPeriodEndSeries({ values, visibleLabels, frequency, periodEndDates }) {
+  function buildFinancialPeriodEndSeries({ values, visibleLabels, frequency, reportDates, periodEndDates }) {
     if (!Array.isArray(values) || !Array.isArray(visibleLabels)) return [];
 
-    const slots = buildVisiblePeriodSlots(visibleLabels, frequency);
-    const useReportedPeriodEndDates = Boolean(periodEndDates)
-      && visibleLabels.every((label, index) => {
-        const rawValue = values[index];
-        const hasFinancialValue = rawValue != null && rawValue !== "" && Number.isFinite(Number(rawValue));
-        return !hasFinancialValue || dateToUtcMs(periodEndDates[label]) != null;
-      });
-
     return values.map((rawValue, index) => {
-      const slot = slots.find((candidate) => candidate.index === index);
       const label = visibleLabels[index];
-      if (!slot || !label) return null;
+      if (!label) return null;
 
-      const range = frequency === "annual" ? annualToDateRange(label) : quarterToDateRange(label);
-      if (!range) return null;
+      const reportDate = resolveFinancialPointDate({ label, frequency, reportDates, periodEndDates });
+      const reportMs = dateToUtcMs(reportDate);
+      if (reportMs == null) return null;
+      const periodEndDate = resolveFinancialPeriodEndDate({ label, frequency, periodEndDates });
 
-      const reportedEndDate = useReportedPeriodEndDates ? periodEndDates[label] : null;
-      const periodEndDate = dateToUtcMs(reportedEndDate) == null ? range.endDate : reportedEndDate;
-      const periodEndMs = dateToUtcMs(periodEndDate);
-      const ratio = periodEndMs == null ? 1 : (periodEndMs - slot.startMs) / (slot.endMs - slot.startMs);
       const value = rawValue == null || rawValue === "" ? null : Number(rawValue);
+      const y = Number.isFinite(value) ? value : null;
+
       return {
-        x: (index - 0.5) + ratio,
-        y: Number.isFinite(value) ? value : null,
+        x: reportMs,
+        y,
         periodLabel: label,
+        reportDate,
         periodEndDate,
       };
     });
@@ -332,26 +462,25 @@
   }
 
   function buildProjectedPriceSeries({ dailyPrices, visibleLabels, frequency }) {
-    const slots = buildVisiblePeriodSlots(visibleLabels, frequency);
-    if (slots.length === 0 || !dailyPrices || typeof dailyPrices !== "object") return [];
+    const range = getVisiblePeriodDateRange(visibleLabels, frequency);
+    if (!range || !dailyPrices || typeof dailyPrices !== "object") return [];
+
+    const startMs = dateToUtcMs(range.startDate);
+    const endMs = dateToUtcMs(range.endDate);
+    if (startMs == null || endMs == null || endMs < startMs) return [];
 
     return Object.entries(dailyPrices)
       .map(([date, value]) => ({ date, value: Number(value), ms: dateToUtcMs(date) }))
       .filter((item) => item.ms != null
+        && item.ms >= startMs
+        && item.ms <= endMs
         && Number.isFinite(item.value))
       .sort((left, right) => left.ms - right.ms)
-      .map((item) => {
-        const slot = slots.find((candidate) => item.ms >= candidate.startMs && item.ms <= candidate.endMs);
-        if (!slot) return null;
-
-        const ratio = (item.ms - slot.startMs) / (slot.endMs - slot.startMs);
-        return {
-          x: (slot.index - 0.5) + ratio,
-          y: item.value,
-          date: item.date,
-        };
-      })
-      .filter(Boolean);
+      .map((item) => ({
+        x: item.ms,
+        y: item.value,
+        date: item.date,
+      }));
   }
 
   function getPriceOverlayDatasetOrder() {
@@ -422,12 +551,14 @@
     canShowPriceComparison,
     shouldResetPriceComparison,
     normalizePriceComparisonEnabled,
+    dateToUtcMs,
     getVisiblePeriodDateRange,
     extendVisibleLabelsThroughLatestPrice,
     extendRangeEndThroughLatestPrice,
     shouldExtendPriceComparisonLabels,
     buildFinancialPeriodEndSeries,
     buildProjectedPriceSeries,
+    computeDateAxisPadding,
     getPriceOverlayDatasetOrder,
     getFinancialBarDatasetOrder,
     alignSecondaryAxisZero,

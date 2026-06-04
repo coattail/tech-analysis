@@ -3,9 +3,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts local assets that changed chart tooltip behavior", () => {
+test("cache-busts local assets that changed report-date chart positioning", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260521-tooltip-metric-scope";
+  const expectedVersion = "20260604-report-date-axis-tight-padding";
 
   for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
     assert.match(
@@ -19,6 +19,11 @@ test("cache-busts local assets that changed chart tooltip behavior", () => {
   assert.doesNotMatch(html, /v=20260519-nvidia-default/);
   assert.doesNotMatch(html, /v=20260519-switch-refresh/);
   assert.doesNotMatch(html, /v=20260519-rebuild-chart/);
+  assert.doesNotMatch(html, /v=20260521-tooltip-metric-scope/);
+  assert.doesNotMatch(html, /v=20260604-bar-spacing/);
+  assert.doesNotMatch(html, /v=20260604-date-axis"/);
+  assert.doesNotMatch(html, /v=20260604-date-axis-center/);
+  assert.doesNotMatch(html, /v=20260604-report-date-axis"/);
 });
 
 test("publishes every local script referenced by the page", () => {

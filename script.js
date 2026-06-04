@@ -507,10 +507,11 @@ const SINGLE_COMPANY_WATERMARK_ALPHA = 0.1;
 const EXPORT_DEVICE_PIXEL_RATIO = 8;
 const SINGLE_COMPANY_BAR_MIN_THICKNESS = 6;
 const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
-const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.62;
+const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.56;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
 const PRICE_AXIS_RESERVED_WIDTH = 92;
+const DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
 const BAR_TOOLTIP_COLLISION_PADDING = 8;
@@ -559,6 +560,7 @@ const state = {
     },
   },
   periodEndDatesByCompany: new Map(),
+  reportDatesByCompany: new Map(),
   forecastFlagsByFrequency: {
     quarterly: {
       revenue: new Map(),
@@ -615,6 +617,10 @@ function getSingleVisibleCompanyId() {
 
 function getEffectiveChartMode() {
   return getSingleVisibleCompanyId() ? state.chartMode : "line";
+}
+
+function usesDateXAxis(effectiveChartMode = getEffectiveChartMode()) {
+  return effectiveChartMode === "bar" && Boolean(getSingleVisibleCompanyId());
 }
 
 function colorToRgba(hexColor, alpha) {
@@ -1540,6 +1546,7 @@ function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, use
     values,
     visibleLabels,
     frequency: state.frequency,
+    reportDates: state.reportDatesByCompany.get(dataset.companyId),
     periodEndDates: state.periodEndDatesByCompany.get(dataset.companyId),
   });
 }
@@ -1574,6 +1581,7 @@ function buildDatasetsForView() {
       borderWidth: useBarDataset ? 0 : 2,
       borderRadius: useBarDataset ? 6 : 0,
       borderSkipped: false,
+      grouped: useBarDataset ? false : undefined,
       barPercentage: useBarDataset ? 0.72 : 0.9,
       categoryPercentage: useBarDataset ? 0.82 : 0.9,
       barThickness: useBarDataset ? computeSingleCompanyBarThickness(rangeLabels.length) : undefined,
@@ -1625,15 +1633,15 @@ function buildDatasetsForView() {
       ...Array(Math.max(0, visibleLabels.length - financialVisibleLabels.length)).fill(null),
     ],
   }));
-  const shouldAnchorFinancialBarsAtPeriodEnd = useBarForSingleCompany;
+  const shouldUseFinancialDatePoints = useBarForSingleCompany;
   const trimmedDatasets = paddedDatasets.map((dataset) => ({
     ...dataset,
     data: buildFinancialDatasetValuesForVisibleLabels(
       dataset,
       visibleLabels,
-      shouldAnchorFinancialBarsAtPeriodEnd && dataset.type === "bar",
+      shouldUseFinancialDatePoints && dataset.type === "bar",
     ),
-    parsing: shouldAnchorFinancialBarsAtPeriodEnd && dataset.type === "bar" ? false : dataset.parsing,
+    parsing: shouldUseFinancialDatePoints && dataset.type === "bar" ? false : dataset.parsing,
   }));
 
   const priceOverlayDataset = buildPriceOverlayDataset(visibleLabels);
@@ -1647,10 +1655,144 @@ function replaceArrayContents(target, nextValues) {
   target.splice(0, target.length, ...nextValues);
 }
 
-function formatXAxisTick(label) {
+function formatDateAxisTick(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return "";
+
+  const date = new Date(numericValue);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+
+  if (state.frequency === "annual" || (month === "01" && day === "01")) return String(year);
+  return `${year}/${month}/${day}`;
+}
+
+function formatXAxisTick(value, label) {
+  if (usesDateXAxis()) return formatDateAxisTick(value);
   if (state.frequency === "annual") return label;
   if (typeof label !== "string") return "";
   return label.endsWith("Q1") ? label.slice(0, 4) : "";
+}
+
+function collectDateXAxisValues(datasets, { barOnly = false } = {}) {
+  const values = [];
+  datasets.forEach((dataset) => {
+    if (barOnly && dataset.type !== "bar") return;
+    if (dataset.hidden && !dataset.priceOverlay) return;
+    dataset.data.forEach((point) => {
+      const x = typeof point === "object" && point !== null ? Number(point.x) : null;
+      const y = typeof point === "object" && point !== null ? Number(point.y) : null;
+      if (Number.isFinite(x) && Number.isFinite(y)) values.push(x);
+    });
+  });
+  return values;
+}
+
+function computeDateXAxisBounds(datasets) {
+  const values = collectDateXAxisValues(datasets);
+  if (values.length === 0) return {};
+
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return {};
+
+  const padding = PriceComparisonUtils.computeDateAxisPadding({
+    values,
+    barValues: collectDateXAxisValues(datasets, { barOnly: true }),
+    dayMs: DATE_AXIS_DAY_MS,
+  });
+  return {
+    min: min - padding,
+    max: max + padding,
+  };
+}
+
+function buildDateAxisTicks(scale) {
+  const min = Number(scale.min);
+  const max = Number(scale.max);
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return;
+
+  const firstYear = new Date(min).getUTCFullYear();
+  const lastYear = new Date(max).getUTCFullYear();
+  const yearCount = Math.max(1, lastYear - firstYear + 1);
+  const step = Math.max(1, Math.ceil(yearCount / 10));
+  const ticks = [];
+
+  for (let year = firstYear; year <= lastYear; year += step) {
+    const value = Date.UTC(year, 0, 1);
+    if (value >= min && value <= max) ticks.push({ value });
+  }
+
+  if (ticks.length === 0) {
+    scale.ticks = [{ value: min }, { value: max }];
+    return;
+  }
+
+  scale.ticks = ticks;
+}
+
+function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets) {
+  const dateAxis = usesDateXAxis(effectiveChartMode);
+  const common = {
+    border: { color: "rgba(0,0,0,0)" },
+    title: {
+      display: true,
+      text: (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle,
+      color: themeTokens.axisColor,
+      font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
+    },
+  };
+
+  if (dateAxis) {
+    return {
+      ...common,
+      type: "linear",
+      offset: false,
+      ...computeDateXAxisBounds(datasets),
+      afterBuildTicks: buildDateAxisTicks,
+      ticks: {
+        autoSkip: false,
+        color: themeTokens.axisColor,
+        font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+        callback(value) {
+          return formatXAxisTick(value, "");
+        },
+      },
+      grid: {
+        color: themeTokens.xGridColor,
+        offset: false,
+        borderDash: [],
+      },
+    };
+  }
+
+  return {
+    ...common,
+    type: "category",
+    offset: effectiveChartMode === "bar",
+    ticks: {
+      autoSkip: false,
+      color: themeTokens.axisColor,
+      font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+      callback(value) {
+        const label = this.getLabelForValue(value);
+        return formatXAxisTick(value, label);
+      },
+    },
+    grid: {
+      color: buildXGridColorCallback(themeTokens),
+      offset: effectiveChartMode === "bar",
+      borderDash: [],
+    },
+  };
+}
+
+function buildInteractionOptions(effectiveChartMode) {
+  return {
+    mode: usesDateXAxis(effectiveChartMode) ? "nearest" : "index",
+    intersect: false,
+  };
 }
 
 function resolveXGridColor(themeTokens, label, tickIndex) {
@@ -2068,6 +2210,7 @@ function syncChartDatasets(nextDatasets) {
     currentDataset.borderWidth = nextDataset.borderWidth;
     currentDataset.borderRadius = nextDataset.borderRadius;
     currentDataset.borderSkipped = nextDataset.borderSkipped;
+    currentDataset.grouped = nextDataset.grouped;
     currentDataset.barPercentage = nextDataset.barPercentage;
     currentDataset.categoryPercentage = nextDataset.categoryPercentage;
     currentDataset.barThickness = nextDataset.barThickness;
@@ -2156,9 +2299,8 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.min = priceBounds.min;
   state.chart.options.scales.yPrice.max = priceBounds.max;
-  state.chart.options.scales.x.title.text = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle;
-  state.chart.options.scales.x.offset = effectiveChartMode === "bar";
-  state.chart.options.scales.x.grid.offset = effectiveChartMode === "bar";
+  state.chart.options.scales.x = buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets);
+  state.chart.options.interaction = buildInteractionOptions(effectiveChartMode);
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
   state.chart.options.plugins.legend.display = reservePriceComparisonLayout;
   state.chart.update(updateMode);
@@ -2299,7 +2441,7 @@ function buildChart() {
         alignRangeWithChartAxis();
         updateRangeVisual();
       },
-      interaction: { mode: "index", intersect: false },
+      interaction: buildInteractionOptions(effectiveChartMode),
       elements: {
         bar: {
           borderRadius: 6,
@@ -2307,30 +2449,7 @@ function buildChart() {
         },
       },
       scales: {
-        x: {
-          offset: effectiveChartMode === "bar",
-          border: { color: "rgba(0,0,0,0)" },
-          title: {
-            display: true,
-            text: (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle,
-            color: themeTokens.axisColor,
-            font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
-          },
-          ticks: {
-            autoSkip: false,
-            color: themeTokens.axisColor,
-            font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
-            callback(value) {
-              const label = this.getLabelForValue(value);
-              return formatXAxisTick(label);
-            },
-          },
-          grid: {
-            color: buildXGridColorCallback(themeTokens),
-            offset: effectiveChartMode === "bar",
-            borderDash: [],
-          },
-        },
+        x: buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets),
         y: {
           afterFit(scale) {
             const reservedWidth = scale.options.reservedWidth ?? scale.width;
@@ -2432,9 +2551,13 @@ function buildChart() {
               if (priceContext?.raw?.date) {
                 return `DATE：${priceContext.raw.date}`;
               }
+              const reportDateContext = context.find((item) => item.raw?.reportDate);
+              if (reportDateContext?.raw?.reportDate) {
+                return `DATE：${reportDateContext.raw.reportDate}`;
+              }
               const periodEndContext = context.find((item) => item.raw?.periodEndDate);
               if (periodEndContext?.raw?.periodEndDate) {
-                return `DATE：${periodEndContext.raw.periodEndDate}`;
+                return `PERIOD END：${periodEndContext.raw.periodEndDate}`;
               }
               const prefix = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).tooltipPrefix;
               return `${prefix}：${context[0].label}`;
@@ -2570,6 +2693,7 @@ function loadFromLocalData() {
 
     loadedCount += 1;
     state.periodEndDatesByCompany.set(company.id, rawCompany.periodEndDates ?? {});
+    state.reportDatesByCompany.set(company.id, rawCompany.reportDates ?? {});
 
     const quarterRevenue = objectToSeries(QUARTER_LABELS, rawCompany.revenue);
     const quarterNetIncome = objectToSeries(QUARTER_LABELS, rawCompany.earnings);

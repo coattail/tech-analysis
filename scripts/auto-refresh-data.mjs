@@ -396,6 +396,10 @@ function addDays(dateKey, days) {
   return base.toISOString().slice(0, 10);
 }
 
+function isIsoDateKey(dateKey) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(dateKey || ""));
+}
+
 function isMoneyUnit(unit) {
   return /^[A-Z]{3}$/.test(String(unit || "").trim());
 }
@@ -1014,10 +1018,17 @@ async function fetchSecQuarterlyHistory(companySource) {
         grossProfitFact?.endDate ||
         netAssetsFact?.endDate ||
         null;
+      const reportDate =
+        revenueFact?.filed ||
+        netIncomeFact?.filed ||
+        grossProfitFact?.filed ||
+        netAssetsFact?.filed ||
+        null;
 
       return {
         period,
         dateKey: endDate,
+        reportDate,
         revenue: revenueFact?.value ?? null,
         netIncome: netIncomeFact?.value ?? null,
         grossProfit: grossProfitFact?.value ?? null,
@@ -1256,6 +1267,7 @@ function ensureCompanyShape(company) {
   if (!company.grossMargin || typeof company.grossMargin !== "object") company.grossMargin = {};
   if (!company.revenueGrowth || typeof company.revenueGrowth !== "object") company.revenueGrowth = {};
   if (!company.periodEndDates || typeof company.periodEndDates !== "object") company.periodEndDates = {};
+  if (!company.reportDates || typeof company.reportDates !== "object") company.reportDates = {};
 
   if (!company.forecastFlags || typeof company.forecastFlags !== "object") {
     company.forecastFlags = {};
@@ -1290,9 +1302,17 @@ function setSeriesValueIfMissing(series, key, value) {
 
 function setPeriodEndDate(companyData, period, dateKey) {
   if (!isPeriodLabel(period)) return false;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dateKey || ""))) return false;
+  if (!isIsoDateKey(dateKey)) return false;
   if (companyData.periodEndDates[period] === dateKey) return false;
   companyData.periodEndDates[period] = dateKey;
+  return true;
+}
+
+function setReportDate(companyData, period, dateKey) {
+  if (!isPeriodLabel(period)) return false;
+  if (!isIsoDateKey(dateKey)) return false;
+  if (companyData.reportDates[period] === dateKey) return false;
+  companyData.reportDates[period] = dateKey;
   return true;
 }
 
@@ -1740,6 +1760,49 @@ function getCuratedUsdScaleFactor(financial) {
   return 1;
 }
 
+function collectCuratedReportDateCandidates(value, candidates = []) {
+  if (!value || typeof value !== "object") return candidates;
+
+  Object.entries(value).forEach(([key, item]) => {
+    if (
+      /^(?:statementFilingDate|filingDate|reportDate|releaseDate|publishedDate)$/.test(key) &&
+      typeof item === "string" &&
+      isIsoDateKey(item)
+    ) {
+      candidates.push(item);
+      return;
+    }
+
+    if (item && typeof item === "object") {
+      collectCuratedReportDateCandidates(item, candidates);
+    }
+  });
+
+  return candidates;
+}
+
+function getCuratedReportDate(financial) {
+  const periodEnd = String(financial?.periodEnd || "");
+  const periodEndMs = Date.parse(`${periodEnd}T00:00:00Z`);
+  const candidates = [...new Set(collectCuratedReportDateCandidates(financial))]
+    .map((dateKey) => ({ dateKey, ms: Date.parse(`${dateKey}T00:00:00Z`) }))
+    .filter((candidate) => Number.isFinite(candidate.ms));
+
+  if (Number.isFinite(periodEndMs)) {
+    const afterPeriodEnd = candidates
+      .filter((candidate) => {
+        const daysAfterEnd = Math.round((candidate.ms - periodEndMs) / 86400000);
+        return daysAfterEnd > 0 && daysAfterEnd <= 220;
+      })
+      .sort((left, right) => left.ms - right.ms);
+
+    if (afterPeriodEnd[0]) return afterPeriodEnd[0].dateKey;
+    return null;
+  }
+
+  return candidates.sort((left, right) => left.ms - right.ms)[0]?.dateKey ?? null;
+}
+
 function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
   if (!curatedCompany?.financials || !Array.isArray(curatedCompany?.quarters)) {
     return {
@@ -1748,6 +1811,7 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
       revenuePeriods: new Set(),
       netIncomePeriods: new Set(),
       grossMarginPeriods: new Set(),
+      reportDatePeriods: new Set(),
     };
   }
 
@@ -1755,11 +1819,19 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
   const revenuePeriods = new Set();
   const netIncomePeriods = new Set();
   const grossMarginPeriods = new Set();
+  const reportDatePeriods = new Set();
   let changedPoints = 0;
 
   curatedCompany.quarters.forEach((period) => {
     const financial = curatedCompany.financials[period];
     if (!financial || typeof financial !== "object") return;
+
+    const reportDate = getCuratedReportDate(financial);
+    if (setReportDate(companyData, period, reportDate)) {
+      reportDatePeriods.add(period);
+      changedPeriods.add(period);
+      changedPoints += 1;
+    }
 
     const revenueLooksReliable = isCuratedRevenueLikelyReliable(financial);
     const usdScaleFactor = getCuratedUsdScaleFactor(financial);
@@ -1791,7 +1863,7 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
     }
   });
 
-  return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods };
+  return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods, reportDatePeriods };
 }
 
 function applyOfficialQuarterlyOverrides(companyId, companyData) {
@@ -2132,11 +2204,20 @@ async function run() {
           companyStats.changedPeriods.add(row.period);
         }
       }
+
+      if (setReportDate(companyData, row.period, row.reportDate)) {
+        companyStats.periodEndDateChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
     });
 
     rows.forEach((row) => {
       periodSet.add(row.period);
       if (setPeriodEndDate(companyData, row.period, row.dateKey)) {
+        companyStats.periodEndDateChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
+      if (setReportDate(companyData, row.period, row.reportDate)) {
         companyStats.periodEndDateChanges += 1;
         companyStats.changedPeriods.add(row.period);
       }
@@ -2294,6 +2375,7 @@ async function run() {
     companyData.roe = sortObjectByPeriodKeys(companyData.roe);
     companyData.grossMargin = sortObjectByPeriodKeys(companyData.grossMargin);
     companyData.periodEndDates = sortObjectByPeriodKeys(companyData.periodEndDates);
+    companyData.reportDates = sortObjectByPeriodKeys(companyData.reportDates);
 
     const detail = summarizeCompanyStats(companyStats);
     if (detail.changedPoints > 0) {
