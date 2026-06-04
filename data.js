@@ -1,13 +1,13 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-05-31T00:13:59.716Z",
+    "generatedAt": "2026-06-04T02:06:24.066Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q2",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet",
-      "refreshedAt": "2026-05-31T00:13:59.716Z",
+      "refreshedAt": "2026-06-04T02:06:24.066Z",
       "updatedCompanies": [
         "nvidia",
         "alphabet",
@@ -33,7 +33,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "cisco",
         "homedepot"
       ],
-      "changedPoints": 1286,
+      "changedPoints": 1293,
       "changedPeriods": [
         "2005Q1",
         "2005Q2",
@@ -4851,7 +4851,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2020Q3": 6467000000,
         "2020Q4": 6655000000,
         "2021Q1": 6610000000,
-        "2021Q2": 6610000000,
+        "2021Q2": 6778000000,
         "2021Q3": 6778000000,
         "2021Q4": 7407000000,
         "2022Q1": 7706000000,
@@ -4870,7 +4870,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 15004000000,
         "2025Q3": 15952000000,
         "2025Q4": 18015000000,
-        "2026Q1": 19311000000
+        "2026Q1": 19311000000,
+        "2026Q2": 22187000000
       },
       "earnings": {
         "2005Q1": null,
@@ -4938,7 +4939,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2020Q3": 1324000000,
         "2020Q4": 1378000000,
         "2021Q1": 1493000000,
-        "2021Q2": 1417000000,
+        "2021Q2": 1876000000,
         "2021Q3": 1802000000,
         "2021Q4": 1914000000,
         "2022Q1": 2398000000,
@@ -4957,7 +4958,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 4965000000,
         "2025Q3": 4140000000,
         "2025Q4": 8518000000,
-        "2026Q1": 7349000000
+        "2026Q1": 7349000000,
+        "2026Q2": 9310000000
       },
       "pe": {
         "2005Q1": null,
@@ -5044,7 +5046,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 70.07958071075217,
         "2025Q3": 73.0597014925373,
         "2025Q4": 75.43469387755101,
-        "2026Q1": 64.707
+        "2026Q1": 64.707,
+        "2026Q2": 70.2133
       },
       "netAssets": {
         "2005Q1": null,
@@ -5131,7 +5134,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 69586000000,
         "2025Q3": 73277000000,
         "2025Q4": 81292000000,
-        "2026Q1": 79867000000
+        "2026Q1": 79867000000,
+        "2026Q2": 87691000000
       },
       "roe": {
         "2005Q1": null,
@@ -5199,7 +5203,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2020Q3": 5.62041006919387,
         "2020Q4": 5.771969506576192,
         "2021Q1": 6.227839652942894,
-        "2021Q2": 5.9192113287940185,
+        "2021Q2": 7.836584652658842,
         "2021Q3": 7.403451109285128,
         "2021Q4": 7.667654835349731,
         "2022Q1": 10.440613026819925,
@@ -5218,7 +5222,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 7.135055902049263,
         "2025Q3": 5.649794614954215,
         "2025Q4": 10.478275845101608,
-        "2026Q1": 9.201547572839846
+        "2026Q1": 9.201547572839846,
+        "2026Q2": 10.616824987741046
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -5289,11 +5294,11 @@ window.FINANCIAL_SOURCE_DATA = {
         "2020Q3": 11.963296398891966,
         "2020Q4": 13.605326049846363,
         "2021Q1": 15.116684082201322,
-        "2021Q2": 13.55437210101357,
+        "2021Q2": 16.440474145335855,
         "2021Q3": 4.809030462347302,
         "2021Q4": 11.29977460555973,
         "2022Q1": 16.580937972768535,
-        "2022Q2": 22.58698940998487,
+        "2022Q2": 19.548539392151078,
         "2022Q3": 24.874594275597524,
         "2022Q4": 20.561630889698932,
         "2023Q1": 15.689073449260317,
@@ -5309,7 +5314,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 22.031823745410037,
         "2025Q4": 28.184146862103315,
         "2026Q1": 29.46500402252615,
-        "2026Q2": null
+        "2026Q2": 47.87390029325513
       },
       "forecastFlags": {
         "revenue": [],
@@ -5385,7 +5390,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2020Q3": 57.94031235503324,
         "2020Q4": 59.3839218632607,
         "2021Q1": 61.37670196671709,
-        "2021Q2": 61.37669999999999,
+        "2021Q2": 61.92092062555326,
         "2021Q3": 61.9209,
         "2021Q4": 62.616400000000006,
         "2022Q1": 65.5204,
@@ -5404,7 +5409,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": 67.9619,
         "2025Q3": 67.095,
         "2025Q4": 67.9933,
-        "2026Q1": 68.1322
+        "2026Q1": 68.1322,
+        "2026Q2": 69.4776
       },
       "periodEndDates": {
         "2021Q2": "2021-05-02",
@@ -5426,7 +5432,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q2": "2025-05-04",
         "2025Q3": "2025-08-03",
         "2025Q4": "2025-11-02",
-        "2026Q1": "2026-02-01"
+        "2026Q1": "2026-02-01",
+        "2026Q2": "2026-05-03"
       }
     },
     "tsla": {
