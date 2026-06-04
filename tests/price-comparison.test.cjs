@@ -15,7 +15,6 @@ const {
   getFinancialBarDatasetOrder,
   alignSecondaryAxisZero,
   computeCompactBarZeroBaselineMin,
-  computeDateAxisPadding,
   shouldHidePrimaryYAxisTickLabel,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
@@ -37,17 +36,6 @@ function loadFinancialSourceData() {
   vm.runInNewContext(dataJs, context);
   return context.FINANCIAL_SOURCE_DATA;
 }
-
-function loadStockPriceSourceData() {
-  const priceDataJs = fs.readFileSync(path.join(__dirname, "../price-data.js"), "utf8");
-  const context = { window: {}, globalThis: {} };
-  context.window = context;
-  context.globalThis = context;
-  vm.runInNewContext(priceDataJs, context);
-  return context.STOCK_PRICE_SOURCE_DATA;
-}
-
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 test("shows price comparison only for one visible company in revenue/net-income bar mode", () => {
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "revenue" }), true);
@@ -122,7 +110,7 @@ test("maps visible annual labels to an inclusive calendar-date window", () => {
   });
 });
 
-test("projects daily adjusted-close data onto actual trading dates", () => {
+test("projects daily adjusted-close data into uniform quarter slots", () => {
   const result = buildProjectedPriceSeries({
     dailyPrices: {
       "2025-06-30": 90,
@@ -135,12 +123,19 @@ test("projects daily adjusted-close data onto actual trading dates", () => {
     visibleLabels: ["2025Q3", "2025Q4"],
     frequency: "quarterly",
   });
+  const q3Start = dateToUtcMs("2025-07-01");
+  const q3End = dateToUtcMs("2025-09-30");
+  const q4Start = dateToUtcMs("2025-10-01");
+  const q4End = dateToUtcMs("2025-12-31");
+  const slotX = (dateKey, index, start, end) => (
+    index - 0.5 + ((dateToUtcMs(dateKey) - start) / (end - start))
+  );
 
   assert.deepEqual(result, [
-    { x: dateToUtcMs("2025-07-01"), y: 100, date: "2025-07-01" },
-    { x: dateToUtcMs("2025-09-30"), y: 120, date: "2025-09-30" },
-    { x: dateToUtcMs("2025-10-01"), y: 125, date: "2025-10-01" },
-    { x: dateToUtcMs("2025-12-31"), y: 130, date: "2025-12-31" },
+    { x: slotX("2025-07-01", 0, q3Start, q3End), y: 100, date: "2025-07-01" },
+    { x: slotX("2025-09-30", 0, q3Start, q3End), y: 120, date: "2025-09-30" },
+    { x: slotX("2025-10-01", 1, q4Start, q4End), y: 125, date: "2025-10-01" },
+    { x: slotX("2025-12-31", 1, q4Start, q4End), y: 130, date: "2025-12-31" },
   ]);
 });
 
@@ -159,21 +154,21 @@ test("falls back to period-end dates when report dates are unavailable", () => {
     })),
     [
       {
-        x: dateToUtcMs("2025-12-31"),
+        x: 0,
         y: 10_000_000_000,
         periodLabel: "2025Q4",
         reportDate: "2025-12-31",
         periodEndDate: "2025-12-31",
       },
       {
-        x: dateToUtcMs("2026-03-31"),
+        x: 1,
         y: null,
         periodLabel: "2026Q1",
         reportDate: "2026-03-31",
         periodEndDate: "2026-03-31",
       },
       {
-        x: dateToUtcMs("2026-06-30"),
+        x: 2,
         y: 12_000_000_000,
         periodLabel: "2026Q2",
         reportDate: "2026-06-30",
@@ -183,7 +178,7 @@ test("falls back to period-end dates when report dates are unavailable", () => {
   );
 });
 
-test("anchors financial bars at report dates when provided", () => {
+test("keeps report dates as metadata while centering bars in quarter slots", () => {
   const result = buildFinancialPeriodEndSeries({
     values: [22_187_000_000],
     visibleLabels: ["2026Q2"],
@@ -198,10 +193,10 @@ test("anchors financial bars at report dates when provided", () => {
 
   assert.equal(result[0].reportDate, "2026-06-03");
   assert.equal(result[0].periodEndDate, "2026-05-03");
-  assert.equal(result[0].x, dateToUtcMs("2026-06-03"));
+  assert.equal(result[0].x, 0);
 });
 
-test("anchors financial bars at reported fiscal period-end dates when provided", () => {
+test("keeps reported fiscal period ends as metadata in uniform quarter slots", () => {
   const result = buildFinancialPeriodEndSeries({
     values: [68_127_000_000],
     visibleLabels: ["2026Q1"],
@@ -214,10 +209,10 @@ test("anchors financial bars at reported fiscal period-end dates when provided",
   assert.equal(result[0].periodEndDate, "2026-01-25");
   assert.equal(result[0].reportDate, "2026-01-25");
   assert.equal(result[0].y, 68_127_000_000);
-  assert.equal(result[0].x, dateToUtcMs("2026-01-25"));
+  assert.equal(result[0].x, 0);
 });
 
-test("uses available reported period ends while fallback points stay on dates", () => {
+test("uses available reported period ends while bars stay in uniform slots", () => {
   const result = buildFinancialPeriodEndSeries({
     values: [57_006_000_000, 68_127_000_000],
     visibleLabels: ["2025Q4", "2026Q1"],
@@ -232,12 +227,12 @@ test("uses available reported period ends while fallback points stay on dates", 
     reportDate: point.reportDate,
     periodEndDate: point.periodEndDate,
   })), [
-    { x: dateToUtcMs("2025-12-31"), reportDate: "2025-12-31", periodEndDate: "2025-12-31" },
-    { x: dateToUtcMs("2026-01-25"), reportDate: "2026-01-25", periodEndDate: "2026-01-25" },
+    { x: 0, reportDate: "2025-12-31", periodEndDate: "2025-12-31" },
+    { x: 1, reportDate: "2026-01-25", periodEndDate: "2026-01-25" },
   ]);
 });
 
-test("does not let price-only extension periods force financial bars back to calendar dates", () => {
+test("does not let price-only extension periods move financial bars off quarter slots", () => {
   const result = buildFinancialPeriodEndSeries({
     values: [57_006_000_000, 68_127_000_000, null],
     visibleLabels: ["2025Q4", "2026Q1", "2026Q2"],
@@ -254,9 +249,9 @@ test("does not let price-only extension periods force financial bars back to cal
     reportDate: point.reportDate,
     periodEndDate: point.periodEndDate,
   })), [
-    { x: dateToUtcMs("2025-10-26"), y: 57_006_000_000, reportDate: "2025-10-26", periodEndDate: "2025-10-26" },
-    { x: dateToUtcMs("2026-01-25"), y: 68_127_000_000, reportDate: "2026-01-25", periodEndDate: "2026-01-25" },
-    { x: dateToUtcMs("2026-06-30"), y: null, reportDate: "2026-06-30", periodEndDate: "2026-06-30" },
+    { x: 0, y: 57_006_000_000, reportDate: "2025-10-26", periodEndDate: "2025-10-26" },
+    { x: 1, y: 68_127_000_000, reportDate: "2026-01-25", periodEndDate: "2026-01-25" },
+    { x: 2, y: null, reportDate: "2026-06-30", periodEndDate: "2026-06-30" },
   ]);
 });
 
@@ -283,7 +278,7 @@ test("stores Nvidia fiscal period ends for every available quarter", () => {
   assert.equal(nvidia.periodEndDates["2026Q2"], "2026-04-26");
 });
 
-test("uses Nvidia fiscal period ends without collapsing bar spacing", () => {
+test("uses Nvidia fiscal metadata while keeping uniform bar spacing", () => {
   const data = loadFinancialSourceData();
   const nvidia = data.companies.nvidia;
   const result = buildFinancialPeriodEndSeries({
@@ -299,11 +294,10 @@ test("uses Nvidia fiscal period ends without collapsing bar spacing", () => {
     "2025-11-19",
     "2026-02-25",
   ]);
-  assert.ok(result[1].x - result[0].x > 80 * ONE_DAY_MS);
-  assert.ok(result[2].x - result[1].x > 80 * ONE_DAY_MS);
+  assert.deepEqual(result.map((point) => point.x), [0, 1, 2]);
 });
 
-test("uses Broadcom report dates on the date axis", () => {
+test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   const data = loadFinancialSourceData();
   const broadcom = data.companies.avgo;
   const visibleLabels = data.periods.filter((period) => broadcom.revenue[period] != null);
@@ -322,45 +316,11 @@ test("uses Broadcom report dates on the date axis", () => {
   assert.equal(latest.periodLabel, "2026Q2");
   assert.equal(latest.reportDate, "2026-06-03");
   assert.equal(latest.periodEndDate, "2026-05-03");
-  assert.equal(latest.x, dateToUtcMs("2026-06-03"));
+  assert.equal(latest.x, visibleLabels.length - 1);
   assert.equal(byLabel.get("2025Q4").reportDate, "2025-12-18");
   assert.equal(byLabel.get("2026Q1").reportDate, "2026-03-11");
   assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-03");
-  assert.ok(gaps.every((gap) => gap >= 70 * ONE_DAY_MS));
-});
-
-test("date-axis padding follows financial bar spacing instead of the full history span", () => {
-  const data = loadFinancialSourceData();
-  const broadcom = data.companies.avgo;
-  const visibleLabels = data.periods.filter((period) => broadcom.revenue[period] != null);
-  const financialPoints = buildFinancialPeriodEndSeries({
-    values: visibleLabels.map((period) => broadcom.revenue[period]),
-    visibleLabels,
-    frequency: "quarterly",
-    reportDates: broadcom.reportDates,
-    periodEndDates: broadcom.periodEndDates,
-  });
-  const barValues = financialPoints.map((point) => point.x);
-  const dailyPriceValues = Object.keys(loadStockPriceSourceData().companies.avgo.daily)
-    .map(dateToUtcMs)
-    .filter(Number.isFinite);
-  const values = [...barValues, ...dailyPriceValues];
-  const padding = computeDateAxisPadding({ values, barValues });
-  const fullSpanFallbackPadding = (Math.max(...values) - Math.min(...values)) * 0.018;
-
-  assert.ok(padding >= 25 * ONE_DAY_MS);
-  assert.ok(padding <= 32 * ONE_DAY_MS);
-  assert.ok(fullSpanFallbackPadding > 100 * ONE_DAY_MS);
-});
-
-test("date-axis padding keeps the full-span fallback when no bar anchors exist", () => {
-  const values = [
-    dateToUtcMs("2020-01-01"),
-    dateToUtcMs("2026-06-03"),
-  ];
-  const padding = computeDateAxisPadding({ values, barValues: [] });
-
-  assert.equal(padding, (values[1] - values[0]) * 0.018);
+  assert.ok(gaps.every((gap) => gap === 1));
 });
 
 
@@ -631,19 +591,35 @@ test("price comparison layout reserves a stable right axis and legend area", () 
   assert.match(script, /state\.chart\.options\.plugins\.legend\.display = reservePriceComparisonLayout;/);
 });
 
-test("single-company financial bars keep date anchors when price comparison is toggled", () => {
+test("single-company financial bars keep uniform quarter slots when price comparison is toggled", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
-  assert.match(script, /const shouldUseFinancialDatePoints = useBarForSingleCompany;/);
-  assert.doesNotMatch(script, /const shouldUseFinancialDatePoints = state\.priceComparisonEnabled && useBarForSingleCompany;/);
+  assert.match(script, /const shouldUseFinancialQuarterSlotPoints = useBarForSingleCompany;/);
+  assert.doesNotMatch(script, /const shouldUseFinancialQuarterSlotPoints = state\.priceComparisonEnabled && useBarForSingleCompany;/);
+  assert.match(script, /function usesDateXAxis\(_effectiveChartMode = getEffectiveChartMode\(\)\) \{\s*return false;/);
 });
 
-test("bar chart tooltips avoid columns only for revenue and net income", () => {
+test("bar chart tooltips choose nearby anchors without covering the active bar", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
+  assert.match(script, /function registerInteractionModes/);
+  assert.match(script, /Chart\.Interaction\.modes\.barPriority/);
+  assert.match(script, /findVisibleBarInteractionItem\(chart, eventPosition, useFinalPosition\)/);
+  assert.match(script, /mode:\s*usesDateXAxis\(effectiveChartMode\) \? "nearest" : "barPriority"/);
   assert.match(script, /Chart\.Tooltip\.positioners\.barAbove/);
   assert.match(script, /const barActiveItem =/);
   assert.match(script, /Chart\.Tooltip\.positioners\.nearest\.call\(this, activeItems, eventPosition\)/);
+  assert.match(script, /const x = clampNumber\(preferredX, chartArea\.left, chartArea\.right\);/);
+  assert.match(script, /if \(x \+ halfWidth > chartArea\.right\) \{\s*xAlign = "right";/);
+  assert.match(script, /else if \(x - halfWidth < chartArea\.left\) \{\s*xAlign = "left";/);
+  assert.match(script, /function getBarRectFromElement/);
+  assert.match(script, /const activeBarRect = getBarRectFromElement\(activeElement\);/);
+  assert.match(script, /function getRectIntersectionArea/);
+  assert.match(script, /function rectsNearlyEqual/);
+  assert.match(script, /const activeOverlapArea = getRectIntersectionArea\(rect, activeBarRect\);/);
+  assert.match(script, /\.filter\(\(\{ activeOverlapArea \}\) => activeOverlapArea === 0\)/);
+  assert.match(script, /distance \+ \(intersectsOtherBars \? 1000 : 0\)/);
+  assert.match(script, /left\.activeOverlapArea - right\.activeOverlapArea \|\| left\.score - right\.score/);
   assert.match(script, /function collectVisibleBarRects/);
   assert.match(script, /function tooltipRectIntersectsBar/);
   assert.match(script, /function shouldAvoidBarTooltipCollisions/);
@@ -655,6 +631,15 @@ test("bar chart tooltips avoid columns only for revenue and net income", () => {
   assert.match(script, /position:\s*"barAbove"/);
 });
 
+test("bar tooltip titles prefer financial report dates before stock-price dates", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const titleBody = script.match(/title\(context\) \{([\s\S]*?)\n              const prefix =/)?.[1] ?? "";
+
+  assert.match(titleBody, /const reportDateContext =/);
+  assert.match(titleBody, /const priceContext =/);
+  assert.ok(titleBody.indexOf("const reportDateContext =") < titleBody.indexOf("const priceContext ="));
+});
+
 test("single-company bars pin thickness when price overlay is dense", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
@@ -663,7 +648,7 @@ test("single-company bars pin thickness when price overlay is dense", () => {
   assert.match(script, /currentDataset\.barThickness = nextDataset\.barThickness;/);
 });
 
-test("single-company bars disable grouping so the bar center stays on the report date", () => {
+test("single-company bars disable grouping so the bar center stays on the quarter slot", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
   assert.match(script, /grouped:\s*useBarDataset\s*\?\s*false\s*:\s*undefined/);

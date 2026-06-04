@@ -619,8 +619,8 @@ function getEffectiveChartMode() {
   return getSingleVisibleCompanyId() ? state.chartMode : "line";
 }
 
-function usesDateXAxis(effectiveChartMode = getEffectiveChartMode()) {
-  return effectiveChartMode === "bar" && Boolean(getSingleVisibleCompanyId());
+function usesDateXAxis(_effectiveChartMode = getEffectiveChartMode()) {
+  return false;
 }
 
 function colorToRgba(hexColor, alpha) {
@@ -705,6 +705,56 @@ function collectVisibleBarRects(chart) {
   return rects;
 }
 
+function findVisibleBarInteractionItem(chart, eventPosition, useFinalPosition = true) {
+  const eventX = Number(eventPosition?.x ?? eventPosition?.native?.offsetX);
+  const eventY = Number(eventPosition?.y ?? eventPosition?.native?.offsetY);
+  if (!isFiniteNumber(eventX) || !isFiniteNumber(eventY)) return null;
+  if (!chart || typeof chart.getSortedVisibleDatasetMetas !== "function") return null;
+
+  let bestItem = null;
+  chart.getSortedVisibleDatasetMetas().forEach((meta) => {
+    const dataset = chart.data?.datasets?.[meta.index];
+    if (dataset?.priceOverlay || dataset?.type !== "bar") return;
+
+    (meta.data || []).forEach((element, index) => {
+      if (!element) return;
+
+      const props = typeof element.getProps === "function"
+        ? element.getProps(["x", "y", "base", "width"], useFinalPosition)
+        : element;
+      const x = Number(props.x);
+      const y = Number(props.y);
+      const base = Number(props.base);
+      const width = Number(props.width);
+
+      if (![x, y, base, width].every(Number.isFinite) || width <= 0) return;
+
+      const left = x - width / 2 - BAR_TOOLTIP_COLLISION_PADDING;
+      const right = x + width / 2 + BAR_TOOLTIP_COLLISION_PADDING;
+      const top = Math.min(y, base) - BAR_TOOLTIP_COLLISION_PADDING;
+      const bottom = Math.max(y, base) + BAR_TOOLTIP_COLLISION_PADDING;
+      if (eventX < left || eventX > right || eventY < top || eventY > bottom) return;
+
+      const score = Math.abs(eventX - x);
+      if (!bestItem || score < bestItem.score) {
+        bestItem = {
+          element,
+          datasetIndex: meta.index,
+          index,
+          score,
+        };
+      }
+    });
+  });
+
+  if (!bestItem) return null;
+  return {
+    element: bestItem.element,
+    datasetIndex: bestItem.datasetIndex,
+    index: bestItem.index,
+  };
+}
+
 function getTooltipBoxSize(tooltip) {
   return {
     width: Math.max(BAR_TOOLTIP_FALLBACK_WIDTH, Number(tooltip?.width) || 0),
@@ -750,6 +800,55 @@ function tooltipRectIntersectsBar(tooltipRect, barRect) {
     && tooltipRect.bottom > barRect.top;
 }
 
+function getRectIntersectionArea(rect, targetRect) {
+  if (!rect || !targetRect) return 0;
+  const width = Math.min(rect.right, targetRect.right) - Math.max(rect.left, targetRect.left);
+  const height = Math.min(rect.bottom, targetRect.bottom) - Math.max(rect.top, targetRect.top);
+  if (width <= 0 || height <= 0) return 0;
+  return width * height;
+}
+
+function rectsNearlyEqual(leftRect, rightRect) {
+  if (!leftRect || !rightRect) return false;
+  const epsilon = 0.5;
+  return Math.abs(leftRect.left - rightRect.left) <= epsilon
+    && Math.abs(leftRect.right - rightRect.right) <= epsilon
+    && Math.abs(leftRect.top - rightRect.top) <= epsilon
+    && Math.abs(leftRect.bottom - rightRect.bottom) <= epsilon;
+}
+
+function getBarRectFromElement(element, padding = BAR_TOOLTIP_COLLISION_PADDING) {
+  if (!element) return null;
+
+  const props = typeof element.getProps === "function"
+    ? element.getProps(["x", "y", "base", "width"], true)
+    : element;
+  const x = Number(props.x);
+  const y = Number(props.y);
+  const base = Number(props.base);
+  const width = Number(props.width);
+
+  if (![x, y, base, width].every(Number.isFinite) || width <= 0) return null;
+
+  return {
+    left: x - width / 2 - padding,
+    right: x + width / 2 + padding,
+    top: Math.min(y, base) - padding,
+    bottom: Math.max(y, base) + padding,
+  };
+}
+
+function addTooltipCandidate(candidates, candidate) {
+  if (!candidate || ![candidate.x, candidate.y].every(Number.isFinite)) return;
+  const isDuplicate = candidates.some((existing) => (
+    Math.abs(existing.x - candidate.x) <= 0.5
+      && Math.abs(existing.y - candidate.y) <= 0.5
+      && existing.xAlign === candidate.xAlign
+      && existing.yAlign === candidate.yAlign
+  ));
+  if (!isDuplicate) candidates.push(candidate);
+}
+
 function isTooltipRectInsideChart(tooltipRect, chartArea) {
   return tooltipRect.left >= chartArea.left
     && tooltipRect.right <= chartArea.right
@@ -763,17 +862,23 @@ function shouldAvoidBarTooltipCollisions(metricKey) {
 
 function buildNearbyTooltipPosition({ chartArea, activeElement, preferredX, preferredY, tooltipSize }) {
   const halfWidth = tooltipSize.width / 2;
-  const x = clampNumber(preferredX, chartArea.left + halfWidth, chartArea.right - halfWidth);
+  const x = clampNumber(preferredX, chartArea.left, chartArea.right);
   const y = clampNumber(
     preferredY,
     chartArea.top + tooltipSize.height + BAR_TOOLTIP_VERTICAL_OFFSET,
     chartArea.bottom,
   );
+  let xAlign = "center";
+  if (x + halfWidth > chartArea.right) {
+    xAlign = "right";
+  } else if (x - halfWidth < chartArea.left) {
+    xAlign = "left";
+  }
 
   return {
     x,
     y,
-    xAlign: "center",
+    xAlign,
     yAlign: "bottom",
     caretX: clampNumber(activeElement?.x, chartArea.left, chartArea.right),
   };
@@ -787,6 +892,7 @@ function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, p
   const activeWidth = Math.max(Number(activeElement?.width) || 0, SINGLE_COMPANY_BAR_MIN_THICKNESS);
   const activeLeft = preferredX - activeWidth / 2;
   const activeRight = preferredX + activeWidth / 2;
+  const activeBarRect = getBarRectFromElement(activeElement);
   const safeMinY = chartArea.top + tooltipSize.height + BAR_TOOLTIP_VERTICAL_OFFSET;
   const safeMaxY = chartArea.bottom;
   const topAnchorY = safeMinY;
@@ -802,34 +908,90 @@ function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, p
     });
   }
 
-  const candidateAnchors = [
-    {
-      x: activeLeft - BAR_TOOLTIP_SIDE_OFFSET,
-      y: clampNumber(activeElement?.y, chartArea.top + tooltipSize.height / 2, chartArea.bottom - tooltipSize.height / 2),
-      xAlign: "right",
-      yAlign: "center",
-    },
-    {
-      x: activeRight + BAR_TOOLTIP_SIDE_OFFSET,
-      y: clampNumber(activeElement?.y, chartArea.top + tooltipSize.height / 2, chartArea.bottom - tooltipSize.height / 2),
-      xAlign: "left",
-      yAlign: "center",
-    },
-    { x: preferredX, y: aboveAnchorY, xAlign: "center", yAlign: "bottom" },
-    { x: activeLeft - BAR_TOOLTIP_SIDE_OFFSET, y: topAnchorY, xAlign: "right", yAlign: "bottom" },
-    { x: activeRight + BAR_TOOLTIP_SIDE_OFFSET, y: topAnchorY, xAlign: "left", yAlign: "bottom" },
-    { x: chartArea.left, y: topAnchorY, xAlign: "left", yAlign: "bottom" },
-    { x: chartArea.right, y: topAnchorY, xAlign: "right", yAlign: "bottom" },
-  ];
+  const candidateAnchors = [];
+  addTooltipCandidate(candidateAnchors, buildNearbyTooltipPosition({
+    chartArea,
+    activeElement,
+    preferredX,
+    preferredY: aboveAnchorY,
+    tooltipSize,
+  }));
+
+  if (activeBarRect) {
+    const activeCenterX = (activeBarRect.left + activeBarRect.right) / 2;
+    const activeCenterY = (activeBarRect.top + activeBarRect.bottom) / 2;
+    const topSideY = clampNumber(
+      activeElement?.y,
+      chartArea.top + tooltipSize.height / 2,
+      chartArea.bottom - tooltipSize.height / 2,
+    );
+    const middleSideY = clampNumber(
+      activeCenterY,
+      chartArea.top + tooltipSize.height / 2,
+      chartArea.bottom - tooltipSize.height / 2,
+    );
+
+    addTooltipCandidate(candidateAnchors, { x: activeCenterX, y: activeBarRect.top, xAlign: "center", yAlign: "bottom" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.left, y: activeBarRect.top, xAlign: "right", yAlign: "bottom" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.right, y: activeBarRect.top, xAlign: "left", yAlign: "bottom" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.left, y: topSideY, xAlign: "right", yAlign: "center" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.right, y: topSideY, xAlign: "left", yAlign: "center" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.left, y: middleSideY, xAlign: "right", yAlign: "center" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.right, y: middleSideY, xAlign: "left", yAlign: "center" });
+    addTooltipCandidate(candidateAnchors, { x: activeCenterX, y: activeBarRect.bottom, xAlign: "center", yAlign: "top" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.left, y: activeBarRect.bottom, xAlign: "right", yAlign: "top" });
+    addTooltipCandidate(candidateAnchors, { x: activeBarRect.right, y: activeBarRect.bottom, xAlign: "left", yAlign: "top" });
+  } else {
+    addTooltipCandidate(candidateAnchors, { x: activeLeft - BAR_TOOLTIP_SIDE_OFFSET, y: aboveAnchorY, xAlign: "right", yAlign: "bottom" });
+    addTooltipCandidate(candidateAnchors, { x: activeRight + BAR_TOOLTIP_SIDE_OFFSET, y: aboveAnchorY, xAlign: "left", yAlign: "bottom" });
+  }
+
+  addTooltipCandidate(candidateAnchors, { x: chartArea.left, y: topAnchorY, xAlign: "left", yAlign: "bottom" });
+  addTooltipCandidate(candidateAnchors, { x: chartArea.right, y: topAnchorY, xAlign: "right", yAlign: "bottom" });
 
   const barRects = collectVisibleBarRects(chart);
-  const nonOverlapping = candidateAnchors.find((candidate) => {
-    const rect = buildTooltipRectFromAnchor(candidate, tooltipSize);
-    return isTooltipRectInsideChart(rect, chartArea)
-      && !barRects.some((barRect) => tooltipRectIntersectsBar(rect, barRect));
-  });
+  const otherBarRects = barRects.filter((barRect) => !rectsNearlyEqual(barRect, activeBarRect));
+  const scoredCandidates = candidateAnchors
+    .map((candidate) => {
+      const rect = buildTooltipRectFromAnchor(candidate, tooltipSize);
+      if (!isTooltipRectInsideChart(rect, chartArea)) return null;
 
-  return nonOverlapping || candidateAnchors[2] || { x: preferredX, y: preferredY, xAlign: "center", yAlign: "bottom" };
+      const activeOverlapArea = getRectIntersectionArea(rect, activeBarRect);
+      const intersectsOtherBars = otherBarRects.some((barRect) => tooltipRectIntersectsBar(rect, barRect));
+      const distance = Math.hypot(candidate.x - preferredX, candidate.y - preferredY);
+      return {
+        candidate,
+        activeOverlapArea,
+        score: distance + (intersectsOtherBars ? 1000 : 0),
+      };
+    })
+    .filter(Boolean);
+
+  const viableCandidates = scoredCandidates
+    .filter(({ activeOverlapArea }) => activeOverlapArea === 0)
+    .sort((left, right) => left.score - right.score);
+
+  const nonOverlapping = viableCandidates[0]?.candidate;
+  if (nonOverlapping) return nonOverlapping;
+
+  const fallbackCandidate = scoredCandidates
+    .sort((left, right) => (
+      left.activeOverlapArea - right.activeOverlapArea || left.score - right.score
+    ))[0]?.candidate;
+
+  return fallbackCandidate || { x: preferredX, y: preferredY, xAlign: "center", yAlign: "bottom" };
+}
+
+function registerInteractionModes() {
+  if (!window.Chart?.Interaction?.modes) return;
+
+  Chart.Interaction.modes.barPriority = function barPriorityInteraction(chart, eventPosition, options, useFinalPosition) {
+    const barItem = findVisibleBarInteractionItem(chart, eventPosition, useFinalPosition);
+    if (barItem) return [barItem];
+
+    const fallbackMode = Chart.Interaction.modes.index || Chart.Interaction.modes.nearest;
+    return fallbackMode?.call(this, chart, eventPosition, options, useFinalPosition) ?? [];
+  };
 }
 
 function registerTooltipPositioners() {
@@ -1538,9 +1700,9 @@ function buildPriceOverlayDataset(visibleLabels) {
   };
 }
 
-function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, usePeriodEndPoints) {
+function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, useQuarterSlotPoints) {
   const values = dataset.data.slice(0, visibleLabels.length);
-  if (!usePeriodEndPoints || dataset.priceOverlay) return values;
+  if (!useQuarterSlotPoints || dataset.priceOverlay) return values;
 
   return PriceComparisonUtils.buildFinancialPeriodEndSeries({
     values,
@@ -1633,15 +1795,15 @@ function buildDatasetsForView() {
       ...Array(Math.max(0, visibleLabels.length - financialVisibleLabels.length)).fill(null),
     ],
   }));
-  const shouldUseFinancialDatePoints = useBarForSingleCompany;
+  const shouldUseFinancialQuarterSlotPoints = useBarForSingleCompany;
   const trimmedDatasets = paddedDatasets.map((dataset) => ({
     ...dataset,
     data: buildFinancialDatasetValuesForVisibleLabels(
       dataset,
       visibleLabels,
-      shouldUseFinancialDatePoints && dataset.type === "bar",
+      shouldUseFinancialQuarterSlotPoints && dataset.type === "bar",
     ),
-    parsing: shouldUseFinancialDatePoints && dataset.type === "bar" ? false : dataset.parsing,
+    parsing: shouldUseFinancialQuarterSlotPoints && dataset.type === "bar" ? false : dataset.parsing,
   }));
 
   const priceOverlayDataset = buildPriceOverlayDataset(visibleLabels);
@@ -1790,7 +1952,7 @@ function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets) {
 
 function buildInteractionOptions(effectiveChartMode) {
   return {
-    mode: usesDateXAxis(effectiveChartMode) ? "nearest" : "index",
+    mode: usesDateXAxis(effectiveChartMode) ? "nearest" : "barPriority",
     intersect: false,
   };
 }
@@ -2547,10 +2709,6 @@ function buildChart() {
           bodyFont: { family: themeTokens.chartFontFamily, size: 11, weight: "500" },
           callbacks: {
             title(context) {
-              const priceContext = context.find((item) => item.dataset.priceOverlay);
-              if (priceContext?.raw?.date) {
-                return `DATE：${priceContext.raw.date}`;
-              }
               const reportDateContext = context.find((item) => item.raw?.reportDate);
               if (reportDateContext?.raw?.reportDate) {
                 return `DATE：${reportDateContext.raw.reportDate}`;
@@ -2558,6 +2716,10 @@ function buildChart() {
               const periodEndContext = context.find((item) => item.raw?.periodEndDate);
               if (periodEndContext?.raw?.periodEndDate) {
                 return `PERIOD END：${periodEndContext.raw.periodEndDate}`;
+              }
+              const priceContext = context.find((item) => item.dataset.priceOverlay);
+              if (priceContext?.raw?.date) {
+                return `DATE：${priceContext.raw.date}`;
               }
               const prefix = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).tooltipPrefix;
               return `${prefix}：${context[0].label}`;
@@ -2759,6 +2921,7 @@ function loadFromLocalData() {
 }
 
 function init() {
+  registerInteractionModes();
   registerTooltipPositioners();
   syncPeriodRangeChip();
   setupTogglePanel();

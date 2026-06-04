@@ -255,7 +255,7 @@
       const y = Number.isFinite(value) ? value : null;
 
       return {
-        x: reportMs,
+        x: index,
         y,
         periodLabel: label,
         reportDate,
@@ -462,25 +462,25 @@
   }
 
   function buildProjectedPriceSeries({ dailyPrices, visibleLabels, frequency }) {
-    const range = getVisiblePeriodDateRange(visibleLabels, frequency);
-    if (!range || !dailyPrices || typeof dailyPrices !== "object") return [];
-
-    const startMs = dateToUtcMs(range.startDate);
-    const endMs = dateToUtcMs(range.endDate);
-    if (startMs == null || endMs == null || endMs < startMs) return [];
+    const slots = buildVisiblePeriodSlots(visibleLabels, frequency);
+    if (slots.length === 0 || !dailyPrices || typeof dailyPrices !== "object") return [];
 
     return Object.entries(dailyPrices)
       .map(([date, value]) => ({ date, value: Number(value), ms: dateToUtcMs(date) }))
-      .filter((item) => item.ms != null
-        && item.ms >= startMs
-        && item.ms <= endMs
-        && Number.isFinite(item.value))
+      .filter((item) => item.ms != null && Number.isFinite(item.value))
       .sort((left, right) => left.ms - right.ms)
-      .map((item) => ({
-        x: item.ms,
-        y: item.value,
-        date: item.date,
-      }));
+      .map((item) => {
+        const slot = slots.find((candidate) => item.ms >= candidate.startMs && item.ms <= candidate.endMs);
+        if (!slot) return null;
+
+        const ratio = (item.ms - slot.startMs) / (slot.endMs - slot.startMs);
+        return {
+          x: (slot.index - 0.5) + ratio,
+          y: item.value,
+          date: item.date,
+        };
+      })
+      .filter(Boolean);
   }
 
   function getPriceOverlayDatasetOrder() {
