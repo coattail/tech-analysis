@@ -262,7 +262,7 @@ test("includes Apple latest reported quarter and fiscal period-end metadata", ()
   assert.equal(apple.revenue["2026Q1"], 111_184_000_000);
   assert.equal(apple.earnings["2026Q1"], 29_578_000_000);
   assert.equal(apple.periodEndDates["2026Q1"], "2026-03-28");
-  assert.equal(apple.reportDates["2026Q1"], "2026-04-30");
+  assert.equal(apple.reportDates["2026Q1"], "2026-05-01");
   assert.ok(Math.abs(apple.revenueGrowth["2026Q1"] - 16.595182415922984) < 1e-12);
 });
 
@@ -290,9 +290,9 @@ test("uses Nvidia fiscal metadata while keeping uniform bar spacing", () => {
   });
 
   assert.deepEqual(result.map((point) => point.reportDate), [
-    "2025-08-27",
     "2025-11-19",
     "2026-02-25",
+    "2026-05-20",
   ]);
   assert.deepEqual(result.map((point) => point.x), [0, 1, 2]);
 });
@@ -317,7 +317,8 @@ test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   assert.equal(latest.reportDate, "2026-06-03");
   assert.equal(latest.periodEndDate, "2026-05-03");
   assert.equal(latest.x, visibleLabels.length - 1);
-  assert.equal(byLabel.get("2025Q4").reportDate, "2025-12-18");
+  assert.equal(byLabel.get("2025Q3").reportDate, "2025-12-18");
+  assert.equal(byLabel.get("2025Q4").reportDate, "2026-03-11");
   assert.equal(byLabel.get("2026Q1").reportDate, "2026-03-11");
   assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-03");
   assert.ok(gaps.every((gap) => gap === 1));
@@ -618,7 +619,9 @@ test("bar chart tooltips choose nearby anchors without covering the active bar",
   assert.match(script, /function rectsNearlyEqual/);
   assert.match(script, /const activeOverlapArea = getRectIntersectionArea\(rect, activeBarRect\);/);
   assert.match(script, /\.filter\(\(\{ activeOverlapArea \}\) => activeOverlapArea === 0\)/);
-  assert.match(script, /distance \+ \(intersectsOtherBars \? 1000 : 0\)/);
+  assert.match(script, /const otherOverlapArea = otherBarRects\.reduce/);
+  assert.match(script, /BAR_TOOLTIP_OTHER_BAR_MAX_PENALTY/);
+  assert.match(script, /score:\s*distance \+ otherBarPenalty/);
   assert.match(script, /left\.activeOverlapArea - right\.activeOverlapArea \|\| left\.score - right\.score/);
   assert.match(script, /function collectVisibleBarRects/);
   assert.match(script, /function tooltipRectIntersectsBar/);

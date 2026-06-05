@@ -5,7 +5,7 @@ const assert = require("node:assert/strict");
 
 test("cache-busts local assets that changed active-bar tooltip positioning", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260605-tooltip-smart-bar-anchor";
+  const expectedVersion = "20260605-tooltip-near-target-bar";
 
   for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
     assert.match(
@@ -29,6 +29,7 @@ test("cache-busts local assets that changed active-bar tooltip positioning", () 
   assert.doesNotMatch(html, /v=20260604-uniform-quarter-bars/);
   assert.doesNotMatch(html, /v=20260604-tooltip-caret-target/);
   assert.doesNotMatch(html, /v=20260604-bar-priority-tooltip/);
+  assert.doesNotMatch(html, /v=20260605-tooltip-smart-bar-anchor/);
 });
 
 test("publishes every local script referenced by the page", () => {

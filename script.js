@@ -517,6 +517,7 @@ const BAR_TOOLTIP_SIDE_OFFSET = 10;
 const BAR_TOOLTIP_COLLISION_PADDING = 8;
 const BAR_TOOLTIP_FALLBACK_WIDTH = 190;
 const BAR_TOOLTIP_FALLBACK_HEIGHT = 78;
+const BAR_TOOLTIP_OTHER_BAR_MAX_PENALTY = 60;
 
 const state = {
   chart: null,
@@ -946,23 +947,34 @@ function findNonOverlappingTooltipPosition({ chart, activeElement, preferredX, p
     addTooltipCandidate(candidateAnchors, { x: activeRight + BAR_TOOLTIP_SIDE_OFFSET, y: aboveAnchorY, xAlign: "left", yAlign: "bottom" });
   }
 
-  addTooltipCandidate(candidateAnchors, { x: chartArea.left, y: topAnchorY, xAlign: "left", yAlign: "bottom" });
-  addTooltipCandidate(candidateAnchors, { x: chartArea.right, y: topAnchorY, xAlign: "right", yAlign: "bottom" });
+  if (preferredX > (chartArea.left + chartArea.right) / 2) {
+    addTooltipCandidate(candidateAnchors, { x: chartArea.right, y: topAnchorY, xAlign: "right", yAlign: "bottom" });
+  } else {
+    addTooltipCandidate(candidateAnchors, { x: chartArea.left, y: topAnchorY, xAlign: "left", yAlign: "bottom" });
+  }
 
   const barRects = collectVisibleBarRects(chart);
   const otherBarRects = barRects.filter((barRect) => !rectsNearlyEqual(barRect, activeBarRect));
+  const tooltipArea = Math.max(1, tooltipSize.width * tooltipSize.height);
   const scoredCandidates = candidateAnchors
     .map((candidate) => {
       const rect = buildTooltipRectFromAnchor(candidate, tooltipSize);
       if (!isTooltipRectInsideChart(rect, chartArea)) return null;
 
       const activeOverlapArea = getRectIntersectionArea(rect, activeBarRect);
-      const intersectsOtherBars = otherBarRects.some((barRect) => tooltipRectIntersectsBar(rect, barRect));
+      const otherOverlapArea = otherBarRects.reduce(
+        (total, barRect) => total + getRectIntersectionArea(rect, barRect),
+        0,
+      );
+      const otherBarPenalty = Math.min(
+        BAR_TOOLTIP_OTHER_BAR_MAX_PENALTY,
+        (otherOverlapArea / tooltipArea) * BAR_TOOLTIP_OTHER_BAR_MAX_PENALTY,
+      );
       const distance = Math.hypot(candidate.x - preferredX, candidate.y - preferredY);
       return {
         candidate,
         activeOverlapArea,
-        score: distance + (intersectsOtherBars ? 1000 : 0),
+        score: distance + otherBarPenalty,
       };
     })
     .filter(Boolean);
