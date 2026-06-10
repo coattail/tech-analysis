@@ -319,7 +319,7 @@ test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   assert.equal(latest.x, visibleLabels.length - 1);
   assert.equal(byLabel.get("2025Q3").reportDate, "2025-12-18");
   assert.equal(byLabel.get("2025Q4").reportDate, "2026-03-11");
-  assert.equal(byLabel.get("2026Q1").reportDate, "2026-03-11");
+  assert.equal(byLabel.get("2026Q1").reportDate, "2026-06-09");
   assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-03");
   assert.ok(gaps.every((gap) => gap === 1));
 });

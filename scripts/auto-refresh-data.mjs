@@ -151,6 +151,14 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2009Q3": { earnings: -88_000_000 },
   },
   oracle: {
+    // FY2026 Q4 earnings release, three months ended May 31, 2026.
+    "2026Q2": {
+      revenue: 19_184_000_000,
+      earnings: 4_304_000_000,
+      grossMargin: 65.22623019182652,
+      netAssets: 43_056_000_000,
+      reportDate: "2026-06-10",
+    },
     // FY2009-FY2011 Form 10-K selected quarterly financial data.
     "2008Q3": { earnings: 1_077_000_000 },
     "2008Q4": { earnings: 1_296_000_000 },
@@ -1875,6 +1883,8 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
       revenuePeriods: new Set(),
       netIncomePeriods: new Set(),
       grossMarginPeriods: new Set(),
+      netAssetPeriods: new Set(),
+      reportDatePeriods: new Set(),
     };
   }
 
@@ -1882,6 +1892,8 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
   const revenuePeriods = new Set();
   const netIncomePeriods = new Set();
   const grossMarginPeriods = new Set();
+  const netAssetPeriods = new Set();
+  const reportDatePeriods = new Set();
   let changedPoints = 0;
 
   Object.entries(overrides).forEach(([period, values]) => {
@@ -1908,9 +1920,31 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
         changedPeriods.add(period);
       }
     }
+
+    if (Number.isFinite(values.netAssets)) {
+      netAssetPeriods.add(period);
+      if (setSeriesValue(companyData.netAssets, period, values.netAssets)) {
+        changedPoints += 1;
+        changedPeriods.add(period);
+      }
+    }
+
+    if (setReportDate(companyData, period, values.reportDate)) {
+      reportDatePeriods.add(period);
+      changedPoints += 1;
+      changedPeriods.add(period);
+    }
   });
 
-  return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods };
+  return {
+    changedPoints,
+    changedPeriods,
+    revenuePeriods,
+    netIncomePeriods,
+    grossMarginPeriods,
+    netAssetPeriods,
+    reportDatePeriods,
+  };
 }
 
 function updateMeta(data, summary, refreshedAtIso) {
