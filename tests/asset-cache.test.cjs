@@ -3,6 +3,12 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
+test("cache-busts the stylesheet after sidebar layout fixes", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+
+  assert.match(html, /style\.css\?v=20260620-sidebar-actions/);
+});
+
 test("cache-busts local assets that changed active-bar tooltip positioning", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const expectedVersion = "20260605-tooltip-near-target-bar";
