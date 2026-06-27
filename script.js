@@ -2145,6 +2145,10 @@ function computeCompactBarZeroBaselineMin(min, max, chartMode) {
 
 function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false) {
   const values = collectDatasetValues(datasets, includeHidden);
+  const boundsMode = PriceComparisonUtils.getYAxisBoundsMode({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode,
+  });
   const shouldClampMinToZero = state.metric === "revenue";
 
   if (values.length === 0) {
@@ -2171,9 +2175,9 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    if (chartMode === "bar") {
+    if (boundsMode === "bar") {
       if (max >= 0) {
-        const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+        const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
         const rounded = roundPositiveAxisBounds(
           0,
           toAxisDisplayValue(state.metric, max),
@@ -2236,9 +2240,9 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
     };
   }
 
-  if (chartMode === "bar") {
+  if (boundsMode === "bar") {
     if (!includesNegative) {
-      const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+      const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
       const rounded = roundPositiveAxisBounds(
         0,
         toAxisDisplayValue(state.metric, includesPositive ? max : 0),
@@ -2250,7 +2254,7 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+    const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
     if (compactMin != null) {
       const rounded = roundPositiveAxisBounds(
         0,

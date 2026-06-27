@@ -644,6 +644,18 @@ test("chart build and refresh apply shared single-company axis reservations", ()
   assert.match(buildBody, /ticks:\s*\{\s*display: hasPriceOverlay/);
 });
 
+test("primary y-axis bounds resolve single-company line mode before calculation", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const body = script.match(/function computeYAxisBounds\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(body, /const boundsMode = PriceComparisonUtils\.getYAxisBoundsMode/);
+  assert.match(body, /visibleCompanyCount: state\.visibleCompanies\.size/);
+  assert.match(body, /chartMode,/);
+  assert.doesNotMatch(body, /if \(chartMode === "bar"\)/);
+  assert.match(body, /if \(boundsMode === "bar"\)/);
+  assert.match(body, /computeCompactBarZeroBaselineMin\(min, max, boundsMode\)/);
+});
+
 test("single-company financial bars keep uniform quarter slots when price comparison is toggled", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
