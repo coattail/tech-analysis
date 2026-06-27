@@ -18,6 +18,7 @@ const {
   shouldHidePrimaryYAxisTickLabel,
   getChartAxisReservations,
   getYAxisBoundsMode,
+  getChartTopPadding,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
   aggregateMarginRollingAnnualEntries,
@@ -76,6 +77,30 @@ test("single-company line and bar views share bar-compatible y-axis bounds", () 
   assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "line" }), "bar");
   assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "bar" }), "bar");
   assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 3, chartMode: "line" }), "line");
+});
+
+test("single-company line reserves the hidden price-legend height", () => {
+  assert.equal(getChartTopPadding({
+    visibleCompanyCount: 1,
+    chartMode: "line",
+    metric: "netIncome",
+    hasDailyPrices: true,
+    priceLegendHeight: 24,
+  }), 24);
+  assert.equal(getChartTopPadding({
+    visibleCompanyCount: 1,
+    chartMode: "bar",
+    metric: "netIncome",
+    hasDailyPrices: true,
+    priceLegendHeight: 24,
+  }), 0);
+  assert.equal(getChartTopPadding({
+    visibleCompanyCount: 1,
+    chartMode: "line",
+    metric: "grossMargin",
+    hasDailyPrices: true,
+    priceLegendHeight: 24,
+  }), 0);
 });
 
 
@@ -654,6 +679,16 @@ test("primary y-axis bounds resolve single-company line mode before calculation"
   assert.doesNotMatch(body, /if \(chartMode === "bar"\)/);
   assert.match(body, /if \(boundsMode === "bar"\)/);
   assert.match(body, /computeCompactBarZeroBaselineMin\(min, max, boundsMode\)/);
+});
+
+test("single-company line layout reserves the hidden price-legend space", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const body = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(script, /const PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT = 24/);
+  assert.match(body, /PriceComparisonUtils\.getChartTopPadding/);
+  assert.match(body, /hasDailyPrices: Boolean\(getSingleCompanyDailyPrices\(\)\)/);
+  assert.match(body, /top,/);
 });
 
 test("single-company financial bars keep uniform quarter slots when price comparison is toggled", () => {

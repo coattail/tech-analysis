@@ -510,6 +510,7 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.56;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
+const PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT = 24;
 const DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
@@ -2442,16 +2443,26 @@ function applyVisibilityStateToChart() {
 }
 
 function buildChartLayoutPadding(effectiveChartMode) {
+  const top = PriceComparisonUtils.getChartTopPadding({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode: effectiveChartMode,
+    metric: state.metric,
+    hasDailyPrices: Boolean(getSingleCompanyDailyPrices()),
+    priceLegendHeight: PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT,
+  });
+
   if (getSingleVisibleCompanyId()) {
     return {
       left: 0,
       right: SINGLE_COMPANY_CHART_RIGHT_PADDING,
+      top,
     };
   }
 
   return {
     left: 0,
     right: MULTI_COMPANY_CHART_RIGHT_PADDING,
+    top,
   };
 }
 

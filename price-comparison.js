@@ -28,6 +28,26 @@
     return Number(visibleCompanyCount) === 1 ? "bar" : chartMode;
   }
 
+  function getChartTopPadding({
+    visibleCompanyCount,
+    chartMode,
+    metric,
+    hasDailyPrices,
+    priceLegendHeight,
+  } = {}) {
+    const shouldReserveHiddenLegend = chartMode === "line"
+      && Boolean(hasDailyPrices)
+      && canShowPriceComparison({
+        visibleCompanyCount,
+        chartMode: "bar",
+        metric,
+      });
+    const safeLegendHeight = Number(priceLegendHeight);
+    return shouldReserveHiddenLegend && Number.isFinite(safeLegendHeight)
+      ? Math.max(0, safeLegendHeight)
+      : 0;
+  }
+
   function canShowPriceComparison({ visibleCompanyCount, chartMode, metric }) {
     return visibleCompanyCount === 1
       && chartMode === "bar"
@@ -587,6 +607,7 @@
     shouldHidePrimaryYAxisTickLabel,
     getChartAxisReservations,
     getYAxisBoundsMode,
+    getChartTopPadding,
     aggregateFlowRollingAnnualEntries,
     aggregatePointRollingAverageEntries,
     aggregateMarginRollingAnnualEntries,
