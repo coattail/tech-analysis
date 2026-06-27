@@ -9,7 +9,7 @@ test("cache-busts the stylesheet after sidebar layout fixes", () => {
   assert.match(html, /style\.css\?v=20260620-sidebar-actions/);
 });
 
-test("cache-busts assets changed by the unified plot-width fix", () => {
+test("cache-busts assets changed by the shared zero-baseline fix", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const asset of ["data.js", "company-selection.js"]) {
@@ -23,8 +23,8 @@ test("cache-busts assets changed by the unified plot-width fix", () => {
   for (const asset of ["price-comparison.js", "script.js"]) {
     assert.match(
       html,
-      new RegExp(`${asset.replace(".", "\\.")}\\?v=20260628-unified-plot-width`),
-      `${asset} should use the unified plot-width cache version`,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=20260628-shared-zero-baseline`),
+      `${asset} should use the shared zero-baseline cache version`,
     );
   }
 
