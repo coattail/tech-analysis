@@ -621,13 +621,20 @@ test("price comparison toggle refreshes in place without rebuilding the chart", 
   assert.doesNotMatch(priceComparisonBody, /rebuildChartForCurrentView\(\);/);
 });
 
-test("price comparison layout reserves a stable right axis and legend area", () => {
+test("chart build and refresh apply shared single-company axis reservations", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const refreshBody = script.match(/function refreshChart\([\s\S]*?\n\}/)?.[0] ?? "";
+  const buildBody = script.match(/function buildChart\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
 
-  assert.match(script, /function shouldReservePriceComparisonLayout/);
-  assert.match(script, /const PRICE_AXIS_RESERVED_WIDTH/);
-  assert.match(script, /state\.chart\.options\.scales\.yPrice\.display = reservePriceComparisonLayout;/);
-  assert.match(script, /state\.chart\.options\.plugins\.legend\.display = reservePriceComparisonLayout;/);
+  assert.match(script, /function computeChartAxisReservations/);
+  assert.match(refreshBody, /scales\.y\.reservedWidth = axisReservations\.primaryWidth/);
+  assert.match(refreshBody, /scales\.yPrice\.display = axisReservations\.priceWidth > 0/);
+  assert.match(refreshBody, /scales\.yPrice\.reservedWidth = axisReservations\.priceWidth/);
+  assert.match(buildBody, /reservedWidth: axisReservations\.primaryWidth/);
+  assert.match(buildBody, /display: axisReservations\.priceWidth > 0/);
+  assert.match(buildBody, /reservedWidth: axisReservations\.priceWidth/);
+  assert.match(buildBody, /title:\s*\{\s*display: hasPriceOverlay/);
+  assert.match(buildBody, /ticks:\s*\{\s*display: hasPriceOverlay/);
 });
 
 test("single-company financial bars keep uniform quarter slots when price comparison is toggled", () => {
