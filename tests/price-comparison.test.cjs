@@ -16,6 +16,7 @@ const {
   alignSecondaryAxisZero,
   computeCompactBarZeroBaselineMin,
   shouldHidePrimaryYAxisTickLabel,
+  getChartAxisReservations,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
   aggregateMarginRollingAnnualEntries,
@@ -43,6 +44,31 @@ test("shows price comparison only for one visible company in revenue/net-income 
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 2, chartMode: "bar", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "line", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "grossMargin" }), false);
+});
+
+test("single-company chart modes share fixed horizontal axis reservations", () => {
+  const reservations = [96, 104, 128].map((measuredPrimaryWidth) => (
+    getChartAxisReservations({
+      visibleCompanyCount: 1,
+      measuredPrimaryWidth,
+    })
+  ));
+
+  assert.deepEqual(reservations, [
+    { primaryWidth: 104, priceWidth: 92 },
+    { primaryWidth: 104, priceWidth: 92 },
+    { primaryWidth: 104, priceWidth: 92 },
+  ]);
+});
+
+test("multi-company charts keep their measured primary width without a price gutter", () => {
+  assert.deepEqual(
+    getChartAxisReservations({
+      visibleCompanyCount: 3,
+      measuredPrimaryWidth: 118,
+    }),
+    { primaryWidth: 118, priceWidth: 0 },
+  );
 });
 
 
