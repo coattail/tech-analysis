@@ -85,21 +85,21 @@ test("single-company line reserves the hidden price-legend height", () => {
     chartMode: "line",
     metric: "netIncome",
     hasDailyPrices: true,
-    priceLegendHeight: 24,
-  }), 24);
+    priceLegendHeight: 32,
+  }), 32);
   assert.equal(getChartTopPadding({
     visibleCompanyCount: 1,
     chartMode: "bar",
     metric: "netIncome",
     hasDailyPrices: true,
-    priceLegendHeight: 24,
+    priceLegendHeight: 32,
   }), 0);
   assert.equal(getChartTopPadding({
     visibleCompanyCount: 1,
     chartMode: "line",
     metric: "grossMargin",
     hasDailyPrices: true,
-    priceLegendHeight: 24,
+    priceLegendHeight: 32,
   }), 0);
 });
 
@@ -685,7 +685,7 @@ test("single-company line layout reserves the hidden price-legend space", () => 
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const body = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
 
-  assert.match(script, /const PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT = 24/);
+  assert.match(script, /const PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT = 32/);
   assert.match(body, /PriceComparisonUtils\.getChartTopPadding/);
   assert.match(body, /hasDailyPrices: Boolean\(getSingleCompanyDailyPrices\(\)\)/);
   assert.match(body, /top,/);
