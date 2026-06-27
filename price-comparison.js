@@ -24,6 +24,10 @@
     };
   }
 
+  function getYAxisBoundsMode({ visibleCompanyCount, chartMode } = {}) {
+    return Number(visibleCompanyCount) === 1 ? "bar" : chartMode;
+  }
+
   function canShowPriceComparison({ visibleCompanyCount, chartMode, metric }) {
     return visibleCompanyCount === 1
       && chartMode === "bar"
@@ -582,6 +586,7 @@
     computeCompactBarZeroBaselineMin,
     shouldHidePrimaryYAxisTickLabel,
     getChartAxisReservations,
+    getYAxisBoundsMode,
     aggregateFlowRollingAnnualEntries,
     aggregatePointRollingAverageEntries,
     aggregateMarginRollingAnnualEntries,

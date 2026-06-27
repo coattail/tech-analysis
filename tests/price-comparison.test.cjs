@@ -17,6 +17,7 @@ const {
   computeCompactBarZeroBaselineMin,
   shouldHidePrimaryYAxisTickLabel,
   getChartAxisReservations,
+  getYAxisBoundsMode,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
   aggregateMarginRollingAnnualEntries,
@@ -69,6 +70,12 @@ test("multi-company charts keep their measured primary width without a price gut
     }),
     { primaryWidth: 118, priceWidth: 0 },
   );
+});
+
+test("single-company line and bar views share bar-compatible y-axis bounds", () => {
+  assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "line" }), "bar");
+  assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "bar" }), "bar");
+  assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 3, chartMode: "line" }), "line");
 });
 
 
