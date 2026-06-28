@@ -33,11 +33,12 @@ The project focuses on three things:
 
 ## Covered Companies
 
-As of April 23, 2026, the sample is expanded to the current top 30 U.S.-listed companies by market cap (based on the StockAnalysis `Largest Companies` list):
+As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across mega-cap, enterprise software, and cloud computing:
 
 - NVIDIA, Alphabet, Apple, Microsoft, Amazon, Broadcom, Meta, TSMC, Tesla, Walmart
 - Berkshire Hathaway, JPMorgan Chase, Eli Lilly, Exxon Mobil, Visa, ASML, Micron, Johnson & Johnson, Oracle, AMD
 - Mastercard, Costco, Netflix, Bank of America, Caterpillar, Chevron, Palantir, Cisco, AbbVie, Home Depot
+- IBM, SAP, CrowdStrike, Salesforce, ServiceNow, Datadog, Snowflake, Cloudflare, Adobe, Zoom
 
 ## Metric Definitions
 
@@ -140,10 +141,12 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 The script currently handles:
 
 - financial data fetching
-- quarterly P/E fetching
-- net asset fetching and ROE backfilling
+- quarterly P/E from StockAnalysis and CompaniesMarketCap, with auditable gaps derived from historical market cap / TTM earnings
+- SEC instant net-assets facts plus CompaniesMarketCap historical net-assets backfills and automatic ROE recalculation
+- gross margin from direct SEC gross-profit facts or revenue minus cost of revenue
 - selected FX conversion for non-USD reporting
 - TSMC override corrections for key periods
+- auditable early-quarter corrections from company annual reports and SEC 6-K/10-K filings
 - `forecastFlags` cleanup
 - recomputation of impacted `revenueGrowth` ranges
 

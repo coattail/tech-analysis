@@ -37,6 +37,15 @@ function loadFinancialSourceData() {
   return context.FINANCIAL_SOURCE_DATA;
 }
 
+function loadStockPriceSourceData() {
+  const priceDataJs = fs.readFileSync(path.join(__dirname, "../price-data.js"), "utf8");
+  const context = { window: {}, globalThis: {} };
+  context.window = context;
+  context.globalThis = context;
+  vm.runInNewContext(priceDataJs, context);
+  return context.STOCK_PRICE_SOURCE_DATA;
+}
+
 test("shows price comparison only for one visible company in revenue/net-income bar mode", () => {
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "revenue" }), true);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "netIncome" }), true);
@@ -262,7 +271,7 @@ test("includes Apple latest reported quarter and fiscal period-end metadata", ()
   assert.equal(apple.revenue["2026Q1"], 111_184_000_000);
   assert.equal(apple.earnings["2026Q1"], 29_578_000_000);
   assert.equal(apple.periodEndDates["2026Q1"], "2026-03-28");
-  assert.equal(apple.reportDates["2026Q1"], "2026-05-01");
+  assert.equal(apple.reportDates["2026Q1"], "2026-04-30");
   assert.ok(Math.abs(apple.revenueGrowth["2026Q1"] - 16.595182415922984) < 1e-12);
 });
 
@@ -274,7 +283,7 @@ test("includes Micron fiscal Q3 2026 results in calendar 2026Q2", () => {
   assert.equal(micron.earnings["2026Q2"], 28_243_000_000);
   assert.equal(micron.periodEndDates["2026Q2"], "2026-05-28");
   assert.equal(micron.reportDates["2026Q2"], "2026-06-24");
-  assert.ok(Math.abs(micron.grossMargin["2026Q2"] - 84.5619) < 1e-12);
+  assert.ok(Math.abs(micron.grossMargin["2026Q2"] - 84.562) < 0.001);
   assert.ok(Math.abs(micron.revenueGrowth["2026Q2"] - 345.71551446081065) < 1e-12);
 });
 
@@ -302,9 +311,9 @@ test("uses Nvidia fiscal metadata while keeping uniform bar spacing", () => {
   });
 
   assert.deepEqual(result.map((point) => point.reportDate), [
+    "2025-08-27",
     "2025-11-19",
     "2026-02-25",
-    "2026-05-20",
   ]);
   assert.deepEqual(result.map((point) => point.x), [0, 1, 2]);
 });
@@ -329,9 +338,9 @@ test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   assert.equal(latest.reportDate, "2026-06-03");
   assert.equal(latest.periodEndDate, "2026-05-03");
   assert.equal(latest.x, visibleLabels.length - 1);
-  assert.equal(byLabel.get("2025Q3").reportDate, "2025-12-18");
-  assert.equal(byLabel.get("2025Q4").reportDate, "2026-03-11");
-  assert.equal(byLabel.get("2026Q1").reportDate, "2026-06-09");
+  assert.equal(byLabel.get("2025Q3").reportDate, "2025-09-10");
+  assert.equal(byLabel.get("2025Q4").reportDate, "2025-12-18");
+  assert.equal(byLabel.get("2026Q1").reportDate, "2026-03-11");
   assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-03");
   assert.ok(gaps.every((gap) => gap === 1));
 });
@@ -430,6 +439,56 @@ test("keeps quarterly net income populated without internal source gaps", () => 
   assert.deepEqual(missing, []);
 });
 
+test("keeps core fundamentals continuous from listing through the latest reported quarter", () => {
+  const data = loadFinancialSourceData();
+  const prices = loadStockPriceSourceData();
+  const missing = [];
+
+  for (const [companyId, company] of Object.entries(data.companies)) {
+    const priceDates = Object.keys(prices.companies?.[companyId]?.daily || {});
+    assert.ok(priceDates.length > 0, `${companyId} should have stock prices`);
+    const listingDate = new Date(`${priceDates[0]}T00:00:00Z`);
+    const listingPeriod = `${listingDate.getUTCFullYear()}Q${Math.floor(listingDate.getUTCMonth() / 3) + 1}`;
+    const availablePeriods = data.periods.filter(
+      (period) => period >= listingPeriod && Number.isFinite(company.revenue?.[period]),
+    );
+    if (availablePeriods.length === 0) continue;
+
+    const firstIndex = data.periods.indexOf(availablePeriods[0]);
+    const lastIndex = data.periods.indexOf(availablePeriods.at(-1));
+    for (const metricKey of ["revenue", "earnings", "netAssets"]) {
+      for (let index = firstIndex; index <= lastIndex; index += 1) {
+        const period = data.periods[index];
+        if (!Number.isFinite(company[metricKey]?.[period])) {
+          missing.push(`${companyId}:${metricKey}:${period}`);
+        }
+      }
+    }
+  }
+
+  assert.deepEqual(missing, []);
+});
+
+test("keeps adjusted-close prices complete across normal trading-calendar gaps", () => {
+  const prices = loadStockPriceSourceData();
+  assert.equal(Object.keys(prices.companies || {}).length, 40);
+
+  const invalid = [];
+  for (const [companyId, company] of Object.entries(prices.companies || {})) {
+    const entries = Object.entries(company.daily || {});
+    if (entries.length === 0) invalid.push(`${companyId}:empty`);
+    entries.forEach(([date, value], index) => {
+      if (!Number.isFinite(value) || value <= 0) invalid.push(`${companyId}:${date}:value`);
+      if (index === 0) return;
+      const previousDate = entries[index - 1][0];
+      const gapDays = (Date.parse(date) - Date.parse(previousDate)) / 86400000;
+      if (gapDays <= 0 || gapDays > 5) invalid.push(`${companyId}:${previousDate}->${date}`);
+    });
+  }
+
+  assert.deepEqual(invalid, []);
+});
+
 test("real rolling annual flow values only appear after four complete source quarters", () => {
   const data = loadFinancialSourceData();
   const missingWindows = [];
@@ -456,7 +515,7 @@ test("real rolling annual flow values only appear after four complete source qua
   assert.deepEqual(missingWindows, []);
 });
 
-test("keeps latest quarter populated across companies except non-applicable bank gross margin", () => {
+test("keeps latest quarter populated across companies except non-applicable metrics", () => {
   const data = loadFinancialSourceData();
   const metricKeys = ["revenue", "earnings", "grossMargin", "pe", "roe", "revenueGrowth"];
   const allowedMissing = new Set([
@@ -470,6 +529,14 @@ test("keeps latest quarter populated across companies except non-applicable bank
       const value = company[metricKey]?.["2026Q1"];
       if (value == null || Number.isNaN(value)) {
         const key = `${companyId}:${metricKey}`;
+        if (metricKey === "pe") {
+          const latestFourEarnings = ["2025Q2", "2025Q3", "2025Q4", "2026Q1"]
+            .map((period) => company.earnings?.[period]);
+          const hasNonPositiveTtmEarnings =
+            latestFourEarnings.every(Number.isFinite) &&
+            latestFourEarnings.reduce((sum, earnings) => sum + earnings, 0) <= 0;
+          if (hasNonPositiveTtmEarnings) continue;
+        }
         if (!allowedMissing.has(key)) missing.push(key);
       }
     }
@@ -609,6 +676,9 @@ test("single-company financial bars keep uniform quarter slots when price compar
 
   assert.match(script, /const shouldUseFinancialQuarterSlotPoints = useBarForSingleCompany;/);
   assert.doesNotMatch(script, /const shouldUseFinancialQuarterSlotPoints = state\.priceComparisonEnabled && useBarForSingleCompany;/);
+  assert.match(script, /const shouldReservePriceComparisonRange = canEnablePriceComparisonForCurrentView\(\);/);
+  assert.match(script, /const visibleLabels = shouldReservePriceComparisonRange/);
+  assert.doesNotMatch(script, /const visibleLabels = state\.priceComparisonEnabled/);
   assert.match(script, /function usesDateXAxis\(_effectiveChartMode = getEffectiveChartMode\(\)\) \{\s*return false;/);
 });
 

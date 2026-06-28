@@ -36,7 +36,35 @@ test('index html marks the same initial view controls as checked', () => {
   assert.doesNotMatch(html, /name="chartMode" value="line" checked/);
   assert.match(html, /id="priceComparisonToggle" type="checkbox" checked/);
   assert.match(html, /<strong id="activeMetricLabel">净利润<\/strong>/);
-  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 30<\/strong>/);
+  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 40<\/strong>/);
+});
+
+test('includes the ten added enterprise software and cloud companies', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+  const fundamentalData = fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8');
+  const priceData = fs.readFileSync(path.join(__dirname, '..', 'price-data.js'), 'utf8');
+  const fundamentalRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-data.mjs'), 'utf8');
+  const priceRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-price-data.mjs'), 'utf8');
+  const expectedCompanies = [
+    ['ibm', 'IBM'],
+    ['sap', 'SAP'],
+    ['crowdstrike', 'CRWD'],
+    ['salesforce', 'CRM'],
+    ['servicenow', 'NOW'],
+    ['datadog', 'DDOG'],
+    ['snowflake', 'SNOW'],
+    ['cloudflare', 'NET'],
+    ['adobe', 'ADBE'],
+    ['zoom', 'ZM'],
+  ];
+
+  for (const [id, ticker] of expectedCompanies) {
+    assert.match(script, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(priceRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalData, new RegExp(`    "${id}": \\{`));
+    assert.match(priceData, new RegExp(`    "${id}": \\{`));
+  }
 });
 
 test('company toggles change pending selection without mutating applied selection', () => {

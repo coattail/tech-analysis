@@ -41,6 +41,16 @@ const COMPANY_SOURCES = [
   { id: "cisco", ticker: "CSCO" },
   { id: "abbvie", ticker: "ABBV" },
   { id: "homedepot", ticker: "HD" },
+  { id: "ibm", ticker: "IBM" },
+  { id: "sap", ticker: "SAP" },
+  { id: "crowdstrike", ticker: "CRWD" },
+  { id: "salesforce", ticker: "CRM" },
+  { id: "servicenow", ticker: "NOW" },
+  { id: "datadog", ticker: "DDOG" },
+  { id: "snowflake", ticker: "SNOW" },
+  { id: "cloudflare", ticker: "NET" },
+  { id: "adobe", ticker: "ADBE" },
+  { id: "zoom", ticker: "ZM" },
 ];
 
 function formatPriceDataJs(data) {

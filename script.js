@@ -72,6 +72,16 @@ const COMPANIES = [
   { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2" },
   { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2" },
   { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316" },
+  { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff" },
+  { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1" },
+  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67" },
+  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff" },
+  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787" },
+  { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5" },
+  { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8" },
+  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120" },
+  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366" },
+  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
 const {
@@ -1787,7 +1797,8 @@ function buildDatasetsForView() {
 
   const trimmedEndIndex = lastVisibleValueIndex >= 0 ? lastVisibleValueIndex : 0;
   const financialVisibleLabels = rangeLabels.slice(0, trimmedEndIndex + 1);
-  const visibleLabels = state.priceComparisonEnabled
+  const shouldReservePriceComparisonRange = canEnablePriceComparisonForCurrentView();
+  const visibleLabels = shouldReservePriceComparisonRange
     ? PriceComparisonUtils.extendVisibleLabelsThroughLatestPrice({
       visibleLabels: financialVisibleLabels,
       allLabels: fullLabels,

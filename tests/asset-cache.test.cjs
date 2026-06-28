@@ -9,11 +9,11 @@ test("cache-busts the stylesheet after sidebar layout fixes", () => {
   assert.match(html, /style\.css\?v=20260620-sidebar-actions/);
 });
 
-test("cache-busts local assets that changed active-bar tooltip positioning", () => {
+test("keeps the latest cache key for unchanged company-selection behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const expectedVersion = "20260605-tooltip-near-target-bar";
 
-  for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
+  for (const asset of ["company-selection.js"]) {
     assert.match(
       html,
       new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
@@ -36,6 +36,32 @@ test("cache-busts local assets that changed active-bar tooltip positioning", () 
   assert.doesNotMatch(html, /v=20260604-tooltip-caret-target/);
   assert.doesNotMatch(html, /v=20260604-bar-priority-tooltip/);
   assert.doesNotMatch(html, /v=20260605-tooltip-smart-bar-anchor/);
+});
+
+test("cache-busts generated datasets after expanding coverage", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const expectedVersion = "20260628-add-enterprise-cloud";
+
+  for (const asset of ["data.js", "price-data.js"]) {
+    assert.match(
+      html,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
+      `${asset} should use the expanded-coverage cache version`,
+    );
+  }
+});
+
+test("cache-busts the chart script after stabilizing price-comparison quarter slots", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const expectedVersion = "20260628-stable-price-slots";
+
+  for (const asset of ["script.js"]) {
+    assert.match(
+      html,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
+      `${asset} should use the stable price-comparison cache version`,
+    );
+  }
 });
 
 test("publishes every local script referenced by the page", () => {
