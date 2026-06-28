@@ -331,7 +331,7 @@ test("includes Micron fiscal Q3 2026 results in calendar 2026Q2", () => {
   assert.equal(micron.revenue["2026Q2"], 41_456_000_000);
   assert.equal(micron.earnings["2026Q2"], 28_243_000_000);
   assert.equal(micron.periodEndDates["2026Q2"], "2026-05-28");
-  assert.equal(micron.reportDates["2026Q2"], "2026-06-24");
+  assert.equal(micron.reportDates["2026Q2"], "2026-06-25");
   assert.ok(Math.abs(micron.grossMargin["2026Q2"] - 84.5619) < 1e-12);
   assert.ok(Math.abs(micron.revenueGrowth["2026Q2"] - 345.71551446081065) < 1e-12);
 });
