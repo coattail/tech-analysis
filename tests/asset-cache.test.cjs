@@ -9,15 +9,22 @@ test("cache-busts the stylesheet after sidebar layout fixes", () => {
   assert.match(html, /style\.css\?v=20260620-sidebar-actions/);
 });
 
-test("cache-busts local assets that changed active-bar tooltip positioning", () => {
+test("cache-busts assets changed by the shared zero-baseline fix", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260605-tooltip-near-target-bar";
 
-  for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
+  for (const asset of ["data.js", "company-selection.js"]) {
     assert.match(
       html,
-      new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
-      `${asset} should use the latest cache-busting version`,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=20260605-tooltip-near-target-bar`),
+      `${asset} should keep its current cache-busting version`,
+    );
+  }
+
+  for (const asset of ["price-comparison.js", "script.js"]) {
+    assert.match(
+      html,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=20260628-shared-zero-baseline`),
+      `${asset} should use the shared zero-baseline cache version`,
     );
   }
 

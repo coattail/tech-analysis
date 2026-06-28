@@ -510,7 +510,7 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.56;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
-const PRICE_AXIS_RESERVED_WIDTH = 92;
+const PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT = 32;
 const DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
@@ -2146,6 +2146,10 @@ function computeCompactBarZeroBaselineMin(min, max, chartMode) {
 
 function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false) {
   const values = collectDatasetValues(datasets, includeHidden);
+  const boundsMode = PriceComparisonUtils.getYAxisBoundsMode({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode,
+  });
   const shouldClampMinToZero = state.metric === "revenue";
 
   if (values.length === 0) {
@@ -2172,9 +2176,9 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    if (chartMode === "bar") {
+    if (boundsMode === "bar") {
       if (max >= 0) {
-        const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+        const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
         const rounded = roundPositiveAxisBounds(
           0,
           toAxisDisplayValue(state.metric, max),
@@ -2237,9 +2241,9 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
     };
   }
 
-  if (chartMode === "bar") {
+  if (boundsMode === "bar") {
     if (!includesNegative) {
-      const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+      const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
       const rounded = roundPositiveAxisBounds(
         0,
         toAxisDisplayValue(state.metric, includesPositive ? max : 0),
@@ -2251,7 +2255,7 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+    const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
     if (compactMin != null) {
       const rounded = roundPositiveAxisBounds(
         0,
@@ -2359,6 +2363,13 @@ function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
   );
 }
 
+function computeChartAxisReservations(datasets, chartMode, themeTokens) {
+  return PriceComparisonUtils.getChartAxisReservations({
+    visibleCompanyCount: state.visibleCompanies.size,
+    measuredPrimaryWidth: computeYAxisReservedWidth(datasets, chartMode, themeTokens),
+  });
+}
+
 function syncChartDatasets(nextDatasets) {
   const existingDatasets = new Map(
     (state.chart?.data?.datasets ?? []).map((dataset) => [getDatasetKey(dataset), dataset]),
@@ -2432,16 +2443,26 @@ function applyVisibilityStateToChart() {
 }
 
 function buildChartLayoutPadding(effectiveChartMode) {
+  const top = PriceComparisonUtils.getChartTopPadding({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode: effectiveChartMode,
+    metric: state.metric,
+    hasDailyPrices: Boolean(getSingleCompanyDailyPrices()),
+    priceLegendHeight: PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT,
+  });
+
   if (getSingleVisibleCompanyId()) {
     return {
       left: 0,
       right: SINGLE_COMPANY_CHART_RIGHT_PADDING,
+      top,
     };
   }
 
   return {
     left: 0,
     right: MULTI_COMPANY_CHART_RIGHT_PADDING,
+    top,
   };
 }
 
@@ -2457,7 +2478,7 @@ function refreshChart(updateMode = undefined) {
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
   const reservePriceComparisonLayout = shouldReservePriceComparisonLayout(hasPriceOverlay);
   const themeTokens = getChartThemeTokens();
-  const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
+  const axisReservations = computeChartAxisReservations(datasets, effectiveChartMode, themeTokens);
   syncChartLabels(labels);
   syncChartDatasets(datasets);
   state.chart.data.datasets.forEach((dataset, index) => {
@@ -2466,9 +2487,9 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.y.title.text = buildYAxisTitle(state.metric, state.frequency);
   state.chart.options.scales.y.min = yBounds.min;
   state.chart.options.scales.y.max = yBounds.max;
-  state.chart.options.scales.y.reservedWidth = yReservedWidth;
-  state.chart.options.scales.yPrice.display = reservePriceComparisonLayout;
-  state.chart.options.scales.yPrice.reservedWidth = reservePriceComparisonLayout ? PRICE_AXIS_RESERVED_WIDTH : 0;
+  state.chart.options.scales.y.reservedWidth = axisReservations.primaryWidth;
+  state.chart.options.scales.yPrice.display = axisReservations.priceWidth > 0;
+  state.chart.options.scales.yPrice.reservedWidth = axisReservations.priceWidth;
   state.chart.options.scales.yPrice.title.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.min = priceBounds.min;
@@ -2600,7 +2621,7 @@ function buildChart() {
   const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
   const reservePriceComparisonLayout = shouldReservePriceComparisonLayout(hasPriceOverlay);
-  const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
+  const axisReservations = computeChartAxisReservations(datasets, effectiveChartMode, themeTokens);
 
   state.chart = new Chart(chartEl, {
     type: "line",
@@ -2632,7 +2653,7 @@ function buildChart() {
           border: { color: "rgba(0,0,0,0)" },
           min: yBounds.min,
           max: yBounds.max,
-          reservedWidth: yReservedWidth,
+          reservedWidth: axisReservations.primaryWidth,
           title: {
             display: false,
             text: buildYAxisTitle(state.metric, state.frequency),
@@ -2657,7 +2678,7 @@ function buildChart() {
           },
         },
         yPrice: {
-          display: reservePriceComparisonLayout,
+          display: axisReservations.priceWidth > 0,
           position: "right",
           afterFit(scale) {
             scale.width = scale.options.reservedWidth ?? scale.width;
@@ -2665,7 +2686,7 @@ function buildChart() {
           border: { color: "rgba(0,0,0,0)" },
           min: priceBounds.min,
           max: priceBounds.max,
-          reservedWidth: reservePriceComparisonLayout ? PRICE_AXIS_RESERVED_WIDTH : 0,
+          reservedWidth: axisReservations.priceWidth,
           title: {
             display: hasPriceOverlay,
             text: "股价（USD）",

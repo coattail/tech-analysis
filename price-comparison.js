@@ -6,6 +6,47 @@
   const DATE_AXIS_FALLBACK_PADDING_RATIO = 0.018;
   const DATE_AXIS_BAR_SLOT_PADDING_RATIO = 0.31;
   const DATE_AXIS_MIN_PADDING_DAYS = 12;
+  const SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH = 104;
+  const SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH = 92;
+
+  function getChartAxisReservations({ visibleCompanyCount, measuredPrimaryWidth } = {}) {
+    if (Number(visibleCompanyCount) === 1) {
+      return {
+        primaryWidth: SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH,
+        priceWidth: SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH,
+      };
+    }
+
+    const safePrimaryWidth = Number(measuredPrimaryWidth);
+    return {
+      primaryWidth: Number.isFinite(safePrimaryWidth) ? Math.max(0, safePrimaryWidth) : 0,
+      priceWidth: 0,
+    };
+  }
+
+  function getYAxisBoundsMode({ visibleCompanyCount, chartMode } = {}) {
+    return Number(visibleCompanyCount) === 1 ? "bar" : chartMode;
+  }
+
+  function getChartTopPadding({
+    visibleCompanyCount,
+    chartMode,
+    metric,
+    hasDailyPrices,
+    priceLegendHeight,
+  } = {}) {
+    const shouldReserveHiddenLegend = chartMode === "line"
+      && Boolean(hasDailyPrices)
+      && canShowPriceComparison({
+        visibleCompanyCount,
+        chartMode: "bar",
+        metric,
+      });
+    const safeLegendHeight = Number(priceLegendHeight);
+    return shouldReserveHiddenLegend && Number.isFinite(safeLegendHeight)
+      ? Math.max(0, safeLegendHeight)
+      : 0;
+  }
 
   function canShowPriceComparison({ visibleCompanyCount, chartMode, metric }) {
     return visibleCompanyCount === 1
@@ -564,6 +605,9 @@
     alignSecondaryAxisZero,
     computeCompactBarZeroBaselineMin,
     shouldHidePrimaryYAxisTickLabel,
+    getChartAxisReservations,
+    getYAxisBoundsMode,
+    getChartTopPadding,
     aggregateFlowRollingAnnualEntries,
     aggregatePointRollingAverageEntries,
     aggregateMarginRollingAnnualEntries,

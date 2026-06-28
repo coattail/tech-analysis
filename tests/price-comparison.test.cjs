@@ -16,6 +16,9 @@ const {
   alignSecondaryAxisZero,
   computeCompactBarZeroBaselineMin,
   shouldHidePrimaryYAxisTickLabel,
+  getChartAxisReservations,
+  getYAxisBoundsMode,
+  getChartTopPadding,
   aggregateFlowRollingAnnualEntries,
   aggregatePointRollingAverageEntries,
   aggregateMarginRollingAnnualEntries,
@@ -43,6 +46,61 @@ test("shows price comparison only for one visible company in revenue/net-income 
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 2, chartMode: "bar", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "line", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "grossMargin" }), false);
+});
+
+test("single-company chart modes share fixed horizontal axis reservations", () => {
+  const reservations = [96, 104, 128].map((measuredPrimaryWidth) => (
+    getChartAxisReservations({
+      visibleCompanyCount: 1,
+      measuredPrimaryWidth,
+    })
+  ));
+
+  assert.deepEqual(reservations, [
+    { primaryWidth: 104, priceWidth: 92 },
+    { primaryWidth: 104, priceWidth: 92 },
+    { primaryWidth: 104, priceWidth: 92 },
+  ]);
+});
+
+test("multi-company charts keep their measured primary width without a price gutter", () => {
+  assert.deepEqual(
+    getChartAxisReservations({
+      visibleCompanyCount: 3,
+      measuredPrimaryWidth: 118,
+    }),
+    { primaryWidth: 118, priceWidth: 0 },
+  );
+});
+
+test("single-company line and bar views share bar-compatible y-axis bounds", () => {
+  assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "line" }), "bar");
+  assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "bar" }), "bar");
+  assert.equal(getYAxisBoundsMode({ visibleCompanyCount: 3, chartMode: "line" }), "line");
+});
+
+test("single-company line reserves the hidden price-legend height", () => {
+  assert.equal(getChartTopPadding({
+    visibleCompanyCount: 1,
+    chartMode: "line",
+    metric: "netIncome",
+    hasDailyPrices: true,
+    priceLegendHeight: 32,
+  }), 32);
+  assert.equal(getChartTopPadding({
+    visibleCompanyCount: 1,
+    chartMode: "bar",
+    metric: "netIncome",
+    hasDailyPrices: true,
+    priceLegendHeight: 32,
+  }), 0);
+  assert.equal(getChartTopPadding({
+    visibleCompanyCount: 1,
+    chartMode: "line",
+    metric: "grossMargin",
+    hasDailyPrices: true,
+    priceLegendHeight: 32,
+  }), 0);
 });
 
 
@@ -273,7 +331,7 @@ test("includes Micron fiscal Q3 2026 results in calendar 2026Q2", () => {
   assert.equal(micron.revenue["2026Q2"], 41_456_000_000);
   assert.equal(micron.earnings["2026Q2"], 28_243_000_000);
   assert.equal(micron.periodEndDates["2026Q2"], "2026-05-28");
-  assert.equal(micron.reportDates["2026Q2"], "2026-06-24");
+  assert.equal(micron.reportDates["2026Q2"], "2026-06-25");
   assert.ok(Math.abs(micron.grossMargin["2026Q2"] - 84.5619) < 1e-12);
   assert.ok(Math.abs(micron.revenueGrowth["2026Q2"] - 345.71551446081065) < 1e-12);
 });
@@ -595,13 +653,42 @@ test("price comparison toggle refreshes in place without rebuilding the chart", 
   assert.doesNotMatch(priceComparisonBody, /rebuildChartForCurrentView\(\);/);
 });
 
-test("price comparison layout reserves a stable right axis and legend area", () => {
+test("chart build and refresh apply shared single-company axis reservations", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const refreshBody = script.match(/function refreshChart\([\s\S]*?\n\}/)?.[0] ?? "";
+  const buildBody = script.match(/function buildChart\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
 
-  assert.match(script, /function shouldReservePriceComparisonLayout/);
-  assert.match(script, /const PRICE_AXIS_RESERVED_WIDTH/);
-  assert.match(script, /state\.chart\.options\.scales\.yPrice\.display = reservePriceComparisonLayout;/);
-  assert.match(script, /state\.chart\.options\.plugins\.legend\.display = reservePriceComparisonLayout;/);
+  assert.match(script, /function computeChartAxisReservations/);
+  assert.match(refreshBody, /scales\.y\.reservedWidth = axisReservations\.primaryWidth/);
+  assert.match(refreshBody, /scales\.yPrice\.display = axisReservations\.priceWidth > 0/);
+  assert.match(refreshBody, /scales\.yPrice\.reservedWidth = axisReservations\.priceWidth/);
+  assert.match(buildBody, /reservedWidth: axisReservations\.primaryWidth/);
+  assert.match(buildBody, /display: axisReservations\.priceWidth > 0/);
+  assert.match(buildBody, /reservedWidth: axisReservations\.priceWidth/);
+  assert.match(buildBody, /title:\s*\{\s*display: hasPriceOverlay/);
+  assert.match(buildBody, /ticks:\s*\{\s*display: hasPriceOverlay/);
+});
+
+test("primary y-axis bounds resolve single-company line mode before calculation", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const body = script.match(/function computeYAxisBounds\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(body, /const boundsMode = PriceComparisonUtils\.getYAxisBoundsMode/);
+  assert.match(body, /visibleCompanyCount: state\.visibleCompanies\.size/);
+  assert.match(body, /chartMode,/);
+  assert.doesNotMatch(body, /if \(chartMode === "bar"\)/);
+  assert.match(body, /if \(boundsMode === "bar"\)/);
+  assert.match(body, /computeCompactBarZeroBaselineMin\(min, max, boundsMode\)/);
+});
+
+test("single-company line layout reserves the hidden price-legend space", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const body = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(script, /const PRICE_COMPARISON_LEGEND_RESERVED_HEIGHT = 32/);
+  assert.match(body, /PriceComparisonUtils\.getChartTopPadding/);
+  assert.match(body, /hasDailyPrices: Boolean\(getSingleCompanyDailyPrices\(\)\)/);
+  assert.match(body, /top,/);
 });
 
 test("single-company financial bars keep uniform quarter slots when price comparison is toggled", () => {
