@@ -10,14 +10,14 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20260620-sidebar-actions" />
+    <link rel="stylesheet" href="style.css?v=20260629-company-groups" />
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script defer src="data.js?v=20260628-full-history"></script>
-    <script defer src="price-data.js?v=20260628-full-history"></script>
+    <script defer src="data.js?v=20260629-neoclouds"></script>
+    <script defer src="price-data.js?v=20260629-neoclouds"></script>
     <script defer src="price-comparison.js?v=20260628-unified-zero-axis"></script>
     <script defer src="company-selection.js?v=20260605-tooltip-near-target-bar"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
-    <script defer src="script.js?v=20260629-visible-logo-area-v2"></script>
+    <script defer src="script.js?v=20260629-company-groups"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
@@ -30,7 +30,7 @@
             <div class="meta-chips" aria-label="页面信息">
               <span class="chip">
                 <span class="chip-label">Coverage</span>
-                <strong>40 家科技与头部市值公司</strong>
+                <strong>44 家科技与头部市值公司</strong>
               </span>
               <span class="chip">
                 <span class="chip-label">Range</span>
@@ -77,6 +77,10 @@
 
           <section class="control-group company-control-group">
             <h3>公司显示</h3>
+            <label class="company-search">
+              <span class="sr-only">搜索企业</span>
+              <input id="companySearch" type="search" placeholder="搜索企业名称或股票代码" autocomplete="off" />
+            </label>
             <div id="companyToggles" class="toggle-list" aria-label="公司显示开关"></div>
 
             <div class="control-actions">
@@ -138,7 +142,7 @@
             </div>
             <div class="summary-card">
               <span class="summary-label">当前公司</span>
-              <strong id="visibleCompaniesLabel">1 / 40</strong>
+              <strong id="visibleCompaniesLabel">1 / 44</strong>
             </div>
             <div class="summary-card">
               <span class="summary-label">数据更新</span>

@@ -286,6 +286,18 @@ body::after {
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body:not([data-theme="deep"]) .panel {
   border-color: var(--panel-outline);
   box-shadow:
@@ -506,7 +518,7 @@ body:not([data-theme="deep"]) .header-panel {
 
 .content-panel {
   display: grid;
-  grid-template-columns: minmax(258px, 286px) minmax(640px, 1fr);
+  grid-template-columns: minmax(600px, 680px) minmax(520px, 1fr);
   gap: 18px;
   padding: 16px;
   align-items: stretch;
@@ -720,11 +732,67 @@ body:not([data-theme="deep"]) .control-group {
 
 .toggle-list {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 10px;
   flex: 1 1 0;
   min-height: 0;
   overflow: auto;
   padding-right: 4px;
+}
+
+.company-search {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.company-search input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(112, 128, 151, 0.34);
+  border-radius: 9px;
+  padding: 0 12px;
+  background: rgba(11, 18, 28, 0.72);
+  color: var(--text-strong);
+  font: 560 0.86rem var(--font-main);
+  outline: none;
+}
+
+.company-search input:focus {
+  border-color: var(--option-active-border);
+  box-shadow: 0 0 0 2px rgba(108, 149, 255, 0.16);
+}
+
+.company-search input::placeholder {
+  color: var(--text-soft);
+}
+
+.company-category-card {
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid rgba(112, 128, 151, 0.23);
+  border-radius: 11px;
+  background: linear-gradient(180deg, rgba(29, 39, 53, 0.88), rgba(16, 23, 33, 0.92));
+}
+
+.company-category-card h4 {
+  margin: 0 0 8px;
+  color: rgba(255, 207, 134, 0.94);
+  font: 720 0.84rem var(--font-label);
+  letter-spacing: 0.04em;
+}
+
+.company-category-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.company-search-empty {
+  grid-column: 1 / -1;
+  margin: 10px 0;
+  color: var(--text-muted);
+  text-align: center;
 }
 
 .preset-actions {
@@ -794,9 +862,9 @@ body:not([data-theme="deep"]) .control-group {
 .toggle-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.94rem;
-  padding: 7px 8px;
+  gap: 6px;
+  font-size: 0.82rem;
+  padding: 6px;
   border: 1px solid rgba(112, 128, 151, 0.14);
   border-radius: var(--radius-md);
   background:
@@ -807,9 +875,20 @@ body:not([data-theme="deep"]) .control-group {
   font-variant-numeric: tabular-nums;
 }
 
-.toggle-item span:last-child {
+.toggle-item span:not(.color-dot) {
   color: var(--text-body);
   font-weight: 520;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toggle-item small {
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: var(--text-soft);
+  font: 600 0.62rem var(--font-terminal);
 }
 
 .toggle-item:hover {
@@ -1641,9 +1720,14 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .toggle-list {
+    grid-template-columns: 1fr;
     min-height: 0;
     max-height: none;
     overflow: visible;
+  }
+
+  .company-category-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .chart-wrap {

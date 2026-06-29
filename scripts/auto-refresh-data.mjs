@@ -67,6 +67,10 @@ const COMPANY_SOURCES = [
   { id: "cloudflare", ticker: "NET", slug: "net", name: "Cloudflare" },
   { id: "adobe", ticker: "ADBE", slug: "adbe", name: "Adobe" },
   { id: "zoom", ticker: "ZM", slug: "zm", name: "Zoom" },
+  { id: "coreweave", ticker: "CRWV", slug: "crwv", name: "CoreWeave" },
+  { id: "nebius", ticker: "NBIS", slug: "nbis", name: "Nebius" },
+  { id: "chronoscale", ticker: "CHRN", slug: "chrn", name: "ChronoScale" },
+  { id: "sharonai", ticker: "SHAZ", slug: "shaz", name: "SharonAI" },
 ];
 
 const COMPANIES_MARKET_CAP_SLUGS = {

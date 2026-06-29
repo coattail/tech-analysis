@@ -33,12 +33,13 @@
 
 ## 覆盖公司
 
-截至 2026-06-28，样本覆盖 40 家美股头部市值、企业软件与云计算公司：
+截至 2026-06-29，样本覆盖 44 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
 
 - NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
 - Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
 - Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
 - IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
+- CoreWeave、Nebius、ChronoScale、SharonAI
 
 ## 指标说明
 

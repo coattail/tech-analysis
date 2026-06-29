@@ -102,7 +102,7 @@ function hasFullCanvasRect(tag, viewBox) {
 test("every company uses a local SVG logo asset with a transparent canvas", async (t) => {
   const companies = getCompanyEntries();
 
-  assert.equal(companies.length, 40);
+  assert.equal(companies.length, 44);
   for (const company of companies) {
     await t.test(company.id, () => {
       assert.ok(company.logoPath, `${company.id} should declare logoPath`);

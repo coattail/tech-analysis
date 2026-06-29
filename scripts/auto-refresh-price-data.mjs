@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -51,7 +51,18 @@ const COMPANY_SOURCES = [
   { id: "cloudflare", ticker: "NET" },
   { id: "adobe", ticker: "ADBE" },
   { id: "zoom", ticker: "ZM" },
+  { id: "coreweave", ticker: "CRWV" },
+  { id: "nebius", ticker: "NBIS" },
+  { id: "chronoscale", ticker: "CHRN" },
+  { id: "sharonai", ticker: "SHAZ" },
 ];
+
+function parsePriceDataJs(raw) {
+  const json = raw
+    .replace(/^\s*window\.STOCK_PRICE_SOURCE_DATA\s*=\s*/, "")
+    .replace(/;\s*$/, "");
+  return JSON.parse(json);
+}
 
 function formatPriceDataJs(data) {
   return `window.STOCK_PRICE_SOURCE_DATA = ${JSON.stringify(data, null, 2)};\n`;
@@ -91,13 +102,27 @@ async function fetchDailyAdjustedSeries(company) {
 }
 
 async function main() {
-  const companies = {};
+  const existing = parsePriceDataJs(await readFile(PRICE_DATA_JS_PATH, "utf8"));
+  const companies = { ...(existing.companies || {}) };
+  const updatedCompanies = [];
+  const failedCompanies = [];
 
   for (const company of COMPANY_SOURCES) {
-    companies[company.id] = {
-      daily: await fetchDailyAdjustedSeries(company),
-    };
+    try {
+      companies[company.id] = {
+        daily: await fetchDailyAdjustedSeries(company),
+      };
+      updatedCompanies.push(company.id);
+      console.log(`已刷新 ${company.ticker}`);
+    } catch (error) {
+      failedCompanies.push(company.id);
+      console.warn(`跳过 ${company.ticker}，保留已有数据：${error.message}`);
+    }
     await sleep(250);
+  }
+
+  if (updatedCompanies.length === 0) {
+    throw new Error("所有公司股价刷新均失败，未写入 price-data.js");
   }
 
   const payload = {
@@ -105,6 +130,8 @@ async function main() {
       generatedAt: new Date().toISOString(),
       source: "Yahoo Finance chart API",
       priceType: "adjusted-close",
+      updatedCompanies,
+      failedCompanies,
     },
     companies,
   };

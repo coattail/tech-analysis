@@ -36,7 +36,7 @@ test('index html marks the same initial view controls as checked', () => {
   assert.doesNotMatch(html, /name="chartMode" value="line" checked/);
   assert.match(html, /id="priceComparisonToggle" type="checkbox" checked/);
   assert.match(html, /<strong id="activeMetricLabel">净利润<\/strong>/);
-  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 40<\/strong>/);
+  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 44<\/strong>/);
 });
 
 test('includes the ten added enterprise software and cloud companies', () => {
@@ -65,6 +65,52 @@ test('includes the ten added enterprise software and cloud companies', () => {
     assert.match(fundamentalData, new RegExp(`    "${id}": \\{`));
     assert.match(priceData, new RegExp(`    "${id}": \\{`));
   }
+});
+
+test('includes four neocloud companies in the dashboard and both refresh pipelines', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+  const fundamentalData = fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8');
+  const priceData = fs.readFileSync(path.join(__dirname, '..', 'price-data.js'), 'utf8');
+  const fundamentalRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-data.mjs'), 'utf8');
+  const priceRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-price-data.mjs'), 'utf8');
+  const expectedCompanies = [
+    ['coreweave', 'CRWV'],
+    ['nebius', 'NBIS'],
+    ['chronoscale', 'CHRN'],
+    ['sharonai', 'SHAZ'],
+  ];
+
+  for (const [id, ticker] of expectedCompanies) {
+    assert.match(script, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(priceRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalData, new RegExp(`    "${id}": \\{`));
+    assert.match(priceData, new RegExp(`    "${id}": \\{`));
+  }
+});
+
+test('renders searchable company categories in a two-by-two module grid', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+
+  assert.match(html, /id="companySearch" type="search"/);
+  assert.match(script, /label: "MAG7"/);
+  assert.match(script, /label: "软件"/);
+  assert.match(script, /label: "云服务"/);
+  assert.match(script, /label: "其他"/);
+  assert.match(script, /companySearchEl\?\.addEventListener\("input"/);
+});
+
+test('scheduled automation refreshes and publishes both fundamental and price datasets', () => {
+  const workflow = fs.readFileSync(path.join(__dirname, '..', '.github', 'workflows', 'data-auto-refresh.yml'), 'utf8');
+  const priceRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-price-data.mjs'), 'utf8');
+
+  assert.match(workflow, /schedule:/);
+  assert.match(workflow, /node scripts\/auto-refresh-data\.mjs/);
+  assert.match(workflow, /node scripts\/auto-refresh-price-data\.mjs/);
+  assert.match(workflow, /git add data\.js price-data\.js/);
+  assert.match(priceRefresh, /保留已有数据/);
+  assert.match(priceRefresh, /failedCompanies/);
 });
 
 test('company toggles change pending selection without mutating applied selection', () => {

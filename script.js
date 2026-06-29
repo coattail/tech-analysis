@@ -82,8 +82,22 @@ const COMPANIES = [
   { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoPath: "assets/logos/cloudflare.svg?v=20260629-visible-area-v4" },
   { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
   { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
+  { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
+  { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
+  { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
+  { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
+const COMPANY_CATEGORIES = [
+  { id: "mag7", label: "MAG7", companyIds: ["nvidia", "alphabet", "apple", "microsoft", "amazon", "meta", "tsla"] },
+  { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"] },
+  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"] },
+  { id: "other", label: "其他", companyIds: [] },
+];
+const CATEGORIZED_COMPANY_IDS = new Set(COMPANY_CATEGORIES.flatMap((category) => category.companyIds));
+COMPANY_CATEGORIES.find((category) => category.id === "other").companyIds = COMPANIES
+  .map((company) => company.id)
+  .filter((companyId) => !CATEGORIZED_COMPANY_IDS.has(companyId));
 const {
   DEFAULT_INITIAL_COMPANIES,
   DEFAULT_INITIAL_VIEW,
@@ -551,6 +565,7 @@ const METRICS = {
 const chartEl = document.getElementById("financeChart");
 const statusEl = document.getElementById("statusText");
 const togglesEl = document.getElementById("companyToggles");
+const companySearchEl = document.getElementById("companySearch");
 const generateBtn = document.getElementById("generateBtn");
 const showAllBtn = document.getElementById("showAllBtn");
 const hideAllBtn = document.getElementById("hideAllBtn");
@@ -2641,6 +2656,9 @@ function createToggle(company) {
   const text = document.createElement("span");
   text.textContent = company.name;
 
+  const ticker = document.createElement("small");
+  ticker.textContent = company.ticker;
+
   checkbox.addEventListener("change", () => {
     const nextPendingCompanies = setPendingCompanyVisibility(
       state.pendingCompanies,
@@ -2651,15 +2669,42 @@ function createToggle(company) {
     syncPresetButtons();
   });
 
-  label.append(checkbox, dot, text);
+  label.append(checkbox, dot, text, ticker);
   return label;
 }
 
-function setupTogglePanel() {
+function setupTogglePanel(query = "") {
   togglesEl.innerHTML = "";
-  COMPANIES.forEach((company) => {
-    togglesEl.appendChild(createToggle(company));
+  const normalizedQuery = query.trim().toLocaleLowerCase("zh-CN");
+
+  COMPANY_CATEGORIES.forEach((category) => {
+    const companies = category.companyIds
+      .map((companyId) => COMPANY_META.get(companyId))
+      .filter(Boolean)
+      .filter((company) => !normalizedQuery || [company.id, company.name, company.ticker]
+        .some((value) => value.toLocaleLowerCase("zh-CN").includes(normalizedQuery)));
+    if (companies.length === 0) return;
+
+    const card = document.createElement("section");
+    card.className = "company-category-card";
+    card.dataset.category = category.id;
+
+    const heading = document.createElement("h4");
+    heading.textContent = category.label;
+
+    const list = document.createElement("div");
+    list.className = "company-category-list";
+    companies.forEach((company) => list.appendChild(createToggle(company)));
+    card.append(heading, list);
+    togglesEl.appendChild(card);
   });
+
+  if (!togglesEl.children.length) {
+    const empty = document.createElement("p");
+    empty.className = "company-search-empty";
+    empty.textContent = "未找到匹配企业";
+    togglesEl.appendChild(empty);
+  }
   syncPresetButtons();
 }
 
@@ -2875,6 +2920,7 @@ function bindEvents() {
   generateBtn.addEventListener("click", generateSelectedCompanies);
   showAllBtn.addEventListener("click", () => setAllVisibility(true));
   hideAllBtn.addEventListener("click", () => setAllVisibility(false));
+  companySearchEl?.addEventListener("input", () => setupTogglePanel(companySearchEl.value));
 
   metricInputs.forEach((input) => {
     input.addEventListener("change", () => {
