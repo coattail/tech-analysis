@@ -611,6 +611,7 @@ body:not([data-theme="deep"]) .control-panel {
   flex: 1 1 auto;
   min-height: 0;
   flex-direction: column;
+  container-type: inline-size;
 }
 
 body:not([data-theme="deep"]) .control-group {
@@ -738,6 +739,7 @@ body:not([data-theme="deep"]) .control-group {
   flex: 1 1 0;
   min-height: 0;
   overflow: auto;
+  overflow-x: hidden;
   padding-right: 4px;
 }
 
@@ -786,6 +788,7 @@ body:not([data-theme="deep"]) .control-group {
   display: grid;
   grid-template-columns: 1fr;
   gap: 6px;
+  min-width: 0;
 }
 
 .company-category-card[data-category="other"] {
@@ -870,6 +873,9 @@ body:not([data-theme="deep"]) .control-group {
 .toggle-item {
   display: flex;
   align-items: center;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
   gap: 6px;
   font-size: 0.82rem;
   padding: 6px;
@@ -1578,6 +1584,12 @@ body:not([data-theme="deep"]) .range-panel {
   width: 100%;
   background: var(--range-fill);
   box-shadow: 0 0 0 1px rgba(214, 180, 122, 0.14);
+}
+
+@container (max-width: 390px) {
+  .toggle-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .range-sliders input[type="range"] {
