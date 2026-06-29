@@ -593,8 +593,7 @@ const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits:
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
 const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.28;
 const CHART_PLOT_LEFT_NUDGE = 6;
-const SINGLE_COMPANY_CHART_RIGHT_PADDING = 52;
-const SINGLE_COMPANY_PRICE_CHART_RIGHT_PADDING = 12;
+const SINGLE_COMPANY_CHART_RIGHT_PADDING = 12;
 const MULTI_COMPANY_CHART_RIGHT_PADDING = 52;
 const Y_AXIS_TICK_PADDING = 2;
 const Y_AXIS_TITLE_PADDING = 28;
@@ -2555,13 +2554,11 @@ function applyVisibilityStateToChart() {
   });
 }
 
-function buildChartLayoutPadding(effectiveChartMode, hasPriceOverlay = false) {
+function buildChartLayoutPadding(effectiveChartMode) {
   if (getSingleVisibleCompanyId()) {
     return {
       left: 0,
-      right: hasPriceOverlay
-        ? SINGLE_COMPANY_PRICE_CHART_RIGHT_PADDING
-        : SINGLE_COMPANY_CHART_RIGHT_PADDING,
+      right: SINGLE_COMPANY_CHART_RIGHT_PADDING,
     };
   }
 
@@ -2601,7 +2598,7 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.yPrice.max = priceBounds.max;
   state.chart.options.scales.x = buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets);
   state.chart.options.interaction = buildInteractionOptions(effectiveChartMode);
-  state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode, hasPriceOverlay);
+  state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
   state.chart.options.plugins.legend.display = reserveLegendLayout;
   state.chart.update(updateMode);
   alignRangeWithChartAxis();
@@ -2765,7 +2762,7 @@ function buildChart() {
       responsive: true,
       maintainAspectRatio: false,
       layout: {
-        padding: buildChartLayoutPadding(effectiveChartMode, hasPriceOverlay),
+        padding: buildChartLayoutPadding(effectiveChartMode),
       },
       onResize() {
         alignRangeWithChartAxis();

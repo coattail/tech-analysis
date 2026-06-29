@@ -57,7 +57,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260629-price-axis-space"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260629-price-axis-space"],
+    ["script.js", "20260629-stable-price-axis"],
   ]) {
     assert.match(
       html,
