@@ -11,6 +11,7 @@ const {
   shouldKeepSelectionPendingUntilGenerate,
   shouldResetRangeAfterApplyingCompanies,
   getDisplayPeriodStart,
+  findLongestContiguousDataRange,
   DEFAULT_INITIAL_COMPANIES,
   DEFAULT_INITIAL_VIEW,
 } = require('../company-selection.js');
@@ -203,4 +204,22 @@ test('script clamps range slider controls to the display period start', () => {
   assert.match(script, /function getDisplayStartIndex/);
   assert.match(script, /rangeStartEl\.min = String\(displayStartIndex\);/);
   assert.match(script, /rangeEndEl\.min = String\(displayStartIndex\);/);
+});
+
+test('finds the longest continuous range without empty periods and prefers the latest tie', () => {
+  assert.deepEqual(findLongestContiguousDataRange([
+    false, true, true, false, true, true, false,
+  ]), {
+    hasData: true,
+    start: 4,
+    end: 5,
+  });
+
+  assert.deepEqual(findLongestContiguousDataRange([
+    false, false, true, true, true, false,
+  ], 1), {
+    hasData: true,
+    start: 2,
+    end: 4,
+  });
 });

@@ -52,7 +52,7 @@ const COMPANY_SOURCES = [
   { id: "adobe", ticker: "ADBE" },
   { id: "zoom", ticker: "ZM" },
   { id: "coreweave", ticker: "CRWV" },
-  { id: "nebius", ticker: "NBIS" },
+  { id: "nebius", ticker: "NBIS", minDate: "2024-04-01" },
   { id: "chronoscale", ticker: "CHRN" },
   { id: "sharonai", ticker: "SHAZ" },
 ];
@@ -74,10 +74,32 @@ function sleep(ms) {
   });
 }
 
+function getSelectedCompanies(argv) {
+  const companyIndex = argv.indexOf("--company");
+  if (companyIndex < 0) return COMPANY_SOURCES;
+  const requested = new Set(String(argv[companyIndex + 1] || "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean));
+  const selected = COMPANY_SOURCES.filter((company) => (
+    requested.has(company.id) || requested.has(company.ticker.toLowerCase())
+  ));
+  if (selected.length === 0) throw new Error("--company 未匹配到公司");
+  return selected;
+}
+
+function pruneDailyPrices(daily, minDate) {
+  if (!minDate) return daily;
+  return Object.fromEntries(Object.entries(daily || {}).filter(([date]) => date >= minDate));
+}
+
 async function fetchDailyAdjustedSeries(company) {
   const endDateUnix = Math.floor(Date.now() / 1000) + 86400;
   const url = new URL(`${YAHOO_CHART_BASE}/${encodeURIComponent(company.ticker)}`);
-  url.searchParams.set("period1", String(START_DATE_UNIX));
+  const startDateUnix = company.minDate
+    ? Math.floor(Date.parse(`${company.minDate}T00:00:00Z`) / 1000)
+    : START_DATE_UNIX;
+  url.searchParams.set("period1", String(startDateUnix));
   url.searchParams.set("period2", String(endDateUnix));
   url.searchParams.set("interval", "1d");
   url.searchParams.set("events", "div,splits");
@@ -106,11 +128,12 @@ async function main() {
   const companies = { ...(existing.companies || {}) };
   const updatedCompanies = [];
   const failedCompanies = [];
+  const selectedCompanies = getSelectedCompanies(process.argv.slice(2));
 
-  for (const company of COMPANY_SOURCES) {
+  for (const company of selectedCompanies) {
     try {
       companies[company.id] = {
-        daily: await fetchDailyAdjustedSeries(company),
+        daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company), company.minDate),
       };
       updatedCompanies.push(company.id);
       console.log(`已刷新 ${company.ticker}`);
@@ -120,6 +143,11 @@ async function main() {
     }
     await sleep(250);
   }
+
+  COMPANY_SOURCES.forEach((company) => {
+    if (!company.minDate || !companies[company.id]) return;
+    companies[company.id].daily = pruneDailyPrices(companies[company.id].daily, company.minDate);
+  });
 
   if (updatedCompanies.length === 0) {
     throw new Error("所有公司股价刷新均失败，未写入 price-data.js");

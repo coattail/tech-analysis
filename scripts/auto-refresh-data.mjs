@@ -68,7 +68,7 @@ const COMPANY_SOURCES = [
   { id: "adobe", ticker: "ADBE", slug: "adbe", name: "Adobe" },
   { id: "zoom", ticker: "ZM", slug: "zm", name: "Zoom" },
   { id: "coreweave", ticker: "CRWV", slug: "crwv", name: "CoreWeave" },
-  { id: "nebius", ticker: "NBIS", slug: "nbis", name: "Nebius" },
+  { id: "nebius", ticker: "NBIS", slug: "nbis", name: "Nebius", minPeriod: "2024Q2" },
   { id: "chronoscale", ticker: "CHRN", slug: "chrn", name: "ChronoScale" },
   { id: "sharonai", ticker: "SHAZ", slug: "shaz", name: "SharonAI" },
 ];
@@ -1509,6 +1509,32 @@ function ensureCompanyShape(company) {
   });
 }
 
+function pruneCompanyDataBeforePeriod(company, minPeriod) {
+  if (!minPeriod) return;
+  const seriesKeys = [
+    "revenue",
+    "earnings",
+    "pe",
+    "netAssets",
+    "roe",
+    "grossMargin",
+    "revenueGrowth",
+    "periodEndDates",
+    "reportDates",
+  ];
+
+  seriesKeys.forEach((key) => {
+    Object.keys(company[key] || {}).forEach((period) => {
+      if (comparePeriods(period, minPeriod) < 0) delete company[key][period];
+    });
+  });
+
+  FORECAST_KEYS.forEach((key) => {
+    company.forecastFlags[key] = (company.forecastFlags[key] || [])
+      .filter((period) => comparePeriods(period, minPeriod) >= 0);
+  });
+}
+
 function setSeriesValue(series, key, value) {
   if (!Number.isFinite(value)) return false;
   const previous = series[key];
@@ -2946,6 +2972,14 @@ async function run() {
 
     recomputeRevenueGrowthForPeriods(companyData, sortedPeriods, new Set(sortedPeriods));
     companyData.revenueGrowth = sortObjectByPeriodKeys(companyData.revenueGrowth);
+  });
+
+  selectedCompanies.forEach((companySource) => {
+    if (!companySource.minPeriod) return;
+    const companyData = data.companies[companySource.id];
+    if (!companyData) return;
+    ensureCompanyShape(companyData);
+    pruneCompanyDataBeforePeriod(companyData, companySource.minPeriod);
   });
 
   summary.changedPeriods = [...new Set(summary.changedPeriods)].sort(comparePeriods);

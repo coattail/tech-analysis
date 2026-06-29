@@ -107,6 +107,7 @@ const {
   applyPendingCompanies,
   shouldResetRangeAfterApplyingCompanies,
   getDisplayPeriodStart,
+  findLongestContiguousDataRange,
 } = window.CompanySelectionUtils;
 
 const DEFAULT_VISIBLE_COMPANIES = DEFAULT_INITIAL_COMPANIES;
@@ -1166,35 +1167,39 @@ function getVisibleDataBounds(frequency = state.frequency, metric = state.metric
     return { hasData: false, start: displayStartIndex, end: displayStartIndex };
   }
 
-  let firstIndex = Number.POSITIVE_INFINITY;
-  let lastIndex = -1;
-
-  state.visibleCompanies.forEach((companyId) => {
-    const series = seriesMap.get(companyId);
-    if (!series) return;
-
-    labels.forEach((label, index) => {
-      const value = series.get(label);
-      if (!isFiniteNumber(value)) return;
-      firstIndex = Math.min(firstIndex, index);
-      lastIndex = Math.max(lastIndex, index);
-    });
-  });
-
-  if (!Number.isFinite(firstIndex) || lastIndex < 0) {
+  const visibleCompanyIds = [...state.visibleCompanies];
+  if (visibleCompanyIds.length === 0) {
     return {
       hasData: false,
       start: displayStartIndex,
-      end: Math.max(0, labels.length - 1),
+      end: displayStartIndex,
     };
   }
 
-  const start = Math.max(displayStartIndex, firstIndex);
-  return {
-    hasData: true,
-    start,
-    end: Math.max(start, lastIndex),
-  };
+  const includePriceData = visibleCompanyIds.length === 1
+    && state.priceComparisonEnabled
+    && canEnablePriceComparisonForCurrentView();
+  const pricePeriods = new Set();
+  if (includePriceData) {
+    Object.keys(getSingleCompanyDailyPrices() || {}).forEach((date) => {
+      const year = date.slice(0, 4);
+      const month = Number(date.slice(5, 7));
+      const label = frequency === "annual"
+        ? year
+        : `${year}Q${Math.floor((month - 1) / 3) + 1}`;
+      if (labels.includes(label)) pricePeriods.add(label);
+    });
+  }
+
+  const validPeriods = labels.map((label, index) => {
+    if (index < displayStartIndex) return false;
+    const allFundamentalsPresent = visibleCompanyIds.every((companyId) => (
+      isFiniteNumber(seriesMap.get(companyId)?.get(label))
+    ));
+    return allFundamentalsPresent || pricePeriods.has(label);
+  });
+
+  return findLongestContiguousDataRange(validPeriods, displayStartIndex);
 }
 
 function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
@@ -1208,16 +1213,7 @@ function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state
 
   const bounds = getVisibleDataBounds(frequency, metric);
   state.rangeStart = Math.max(displayStartIndex, bounds.start);
-  state.rangeEnd = canEnablePriceComparisonForCurrentView()
-    ? PriceComparisonUtils.extendRangeEndThroughLatestPrice({
-      rangeStart: state.rangeStart,
-      rangeEnd: bounds.end,
-      allLabels: labels,
-      dailyPrices: getSingleCompanyDailyPrices(),
-      frequency,
-      allowExtension: true,
-    })
-    : bounds.end;
+  state.rangeEnd = bounds.end;
   state.rangeEnd = Math.max(state.rangeStart, state.rangeEnd);
 }
 

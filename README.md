@@ -41,6 +41,8 @@
 - IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
 - CoreWeave、Nebius、ChronoScale、SharonAI
 
+Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及之后数据，股价仅保留 2024-04-01 及之后数据。
+
 ## 指标说明
 
 | 指标 | 数据键 | 季度口径 | 年度口径 | 滚动年度（TTM）口径 |

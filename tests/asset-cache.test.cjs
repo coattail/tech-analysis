@@ -6,12 +6,12 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after sidebar layout fixes", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260629-company-groups/);
+  assert.match(html, /style\.css\?v=20260629-single-column-range/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260605-tooltip-near-target-bar";
+  const expectedVersion = "20260629-contiguous-range";
 
   for (const asset of ["company-selection.js"]) {
     assert.match(
@@ -40,7 +40,7 @@ test("keeps the latest cache key for unchanged company-selection behavior", () =
 
 test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260629-neoclouds";
+  const expectedVersion = "20260629-nebius-cutoff";
 
   for (const asset of ["data.js", "price-data.js"]) {
     assert.match(
@@ -57,7 +57,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260628-unified-zero-axis"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260629-company-groups"],
+    ["script.js", "20260629-single-column-range"],
   ]) {
     assert.match(
       html,

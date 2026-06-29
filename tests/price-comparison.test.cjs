@@ -691,11 +691,24 @@ test("initial chart build applies the same price overlay options as refresh", ()
   assert.match(buildChartBody, /max: priceBounds\.max,/);
 });
 
-test("visible-data range includes latest price period for price comparison", () => {
+test("visible-data range uses the longest continuous fundamental-or-price interval", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
-  const setRangeBody = script.match(/function setRangeToVisibleDataBounds\([\s\S]*?\n\}/)?.[0] ?? "";
+  const boundsBody = script.match(/function getVisibleDataBounds\([\s\S]*?\n\}/)?.[0] ?? "";
 
-  assert.match(setRangeBody, /extendRangeEndThroughLatestPrice/);
+  assert.match(boundsBody, /allFundamentalsPresent/);
+  assert.match(boundsBody, /pricePeriods\.has\(label\)/);
+  assert.match(boundsBody, /findLongestContiguousDataRange/);
+});
+
+test("Nebius datasets start at 2024Q2 and never expose pre-spinoff history", () => {
+  const data = loadFinancialSourceData();
+  const prices = loadStockPriceSourceData();
+  const nebius = data.companies.nebius;
+
+  for (const key of ["revenue", "earnings", "pe", "netAssets", "roe", "grossMargin", "revenueGrowth", "periodEndDates", "reportDates"]) {
+    assert.equal(Object.keys(nebius[key] || {}).some((period) => period < "2024Q2"), false, key);
+  }
+  assert.equal(Object.keys(prices.companies.nebius.daily).some((date) => date < "2024-04-01"), false);
 });
 
 test("company generation rebuilds the chart after applying pending selection", () => {
