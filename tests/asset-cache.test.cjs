@@ -6,14 +6,14 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after sidebar layout fixes", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260620-sidebar-actions/);
+  assert.match(html, /style\.css\?v=20260629-two-column-companies/);
 });
 
-test("cache-busts local assets that changed active-bar tooltip positioning", () => {
+test("keeps the latest cache key for unchanged company-selection behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260605-tooltip-near-target-bar";
+  const expectedVersion = "20260629-contiguous-range";
 
-  for (const asset of ["data.js", "price-comparison.js", "company-selection.js", "script.js"]) {
+  for (const asset of ["company-selection.js"]) {
     assert.match(
       html,
       new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
@@ -36,6 +36,35 @@ test("cache-busts local assets that changed active-bar tooltip positioning", () 
   assert.doesNotMatch(html, /v=20260604-tooltip-caret-target/);
   assert.doesNotMatch(html, /v=20260604-bar-priority-tooltip/);
   assert.doesNotMatch(html, /v=20260605-tooltip-smart-bar-anchor/);
+});
+
+test("cache-busts generated datasets after completing historical coverage", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const expectedVersion = "20260629-nebius-cutoff";
+
+  for (const asset of ["data.js", "price-data.js"]) {
+    assert.match(
+      html,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
+      `${asset} should use the full-history cache version`,
+    );
+  }
+});
+
+test("cache-busts chart scripts after normalizing visible logo area", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+
+  for (const [asset, expectedVersion] of [
+    ["price-comparison.js", "20260629-price-axis-space"],
+    ["logo-layout.js", "20260629-visible-area"],
+    ["script.js", "20260629-stable-price-axis"],
+  ]) {
+    assert.match(
+      html,
+      new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
+      `${asset} should use the latest chart cache version`,
+    );
+  }
 });
 
 test("publishes every local script referenced by the page", () => {

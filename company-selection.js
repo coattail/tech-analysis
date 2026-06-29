@@ -71,6 +71,35 @@
     return DISPLAY_PERIOD_STARTS[frequency] ?? DISPLAY_PERIOD_STARTS.quarterly;
   }
 
+  function findLongestContiguousDataRange(validPeriods, minimumStartIndex = 0) {
+    const values = Array.isArray(validPeriods) ? validPeriods : [];
+    const minimum = Math.max(0, Number.isInteger(minimumStartIndex) ? minimumStartIndex : 0);
+    let bestStart = minimum;
+    let bestEnd = minimum;
+    let bestLength = 0;
+    let currentStart = null;
+
+    for (let index = minimum; index < values.length; index += 1) {
+      if (values[index]) {
+        if (currentStart == null) currentStart = index;
+        const length = index - currentStart + 1;
+        if (length >= bestLength) {
+          bestStart = currentStart;
+          bestEnd = index;
+          bestLength = length;
+        }
+      } else {
+        currentStart = null;
+      }
+    }
+
+    return {
+      hasData: bestLength > 0,
+      start: bestStart,
+      end: bestEnd,
+    };
+  }
+
   const api = {
     DEFAULT_INITIAL_COMPANIES,
     DEFAULT_INITIAL_VIEW,
@@ -82,6 +111,7 @@
     shouldKeepSelectionPendingUntilGenerate,
     shouldResetRangeAfterApplyingCompanies,
     getDisplayPeriodStart,
+    findLongestContiguousDataRange,
   };
 
   if (typeof module !== "undefined" && module.exports) {

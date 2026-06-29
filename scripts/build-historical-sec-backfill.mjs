@@ -56,6 +56,16 @@ const COMPANY_SOURCES = [
   { id: "cisco", ticker: "CSCO", slug: "csco", name: "思科" },
   { id: "abbvie", ticker: "ABBV", slug: "abbv", name: "艾伯维" },
   { id: "homedepot", ticker: "HD", slug: "hd", name: "家得宝" },
+  { id: "ibm", ticker: "IBM", slug: "ibm", name: "IBM" },
+  { id: "sap", ticker: "SAP", slug: "sap", name: "SAP" },
+  { id: "crowdstrike", ticker: "CRWD", slug: "crwd", name: "CrowdStrike" },
+  { id: "salesforce", ticker: "CRM", slug: "crm", name: "Salesforce" },
+  { id: "servicenow", ticker: "NOW", slug: "now", name: "ServiceNow" },
+  { id: "datadog", ticker: "DDOG", slug: "ddog", name: "Datadog" },
+  { id: "snowflake", ticker: "SNOW", slug: "snow", name: "Snowflake" },
+  { id: "cloudflare", ticker: "NET", slug: "net", name: "Cloudflare" },
+  { id: "adobe", ticker: "ADBE", slug: "adbe", name: "Adobe" },
+  { id: "zoom", ticker: "ZM", slug: "zm", name: "Zoom" },
 ];
 const COMPANY_START_OVERRIDES = {
   meta: "2010Q1",
@@ -63,13 +73,21 @@ const COMPANY_START_OVERRIDES = {
   abbvie: "2012Q1",
   palantir: "2019Q1",
   avgo: "2009Q4",
+  crowdstrike: "2017Q1",
+  servicenow: "2009Q2",
+  datadog: "2016Q4",
+  snowflake: "2018Q1",
+  cloudflare: "2016Q4",
+  zoom: "2017Q1",
 };
 const COMPANY_END_OVERRIDES = {
   amd: "2009Q1",
   exxon: "2016Q4",
   asml: "2021Q1",
 };
-const SEC_ALLOWED_FORMS = new Set(["10-Q", "10-K", "20-F", "6-K"]);
+// Registration statements often contain the only audited pre-IPO history for
+// newly listed companies, so include them in the historical-only collector.
+const SEC_ALLOWED_FORMS = new Set(["10-Q", "10-K", "20-F", "6-K", "S-1", "S-1/A", "F-1", "F-1/A"]);
 const SEC_FIELD_CONCEPTS = {
   revenue: [
     "RevenueFromContractWithCustomerExcludingAssessedTax",
@@ -1371,6 +1389,84 @@ function extractJpmorganEntries(documentText, filingDate, sourceUrl) {
     .filter((entry) => Number.isFinite(entry?.revenue));
 }
 
+function extractSapEntries(documentText, filingDate, sourceUrl) {
+  const searchableText = toSearchableText(documentText).replace(/\s+/g, " ");
+  const quarterMatch = searchableText.match(/(?:financial highlights|key figures sap group)[\s\S]{0,160}?(first|second|third|fourth) quarter\s+(20\d{2})/i);
+  if (quarterMatch) {
+    const quarterNumber = { first: 1, second: 2, third: 3, fourth: 4 }[quarterMatch[1].toLowerCase()];
+    const year = Number(quarterMatch[2]);
+    const block = searchableText.slice(quarterMatch.index, quarterMatch.index + 5000);
+    const parseMillions = (raw) => {
+      if (!raw) return null;
+      const normalized = String(raw).replace(/[.,]/g, "");
+      const value = Number(normalized);
+      return Number.isFinite(value) ? Math.round(value * 1_000_000) : null;
+    };
+    const revenue = parseMillions(block.match(/total revenue\s+([0-9][0-9.,]*)/i)?.[1]);
+    const netIncome = parseMillions(block.match(/profit after tax\s+([0-9][0-9.,]*)/i)?.[1]);
+    if (quarterNumber && year && Number.isFinite(revenue) && revenue >= 1_000_000_000) {
+      return [{
+        period: `${year}Q${quarterNumber}`,
+        dateKey: quarterPeriodEnd(year, quarterNumber),
+        filingDate,
+        sourceUrl,
+        sourcePriority: 260,
+        spanQuarters: 1,
+        fieldCount: [revenue, netIncome].filter(Number.isFinite).length,
+        revenue,
+        grossProfit: null,
+        netIncome,
+      }];
+    }
+  }
+
+  const toEuros = (rawValue, scale) => {
+    if (!Number.isFinite(rawValue)) return null;
+    // Older SAP HTML uses a dot as the thousands separator (for example
+    // "1.776" means EUR 1,776 million). The generic numeric parser reads it
+    // as a decimal, so restore the stated million-unit magnitude here.
+    const normalized = scale === 1_000_000 && Math.abs(rawValue) > 0 && Math.abs(rawValue) < 20
+      ? rawValue * 1_000
+      : rawValue;
+    return Math.round(normalized * scale);
+  };
+
+  return extractHtmlTables(documentText)
+    .flatMap((rows) => {
+      const quarterColumns = extractQuarterColumns(rows);
+      if (quarterColumns.length === 0) return [];
+      const rowMap = new Map(rows.filter((row) => row && row.length > 1).map((row) => [row[0], row]));
+      const revenueRaw = rowNumericSeries(
+        findPreferredExactRow(rowMap, ["total revenue", "total revenues", "revenues"], quarterColumns.length),
+        quarterColumns.length,
+      );
+      if (revenueRaw.length !== quarterColumns.length) return [];
+      const netIncomeRaw = rowNumericSeries(
+        findPreferredExactRow(rowMap, ["net income", "profit after tax"], quarterColumns.length),
+        quarterColumns.length,
+      );
+      const scale = tableScale(rows) === 1 ? 1_000_000 : tableScale(rows);
+
+      return quarterColumns.map((column, index) => {
+        const revenue = toEuros(revenueRaw[index], scale);
+        const netIncome = netIncomeRaw.length === quarterColumns.length ? toEuros(netIncomeRaw[index], scale) : null;
+        return {
+          period: column.period,
+          dateKey: column.dateKey,
+          filingDate,
+          sourceUrl,
+          sourcePriority: 220,
+          spanQuarters: column.spanQuarters,
+          fieldCount: [revenue, netIncome].filter(Number.isFinite).length,
+          revenue,
+          grossProfit: null,
+          netIncome,
+        };
+      });
+    })
+    .filter((entry) => Number.isFinite(entry?.revenue));
+}
+
 function extractExxonEntries(documentText, filingDate, sourceUrl) {
   return extractHtmlTables(documentText)
     .flatMap((rows) => {
@@ -1479,6 +1575,11 @@ function extractExxonAnnualEntries(documentText, filingDate, sourceUrl) {
 }
 
 function extractEntriesFromDocument(documentText, filingDate, sourceUrl, companyId = null) {
+  if (companyId === "sap") {
+    const sapEntries = extractSapEntries(documentText, filingDate, sourceUrl);
+    if (sapEntries.length > 0) return sapEntries;
+  }
+
   if (companyId === "exxon") {
     const exxonEntries = extractExxonEntries(documentText, filingDate, sourceUrl);
     if (exxonEntries.length > 0) return exxonEntries;
@@ -1504,6 +1605,42 @@ function extractEntriesFromDocument(documentText, filingDate, sourceUrl, company
   if (htmlEntries.length > 0) return htmlEntries;
 
   return [];
+}
+
+function normalizeCompanyBackfillRows(companyId, rows) {
+  if (!["salesforce", "adobe"].includes(companyId)) return rows;
+
+  const normalizeValue = (value) => {
+    if (!Number.isFinite(value)) return null;
+    const absolute = Math.abs(value);
+    if (absolute > 10_000_000_000) return Math.round(value / 1_000);
+    if (companyId === "adobe" && absolute > 0 && absolute < 10_000_000) return Math.round(value * 1_000);
+    return value;
+  };
+
+  return rows.map((row) => {
+    const revenue = normalizeValue(row.revenue);
+    let grossProfit = normalizeValue(row.grossProfit);
+    let netIncome = normalizeValue(row.netIncome);
+    if (companyId === "salesforce" && Number.isFinite(revenue)) {
+      while (Number.isFinite(netIncome) && Math.abs(netIncome) > Math.abs(revenue) * 0.5) {
+        netIncome = Math.round(netIncome / 1_000);
+      }
+    }
+    if (Number.isFinite(grossProfit) && Number.isFinite(revenue) && (grossProfit < 0 || grossProfit > revenue * 1.05)) {
+      grossProfit = null;
+    }
+    return {
+      ...row,
+      revenue,
+      grossProfit,
+      netIncome,
+      grossMarginPct:
+        Number.isFinite(revenue) && Number.isFinite(grossProfit) && revenue !== 0
+          ? (grossProfit / revenue) * 100
+          : null,
+    };
+  });
 }
 
 function collectAnnualEntriesFromDocument(documentText, filingDate, sourceUrl, companyId = null) {
@@ -1757,7 +1894,11 @@ function preferredDocumentNames(indexPayload, primaryDocument) {
       3;
     if (leftPriority !== rightPriority) return leftPriority - rightPriority;
     return left.localeCompare(right);
-  }).slice(0, 10);
+  // A filing directory can contain dozens of generated XBRL report pages.
+  // The primary filing plus the highest-priority financial exhibits contain
+  // the useful historical tables; keeping four avoids hundreds of redundant
+  // downloads per company while preserving those sources.
+  }).slice(0, 4);
 }
 
 function resolveCompanyCiks(company, tickerMap) {
@@ -1768,6 +1909,19 @@ function resolveCompanyCiks(company, tickerMap) {
   if (Number.isFinite(override)) return [override];
   const cik = tickerMap.get(normalizeTickerForSec(company.ticker));
   return Number.isFinite(cik) ? [cik] : [];
+}
+
+function shouldInspectHistoricalFiling(companyId, form, filingDate) {
+  if (companyId !== "sap" || form !== "6-K") return true;
+
+  // SAP files many unrelated 6-K notices. Its quarterly result packages are
+  // consistently filed in the latter half of Jan/Apr/Jul/Oct. An Aug filing
+  // is retained for the exceptional 2005 Q2 package.
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(filingDate || ""));
+  if (!match) return false;
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  return ([1, 4, 7, 10].includes(month) && day >= 15) || (month === 8 && day <= 20);
 }
 
 async function buildCompanyBackfill(company, currentEarliestPeriod, targetStartPeriod, explicitTargetEndPeriod = null) {
@@ -1823,6 +1977,7 @@ async function buildCompanyBackfill(company, currentEarliestPeriod, targetStartP
     for (const [form, accession, filingDate, primaryDocument] of records) {
       if (!SEC_ALLOWED_FORMS.has(form)) continue;
       if (filingDate < minFilingDate || filingDate > maxFilingDate) continue;
+      if (!shouldInspectHistoricalFiling(company.id, form, filingDate)) continue;
 
       const accessionCompact = accession.replace(/-/g, "");
       let indexPayload;
@@ -1905,8 +2060,11 @@ async function buildCompanyBackfill(company, currentEarliestPeriod, targetStartP
 
   return {
     reportingCurrency,
-    rows: mergeEntriesIntoRows(entries, contextStartPeriod, targetEndPeriod, annualRevenueSeries, annualNetIncomeSeries)
-      .filter((row) => comparePeriods(row.period, targetStartPeriod) >= 0),
+    rows: normalizeCompanyBackfillRows(
+      company.id,
+      mergeEntriesIntoRows(entries, contextStartPeriod, targetEndPeriod, annualRevenueSeries, annualNetIncomeSeries)
+        .filter((row) => comparePeriods(row.period, targetStartPeriod) >= 0),
+    ),
   };
 }
 

@@ -33,11 +33,15 @@
 
 ## 覆盖公司
 
-截至 2026-04-23，样本扩展为当前美股前 30 大市值公司（按 StockAnalysis `Largest Companies` 列表）：
+截至 2026-06-29，样本覆盖 44 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
 
 - NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
 - Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
 - Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
+- IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
+- CoreWeave、Nebius、ChronoScale、SharonAI
+
+Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及之后数据，股价仅保留 2024-04-01 及之后数据。
 
 ## 指标说明
 
@@ -140,10 +144,12 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 脚本当前会处理：
 
 - 财务数据抓取
-- 季度 P/E 抓取
-- 净资产抓取与 ROE 自动回填
+- StockAnalysis 与 CompaniesMarketCap 季度 P/E 抓取，缺失点可按历史市值 / TTM 净利润推导
+- SEC 时点型净资产与 CompaniesMarketCap 历史净资产回填，并自动重算 ROE
+- SEC 毛利润直接值或“营收－营业成本”毛利率推导
 - 部分非美元口径的汇率换算
 - 台积电关键季度覆盖修正
+- 公司年报、SEC 6-K/10-K 中可审计的早期季度缺口修正
 - `forecastFlags` 清理
 - `revenueGrowth` 受影响区间重算
 

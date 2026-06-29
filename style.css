@@ -286,6 +286,18 @@ body::after {
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body:not([data-theme="deep"]) .panel {
   border-color: var(--panel-outline);
   box-shadow:
@@ -506,7 +518,7 @@ body:not([data-theme="deep"]) .header-panel {
 
 .content-panel {
   display: grid;
-  grid-template-columns: minmax(258px, 286px) minmax(640px, 1fr);
+  grid-template-columns: minmax(330px, 375px) minmax(640px, 1fr);
   gap: 18px;
   padding: 16px;
   align-items: stretch;
@@ -599,6 +611,7 @@ body:not([data-theme="deep"]) .control-panel {
   flex: 1 1 auto;
   min-height: 0;
   flex-direction: column;
+  container-type: inline-size;
 }
 
 body:not([data-theme="deep"]) .control-group {
@@ -720,11 +733,77 @@ body:not([data-theme="deep"]) .control-group {
 
 .toggle-list {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 10px;
   flex: 1 1 0;
   min-height: 0;
   overflow: auto;
+  overflow-x: hidden;
   padding-right: 4px;
+}
+
+.company-search {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.company-search input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(112, 128, 151, 0.34);
+  border-radius: 9px;
+  padding: 0 12px;
+  background: rgba(11, 18, 28, 0.72);
+  color: var(--text-strong);
+  font: 560 0.86rem var(--font-main);
+  outline: none;
+}
+
+.company-search input:focus {
+  border-color: var(--option-active-border);
+  box-shadow: 0 0 0 2px rgba(108, 149, 255, 0.16);
+}
+
+.company-search input::placeholder {
+  color: var(--text-soft);
+}
+
+.company-category-card {
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid rgba(112, 128, 151, 0.23);
+  border-radius: 11px;
+  background: linear-gradient(180deg, rgba(29, 39, 53, 0.88), rgba(16, 23, 33, 0.92));
+}
+
+.company-category-card h4 {
+  margin: 0 0 8px;
+  color: rgba(255, 207, 134, 0.94);
+  font: 720 0.84rem var(--font-label);
+  letter-spacing: 0.04em;
+}
+
+.company-category-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  min-width: 0;
+}
+
+.company-category-card[data-category="other"] {
+  grid-column: 1 / -1;
+}
+
+.company-category-card[data-category="other"] .company-category-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.company-search-empty {
+  grid-column: 1 / -1;
+  margin: 10px 0;
+  color: var(--text-muted);
+  text-align: center;
 }
 
 .preset-actions {
@@ -792,11 +871,15 @@ body:not([data-theme="deep"]) .control-group {
 }
 
 .toggle-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
   align-items: center;
-  gap: 8px;
-  font-size: 0.94rem;
-  padding: 7px 8px;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  column-gap: 5px;
+  row-gap: 1px;
+  padding: 6px;
   border: 1px solid rgba(112, 128, 151, 0.14);
   border-radius: var(--radius-md);
   background:
@@ -807,9 +890,29 @@ body:not([data-theme="deep"]) .control-group {
   font-variant-numeric: tabular-nums;
 }
 
-.toggle-item span:last-child {
+.toggle-item span:not(.color-dot) {
+  grid-column: 3;
+  grid-row: 1;
   color: var(--text-body);
   font-weight: 520;
+  font-size: clamp(0.68rem, 3.4cqi, 0.82rem);
+  line-height: 1.15;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toggle-item small {
+  grid-column: 3;
+  grid-row: 2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-soft);
+  font: 600 clamp(0.5rem, 2.3cqi, 0.62rem) var(--font-terminal);
+  line-height: 1.1;
 }
 
 .toggle-item:hover {
@@ -821,11 +924,17 @@ body:not([data-theme="deep"]) .control-group {
 }
 
 .toggle-item input {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
   margin: 0;
   accent-color: #6c95ff;
 }
 
 .color-dot {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -1493,6 +1602,12 @@ body:not([data-theme="deep"]) .range-panel {
   box-shadow: 0 0 0 1px rgba(214, 180, 122, 0.14);
 }
 
+@container (max-width: 390px) {
+  .toggle-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 .range-sliders input[type="range"] {
   position: absolute;
   inset: 0;
@@ -1641,6 +1756,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .toggle-list {
+    grid-template-columns: 1fr;
     min-height: 0;
     max-height: none;
     overflow: visible;

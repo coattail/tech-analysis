@@ -9,6 +9,7 @@ const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const CURATED_EARNINGS_DATASET_PATH = new URL("../../earnings-image-studio/data/earnings-dataset.json", import.meta.url);
 const HISTORICAL_SEC_BACKFILL_PATH = new URL("../data/historical-sec-backfill.json", import.meta.url);
 const STOCK_ANALYSIS_BASE = "https://stockanalysis.com/stocks";
+const COMPANIES_MARKET_CAP_BASE = "https://companiesmarketcap.com";
 const SEC_COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json";
 const SEC_COMPANYFACTS_BASE = "https://data.sec.gov/api/xbrl/companyfacts";
 const execFileAsync = promisify(execFile);
@@ -56,7 +57,36 @@ const COMPANY_SOURCES = [
   { id: "cisco", ticker: "CSCO", slug: "csco", name: "思科" },
   { id: "abbvie", ticker: "ABBV", slug: "abbv", name: "艾伯维" },
   { id: "homedepot", ticker: "HD", slug: "hd", name: "家得宝" },
+  { id: "ibm", ticker: "IBM", slug: "ibm", name: "IBM" },
+  { id: "sap", ticker: "SAP", slug: "sap", name: "SAP" },
+  { id: "crowdstrike", ticker: "CRWD", slug: "crwd", name: "CrowdStrike" },
+  { id: "salesforce", ticker: "CRM", slug: "crm", name: "Salesforce" },
+  { id: "servicenow", ticker: "NOW", slug: "now", name: "ServiceNow" },
+  { id: "datadog", ticker: "DDOG", slug: "ddog", name: "Datadog" },
+  { id: "snowflake", ticker: "SNOW", slug: "snow", name: "Snowflake" },
+  { id: "cloudflare", ticker: "NET", slug: "net", name: "Cloudflare" },
+  { id: "adobe", ticker: "ADBE", slug: "adbe", name: "Adobe" },
+  { id: "zoom", ticker: "ZM", slug: "zm", name: "Zoom" },
+  { id: "coreweave", ticker: "CRWV", slug: "crwv", name: "CoreWeave" },
+  { id: "nebius", ticker: "NBIS", slug: "nbis", name: "Nebius", minPeriod: "2024Q2" },
+  { id: "chronoscale", ticker: "CHRN", slug: "chrn", name: "ChronoScale" },
+  { id: "sharonai", ticker: "SHAZ", slug: "shaz", name: "SharonAI" },
 ];
+
+const COMPANIES_MARKET_CAP_SLUGS = {
+  alphabet: "alphabet-google",
+  avgo: "broadcom",
+  meta: "meta-platforms",
+  tsla: "tesla",
+  berkshire: "berkshire-hathaway",
+  jpmorgan: "jp-morgan-chase",
+  lilly: "eli-lilly",
+  exxon: "exxon-mobil",
+  micron: "micron-technology",
+  jnj: "johnson-and-johnson",
+  bankofamerica: "bank-of-america",
+  homedepot: "home-depot",
+};
 
 const FORECAST_KEYS = ["revenue", "netIncome", "grossMargin", "pe", "roe", "revenueGrowth"];
 const SEC_ALLOWED_FORMS = new Set(["10-Q", "10-K", "20-F", "6-K"]);
@@ -82,10 +112,21 @@ const SEC_FIELD_CONCEPTS = {
   grossProfit: [
     "GrossProfit",
   ],
+  costOfRevenue: [
+    "CostOfRevenue",
+    "CostOfGoodsAndServicesSold",
+    "CostOfGoodsSold",
+    "CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization",
+    "CostOfProducts",
+    "CostOfSales",
+    "CostOfRevenues",
+    "CostOfProductsAndServices",
+  ],
   netIncome: [
     "NetIncomeLoss",
     "ProfitLoss",
     "ProfitLossAttributableToOwnersOfParent",
+    "NetIncomeLossAvailableToCommonStockholdersBasic",
   ],
   netAssets: [
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
@@ -109,6 +150,13 @@ const FX_SERIES_CONFIG = {
 const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   // Source: TSMC Quarterly Results / Management Report (official IR pages).
   // Values are reported in NT$ billions and US$ billions.
+  // 2004Q4 USD conversion uses the FRED DEXTAUS quarter-average rate (31.378 TWD/USD).
+  "2004Q4": {
+    revenueUsdBillions: 63.87 / 31.378,
+    revenueTwdBillions: 63.87,
+    netIncomeTwdBillions: 22.18,
+    grossMarginPct: 42.5,
+  },
   "2024Q4": { revenueUsdBillions: 26.88, revenueTwdBillions: 868.46, netIncomeTwdBillions: 374.68, grossMarginPct: 59.0 },
   "2025Q1": { revenueUsdBillions: 25.53, revenueTwdBillions: 839.25, netIncomeTwdBillions: 361.56, grossMarginPct: 58.8 },
   "2025Q2": { revenueUsdBillions: 30.07, revenueTwdBillions: 933.79, netIncomeTwdBillions: 398.27, grossMarginPct: 58.6 },
@@ -116,6 +164,103 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2025Q4": { revenueUsdBillions: 33.73, revenueTwdBillions: 1046.09, netIncomeTwdBillions: 505.74, grossMarginPct: 62.3 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  apple: {
+    // FY2004 Form 10-K, Note 13 selected quarterly financial information.
+    "2004Q3": { earnings: 106_000_000, grossMargin: (634 / 2_350) * 100 },
+  },
+  amazon: {
+    // FY2004 Form 10-K, Note 14 quarterly results.
+    "2004Q4": {
+      revenue: 2_540_959_000,
+      earnings: 346_688_000,
+      grossMargin: (544_466 / 2_540_959) * 100,
+    },
+  },
+  tsmc: {
+    // TSMC 2004Q4 Form 6-K; TWD values converted at the FRED quarter-average rate.
+    "2004Q4": {
+      revenue: Math.round((63.87 / 31.378) * 1e9),
+      earnings: Math.round((22.18 / 31.378) * 1e9),
+      grossMargin: 42.5,
+    },
+  },
+  walmart: {
+    // FY2005 Form 10-K exhibit 13, quarter ended January 31, 2005.
+    "2005Q1": {
+      earnings: 3_164_000_000,
+      grossMargin: ((82_216 - 63_723) / 82_216) * 100,
+    },
+  },
+  jpmorgan: {
+    // FY2004 Form 10-K selected quarterly financial data.
+    "2004Q2": { earnings: -548_000_000 },
+    "2004Q3": { earnings: 1_418_000_000 },
+    "2004Q4": { earnings: 1_666_000_000 },
+  },
+  lilly: {
+    // FY2004 annual report selected quarterly data.
+    "2004Q4": { earnings: -2_400_000, grossMargin: ((3_644.3 - 865.7) / 3_644.3) * 100 },
+  },
+  ibm: {
+    // IBM 2004-2007 annual reports, Selected Quarterly Data (USD millions).
+    "2004Q2": { earnings: 1_988_000_000, grossMargin: (8_525 / 23_098) * 100 },
+    "2004Q3": { earnings: 1_800_000_000, grossMargin: (8_646 / 23_349) * 100 },
+    "2004Q4": { earnings: 3_040_000_000, grossMargin: (10_852 / 27_671) * 100 },
+    "2005Q1": { earnings: 1_402_000_000, grossMargin: (8_254 / 22_908) * 100 },
+    "2005Q2": { earnings: 1_829_000_000, grossMargin: (8_775 / 22_270) * 100 },
+    "2005Q3": { earnings: 1_516_000_000, grossMargin: (8_738 / 21_529) * 100 },
+    "2005Q4": { earnings: 3_187_000_000, grossMargin: (10_765 / 24_427) * 100 },
+    "2006Q1": { earnings: 1_708_000_000, grossMargin: (8_088 / 20_659) * 100 },
+    "2006Q2": { earnings: 2_022_000_000, grossMargin: (9_014 / 21_890) * 100 },
+    "2006Q3": { earnings: 2_222_000_000, grossMargin: (9_492 / 22_617) * 100 },
+    "2006Q4": { earnings: 3_541_000_000, grossMargin: (11_701 / 26_257) * 100 },
+    "2007Q1": { earnings: 1_844_000_000, grossMargin: (8_866 / 22_029) * 100 },
+    "2007Q2": { earnings: 2_260_000_000, grossMargin: (9_938 / 23_772) * 100 },
+    "2007Q3": { earnings: 2_361_000_000, grossMargin: (9_956 / 24_119) * 100 },
+    "2007Q4": { earnings: 3_952_000_000, grossMargin: (12_970 / 28_866) * 100 },
+    // IBM 2010/2011 annual reports and fourth-quarter earnings releases (USD).
+    // These quarter values bridge SEC CompanyFacts gaps in the fiscal Q4 facts.
+    "2010Q4": { revenue: 29_018_000_000, earnings: 5_257_000_000, grossMargin: 49.0 },
+    "2011Q4": { revenue: 29_486_000_000, earnings: 5_489_000_000, grossMargin: 49.9 },
+    // IBM fourth-quarter 2021 earnings release, continuing-operations basis.
+    "2021Q4": { revenue: 16_695_000_000, grossMargin: 56.9 },
+  },
+  servicenow: {
+    // ServiceNow FY2012 Form 10-K quarterly results table (USD thousands).
+    "2011Q1": { revenue: 25_212_000, earnings: 2_991_000, grossMargin: (15_998 / 25_212) * 100 },
+    "2011Q4": { revenue: 39_178_000, earnings: -6_805_000, grossMargin: (23_187 / 39_178) * 100 },
+  },
+  salesforce: {
+    // Salesforce FY2005-FY2008 Forms 10-K, selected quarterly data (USD thousands).
+    "2004Q2": { revenue: 34_839_000, earnings: 437_000, grossMargin: (28_476 / 34_839) * 100 },
+    "2004Q3": { revenue: 40_581_000, earnings: 1_170_000, grossMargin: (32_399 / 40_581) * 100 },
+    "2004Q4": { revenue: 46_361_000, earnings: 2_153_000, grossMargin: (37_456 / 46_361) * 100 },
+    "2005Q1": { revenue: 54_594_000, earnings: 3_586_000, grossMargin: (44_590 / 54_594) * 100 },
+    "2005Q2": { revenue: 64_177_000, earnings: 4_380_000, grossMargin: (52_212 / 64_177) * 100 },
+    "2005Q3": { revenue: 71_943_000, earnings: 5_040_000, grossMargin: (55_706 / 71_943) * 100 },
+    "2005Q4": { revenue: 82_673_000, earnings: 13_097_000, grossMargin: (63_089 / 82_673) * 100 },
+    "2006Q1": { revenue: 91_064_000, earnings: 5_957_000, grossMargin: (69_724 / 91_064) * 100 },
+    "2006Q2": { revenue: 104_686_000, earnings: -229_000, grossMargin: (80_126 / 104_686) * 100 },
+    "2006Q3": { revenue: 118_137_000, earnings: -145_000, grossMargin: (89_006 / 118_137) * 100 },
+    "2006Q4": { revenue: 130_053_000, earnings: 339_000, grossMargin: (98_693 / 130_053) * 100 },
+    "2007Q1": { revenue: 144_222_000, earnings: 516_000, grossMargin: (110_383 / 144_222) * 100 },
+    "2007Q2": { revenue: 162_412_000, earnings: 730_000, grossMargin: (123_245 / 162_412) * 100 },
+    "2007Q3": { revenue: 176_579_000, earnings: 3_735_000, grossMargin: (135_167 / 176_579) * 100 },
+    "2007Q4": { revenue: 192_803_000, earnings: 6_512_000, grossMargin: (148_522 / 192_803) * 100 },
+    "2008Q1": { revenue: 216_906_000, earnings: 7_379_000, grossMargin: (170_175 / 216_906) * 100 },
+  },
+  sap: {
+    // SAP Q2 2009 interim report: IFRS equity attributable to shareholders
+    // was EUR 7.269bn; converted at the FRED Q2 2009 average EUR/USD rate.
+    "2009Q2": { netAssets: 9_747_292_860 },
+  },
+  adobe: {
+    // Adobe official Q4 releases and annual statements (USD thousands).
+    "2004Q4": { revenue: 429_502_000, earnings: 113_501_000, grossMargin: (400_130 / 429_502) * 100 },
+    "2005Q4": { revenue: 510_371_000, earnings: 156_251_000, grossMargin: (479_676 / 510_371) * 100 },
+    "2006Q4": { revenue: 682_175_000, earnings: 181_855_000, grossMargin: (602_550 / 682_175) * 100 },
+    "2007Q4": { revenue: 911_211_000, earnings: 222_208_000, grossMargin: (812_615 / 911_211) * 100 },
+  },
   avgo: {
     "2014Q3": { revenue: 1_269_000_000 },
     "2015Q2": { revenue: 1_614_000_000 },
@@ -137,6 +282,8 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2008Q1": { revenue: 113_223_000_000 },
   },
   jnj: {
+    // FY2004 annual report selected quarterly financial data.
+    "2004Q4": { revenue: 12_752_000_000, earnings: 1_217_000_000, grossMargin: (9_046 / 12_752) * 100 },
     "2005Q4": { revenue: 12_610_000_000, earnings: 2_183_000_000 },
   },
   // Historical net-income backfills below are sourced from company SEC annual-report
@@ -144,6 +291,7 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   // in millions unless Costco reports in thousands; all values here are USD.
   micron: {
     // FY2005/FY2007-FY2009 Form 10-K quarterly financial information.
+    "2004Q3": { revenue: 1_189_200_000, earnings: 93_500_000, grossMargin: (392.6 / 1_189.2) * 100 },
     "2005Q3": { earnings: 43_100_000 },
     "2007Q3": { earnings: -158_000_000 },
     "2007Q4": { earnings: -262_000_000 },
@@ -175,25 +323,35 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   },
   amd: {
     // FY2005/FY2007 Form 10-K selected quarterly financial data.
+    "2004Q4": { earnings: -30_000_000, grossMargin: 41.0 },
     "2005Q4": { earnings: 95_588_000 },
     "2007Q4": { earnings: -1_772_000_000 },
   },
   costco: {
     // FY2005/FY2007 Form 10-K quarterly financial data.
+    "2004Q2": { grossMargin: ((10_897_239 - 9_540_312) / 10_897_239) * 100 },
+    "2004Q3": { earnings: 296_768_000, grossMargin: ((15_139_301 - 13_229_605) / 15_139_301) * 100 },
     "2005Q3": { earnings: 354_699_000 },
     "2007Q3": { earnings: 372_422_000 },
   },
   caterpillar: {
     // FY2005 Form 10-K annual-report quarterly profit table.
+    "2004Q2": { revenue: 7_564_000_000, earnings: 566_000_000, grossMargin: (1_559 / 7_564) * 100 },
+    "2004Q3": { revenue: 7_649_000_000, earnings: 498_000_000, grossMargin: (1_447 / 7_649) * 100 },
+    "2004Q4": { revenue: 8_571_000_000, earnings: 551_000_000, grossMargin: (1_591 / 8_571) * 100 },
     "2005Q4": { earnings: 846_000_000 },
   },
   cisco: {
     // FY2005-FY2007 Form 10-K exhibit 13 supplementary financial data.
+    "2004Q3": { earnings: 1_380_000_000, grossMargin: (4_055 / 5_926) * 100 },
     "2005Q3": { earnings: 1_540_000_000 },
     "2006Q3": { earnings: 1_544_000_000 },
     "2007Q3": { earnings: 1_930_000_000 },
   },
   netflix: {
+    // FY2004 Form 10-K selected quarterly financial data.
+    "2004Q3": { earnings: 18_925_000 },
+    "2004Q4": { revenue: 143_893_000, earnings: 5_569_000, grossMargin: (65_451 / 143_893) * 100 },
     "2005Q1": { revenue: 152_446_000 },
     "2005Q2": { revenue: 164_027_000 },
     "2005Q3": { revenue: 172_740_000 },
@@ -354,6 +512,36 @@ async function loadHistoricalSecBackfill() {
   }
 
   return historicalSecBackfillCache;
+}
+
+function sanitizeHistoricalBackfillRows(companyId, rows) {
+  if (companyId !== "sap") return rows;
+
+  const earlyOfficial = {
+    "2004Q3": { revenue: 1_776_000_000, netIncome: 291_000_000 },
+    "2005Q1": { revenue: 1_729_000_000, netIncome: 254_000_000 },
+    "2005Q2": { revenue: 2_016_000_000, netIncome: 289_000_000 },
+    "2005Q3": { revenue: 2_014_000_000, netIncome: 334_000_000 },
+    "2006Q4": { revenue: 2_921_000_000, netIncome: 786_000_000 },
+    "2007Q1": { revenue: 2_166_000_000, netIncome: 310_000_000 },
+    "2007Q2": { revenue: 2_424_000_000, netIncome: 449_000_000 },
+    "2018Q1": { revenue: 5_261_000_000, netIncome: 708_000_000 },
+    "2019Q1": { netIncome: -108_000_000 },
+  };
+
+  return rows.map((row) => {
+    const official = earlyOfficial[row.period] || {};
+    const candidateRevenue = Number.isFinite(official.revenue) ? official.revenue : row.revenue;
+    const candidateNetIncome = Number.isFinite(official.netIncome) ? official.netIncome : row.netIncome;
+    const revenue = Number.isFinite(candidateRevenue) && candidateRevenue >= 1_000_000_000 ? candidateRevenue : null;
+    const netIncome = Number.isFinite(candidateNetIncome) && Math.abs(candidateNetIncome) <= 10_000_000_000
+      ? candidateNetIncome
+      : null;
+    const grossMarginPct = Number.isFinite(row.grossMarginPct) && row.grossMarginPct >= 0 && row.grossMarginPct <= 100
+      ? row.grossMarginPct
+      : null;
+    return { ...row, revenue, netIncome, grossMarginPct };
+  });
 }
 
 function formatDataJs(data) {
@@ -663,6 +851,28 @@ function buildSecFieldQuarterSeries(facts) {
   return quarterRows;
 }
 
+function buildSecInstantQuarterSeries(facts) {
+  const quarterRows = new Map();
+
+  dedupeExactSecFacts(facts)
+    .slice()
+    .sort((left, right) => {
+      if (left.endDate !== right.endDate) return left.endDate.localeCompare(right.endDate);
+      if (left.filed !== right.filed) return left.filed.localeCompare(right.filed);
+      return left.conceptPriority - right.conceptPriority;
+    })
+    .forEach((fact) => {
+      const quarter = toQuarterLabel(fact.endDate);
+      if (!quarter) return;
+      const current = quarterRows.get(quarter);
+      if (!current || betterSecFact(fact, current)) {
+        quarterRows.set(quarter, fact);
+      }
+    });
+
+  return quarterRows;
+}
+
 function toQuarterLabel(dateKey) {
   return calendarQuarterFromDate(dateKey);
 }
@@ -957,7 +1167,8 @@ function collectSecFieldSeries(companyfacts, reportingCurrency) {
         values.forEach((raw) => {
           if (!raw || typeof raw !== "object") return;
           if (!SEC_ALLOWED_FORMS.has(String(raw.form || ""))) return;
-          if (!raw.start || !raw.end) return;
+          if (!raw.end) return;
+          if (fieldKey !== "netAssets" && !raw.start) return;
           const value = Number(raw.val);
           if (!Number.isFinite(value)) return;
           const nsPriority = namespacePriority.get(namespace) || 0;
@@ -972,17 +1183,21 @@ function collectSecFieldSeries(companyfacts, reportingCurrency) {
             fiscalPeriod: String(raw.fp || "").toUpperCase(),
             accession: String(raw.accn || ""),
             filed: String(raw.filed || ""),
-            startDate: String(raw.start || ""),
+            startDate: String(raw.start || raw.end || ""),
             endDate: String(raw.end || ""),
             value,
-            daySpan: daySpanInclusive(String(raw.start || ""), String(raw.end || "")),
+            daySpan: raw.start
+              ? daySpanInclusive(String(raw.start), String(raw.end))
+              : 1,
           });
         });
       });
     });
 
     if (collectedFacts.length > 0) {
-      fieldSeries[fieldKey] = buildSecFieldQuarterSeries(collectedFacts);
+      fieldSeries[fieldKey] = fieldKey === "netAssets"
+        ? buildSecInstantQuarterSeries(collectedFacts)
+        : buildSecFieldQuarterSeries(collectedFacts);
     }
   });
 
@@ -1018,6 +1233,7 @@ async function fetchSecQuarterlyHistory(companySource) {
     .map((period) => {
       const revenueFact = fieldSeries.revenue?.get(period) || null;
       const grossProfitFact = fieldSeries.grossProfit?.get(period) || null;
+      const costOfRevenueFact = fieldSeries.costOfRevenue?.get(period) || null;
       const netIncomeFact = fieldSeries.netIncome?.get(period) || null;
       const netAssetsFact = fieldSeries.netAssets?.get(period) || null;
       const endDate =
@@ -1032,6 +1248,11 @@ async function fetchSecQuarterlyHistory(companySource) {
         grossProfitFact?.filed ||
         netAssetsFact?.filed ||
         null;
+      const grossProfitValue = grossProfitFact?.value ?? (
+        Number.isFinite(revenueFact?.value) && Number.isFinite(costOfRevenueFact?.value)
+          ? revenueFact.value - costOfRevenueFact.value
+          : null
+      );
 
       return {
         period,
@@ -1039,11 +1260,11 @@ async function fetchSecQuarterlyHistory(companySource) {
         reportDate,
         revenue: revenueFact?.value ?? null,
         netIncome: netIncomeFact?.value ?? null,
-        grossProfit: grossProfitFact?.value ?? null,
+        grossProfit: grossProfitValue,
         netAssets: netAssetsFact?.value ?? null,
         grossMarginPct:
-          Number.isFinite(revenueFact?.value) && Number.isFinite(grossProfitFact?.value) && revenueFact.value !== 0
-            ? (grossProfitFact.value / revenueFact.value) * 100
+          Number.isFinite(revenueFact?.value) && Number.isFinite(grossProfitValue) && revenueFact.value !== 0
+            ? (grossProfitValue / revenueFact.value) * 100
             : null,
       };
     });
@@ -1288,6 +1509,32 @@ function ensureCompanyShape(company) {
   });
 }
 
+function pruneCompanyDataBeforePeriod(company, minPeriod) {
+  if (!minPeriod) return;
+  const seriesKeys = [
+    "revenue",
+    "earnings",
+    "pe",
+    "netAssets",
+    "roe",
+    "grossMargin",
+    "revenueGrowth",
+    "periodEndDates",
+    "reportDates",
+  ];
+
+  seriesKeys.forEach((key) => {
+    Object.keys(company[key] || {}).forEach((period) => {
+      if (comparePeriods(period, minPeriod) < 0) delete company[key][period];
+    });
+  });
+
+  FORECAST_KEYS.forEach((key) => {
+    company.forecastFlags[key] = (company.forecastFlags[key] || [])
+      .filter((period) => comparePeriods(period, minPeriod) >= 0);
+  });
+}
+
 function setSeriesValue(series, key, value) {
   if (!Number.isFinite(value)) return false;
   const previous = series[key];
@@ -1391,6 +1638,229 @@ async function fetchCompanyRatios(slug) {
   return extractRatioSeries(stdout);
 }
 
+function extractCompaniesMarketCapPeSeries(html) {
+  const match = html.match(/\bdata\s*=\s*(\[[\s\S]*?\]);/);
+  if (!match) return [];
+
+  let rawRows;
+  try {
+    rawRows = JSON.parse(match[1]);
+  } catch {
+    return [];
+  }
+
+  const byPeriod = new Map();
+  rawRows.forEach((row) => {
+    const timestamp = Number(row?.d);
+    const pe = Number(row?.v);
+    if (!Number.isFinite(timestamp) || !Number.isFinite(pe)) return;
+    const dateKey = new Date(timestamp * 1000).toISOString().slice(0, 10);
+    const period = toQuarterLabel(dateKey);
+    if (!period) return;
+    byPeriod.set(period, { period, pe, dateKey });
+  });
+
+  const annualRowPattern = /<tr><td>(\d{4})<\/td><td>([^<]*)<\/td>/g;
+  let annualMatch;
+  while ((annualMatch = annualRowPattern.exec(html)) !== null) {
+    const year = Number(annualMatch[1]);
+    const pe = Number(
+      annualMatch[2]
+        .replace(/&gt;|>/g, "")
+        .replace(/,/g, "")
+        .trim(),
+    );
+    if (!Number.isFinite(year) || !Number.isFinite(pe)) continue;
+    const period = `${year}Q4`;
+    if (!byPeriod.has(period)) {
+      byPeriod.set(period, { period, pe, dateKey: `${year}-12-31` });
+    }
+  }
+
+  return [...byPeriod.values()].sort((left, right) => comparePeriods(left.period, right.period));
+}
+
+async function fetchCompaniesMarketCapPeSeries(companySource) {
+  const slug = COMPANIES_MARKET_CAP_SLUGS[companySource.id] || companySource.id;
+  const url = `${COMPANIES_MARKET_CAP_BASE}/${slug}/pe-ratio/`;
+  const args = [
+    "-L",
+    "-sS",
+    "--fail",
+    "--compressed",
+    "--retry",
+    "3",
+    "--retry-delay",
+    "1",
+    "--connect-timeout",
+    "15",
+    "--max-time",
+    "45",
+    "-H",
+    `User-Agent: ${REQUEST_HEADERS["user-agent"]}`,
+    "-H",
+    `Accept: ${REQUEST_HEADERS.accept}`,
+    "-H",
+    `Accept-Language: ${REQUEST_HEADERS["accept-language"]}`,
+    url,
+  ];
+  const { stdout } = await execFileAsync("curl", args, { maxBuffer: 20 * 1024 * 1024 });
+  return extractCompaniesMarketCapPeSeries(stdout);
+}
+
+function extractCompaniesMarketCapMarketCapSeries(html) {
+  const match = html.match(/\bdata\s*=\s*(\[[\s\S]*?\]);/);
+  if (!match) return [];
+
+  let rawRows;
+  try {
+    rawRows = JSON.parse(match[1]);
+  } catch {
+    return [];
+  }
+
+  return rawRows
+    .map((row) => {
+      const timestamp = Number(row?.d);
+      const marketCapUnits = Number(row?.m);
+      if (!Number.isFinite(timestamp) || !Number.isFinite(marketCapUnits)) return null;
+      return {
+        dateKey: new Date(timestamp * 1000).toISOString().slice(0, 10),
+        marketCapUsd: marketCapUnits * 100_000,
+      };
+    })
+    .filter(Boolean)
+    .sort((left, right) => left.dateKey.localeCompare(right.dateKey));
+}
+
+async function fetchCompaniesMarketCapMarketCapSeries(companySource) {
+  const slug = COMPANIES_MARKET_CAP_SLUGS[companySource.id] || companySource.id;
+  const url = `${COMPANIES_MARKET_CAP_BASE}/${slug}/marketcap/`;
+  const args = [
+    "-L",
+    "-sS",
+    "--fail",
+    "--compressed",
+    "--retry",
+    "3",
+    "--retry-delay",
+    "1",
+    "--connect-timeout",
+    "15",
+    "--max-time",
+    "45",
+    "-H",
+    `User-Agent: ${REQUEST_HEADERS["user-agent"]}`,
+    "-H",
+    `Accept: ${REQUEST_HEADERS.accept}`,
+    "-H",
+    `Accept-Language: ${REQUEST_HEADERS["accept-language"]}`,
+    url,
+  ];
+  const { stdout } = await execFileAsync("curl", args, { maxBuffer: 30 * 1024 * 1024 });
+  return extractCompaniesMarketCapMarketCapSeries(stdout);
+}
+
+function extractCompaniesMarketCapNetAssetsSeries(html) {
+  const match = html.match(/\bdata\s*=\s*(\[[\s\S]*?\]);/);
+  if (!match) return [];
+
+  let rawRows;
+  try {
+    rawRows = JSON.parse(match[1]);
+  } catch {
+    return [];
+  }
+
+  const byPeriod = new Map();
+  rawRows.forEach((row) => {
+    const timestamp = Number(row?.d);
+    const equity = Number(row?.v);
+    if (!Number.isFinite(timestamp) || !Number.isFinite(equity)) return;
+    const dateKey = new Date(timestamp * 1000).toISOString().slice(0, 10);
+    const period = toQuarterLabel(dateKey);
+    if (!period) return;
+    byPeriod.set(period, { period, equity, dateKey });
+  });
+
+  return [...byPeriod.values()].sort((left, right) => comparePeriods(left.period, right.period));
+}
+
+async function fetchCompaniesMarketCapNetAssetsSeries(companySource) {
+  const slug = COMPANIES_MARKET_CAP_SLUGS[companySource.id] || companySource.id;
+  const url = `${COMPANIES_MARKET_CAP_BASE}/${slug}/net-assets/`;
+  const args = [
+    "-L",
+    "-sS",
+    "--fail",
+    "--compressed",
+    "--retry",
+    "3",
+    "--retry-delay",
+    "1",
+    "--connect-timeout",
+    "15",
+    "--max-time",
+    "45",
+    "-H",
+    `User-Agent: ${REQUEST_HEADERS["user-agent"]}`,
+    "-H",
+    `Accept: ${REQUEST_HEADERS.accept}`,
+    "-H",
+    `Accept-Language: ${REQUEST_HEADERS["accept-language"]}`,
+    url,
+  ];
+  const { stdout } = await execFileAsync("curl", args, { maxBuffer: 20 * 1024 * 1024 });
+  return extractCompaniesMarketCapNetAssetsSeries(stdout);
+}
+
+function calendarQuarterEndDate(period) {
+  const parsed = parsePeriod(period);
+  if (!parsed) return null;
+  const month = parsed.quarter * 3;
+  const day = new Date(Date.UTC(parsed.year, month, 0)).getUTCDate();
+  return `${parsed.year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function findLatestMarketCapOnOrBefore(rows, targetDate, maxAgeDays = 45) {
+  for (let index = rows.length - 1; index >= 0; index -= 1) {
+    const row = rows[index];
+    if (row.dateKey > targetDate) continue;
+    const ageDays = Math.round((Date.parse(targetDate) - Date.parse(row.dateKey)) / 86400000);
+    if (ageDays < 0 || ageDays > maxAgeDays) return null;
+    return row.marketCapUsd;
+  }
+  return null;
+}
+
+function deriveMissingPeFromMarketCap(companyData, periods, marketCapRows) {
+  const changedPeriods = new Set();
+  let changedPoints = 0;
+
+  periods.forEach((period, index) => {
+    if (Number.isFinite(companyData.pe?.[period]) || index < 3) return;
+    const windowPeriods = periods.slice(index - 3, index + 1);
+    const earnings = windowPeriods.map((windowPeriod) => companyData.earnings?.[windowPeriod]);
+    if (!earnings.every(Number.isFinite)) return;
+    const ttmEarnings = earnings.reduce((sum, value) => sum + value, 0);
+    if (!Number.isFinite(ttmEarnings) || ttmEarnings <= 0) return;
+
+    const targetDate = companyData.periodEndDates?.[period] || calendarQuarterEndDate(period);
+    if (!targetDate) return;
+    const marketCapUsd = findLatestMarketCapOnOrBefore(marketCapRows, targetDate);
+    if (!Number.isFinite(marketCapUsd) || marketCapUsd <= 0) return;
+
+    const pe = marketCapUsd / ttmEarnings;
+    if (!Number.isFinite(pe) || pe <= 0) return;
+    if (setSeriesValueIfMissing(companyData.pe, period, pe)) {
+      changedPoints += 1;
+      changedPeriods.add(period);
+    }
+  });
+
+  return { changedPoints, changedPeriods };
+}
+
 async function fetchCompanyBalanceSheetRows(slug) {
   const url = `${STOCK_ANALYSIS_BASE}/${slug}/financials/balance-sheet/?p=quarterly`;
   const args = [
@@ -1486,8 +1956,9 @@ function buildImpactedGrowthPeriods(periods, basePeriods) {
   return impacted;
 }
 
-function sortObjectByPeriodKeys(series) {
-  const entries = Object.entries(series || {});
+function sortObjectByPeriodKeys(series, validPeriods = null) {
+  const entries = Object.entries(series || {})
+    .filter(([period]) => !validPeriods || validPeriods.has(period));
   entries.sort((a, b) => comparePeriods(a[0], b[0]));
   const next = {};
   entries.forEach(([key, value]) => {
@@ -1959,7 +2430,7 @@ function updateMeta(data, summary, refreshedAtIso) {
   }
 
   data.meta.autoRefresh = {
-    source: "StockAnalysis quarterly financials / ratios / balance sheet",
+    source: "StockAnalysis quarterly financials / ratios / balance sheet + CompaniesMarketCap quarterly P/E",
     refreshedAt: refreshedAtIso,
     updatedCompanies: summary.updatedCompanyIds,
     changedPoints: summary.changedPoints,
@@ -2022,6 +2493,8 @@ async function run() {
     let rows;
     let financialCurrency;
     let ratioRows = [];
+    let marketCapRows = [];
+    let historicalNetAssetRows = [];
     let balanceRows = [];
     let secHistoryRows = [];
     let historicalBackfillRows = [];
@@ -2054,7 +2527,7 @@ async function run() {
     const historicalBackfill = historicalSecBackfill[companySource.id];
     if (historicalBackfill?.rows?.length) {
       try {
-        historicalBackfillRows = historicalBackfill.rows;
+        historicalBackfillRows = sanitizeHistoricalBackfillRows(companySource.id, historicalBackfill.rows);
         if (historicalBackfill.reportingCurrency && historicalBackfill.reportingCurrency !== "USD") {
           const converted = await convertSecHistoryRowsToUsd(historicalBackfillRows, historicalBackfill.reportingCurrency);
           if (!converted) {
@@ -2088,6 +2561,27 @@ async function run() {
       ratioRows = await fetchCompanyRatios(companySource.slug);
     } catch (error) {
       console.warn(`  P/E 抓取失败：${error.message}`);
+    }
+
+    try {
+      const historicalPeRows = await fetchCompaniesMarketCapPeSeries(companySource);
+      if (historicalPeRows.length > 0) {
+        ratioRows = [...ratioRows, ...historicalPeRows];
+      }
+    } catch (error) {
+      console.warn(`  CompaniesMarketCap P/E 抓取失败：${error.message}`);
+    }
+
+    try {
+      marketCapRows = await fetchCompaniesMarketCapMarketCapSeries(companySource);
+    } catch (error) {
+      console.warn(`  CompaniesMarketCap 市值抓取失败：${error.message}`);
+    }
+
+    try {
+      historicalNetAssetRows = await fetchCompaniesMarketCapNetAssetsSeries(companySource);
+    } catch (error) {
+      console.warn(`  CompaniesMarketCap 净资产抓取失败：${error.message}`);
     }
 
     try {
@@ -2158,6 +2652,15 @@ async function run() {
     historicalBackfillRows.forEach((row) => {
       periodSet.add(row.period);
 
+      if (!companyData.periodEndDates[row.period] && setPeriodEndDate(companyData, row.period, row.dateKey)) {
+        companyStats.periodEndDateChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
+      if (setReportDate(companyData, row.period, row.reportDate)) {
+        companyStats.periodEndDateChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
+
       const useRevenue = isCompatibleHistoricalBackfillValue(
         companyData.revenue,
         qualityReferencePeriods,
@@ -2203,6 +2706,11 @@ async function run() {
 
     secHistoryRows.forEach((row) => {
       periodSet.add(row.period);
+
+      if (setPeriodEndDate(companyData, row.period, row.dateKey)) {
+        companyStats.periodEndDateChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
 
       if (Number.isFinite(row.revenue)) {
         revenueActual.add(row.period);
@@ -2307,6 +2815,7 @@ async function run() {
     });
 
     ratioRows.forEach((row) => {
+      if (!periodSet.has(row.period)) return;
       const changed = setSeriesValueIfMissing(companyData.pe, row.period, row.pe);
       if (changed) {
         companyStats.peChanges += 1;
@@ -2318,6 +2827,19 @@ async function run() {
       const changed = setSeriesValueIfMissing(companyData.netAssets, row.period, row.equity);
       if (changed) {
         companyStats.netAssetChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
+    });
+
+    historicalNetAssetRows.forEach((row) => {
+      if (!periodSet.has(row.period)) return;
+      const changed = setSeriesValueIfMissing(companyData.netAssets, row.period, row.equity);
+      if (changed) {
+        companyStats.netAssetChanges += 1;
+        companyStats.changedPeriods.add(row.period);
+      }
+      if (!companyData.periodEndDates[row.period] && setPeriodEndDate(companyData, row.period, row.dateKey)) {
+        companyStats.periodEndDateChanges += 1;
         companyStats.changedPeriods.add(row.period);
       }
     });
@@ -2358,6 +2880,18 @@ async function run() {
       console.log(
         `  已应用官方季度修正：${officialOverrideResult.changedPoints} 个修正点，涉及 ${officialOverrideResult.changedPeriods.size} 个季度`,
       );
+    }
+
+    const derivedPeResult = deriveMissingPeFromMarketCap(
+      companyData,
+      [...periodSet].sort(comparePeriods),
+      marketCapRows,
+    );
+    derivedPeResult.changedPeriods.forEach((period) => companyStats.changedPeriods.add(period));
+    companyStats.peChanges += derivedPeResult.changedPoints;
+
+    if (derivedPeResult.changedPoints > 0) {
+      console.log(`  已按历史市值 / TTM 净利润补齐 P/E：${derivedPeResult.changedPoints} 个季度`);
     }
 
     const roePeriods = new Set([...Object.keys(companyData.earnings), ...Object.keys(companyData.netAssets)]);
@@ -2402,14 +2936,14 @@ async function run() {
 
     growthCompanyIds.add(companySource.id);
 
-    companyData.revenue = sortObjectByPeriodKeys(companyData.revenue);
-    companyData.earnings = sortObjectByPeriodKeys(companyData.earnings);
-    companyData.pe = sortObjectByPeriodKeys(companyData.pe);
-    companyData.netAssets = sortObjectByPeriodKeys(companyData.netAssets);
-    companyData.roe = sortObjectByPeriodKeys(companyData.roe);
-    companyData.grossMargin = sortObjectByPeriodKeys(companyData.grossMargin);
-    companyData.periodEndDates = sortObjectByPeriodKeys(companyData.periodEndDates);
-    companyData.reportDates = sortObjectByPeriodKeys(companyData.reportDates);
+    companyData.revenue = sortObjectByPeriodKeys(companyData.revenue, periodSet);
+    companyData.earnings = sortObjectByPeriodKeys(companyData.earnings, periodSet);
+    companyData.pe = sortObjectByPeriodKeys(companyData.pe, periodSet);
+    companyData.netAssets = sortObjectByPeriodKeys(companyData.netAssets, periodSet);
+    companyData.roe = sortObjectByPeriodKeys(companyData.roe, periodSet);
+    companyData.grossMargin = sortObjectByPeriodKeys(companyData.grossMargin, periodSet);
+    companyData.periodEndDates = sortObjectByPeriodKeys(companyData.periodEndDates, periodSet);
+    companyData.reportDates = sortObjectByPeriodKeys(companyData.reportDates, periodSet);
 
     const detail = summarizeCompanyStats(companyStats);
     if (detail.changedPoints > 0) {
@@ -2438,6 +2972,14 @@ async function run() {
 
     recomputeRevenueGrowthForPeriods(companyData, sortedPeriods, new Set(sortedPeriods));
     companyData.revenueGrowth = sortObjectByPeriodKeys(companyData.revenueGrowth);
+  });
+
+  selectedCompanies.forEach((companySource) => {
+    if (!companySource.minPeriod) return;
+    const companyData = data.companies[companySource.id];
+    if (!companyData) return;
+    ensureCompanyShape(companyData);
+    pruneCompanyDataBeforePeriod(companyData, companySource.minPeriod);
   });
 
   summary.changedPeriods = [...new Set(summary.changedPeriods)].sort(comparePeriods);

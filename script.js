@@ -42,38 +42,63 @@ const FREQUENCY_META = {
 };
 
 const COMPANIES = [
-  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg" },
-  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoPath: "assets/logos/alphabet.svg" },
-  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoPath: "assets/logos/apple.svg" },
-  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoPath: "assets/logos/microsoft.svg" },
-  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg" },
-  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg" },
-  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg" },
-  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg?v=20260423d" },
-  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg" },
-  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b" },
-  { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b" },
-  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4" },
-  { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b" },
-  { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058" },
-  { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff" },
-  { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd" },
-  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff" },
-  { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d" },
-  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48" },
-  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a" },
-  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57" },
-  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e" },
-  { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914" },
-  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff" },
-  { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c" },
-  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9" },
-  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff" },
-  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2" },
-  { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2" },
-  { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316" },
+  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
+  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoPath: "assets/logos/alphabet.svg?v=20260629-visible-area-v4" },
+  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
+  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
+  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
+  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
+  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
+  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
+  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
+  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoPath: "assets/logos/walmart.svg?v=20260629-visible-area-v4" },
+  { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoPath: "assets/logos/berkshire.svg?v=20260629-visible-area-v4" },
+  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
+  { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b", logoPath: "assets/logos/lilly.svg?v=20260629-visible-area-v4" },
+  { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoPath: "assets/logos/exxon.svg?v=20260629-visible-area-v4" },
+  { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoPath: "assets/logos/visa.svg?v=20260629-visible-area-v4" },
+  { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoPath: "assets/logos/asml.svg?v=20260629-visible-area-v4" },
+  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
+  { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoPath: "assets/logos/jnj.svg?v=20260629-visible-area-v4" },
+  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
+  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoPath: "assets/logos/amd.svg?v=20260629-visible-area-v4" },
+  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoPath: "assets/logos/mastercard.svg?v=20260629-visible-area-v4" },
+  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoPath: "assets/logos/costco.svg?v=20260629-visible-area-v4" },
+  { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914", logoPath: "assets/logos/netflix.svg?v=20260629-visible-area-v4" },
+  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoPath: "assets/logos/bankofamerica.svg?v=20260629-visible-area-v4" },
+  { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c", logoPath: "assets/logos/caterpillar.svg?v=20260629-visible-area-v4" },
+  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoPath: "assets/logos/chevron.svg?v=20260629-visible-area-v4" },
+  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff", logoPath: "assets/logos/palantir.svg?v=20260629-visible-area-v4" },
+  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoPath: "assets/logos/cisco.svg?v=20260629-visible-area-v4" },
+  { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2", logoPath: "assets/logos/abbvie.svg?v=20260629-visible-area-v4" },
+  { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316", logoPath: "assets/logos/homedepot.svg?v=20260629-visible-area-v4" },
+  { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff", logoPath: "assets/logos/ibm.svg?v=20260629-visible-area-v4" },
+  { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1", logoPath: "assets/logos/sap.svg?v=20260629-visible-area-v4" },
+  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoPath: "assets/logos/crowdstrike.svg?v=20260629-visible-area-v4" },
+  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoPath: "assets/logos/salesforce.svg?v=20260629-visible-area-v4" },
+  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoPath: "assets/logos/servicenow.svg?v=20260629-visible-area-v4" },
+  { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5", logoPath: "assets/logos/datadog.svg?v=20260629-visible-area-v4" },
+  { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8", logoPath: "assets/logos/snowflake.svg?v=20260629-visible-area-v4" },
+  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoPath: "assets/logos/cloudflare.svg?v=20260629-visible-area-v4" },
+  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
+  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
+  { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
+  { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
+  { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
+  { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
+const COMPANY_CATEGORIES = [
+  { id: "mag7", label: "MAG7", companyIds: ["nvidia", "alphabet", "apple", "microsoft", "amazon", "meta", "tsla"] },
+  { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"] },
+  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"] },
+  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"] },
+  { id: "other", label: "其他", companyIds: [] },
+];
+const CATEGORIZED_COMPANY_IDS = new Set(COMPANY_CATEGORIES.flatMap((category) => category.companyIds));
+COMPANY_CATEGORIES.find((category) => category.id === "other").companyIds = COMPANIES
+  .map((company) => company.id)
+  .filter((companyId) => !CATEGORIZED_COMPANY_IDS.has(companyId));
 const {
   DEFAULT_INITIAL_COMPANIES,
   DEFAULT_INITIAL_VIEW,
@@ -83,20 +108,26 @@ const {
   applyPendingCompanies,
   shouldResetRangeAfterApplyingCompanies,
   getDisplayPeriodStart,
+  findLongestContiguousDataRange,
 } = window.CompanySelectionUtils;
 
 const DEFAULT_VISIBLE_COMPANIES = DEFAULT_INITIAL_COMPANIES;
+const { calculateVisibleLogoLayout } = window.LogoLayoutUtils;
 const COMPANY_PRESETS = {
   focus: DEFAULT_VISIBLE_COMPANIES,
   ai: ["microsoft", "nvidia", "amazon", "meta"],
   all: COMPANIES.map((company) => company.id),
 };
 const BAR_CHART_LOGO_LEFT = 14;
-const BAR_CHART_LOGO_TARGET_AREA = 44 * 44 * 2;
-const BAR_CHART_LOGO_MAX_WIDTH = 170;
+const BAR_CHART_LOGO_TARGET_AREA = 62 * 62;
+const BAR_CHART_LOGO_MAX_WIDTH = 220;
 const BAR_CHART_LOGO_MAX_HEIGHT = 62;
+const BAR_CHART_BADGE_VERTICAL_OFFSET = 32;
+const LOGO_MEASURE_MAX_DIMENSION = 512;
+const LOGO_ALPHA_THRESHOLD = 8;
 const companyLogoCache = new Map();
 const companyLogoLoadState = new Map();
+const companyLogoBoundsCache = new WeakMap();
 
 function getCompanyLogo(companyId) {
   return companyLogoCache.get(companyId) ?? null;
@@ -131,28 +162,77 @@ function preloadCompanyLogos() {
   });
 }
 
-function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
-  if (!image) return false;
+function measureOpaqueLogoBounds(image) {
+  const cached = companyLogoBoundsCache.get(image);
+  if (cached) return cached;
 
   const naturalWidth = image.naturalWidth || image.width;
   const naturalHeight = image.naturalHeight || image.height;
-  if (!naturalWidth || !naturalHeight) return false;
+  if (!naturalWidth || !naturalHeight) return null;
 
-  let scale = Math.sqrt(targetArea / (naturalWidth * naturalHeight));
-  let width = Math.max(1, naturalWidth * scale);
-  let height = Math.max(1, naturalHeight * scale);
+  const measureScale = Math.min(1, LOGO_MEASURE_MAX_DIMENSION / Math.max(naturalWidth, naturalHeight));
+  const width = Math.max(1, Math.round(naturalWidth * measureScale));
+  const height = Math.max(1, Math.round(naturalHeight * measureScale));
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return null;
 
-  if (width > BAR_CHART_LOGO_MAX_WIDTH || height > BAR_CHART_LOGO_MAX_HEIGHT) {
-    scale *= Math.min(
-      BAR_CHART_LOGO_MAX_WIDTH / width,
-      BAR_CHART_LOGO_MAX_HEIGHT / height,
-    );
-    width = Math.max(1, naturalWidth * scale);
-    height = Math.max(1, naturalHeight * scale);
+  canvas.width = width;
+  canvas.height = height;
+  ctx.clearRect(0, 0, width, height);
+  ctx.drawImage(image, 0, 0, width, height);
+
+  const pixels = ctx.getImageData(0, 0, width, height).data;
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (pixels[(y * width + x) * 4 + 3] <= LOGO_ALPHA_THRESHOLD) continue;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+    }
   }
 
-  const offsetX = x;
-  const offsetY = y - height / 2;
+  const bounds = maxX >= minX && maxY >= minY
+    ? {
+      x: minX / measureScale,
+      y: minY / measureScale,
+      width: (maxX - minX + 1) / measureScale,
+      height: (maxY - minY + 1) / measureScale,
+    }
+    : { x: 0, y: 0, width: naturalWidth, height: naturalHeight };
+  companyLogoBoundsCache.set(image, bounds);
+  return bounds;
+}
+
+function getCompanyLogoLayout(image, targetArea) {
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
+  if (!naturalWidth || !naturalHeight) return null;
+
+  return calculateVisibleLogoLayout({
+    sourceWidth: naturalWidth,
+    sourceHeight: naturalHeight,
+    bounds: measureOpaqueLogoBounds(image),
+    targetVisibleArea: targetArea,
+    maxVisibleWidth: BAR_CHART_LOGO_MAX_WIDTH,
+    maxVisibleHeight: BAR_CHART_LOGO_MAX_HEIGHT,
+  });
+}
+
+function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
+  if (!image) return false;
+
+  const layout = getCompanyLogoLayout(image, targetArea);
+  if (!layout) return false;
+  const width = Math.max(1, layout.drawWidth);
+  const height = Math.max(1, layout.drawHeight);
+  const offsetX = x + layout.offsetX;
+  const offsetY = y + layout.offsetY;
   const pixelRatio = Math.max(chart.currentDevicePixelRatio || window.devicePixelRatio || 1, 1);
   const buffer = document.createElement("canvas");
   const bufferCtx = buffer.getContext("2d");
@@ -177,35 +257,37 @@ function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
 function drawOriginalLogo(ctx, chart, image, x, y, targetArea) {
   if (!image) return false;
 
-  const naturalWidth = image.naturalWidth || image.width;
-  const naturalHeight = image.naturalHeight || image.height;
-  if (!naturalWidth || !naturalHeight) return false;
-
-  let scale = Math.sqrt(targetArea / (naturalWidth * naturalHeight));
-  let width = Math.max(1, naturalWidth * scale);
-  let height = Math.max(1, naturalHeight * scale);
-
-  if (width > BAR_CHART_LOGO_MAX_WIDTH || height > BAR_CHART_LOGO_MAX_HEIGHT) {
-    scale *= Math.min(
-      BAR_CHART_LOGO_MAX_WIDTH / width,
-      BAR_CHART_LOGO_MAX_HEIGHT / height,
-    );
-    width = Math.max(1, naturalWidth * scale);
-    height = Math.max(1, naturalHeight * scale);
-  }
+  const layout = getCompanyLogoLayout(image, targetArea);
+  if (!layout) return false;
 
   ctx.save();
   ctx.globalAlpha = 1;
-  ctx.drawImage(image, x, y - height / 2, width, height);
+  ctx.drawImage(
+    image,
+    x + layout.offsetX,
+    y + layout.offsetY,
+    Math.max(1, layout.drawWidth),
+    Math.max(1, layout.drawHeight),
+  );
   ctx.restore();
   return true;
 }
 
-function drawSingleCompanyLogoBadge(ctx, chart, chartArea, company, chartFontFamily, isDeepTheme) {
+function drawSingleCompanyLogoBadge(
+  ctx,
+  chart,
+  chartArea,
+  company,
+  chartFontFamily,
+  isDeepTheme,
+  badgeVerticalPosition = "top",
+) {
   if (!company) return false;
 
   const badgeX = chartArea.left + BAR_CHART_LOGO_LEFT;
-  const badgeY = chartArea.top + 32;
+  const badgeY = badgeVerticalPosition === "bottom"
+    ? chartArea.bottom - BAR_CHART_BADGE_VERTICAL_OFFSET
+    : chartArea.top + BAR_CHART_BADGE_VERTICAL_OFFSET;
   const logoImage = getCompanyLogo(company.id);
   const logoColor = isDeepTheme ? "#f4f7fb" : "#f3f6fa";
 
@@ -259,10 +341,28 @@ const rightTickerLabelsPlugin = {
 
     if (singleCompanyId) {
       const company = COMPANY_META.get(singleCompanyId);
-      const hasVisibleDataset = chart.data.datasets.some((item) => item.companyId === singleCompanyId && !item.hidden);
-      if (!company || !hasVisibleDataset) return;
+      const companyDataset = chart.data.datasets.find(
+        (item) => item.companyId === singleCompanyId && !item.hidden,
+      );
+      if (!company || !companyDataset) return;
 
-      drawSingleCompanyLogoBadge(ctx, chart, chartArea, company, chartFontFamily, isDeepTheme);
+      const companyValues = companyDataset.data.map((item) => (
+        typeof item === "object" && item !== null ? item.y : item
+      ));
+      const badgeVerticalPosition = PriceComparisonUtils.shouldPlaceCompanyBadgeAtBottom({
+        chartMode: effectiveChartMode,
+        values: companyValues,
+      }) ? "bottom" : "top";
+
+      drawSingleCompanyLogoBadge(
+        ctx,
+        chart,
+        chartArea,
+        company,
+        chartFontFamily,
+        isDeepTheme,
+        badgeVerticalPosition,
+      );
 
       if (effectiveChartMode === "bar") {
         return;
@@ -467,6 +567,7 @@ const METRICS = {
 const chartEl = document.getElementById("financeChart");
 const statusEl = document.getElementById("statusText");
 const togglesEl = document.getElementById("companyToggles");
+const companySearchEl = document.getElementById("companySearch");
 const generateBtn = document.getElementById("generateBtn");
 const showAllBtn = document.getElementById("showAllBtn");
 const hideAllBtn = document.getElementById("hideAllBtn");
@@ -492,7 +593,7 @@ const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits:
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
 const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.28;
 const CHART_PLOT_LEFT_NUDGE = 6;
-const SINGLE_COMPANY_CHART_RIGHT_PADDING = 52;
+const SINGLE_COMPANY_CHART_RIGHT_PADDING = 12;
 const MULTI_COMPANY_CHART_RIGHT_PADDING = 52;
 const Y_AXIS_TICK_PADDING = 2;
 const Y_AXIS_TITLE_PADDING = 28;
@@ -510,7 +611,6 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.56;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
-const PRICE_AXIS_RESERVED_WIDTH = 92;
 const DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
@@ -1068,35 +1168,39 @@ function getVisibleDataBounds(frequency = state.frequency, metric = state.metric
     return { hasData: false, start: displayStartIndex, end: displayStartIndex };
   }
 
-  let firstIndex = Number.POSITIVE_INFINITY;
-  let lastIndex = -1;
-
-  state.visibleCompanies.forEach((companyId) => {
-    const series = seriesMap.get(companyId);
-    if (!series) return;
-
-    labels.forEach((label, index) => {
-      const value = series.get(label);
-      if (!isFiniteNumber(value)) return;
-      firstIndex = Math.min(firstIndex, index);
-      lastIndex = Math.max(lastIndex, index);
-    });
-  });
-
-  if (!Number.isFinite(firstIndex) || lastIndex < 0) {
+  const visibleCompanyIds = [...state.visibleCompanies];
+  if (visibleCompanyIds.length === 0) {
     return {
       hasData: false,
       start: displayStartIndex,
-      end: Math.max(0, labels.length - 1),
+      end: displayStartIndex,
     };
   }
 
-  const start = Math.max(displayStartIndex, firstIndex);
-  return {
-    hasData: true,
-    start,
-    end: Math.max(start, lastIndex),
-  };
+  const includePriceData = visibleCompanyIds.length === 1
+    && state.priceComparisonEnabled
+    && canEnablePriceComparisonForCurrentView();
+  const pricePeriods = new Set();
+  if (includePriceData) {
+    Object.keys(getSingleCompanyDailyPrices() || {}).forEach((date) => {
+      const year = date.slice(0, 4);
+      const month = Number(date.slice(5, 7));
+      const label = frequency === "annual"
+        ? year
+        : `${year}Q${Math.floor((month - 1) / 3) + 1}`;
+      if (labels.includes(label)) pricePeriods.add(label);
+    });
+  }
+
+  const validPeriods = labels.map((label, index) => {
+    if (index < displayStartIndex) return false;
+    const allFundamentalsPresent = visibleCompanyIds.every((companyId) => (
+      isFiniteNumber(seriesMap.get(companyId)?.get(label))
+    ));
+    return allFundamentalsPresent || pricePeriods.has(label);
+  });
+
+  return findLongestContiguousDataRange(validPeriods, displayStartIndex);
 }
 
 function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
@@ -1110,16 +1214,7 @@ function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state
 
   const bounds = getVisibleDataBounds(frequency, metric);
   state.rangeStart = Math.max(displayStartIndex, bounds.start);
-  state.rangeEnd = canEnablePriceComparisonForCurrentView()
-    ? PriceComparisonUtils.extendRangeEndThroughLatestPrice({
-      rangeStart: state.rangeStart,
-      rangeEnd: bounds.end,
-      allLabels: labels,
-      dailyPrices: getSingleCompanyDailyPrices(),
-      frequency,
-      allowExtension: true,
-    })
-    : bounds.end;
+  state.rangeEnd = bounds.end;
   state.rangeEnd = Math.max(state.rangeStart, state.rangeEnd);
 }
 
@@ -1195,6 +1290,11 @@ function canEnablePriceComparisonForCurrentView() {
 
 function shouldReservePriceComparisonLayout(hasPriceOverlay = false) {
   return Boolean(hasPriceOverlay) || canEnablePriceComparisonForCurrentView();
+}
+
+function shouldReserveSingleCompanyLegendLayout(hasPriceOverlay = false) {
+  return Boolean(getSingleVisibleCompanyId())
+    || shouldReservePriceComparisonLayout(hasPriceOverlay);
 }
 
 function setPriceComparisonEnabled(enabled) {
@@ -1439,8 +1539,19 @@ function formatYAxisTick(metricKey, value) {
   return `${decimalFormatter.format(value)}x`;
 }
 
-function formatPrimaryYAxisTick(metricKey, value, chartMode = getEffectiveChartMode()) {
-  if (PriceComparisonUtils.shouldHidePrimaryYAxisTickLabel({ metricKey, chartMode, value })) {
+function formatPrimaryYAxisTick(
+  metricKey,
+  value,
+  chartMode = getEffectiveChartMode(),
+  axisBounds = {},
+) {
+  if (PriceComparisonUtils.shouldHidePrimaryYAxisTickLabel({
+    metricKey,
+    chartMode,
+    value,
+    axisMin: axisBounds.min,
+    axisMax: axisBounds.max,
+  })) {
     return "";
   }
 
@@ -1787,7 +1898,8 @@ function buildDatasetsForView() {
 
   const trimmedEndIndex = lastVisibleValueIndex >= 0 ? lastVisibleValueIndex : 0;
   const financialVisibleLabels = rangeLabels.slice(0, trimmedEndIndex + 1);
-  const visibleLabels = state.priceComparisonEnabled
+  const shouldReservePriceComparisonRange = canEnablePriceComparisonForCurrentView();
+  const visibleLabels = shouldReservePriceComparisonRange
     ? PriceComparisonUtils.extendVisibleLabelsThroughLatestPrice({
       visibleLabels: financialVisibleLabels,
       allLabels: fullLabels,
@@ -2146,6 +2258,10 @@ function computeCompactBarZeroBaselineMin(min, max, chartMode) {
 
 function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false) {
   const values = collectDatasetValues(datasets, includeHidden);
+  const boundsMode = PriceComparisonUtils.resolveYAxisBoundsMode({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode,
+  });
   const shouldClampMinToZero = state.metric === "revenue";
 
   if (values.length === 0) {
@@ -2172,9 +2288,9 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    if (chartMode === "bar") {
+    if (boundsMode === "bar") {
       if (max >= 0) {
-        const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+        const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
         const rounded = roundPositiveAxisBounds(
           0,
           toAxisDisplayValue(state.metric, max),
@@ -2237,9 +2353,9 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
     };
   }
 
-  if (chartMode === "bar") {
+  if (boundsMode === "bar") {
     if (!includesNegative) {
-      const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+      const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
       const rounded = roundPositiveAxisBounds(
         0,
         toAxisDisplayValue(state.metric, includesPositive ? max : 0),
@@ -2251,7 +2367,7 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    const compactMin = computeCompactBarZeroBaselineMin(min, max, chartMode);
+    const compactMin = computeCompactBarZeroBaselineMin(min, max, boundsMode);
     if (compactMin != null) {
       const rounded = roundPositiveAxisBounds(
         0,
@@ -2359,6 +2475,13 @@ function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
   );
 }
 
+function computeChartAxisReservations(datasets, chartMode, themeTokens) {
+  return PriceComparisonUtils.getChartAxisReservations({
+    visibleCompanyCount: state.visibleCompanies.size,
+    measuredPrimaryWidth: computeYAxisReservedWidth(datasets, chartMode, themeTokens),
+  });
+}
+
 function syncChartDatasets(nextDatasets) {
   const existingDatasets = new Map(
     (state.chart?.data?.datasets ?? []).map((dataset) => [getDatasetKey(dataset), dataset]),
@@ -2455,9 +2578,9 @@ function refreshChart(updateMode = undefined) {
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
   const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
-  const reservePriceComparisonLayout = shouldReservePriceComparisonLayout(hasPriceOverlay);
+  const reserveLegendLayout = shouldReserveSingleCompanyLegendLayout(hasPriceOverlay);
   const themeTokens = getChartThemeTokens();
-  const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
+  const axisReservations = computeChartAxisReservations(datasets, effectiveChartMode, themeTokens);
   syncChartLabels(labels);
   syncChartDatasets(datasets);
   state.chart.data.datasets.forEach((dataset, index) => {
@@ -2466,9 +2589,9 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.y.title.text = buildYAxisTitle(state.metric, state.frequency);
   state.chart.options.scales.y.min = yBounds.min;
   state.chart.options.scales.y.max = yBounds.max;
-  state.chart.options.scales.y.reservedWidth = yReservedWidth;
-  state.chart.options.scales.yPrice.display = reservePriceComparisonLayout;
-  state.chart.options.scales.yPrice.reservedWidth = reservePriceComparisonLayout ? PRICE_AXIS_RESERVED_WIDTH : 0;
+  state.chart.options.scales.y.reservedWidth = axisReservations.primaryWidth;
+  state.chart.options.scales.yPrice.display = axisReservations.priceWidth > 0;
+  state.chart.options.scales.yPrice.reservedWidth = axisReservations.priceWidth;
   state.chart.options.scales.yPrice.title.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.min = priceBounds.min;
@@ -2476,7 +2599,7 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.x = buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets);
   state.chart.options.interaction = buildInteractionOptions(effectiveChartMode);
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
-  state.chart.options.plugins.legend.display = reservePriceComparisonLayout;
+  state.chart.options.plugins.legend.display = reserveLegendLayout;
   state.chart.update(updateMode);
   alignRangeWithChartAxis();
   updateRangeVisual();
@@ -2530,6 +2653,9 @@ function createToggle(company) {
   const text = document.createElement("span");
   text.textContent = company.name;
 
+  const ticker = document.createElement("small");
+  ticker.textContent = company.ticker;
+
   checkbox.addEventListener("change", () => {
     const nextPendingCompanies = setPendingCompanyVisibility(
       state.pendingCompanies,
@@ -2540,15 +2666,42 @@ function createToggle(company) {
     syncPresetButtons();
   });
 
-  label.append(checkbox, dot, text);
+  label.append(checkbox, dot, text, ticker);
   return label;
 }
 
-function setupTogglePanel() {
+function setupTogglePanel(query = "") {
   togglesEl.innerHTML = "";
-  COMPANIES.forEach((company) => {
-    togglesEl.appendChild(createToggle(company));
+  const normalizedQuery = query.trim().toLocaleLowerCase("zh-CN");
+
+  COMPANY_CATEGORIES.forEach((category) => {
+    const companies = category.companyIds
+      .map((companyId) => COMPANY_META.get(companyId))
+      .filter(Boolean)
+      .filter((company) => !normalizedQuery || [company.id, company.name, company.ticker]
+        .some((value) => value.toLocaleLowerCase("zh-CN").includes(normalizedQuery)));
+    if (companies.length === 0) return;
+
+    const card = document.createElement("section");
+    card.className = "company-category-card";
+    card.dataset.category = category.id;
+
+    const heading = document.createElement("h4");
+    heading.textContent = category.label;
+
+    const list = document.createElement("div");
+    list.className = "company-category-list";
+    companies.forEach((company) => list.appendChild(createToggle(company)));
+    card.append(heading, list);
+    togglesEl.appendChild(card);
   });
+
+  if (!togglesEl.children.length) {
+    const empty = document.createElement("p");
+    empty.className = "company-search-empty";
+    empty.textContent = "未找到匹配企业";
+    togglesEl.appendChild(empty);
+  }
   syncPresetButtons();
 }
 
@@ -2599,8 +2752,8 @@ function buildChart() {
   const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
   const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
-  const reservePriceComparisonLayout = shouldReservePriceComparisonLayout(hasPriceOverlay);
-  const yReservedWidth = computeYAxisReservedWidth(datasets, effectiveChartMode, themeTokens);
+  const reserveLegendLayout = shouldReserveSingleCompanyLegendLayout(hasPriceOverlay);
+  const axisReservations = computeChartAxisReservations(datasets, effectiveChartMode, themeTokens);
 
   state.chart = new Chart(chartEl, {
     type: "line",
@@ -2632,7 +2785,7 @@ function buildChart() {
           border: { color: "rgba(0,0,0,0)" },
           min: yBounds.min,
           max: yBounds.max,
-          reservedWidth: yReservedWidth,
+          reservedWidth: axisReservations.primaryWidth,
           title: {
             display: false,
             text: buildYAxisTitle(state.metric, state.frequency),
@@ -2648,7 +2801,12 @@ function buildChart() {
             font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
             padding: Y_AXIS_TICK_PADDING,
             callback(value) {
-              return formatPrimaryYAxisTick(state.metric, Number(value), effectiveChartMode);
+              return formatPrimaryYAxisTick(
+                state.metric,
+                Number(value),
+                effectiveChartMode,
+                { min: this.min, max: this.max },
+              );
             },
           },
           grid: {
@@ -2657,7 +2815,7 @@ function buildChart() {
           },
         },
         yPrice: {
-          display: reservePriceComparisonLayout,
+          display: axisReservations.priceWidth > 0,
           position: "right",
           afterFit(scale) {
             scale.width = scale.options.reservedWidth ?? scale.width;
@@ -2665,7 +2823,7 @@ function buildChart() {
           border: { color: "rgba(0,0,0,0)" },
           min: priceBounds.min,
           max: priceBounds.max,
-          reservedWidth: reservePriceComparisonLayout ? PRICE_AXIS_RESERVED_WIDTH : 0,
+          reservedWidth: axisReservations.priceWidth,
           title: {
             display: hasPriceOverlay,
             text: "股价（USD）",
@@ -2687,7 +2845,7 @@ function buildChart() {
       },
       plugins: {
         legend: {
-          display: reservePriceComparisonLayout,
+          display: reserveLegendLayout,
           labels: {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
@@ -2759,6 +2917,7 @@ function bindEvents() {
   generateBtn.addEventListener("click", generateSelectedCompanies);
   showAllBtn.addEventListener("click", () => setAllVisibility(true));
   hideAllBtn.addEventListener("click", () => setAllVisibility(false));
+  companySearchEl?.addEventListener("input", () => setupTogglePanel(companySearchEl.value));
 
   metricInputs.forEach((input) => {
     input.addEventListener("change", () => {
