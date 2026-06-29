@@ -1676,6 +1676,21 @@ body:not([data-theme="deep"]) .range-panel {
     overflow: visible;
   }
 
+  .company-control-group {
+    flex: none;
+    min-height: auto;
+  }
+
+  .toggle-list {
+    flex: 0 0 auto;
+    max-height: 520px;
+    max-height: min(52svh, 520px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .chart-wrap {
     min-height: 560px;
   }
