@@ -744,7 +744,7 @@ test("single-company chart modes share fixed horizontal axis reservations", () =
   for (const measuredPrimaryWidth of [96, 104, 128]) {
     assert.deepEqual(
       getChartAxisReservations({ visibleCompanyCount: 1, measuredPrimaryWidth }),
-      { primaryWidth: 104, priceWidth: 92 },
+      { primaryWidth: 104, priceWidth: 76 },
     );
   }
 });
@@ -803,6 +803,15 @@ test("chart build and refresh apply shared single-company axis reservations", ()
   assert.match(buildBody, /reservedWidth: axisReservations\.priceWidth/);
   assert.match(buildBody, /title:\s*\{\s*display: hasPriceOverlay/);
   assert.match(buildBody, /ticks:\s*\{\s*display: hasPriceOverlay/);
+});
+
+test("price comparison reclaims the single-company right gutter for the plot", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const paddingBody = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.match(script, /const SINGLE_COMPANY_PRICE_CHART_RIGHT_PADDING = 12;/);
+  assert.match(paddingBody, /hasPriceOverlay\s*\? SINGLE_COMPANY_PRICE_CHART_RIGHT_PADDING\s*:\s*SINGLE_COMPANY_CHART_RIGHT_PADDING/);
+  assert.match(script, /buildChartLayoutPadding\(effectiveChartMode, hasPriceOverlay\)/g);
 });
 
 test("single-company financial bars keep uniform quarter slots with price comparison", () => {

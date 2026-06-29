@@ -55,9 +55,9 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["price-comparison.js", "20260628-unified-zero-axis"],
+    ["price-comparison.js", "20260629-price-axis-space"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260629-semiconductor-panel"],
+    ["script.js", "20260629-price-axis-space"],
   ]) {
     assert.match(
       html,

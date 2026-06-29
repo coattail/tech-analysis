@@ -7,7 +7,7 @@
   const DATE_AXIS_BAR_SLOT_PADDING_RATIO = 0.31;
   const DATE_AXIS_MIN_PADDING_DAYS = 12;
   const SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH = 104;
-  const SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH = 92;
+  const SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH = 76;
 
   function getChartAxisReservations({ visibleCompanyCount, measuredPrimaryWidth } = {}) {
     if (Number(visibleCompanyCount) === 1) {
