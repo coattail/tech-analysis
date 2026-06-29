@@ -13,6 +13,9 @@ const {
   extendRangeEndThroughLatestPrice,
   getPriceOverlayDatasetOrder,
   getFinancialBarDatasetOrder,
+  getChartAxisReservations,
+  resolveYAxisBoundsMode,
+  shouldPlaceCompanyBadgeAtBottom,
   alignSecondaryAxisZero,
   computeCompactBarZeroBaselineMin,
   shouldHidePrimaryYAxisTickLabel,
@@ -119,7 +122,7 @@ test("maps visible annual labels to an inclusive calendar-date window", () => {
   });
 });
 
-test("projects daily adjusted-close data into uniform quarter slots", () => {
+test("projects daily adjusted-close data into uniform period slots", () => {
   const result = buildProjectedPriceSeries({
     dailyPrices: {
       "2025-06-30": 90,
@@ -188,6 +191,24 @@ test("falls back to period-end dates when report dates are unavailable", () => {
 });
 
 test("keeps report dates as metadata while centering bars in quarter slots", () => {
+  const result = buildFinancialPeriodEndSeries({
+    values: [22_187_000_000],
+    visibleLabels: ["2026Q2"],
+    frequency: "quarterly",
+    reportDates: {
+      "2026Q2": "2026-06-03",
+    },
+    periodEndDates: {
+      "2026Q2": "2026-05-03",
+    },
+  });
+
+  assert.equal(result[0].reportDate, "2026-06-03");
+  assert.equal(result[0].periodEndDate, "2026-05-03");
+  assert.equal(result[0].x, 0);
+});
+
+test("keeps report dates from changing financial bar slot coordinates", () => {
   const result = buildFinancialPeriodEndSeries({
     values: [22_187_000_000],
     visibleLabels: ["2026Q2"],
@@ -489,6 +510,45 @@ test("keeps adjusted-close prices complete across normal trading-calendar gaps",
   assert.deepEqual(invalid, []);
 });
 
+test("preserves audited historical starts and does not invent pre-IPO prices", () => {
+  const data = loadFinancialSourceData();
+  const prices = loadStockPriceSourceData();
+  const expectedRevenueStarts = {
+    ibm: "2004Q2",
+    sap: "2004Q2",
+    salesforce: "2004Q2",
+    adobe: "2004Q2",
+    servicenow: "2011Q1",
+    crowdstrike: "2018Q1",
+    datadog: "2017Q1",
+    snowflake: "2018Q4",
+    cloudflare: "2017Q1",
+    zoom: "2018Q1",
+  };
+  const expectedPriceStarts = {
+    crowdstrike: "2019-06-12",
+    servicenow: "2012-06-29",
+    datadog: "2019-09-19",
+    snowflake: "2020-09-16",
+    cloudflare: "2019-09-13",
+    zoom: "2019-04-18",
+  };
+
+  for (const [companyId, expectedPeriod] of Object.entries(expectedRevenueStarts)) {
+    const firstPeriod = data.periods.find((period) => Number.isFinite(data.companies[companyId].revenue?.[period]));
+    assert.equal(firstPeriod, expectedPeriod, `${companyId} revenue should start at ${expectedPeriod}`);
+  }
+  for (const [companyId, expectedDate] of Object.entries(expectedPriceStarts)) {
+    assert.equal(Object.keys(prices.companies[companyId].daily)[0], expectedDate);
+  }
+
+  assert.ok(
+    data.companies.sap.earnings["2018Q1"] > 700_000_000 &&
+      data.companies.sap.earnings["2018Q1"] < 1_000_000_000,
+    "SAP 2018Q1 should use quarterly profit after tax rather than the full-year value",
+  );
+});
+
 test("real rolling annual flow values only appear after four complete source quarters", () => {
   const data = loadFinancialSourceData();
   const missingWindows = [];
@@ -662,20 +722,77 @@ test("price comparison toggle refreshes in place without rebuilding the chart", 
   assert.doesNotMatch(priceComparisonBody, /rebuildChartForCurrentView\(\);/);
 });
 
-test("price comparison layout reserves a stable right axis and legend area", () => {
-  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
-
-  assert.match(script, /function shouldReservePriceComparisonLayout/);
-  assert.match(script, /const PRICE_AXIS_RESERVED_WIDTH/);
-  assert.match(script, /state\.chart\.options\.scales\.yPrice\.display = reservePriceComparisonLayout;/);
-  assert.match(script, /state\.chart\.options\.plugins\.legend\.display = reservePriceComparisonLayout;/);
+test("single-company chart modes share fixed horizontal axis reservations", () => {
+  for (const measuredPrimaryWidth of [96, 104, 128]) {
+    assert.deepEqual(
+      getChartAxisReservations({ visibleCompanyCount: 1, measuredPrimaryWidth }),
+      { primaryWidth: 104, priceWidth: 92 },
+    );
+  }
 });
 
-test("single-company financial bars keep uniform quarter slots when price comparison is toggled", () => {
+test("multi-company charts keep their measured primary width without a price gutter", () => {
+  assert.deepEqual(
+    getChartAxisReservations({ visibleCompanyCount: 3, measuredPrimaryWidth: 118 }),
+    { primaryWidth: 118, priceWidth: 0 },
+  );
+});
+
+test("single-company line and bar charts share bar-style y-axis bounds", () => {
+  assert.equal(resolveYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "line" }), "bar");
+  assert.equal(resolveYAxisBoundsMode({ visibleCompanyCount: 1, chartMode: "bar" }), "bar");
+  assert.equal(resolveYAxisBoundsMode({ visibleCompanyCount: 3, chartMode: "line" }), "line");
+});
+
+test("places the company badge at the bottom when bar values are mostly negative", () => {
+  assert.equal(
+    shouldPlaceCompanyBadgeAtBottom({ chartMode: "bar", values: [-4, -3, -2, -1, 0.2] }),
+    true,
+  );
+  assert.equal(
+    shouldPlaceCompanyBadgeAtBottom({ chartMode: "bar", values: [-2, -1, 1, 2] }),
+    false,
+  );
+  assert.equal(
+    shouldPlaceCompanyBadgeAtBottom({ chartMode: "line", values: [-4, -3, -2, -1] }),
+    false,
+  );
+});
+
+test("chart rendering applies unified zero bounds, adaptive badge placement, and bounded tick hiding", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+
+  assert.match(script, /const boundsMode = PriceComparisonUtils\.resolveYAxisBoundsMode/);
+  assert.match(script, /function shouldReserveSingleCompanyLegendLayout/);
+  assert.match(script, /plugins\.legend\.display = reserveLegendLayout/);
+  assert.match(script, /display: reserveLegendLayout/);
+  assert.match(script, /shouldPlaceCompanyBadgeAtBottom/);
+  assert.match(script, /badgeVerticalPosition === "bottom"/);
+  assert.match(script, /\{ min: this\.min, max: this\.max \}/);
+});
+
+test("chart build and refresh apply shared single-company axis reservations", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const refreshBody = script.match(/function refreshChart\([\s\S]*?\n\}/)?.[0] ?? "";
+  const buildBody = script.match(/function buildChart\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
+
+  assert.match(script, /function computeChartAxisReservations/);
+  assert.match(refreshBody, /scales\.y\.reservedWidth = axisReservations\.primaryWidth/);
+  assert.match(refreshBody, /scales\.yPrice\.display = axisReservations\.priceWidth > 0/);
+  assert.match(refreshBody, /scales\.yPrice\.reservedWidth = axisReservations\.priceWidth/);
+  assert.match(buildBody, /reservedWidth: axisReservations\.primaryWidth/);
+  assert.match(buildBody, /display: axisReservations\.priceWidth > 0/);
+  assert.match(buildBody, /reservedWidth: axisReservations\.priceWidth/);
+  assert.match(buildBody, /title:\s*\{\s*display: hasPriceOverlay/);
+  assert.match(buildBody, /ticks:\s*\{\s*display: hasPriceOverlay/);
+});
+
+test("single-company financial bars keep uniform quarter slots with price comparison", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
   assert.match(script, /const shouldUseFinancialQuarterSlotPoints = useBarForSingleCompany;/);
-  assert.doesNotMatch(script, /const shouldUseFinancialQuarterSlotPoints = state\.priceComparisonEnabled && useBarForSingleCompany;/);
+  assert.doesNotMatch(script, /const shouldUseDateXAxis = usesDateXAxis\(\);/);
+  assert.doesNotMatch(script, /useDateXAxis/);
   assert.match(script, /const shouldReservePriceComparisonRange = canEnablePriceComparisonForCurrentView\(\);/);
   assert.match(script, /const visibleLabels = shouldReservePriceComparisonRange/);
   assert.doesNotMatch(script, /const visibleLabels = state\.priceComparisonEnabled/);
@@ -786,12 +903,14 @@ test("preserves substantial net-income losses instead of hiding them in a compac
   );
 });
 
-test("hides below-zero primary y-axis tick labels for net-income bar charts", () => {
+test("hides only compact padding ticks and keeps real negative units visible", () => {
   assert.equal(
     shouldHidePrimaryYAxisTickLabel({
       metricKey: "netIncome",
       chartMode: "bar",
       value: -1_000_000_000,
+      axisMin: -1_075_000_000,
+      axisMax: 43_000_000_000,
     }),
     true,
   );
@@ -799,15 +918,19 @@ test("hides below-zero primary y-axis tick labels for net-income bar charts", ()
     shouldHidePrimaryYAxisTickLabel({
       metricKey: "netIncome",
       chartMode: "bar",
-      value: 0,
+      value: -10_000_000,
+      axisMin: -400_000_000,
+      axisMax: 50_000_000,
     }),
     false,
   );
   assert.equal(
     shouldHidePrimaryYAxisTickLabel({
-      metricKey: "revenueGrowth",
-      chartMode: "line",
-      value: -10,
+      metricKey: "netIncome",
+      chartMode: "bar",
+      value: 0,
+      axisMin: -400_000_000,
+      axisMax: 50_000_000,
     }),
     false,
   );

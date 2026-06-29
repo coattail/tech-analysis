@@ -6,6 +6,39 @@
   const DATE_AXIS_FALLBACK_PADDING_RATIO = 0.018;
   const DATE_AXIS_BAR_SLOT_PADDING_RATIO = 0.31;
   const DATE_AXIS_MIN_PADDING_DAYS = 12;
+  const SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH = 104;
+  const SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH = 92;
+
+  function getChartAxisReservations({ visibleCompanyCount, measuredPrimaryWidth } = {}) {
+    if (Number(visibleCompanyCount) === 1) {
+      return {
+        primaryWidth: SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH,
+        priceWidth: SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH,
+      };
+    }
+
+    const safePrimaryWidth = Number(measuredPrimaryWidth);
+    return {
+      primaryWidth: Number.isFinite(safePrimaryWidth) ? Math.max(0, safePrimaryWidth) : 0,
+      priceWidth: 0,
+    };
+  }
+
+  function resolveYAxisBoundsMode({ visibleCompanyCount, chartMode } = {}) {
+    return Number(visibleCompanyCount) === 1 ? "bar" : chartMode;
+  }
+
+  function shouldPlaceCompanyBadgeAtBottom({ chartMode, values } = {}) {
+    if (chartMode !== "bar" || !Array.isArray(values)) return false;
+
+    const nonZeroValues = values
+      .map(Number)
+      .filter((value) => Number.isFinite(value) && value !== 0);
+    if (nonZeroValues.length === 0) return false;
+
+    const negativeCount = nonZeroValues.filter((value) => value < 0).length;
+    return negativeCount / nonZeroValues.length >= 0.6;
+  }
 
   function canShowPriceComparison({ visibleCompanyCount, chartMode, metric }) {
     return visibleCompanyCount === 1
@@ -239,7 +272,14 @@
       .filter(Boolean);
   }
 
-  function buildFinancialPeriodEndSeries({ values, visibleLabels, frequency, reportDates, periodEndDates }) {
+  function buildFinancialPeriodEndSeries({
+    values,
+    visibleLabels,
+    frequency,
+    reportDates,
+    periodEndDates,
+    useDateXAxis = false,
+  }) {
     if (!Array.isArray(values) || !Array.isArray(visibleLabels)) return [];
 
     return values.map((rawValue, index) => {
@@ -255,7 +295,7 @@
       const y = Number.isFinite(value) ? value : null;
 
       return {
-        x: index,
+        x: useDateXAxis ? reportMs : index,
         y,
         periodLabel: label,
         reportDate,
@@ -461,7 +501,7 @@
     });
   }
 
-  function buildProjectedPriceSeries({ dailyPrices, visibleLabels, frequency }) {
+  function buildProjectedPriceSeries({ dailyPrices, visibleLabels, frequency, useDateXAxis = false }) {
     const slots = buildVisiblePeriodSlots(visibleLabels, frequency);
     if (slots.length === 0 || !dailyPrices || typeof dailyPrices !== "object") return [];
 
@@ -475,7 +515,7 @@
 
         const ratio = (item.ms - slot.startMs) / (slot.endMs - slot.startMs);
         return {
-          x: (slot.index - 0.5) + ratio,
+          x: useDateXAxis ? item.ms : (slot.index - 0.5) + ratio,
           y: item.value,
           date: item.date,
         };
@@ -539,12 +579,22 @@
     );
   }
 
-  function shouldHidePrimaryYAxisTickLabel({ metricKey, chartMode, value }) {
+  function shouldHidePrimaryYAxisTickLabel({
+    metricKey,
+    chartMode,
+    value,
+    axisMin,
+    axisMax,
+  }) {
     const numericValue = Number(value);
-    return metricKey === "netIncome"
-      && chartMode === "bar"
-      && Number.isFinite(numericValue)
-      && numericValue < 0;
+    const numericAxisMin = Number(axisMin);
+    const numericAxisMax = Number(axisMax);
+    if (metricKey !== "netIncome" || chartMode !== "bar") return false;
+    if (!Number.isFinite(numericValue) || numericValue >= 0) return false;
+    if (!Number.isFinite(numericAxisMin) || !Number.isFinite(numericAxisMax)) return false;
+    if (numericAxisMin >= 0 || numericAxisMax <= 0) return false;
+
+    return Math.abs(numericAxisMin) / numericAxisMax <= COMPACT_NEGATIVE_MAX_SHARE;
   }
 
   const api = {
@@ -561,6 +611,9 @@
     computeDateAxisPadding,
     getPriceOverlayDatasetOrder,
     getFinancialBarDatasetOrder,
+    getChartAxisReservations,
+    resolveYAxisBoundsMode,
+    shouldPlaceCompanyBadgeAtBottom,
     alignSecondaryAxisZero,
     computeCompactBarZeroBaselineMin,
     shouldHidePrimaryYAxisTickLabel,

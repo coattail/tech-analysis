@@ -198,6 +198,22 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2004Q4": { earnings: -2_400_000, grossMargin: ((3_644.3 - 865.7) / 3_644.3) * 100 },
   },
   ibm: {
+    // IBM 2004-2007 annual reports, Selected Quarterly Data (USD millions).
+    "2004Q2": { earnings: 1_988_000_000, grossMargin: (8_525 / 23_098) * 100 },
+    "2004Q3": { earnings: 1_800_000_000, grossMargin: (8_646 / 23_349) * 100 },
+    "2004Q4": { earnings: 3_040_000_000, grossMargin: (10_852 / 27_671) * 100 },
+    "2005Q1": { earnings: 1_402_000_000, grossMargin: (8_254 / 22_908) * 100 },
+    "2005Q2": { earnings: 1_829_000_000, grossMargin: (8_775 / 22_270) * 100 },
+    "2005Q3": { earnings: 1_516_000_000, grossMargin: (8_738 / 21_529) * 100 },
+    "2005Q4": { earnings: 3_187_000_000, grossMargin: (10_765 / 24_427) * 100 },
+    "2006Q1": { earnings: 1_708_000_000, grossMargin: (8_088 / 20_659) * 100 },
+    "2006Q2": { earnings: 2_022_000_000, grossMargin: (9_014 / 21_890) * 100 },
+    "2006Q3": { earnings: 2_222_000_000, grossMargin: (9_492 / 22_617) * 100 },
+    "2006Q4": { earnings: 3_541_000_000, grossMargin: (11_701 / 26_257) * 100 },
+    "2007Q1": { earnings: 1_844_000_000, grossMargin: (8_866 / 22_029) * 100 },
+    "2007Q2": { earnings: 2_260_000_000, grossMargin: (9_938 / 23_772) * 100 },
+    "2007Q3": { earnings: 2_361_000_000, grossMargin: (9_956 / 24_119) * 100 },
+    "2007Q4": { earnings: 3_952_000_000, grossMargin: (12_970 / 28_866) * 100 },
     // IBM 2010/2011 annual reports and fourth-quarter earnings releases (USD).
     // These quarter values bridge SEC CompanyFacts gaps in the fiscal Q4 facts.
     "2010Q4": { revenue: 29_018_000_000, earnings: 5_257_000_000, grossMargin: 49.0 },
@@ -209,6 +225,37 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     // ServiceNow FY2012 Form 10-K quarterly results table (USD thousands).
     "2011Q1": { revenue: 25_212_000, earnings: 2_991_000, grossMargin: (15_998 / 25_212) * 100 },
     "2011Q4": { revenue: 39_178_000, earnings: -6_805_000, grossMargin: (23_187 / 39_178) * 100 },
+  },
+  salesforce: {
+    // Salesforce FY2005-FY2008 Forms 10-K, selected quarterly data (USD thousands).
+    "2004Q2": { revenue: 34_839_000, earnings: 437_000, grossMargin: (28_476 / 34_839) * 100 },
+    "2004Q3": { revenue: 40_581_000, earnings: 1_170_000, grossMargin: (32_399 / 40_581) * 100 },
+    "2004Q4": { revenue: 46_361_000, earnings: 2_153_000, grossMargin: (37_456 / 46_361) * 100 },
+    "2005Q1": { revenue: 54_594_000, earnings: 3_586_000, grossMargin: (44_590 / 54_594) * 100 },
+    "2005Q2": { revenue: 64_177_000, earnings: 4_380_000, grossMargin: (52_212 / 64_177) * 100 },
+    "2005Q3": { revenue: 71_943_000, earnings: 5_040_000, grossMargin: (55_706 / 71_943) * 100 },
+    "2005Q4": { revenue: 82_673_000, earnings: 13_097_000, grossMargin: (63_089 / 82_673) * 100 },
+    "2006Q1": { revenue: 91_064_000, earnings: 5_957_000, grossMargin: (69_724 / 91_064) * 100 },
+    "2006Q2": { revenue: 104_686_000, earnings: -229_000, grossMargin: (80_126 / 104_686) * 100 },
+    "2006Q3": { revenue: 118_137_000, earnings: -145_000, grossMargin: (89_006 / 118_137) * 100 },
+    "2006Q4": { revenue: 130_053_000, earnings: 339_000, grossMargin: (98_693 / 130_053) * 100 },
+    "2007Q1": { revenue: 144_222_000, earnings: 516_000, grossMargin: (110_383 / 144_222) * 100 },
+    "2007Q2": { revenue: 162_412_000, earnings: 730_000, grossMargin: (123_245 / 162_412) * 100 },
+    "2007Q3": { revenue: 176_579_000, earnings: 3_735_000, grossMargin: (135_167 / 176_579) * 100 },
+    "2007Q4": { revenue: 192_803_000, earnings: 6_512_000, grossMargin: (148_522 / 192_803) * 100 },
+    "2008Q1": { revenue: 216_906_000, earnings: 7_379_000, grossMargin: (170_175 / 216_906) * 100 },
+  },
+  sap: {
+    // SAP Q2 2009 interim report: IFRS equity attributable to shareholders
+    // was EUR 7.269bn; converted at the FRED Q2 2009 average EUR/USD rate.
+    "2009Q2": { netAssets: 9_747_292_860 },
+  },
+  adobe: {
+    // Adobe official Q4 releases and annual statements (USD thousands).
+    "2004Q4": { revenue: 429_502_000, earnings: 113_501_000, grossMargin: (400_130 / 429_502) * 100 },
+    "2005Q4": { revenue: 510_371_000, earnings: 156_251_000, grossMargin: (479_676 / 510_371) * 100 },
+    "2006Q4": { revenue: 682_175_000, earnings: 181_855_000, grossMargin: (602_550 / 682_175) * 100 },
+    "2007Q4": { revenue: 911_211_000, earnings: 222_208_000, grossMargin: (812_615 / 911_211) * 100 },
   },
   avgo: {
     "2014Q3": { revenue: 1_269_000_000 },
@@ -461,6 +508,36 @@ async function loadHistoricalSecBackfill() {
   }
 
   return historicalSecBackfillCache;
+}
+
+function sanitizeHistoricalBackfillRows(companyId, rows) {
+  if (companyId !== "sap") return rows;
+
+  const earlyOfficial = {
+    "2004Q3": { revenue: 1_776_000_000, netIncome: 291_000_000 },
+    "2005Q1": { revenue: 1_729_000_000, netIncome: 254_000_000 },
+    "2005Q2": { revenue: 2_016_000_000, netIncome: 289_000_000 },
+    "2005Q3": { revenue: 2_014_000_000, netIncome: 334_000_000 },
+    "2006Q4": { revenue: 2_921_000_000, netIncome: 786_000_000 },
+    "2007Q1": { revenue: 2_166_000_000, netIncome: 310_000_000 },
+    "2007Q2": { revenue: 2_424_000_000, netIncome: 449_000_000 },
+    "2018Q1": { revenue: 5_261_000_000, netIncome: 708_000_000 },
+    "2019Q1": { netIncome: -108_000_000 },
+  };
+
+  return rows.map((row) => {
+    const official = earlyOfficial[row.period] || {};
+    const candidateRevenue = Number.isFinite(official.revenue) ? official.revenue : row.revenue;
+    const candidateNetIncome = Number.isFinite(official.netIncome) ? official.netIncome : row.netIncome;
+    const revenue = Number.isFinite(candidateRevenue) && candidateRevenue >= 1_000_000_000 ? candidateRevenue : null;
+    const netIncome = Number.isFinite(candidateNetIncome) && Math.abs(candidateNetIncome) <= 10_000_000_000
+      ? candidateNetIncome
+      : null;
+    const grossMarginPct = Number.isFinite(row.grossMarginPct) && row.grossMarginPct >= 0 && row.grossMarginPct <= 100
+      ? row.grossMarginPct
+      : null;
+    return { ...row, revenue, netIncome, grossMarginPct };
+  });
 }
 
 function formatDataJs(data) {
@@ -2420,7 +2497,7 @@ async function run() {
     const historicalBackfill = historicalSecBackfill[companySource.id];
     if (historicalBackfill?.rows?.length) {
       try {
-        historicalBackfillRows = historicalBackfill.rows;
+        historicalBackfillRows = sanitizeHistoricalBackfillRows(companySource.id, historicalBackfill.rows);
         if (historicalBackfill.reportingCurrency && historicalBackfill.reportingCurrency !== "USD") {
           const converted = await convertSecHistoryRowsToUsd(historicalBackfillRows, historicalBackfill.reportingCurrency);
           if (!converted) {

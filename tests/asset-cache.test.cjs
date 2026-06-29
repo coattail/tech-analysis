@@ -38,28 +38,30 @@ test("keeps the latest cache key for unchanged company-selection behavior", () =
   assert.doesNotMatch(html, /v=20260605-tooltip-smart-bar-anchor/);
 });
 
-test("cache-busts generated datasets after expanding coverage", () => {
+test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260628-add-enterprise-cloud";
+  const expectedVersion = "20260628-full-history";
 
   for (const asset of ["data.js", "price-data.js"]) {
     assert.match(
       html,
       new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
-      `${asset} should use the expanded-coverage cache version`,
+      `${asset} should use the full-history cache version`,
     );
   }
 });
 
-test("cache-busts the chart script after stabilizing price-comparison quarter slots", () => {
+test("cache-busts chart scripts after repairing transparent logo assets", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260628-stable-price-slots";
 
-  for (const asset of ["script.js"]) {
+  for (const [asset, expectedVersion] of [
+    ["price-comparison.js", "20260628-unified-zero-axis"],
+    ["script.js", "20260629-transparent-logos-v4"],
+  ]) {
     assert.match(
       html,
       new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
-      `${asset} should use the stable price-comparison cache version`,
+      `${asset} should use the latest chart cache version`,
     );
   }
 });
