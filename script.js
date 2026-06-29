@@ -42,46 +42,46 @@ const FREQUENCY_META = {
 };
 
 const COMPANIES = [
-  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg?v=20260629-transparent-logos-v3" },
-  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoPath: "assets/logos/alphabet.svg?v=20260629-transparent-logos-v3" },
-  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoPath: "assets/logos/apple.svg?v=20260629-transparent-logos-v3" },
-  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoPath: "assets/logos/microsoft.svg?v=20260629-transparent-logos-v3" },
-  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg?v=20260629-transparent-logos-v3" },
-  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg?v=20260629-transparent-logos-v3" },
-  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg?v=20260629-transparent-logos-v3" },
-  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg?v=20260629-transparent-logos-v3" },
-  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg?v=20260629-transparent-logos-v3" },
-  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoPath: "assets/logos/walmart.svg?v=20260629-transparent-logos-v3" },
-  { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoPath: "assets/logos/berkshire.svg?v=20260629-transparent-logos-v3" },
-  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoPath: "assets/logos/jpmorgan.svg?v=20260629-transparent-logos-v3" },
-  { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b", logoPath: "assets/logos/lilly.svg?v=20260629-transparent-logos-v3" },
-  { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoPath: "assets/logos/exxon.svg?v=20260629-transparent-logos-v3" },
-  { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoPath: "assets/logos/visa.svg?v=20260629-transparent-logos-v3" },
-  { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoPath: "assets/logos/asml.svg?v=20260629-transparent-logos-v3" },
-  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoPath: "assets/logos/micron.svg?v=20260629-transparent-logos-v3" },
-  { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoPath: "assets/logos/jnj.svg?v=20260629-transparent-logos-v3" },
-  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoPath: "assets/logos/oracle.svg?v=20260629-transparent-logos-v3" },
-  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoPath: "assets/logos/amd.svg?v=20260629-transparent-logos-v3" },
-  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoPath: "assets/logos/mastercard.svg?v=20260629-transparent-logos-v3" },
-  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoPath: "assets/logos/costco.svg?v=20260629-transparent-logos-v3" },
-  { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914", logoPath: "assets/logos/netflix.svg?v=20260629-transparent-logos-v3" },
-  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoPath: "assets/logos/bankofamerica.svg?v=20260629-transparent-logos-v3" },
-  { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c", logoPath: "assets/logos/caterpillar.svg?v=20260629-transparent-logos-v3" },
-  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoPath: "assets/logos/chevron.svg?v=20260629-transparent-logos-v3" },
-  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff", logoPath: "assets/logos/palantir.svg?v=20260629-transparent-logos-v3" },
-  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoPath: "assets/logos/cisco.svg?v=20260629-transparent-logos-v3" },
-  { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2", logoPath: "assets/logos/abbvie.svg?v=20260629-transparent-logos-v3" },
-  { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316", logoPath: "assets/logos/homedepot.svg?v=20260629-transparent-logos-v3" },
-  { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff", logoPath: "assets/logos/ibm.svg?v=20260629-transparent-logos-v3" },
-  { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1", logoPath: "assets/logos/sap.svg?v=20260629-transparent-logos-v3" },
-  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoPath: "assets/logos/crowdstrike.svg?v=20260629-transparent-logos-v3" },
-  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoPath: "assets/logos/salesforce.svg?v=20260629-transparent-logos-v3" },
-  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoPath: "assets/logos/servicenow.svg?v=20260629-transparent-logos-v3" },
-  { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5", logoPath: "assets/logos/datadog.svg?v=20260629-transparent-logos-v3" },
-  { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8", logoPath: "assets/logos/snowflake.svg?v=20260629-transparent-logos-v3" },
-  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoPath: "assets/logos/cloudflare.svg?v=20260629-transparent-logos-v3" },
-  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoPath: "assets/logos/adobe.svg?v=20260629-transparent-logos-v3" },
-  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoPath: "assets/logos/zoom.svg?v=20260629-transparent-logos-v3" },
+  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
+  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoPath: "assets/logos/alphabet.svg?v=20260629-visible-area-v4" },
+  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
+  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
+  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
+  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
+  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
+  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
+  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
+  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoPath: "assets/logos/walmart.svg?v=20260629-visible-area-v4" },
+  { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoPath: "assets/logos/berkshire.svg?v=20260629-visible-area-v4" },
+  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
+  { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b", logoPath: "assets/logos/lilly.svg?v=20260629-visible-area-v4" },
+  { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoPath: "assets/logos/exxon.svg?v=20260629-visible-area-v4" },
+  { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoPath: "assets/logos/visa.svg?v=20260629-visible-area-v4" },
+  { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoPath: "assets/logos/asml.svg?v=20260629-visible-area-v4" },
+  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
+  { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoPath: "assets/logos/jnj.svg?v=20260629-visible-area-v4" },
+  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
+  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoPath: "assets/logos/amd.svg?v=20260629-visible-area-v4" },
+  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoPath: "assets/logos/mastercard.svg?v=20260629-visible-area-v4" },
+  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoPath: "assets/logos/costco.svg?v=20260629-visible-area-v4" },
+  { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914", logoPath: "assets/logos/netflix.svg?v=20260629-visible-area-v4" },
+  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoPath: "assets/logos/bankofamerica.svg?v=20260629-visible-area-v4" },
+  { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c", logoPath: "assets/logos/caterpillar.svg?v=20260629-visible-area-v4" },
+  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoPath: "assets/logos/chevron.svg?v=20260629-visible-area-v4" },
+  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff", logoPath: "assets/logos/palantir.svg?v=20260629-visible-area-v4" },
+  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoPath: "assets/logos/cisco.svg?v=20260629-visible-area-v4" },
+  { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2", logoPath: "assets/logos/abbvie.svg?v=20260629-visible-area-v4" },
+  { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316", logoPath: "assets/logos/homedepot.svg?v=20260629-visible-area-v4" },
+  { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff", logoPath: "assets/logos/ibm.svg?v=20260629-visible-area-v4" },
+  { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1", logoPath: "assets/logos/sap.svg?v=20260629-visible-area-v4" },
+  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoPath: "assets/logos/crowdstrike.svg?v=20260629-visible-area-v4" },
+  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoPath: "assets/logos/salesforce.svg?v=20260629-visible-area-v4" },
+  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoPath: "assets/logos/servicenow.svg?v=20260629-visible-area-v4" },
+  { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5", logoPath: "assets/logos/datadog.svg?v=20260629-visible-area-v4" },
+  { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8", logoPath: "assets/logos/snowflake.svg?v=20260629-visible-area-v4" },
+  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoPath: "assets/logos/cloudflare.svg?v=20260629-visible-area-v4" },
+  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
+  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
 const {
@@ -96,18 +96,22 @@ const {
 } = window.CompanySelectionUtils;
 
 const DEFAULT_VISIBLE_COMPANIES = DEFAULT_INITIAL_COMPANIES;
+const { calculateVisibleLogoLayout } = window.LogoLayoutUtils;
 const COMPANY_PRESETS = {
   focus: DEFAULT_VISIBLE_COMPANIES,
   ai: ["microsoft", "nvidia", "amazon", "meta"],
   all: COMPANIES.map((company) => company.id),
 };
 const BAR_CHART_LOGO_LEFT = 14;
-const BAR_CHART_LOGO_TARGET_AREA = 44 * 44 * 2;
-const BAR_CHART_LOGO_MAX_WIDTH = 170;
+const BAR_CHART_LOGO_TARGET_AREA = 62 * 62;
+const BAR_CHART_LOGO_MAX_WIDTH = 220;
 const BAR_CHART_LOGO_MAX_HEIGHT = 62;
 const BAR_CHART_BADGE_VERTICAL_OFFSET = 32;
+const LOGO_MEASURE_MAX_DIMENSION = 512;
+const LOGO_ALPHA_THRESHOLD = 8;
 const companyLogoCache = new Map();
 const companyLogoLoadState = new Map();
+const companyLogoBoundsCache = new WeakMap();
 
 function getCompanyLogo(companyId) {
   return companyLogoCache.get(companyId) ?? null;
@@ -142,28 +146,77 @@ function preloadCompanyLogos() {
   });
 }
 
-function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
-  if (!image) return false;
+function measureOpaqueLogoBounds(image) {
+  const cached = companyLogoBoundsCache.get(image);
+  if (cached) return cached;
 
   const naturalWidth = image.naturalWidth || image.width;
   const naturalHeight = image.naturalHeight || image.height;
-  if (!naturalWidth || !naturalHeight) return false;
+  if (!naturalWidth || !naturalHeight) return null;
 
-  let scale = Math.sqrt(targetArea / (naturalWidth * naturalHeight));
-  let width = Math.max(1, naturalWidth * scale);
-  let height = Math.max(1, naturalHeight * scale);
+  const measureScale = Math.min(1, LOGO_MEASURE_MAX_DIMENSION / Math.max(naturalWidth, naturalHeight));
+  const width = Math.max(1, Math.round(naturalWidth * measureScale));
+  const height = Math.max(1, Math.round(naturalHeight * measureScale));
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return null;
 
-  if (width > BAR_CHART_LOGO_MAX_WIDTH || height > BAR_CHART_LOGO_MAX_HEIGHT) {
-    scale *= Math.min(
-      BAR_CHART_LOGO_MAX_WIDTH / width,
-      BAR_CHART_LOGO_MAX_HEIGHT / height,
-    );
-    width = Math.max(1, naturalWidth * scale);
-    height = Math.max(1, naturalHeight * scale);
+  canvas.width = width;
+  canvas.height = height;
+  ctx.clearRect(0, 0, width, height);
+  ctx.drawImage(image, 0, 0, width, height);
+
+  const pixels = ctx.getImageData(0, 0, width, height).data;
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (pixels[(y * width + x) * 4 + 3] <= LOGO_ALPHA_THRESHOLD) continue;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+    }
   }
 
-  const offsetX = x;
-  const offsetY = y - height / 2;
+  const bounds = maxX >= minX && maxY >= minY
+    ? {
+      x: minX / measureScale,
+      y: minY / measureScale,
+      width: (maxX - minX + 1) / measureScale,
+      height: (maxY - minY + 1) / measureScale,
+    }
+    : { x: 0, y: 0, width: naturalWidth, height: naturalHeight };
+  companyLogoBoundsCache.set(image, bounds);
+  return bounds;
+}
+
+function getCompanyLogoLayout(image, targetArea) {
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
+  if (!naturalWidth || !naturalHeight) return null;
+
+  return calculateVisibleLogoLayout({
+    sourceWidth: naturalWidth,
+    sourceHeight: naturalHeight,
+    bounds: measureOpaqueLogoBounds(image),
+    targetVisibleArea: targetArea,
+    maxVisibleWidth: BAR_CHART_LOGO_MAX_WIDTH,
+    maxVisibleHeight: BAR_CHART_LOGO_MAX_HEIGHT,
+  });
+}
+
+function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
+  if (!image) return false;
+
+  const layout = getCompanyLogoLayout(image, targetArea);
+  if (!layout) return false;
+  const width = Math.max(1, layout.drawWidth);
+  const height = Math.max(1, layout.drawHeight);
+  const offsetX = x + layout.offsetX;
+  const offsetY = y + layout.offsetY;
   const pixelRatio = Math.max(chart.currentDevicePixelRatio || window.devicePixelRatio || 1, 1);
   const buffer = document.createElement("canvas");
   const bufferCtx = buffer.getContext("2d");
@@ -188,26 +241,18 @@ function drawMonochromeLogo(ctx, chart, image, x, y, targetArea, color) {
 function drawOriginalLogo(ctx, chart, image, x, y, targetArea) {
   if (!image) return false;
 
-  const naturalWidth = image.naturalWidth || image.width;
-  const naturalHeight = image.naturalHeight || image.height;
-  if (!naturalWidth || !naturalHeight) return false;
-
-  let scale = Math.sqrt(targetArea / (naturalWidth * naturalHeight));
-  let width = Math.max(1, naturalWidth * scale);
-  let height = Math.max(1, naturalHeight * scale);
-
-  if (width > BAR_CHART_LOGO_MAX_WIDTH || height > BAR_CHART_LOGO_MAX_HEIGHT) {
-    scale *= Math.min(
-      BAR_CHART_LOGO_MAX_WIDTH / width,
-      BAR_CHART_LOGO_MAX_HEIGHT / height,
-    );
-    width = Math.max(1, naturalWidth * scale);
-    height = Math.max(1, naturalHeight * scale);
-  }
+  const layout = getCompanyLogoLayout(image, targetArea);
+  if (!layout) return false;
 
   ctx.save();
   ctx.globalAlpha = 1;
-  ctx.drawImage(image, x, y - height / 2, width, height);
+  ctx.drawImage(
+    image,
+    x + layout.offsetX,
+    y + layout.offsetY,
+    Math.max(1, layout.drawWidth),
+    Math.max(1, layout.drawHeight),
+  );
   ctx.restore();
   return true;
 }

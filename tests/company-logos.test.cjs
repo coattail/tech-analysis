@@ -107,7 +107,7 @@ test("every company uses a local SVG logo asset with a transparent canvas", asyn
     await t.test(company.id, () => {
       assert.ok(company.logoPath, `${company.id} should declare logoPath`);
       assert.match(company.logoPath, /^assets\/logos\/[a-z0-9-]+\.svg(?:\?v=[a-z0-9-]+)?$/);
-      assert.match(company.logoPath, /\?v=20260629-transparent-logos-v3$/);
+      assert.match(company.logoPath, /\?v=20260629-visible-area-v4$/);
 
       const assetPath = company.logoPath.split("?")[0];
       const svg = fs.readFileSync(path.join(__dirname, "..", assetPath), "utf8");

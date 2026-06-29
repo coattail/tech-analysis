@@ -51,12 +51,13 @@ test("cache-busts generated datasets after completing historical coverage", () =
   }
 });
 
-test("cache-busts chart scripts after repairing transparent logo assets", () => {
+test("cache-busts chart scripts after normalizing visible logo area", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260628-unified-zero-axis"],
-    ["script.js", "20260629-transparent-logos-v4"],
+    ["logo-layout.js", "20260629-visible-area"],
+    ["script.js", "20260629-visible-logo-area-v2"],
   ]) {
     assert.match(
       html,
