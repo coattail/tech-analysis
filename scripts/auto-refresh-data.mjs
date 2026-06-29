@@ -69,7 +69,14 @@ const COMPANY_SOURCES = [
   { id: "zoom", ticker: "ZM", slug: "zm", name: "Zoom" },
   { id: "coreweave", ticker: "CRWV", slug: "crwv", name: "CoreWeave" },
   { id: "nebius", ticker: "NBIS", slug: "nbis", name: "Nebius", minPeriod: "2024Q2" },
-  { id: "chronoscale", ticker: "CHRN", slug: "chrn", name: "ChronoScale" },
+  {
+    id: "chronoscale",
+    ticker: "CHRN",
+    slug: "chrn",
+    name: "ChronoScale",
+    minPeriod: "2024Q3",
+    replaceThroughPeriod: "2026Q1",
+  },
   { id: "sharonai", ticker: "SHAZ", slug: "shaz", name: "SharonAI" },
 ];
 
@@ -164,6 +171,105 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2025Q4": { revenueUsdBillions: 33.73, revenueTwdBillions: 1046.09, netIncomeTwdBillions: 505.74, grossMarginPct: 62.3 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  chronoscale: {
+    // Applied Digital Cloud (ChronoScale predecessor) quarterly results.
+    // Sources: APLD FY2025 10-K, FY2025/FY2026 10-Q segment and discontinued-operation tables,
+    // plus the ChronoScale DEF 14C carve-out financial statements. USD values below are exact.
+    "2024Q3": {
+      revenue: 25_855_000,
+      earnings: -20_159_000,
+      grossMargin: ((25_855 - 38_317) / 25_855) * 100,
+      periodEndDate: "2024-08-31",
+      reportDate: "2024-10-09",
+    },
+    "2024Q4": {
+      revenue: 27_705_000,
+      earnings: -10_363_000,
+      grossMargin: ((27_705 - 29_700) / 27_705) * 100,
+      periodEndDate: "2024-11-30",
+      reportDate: "2025-01-14",
+    },
+    "2025Q1": {
+      revenue: 17_754_000,
+      earnings: -14_849_000,
+      grossMargin: ((17_754 - 23_342) / 17_754) * 100,
+      periodEndDate: "2025-02-28",
+      reportDate: "2025-04-14",
+    },
+    "2025Q2": {
+      revenue: 13_063_000,
+      earnings: -27_358_000,
+      grossMargin: ((13_063 - 23_949) / 13_063) * 100,
+      netAssets: 76_152_000,
+      periodEndDate: "2025-05-31",
+      reportDate: "2025-07-30",
+    },
+    "2025Q3": {
+      revenue: 16_718_000,
+      earnings: 9_321_000,
+      grossMargin: ((16_718 - 3_365) / 16_718) * 100,
+      periodEndDate: "2025-08-31",
+      reportDate: "2025-10-09",
+    },
+    "2025Q4": {
+      revenue: 18_402_000,
+      earnings: 12_113_000,
+      grossMargin: ((18_402 - 3_044) / 18_402) * 100,
+      netAssets: 98_481_000,
+      periodEndDate: "2025-11-30",
+      reportDate: "2026-01-08",
+    },
+    "2026Q1": {
+      revenue: 18_087_000,
+      earnings: -54_252_000,
+      grossMargin: ((18_087 - 6_282) / 18_087) * 100,
+      periodEndDate: "2026-02-28",
+      reportDate: "2026-04-08",
+    },
+  },
+  sharonai: {
+    // SHAZ FY2025 Form 10-K and Q1 2026 Form 10-Q. Q2 is the annual total less
+    // the three other disclosed quarters; gross profit follows the same reconciliation.
+    "2025Q1": {
+      revenue: 325_092,
+      earnings: -1_432_580,
+      grossMargin: (11_710 / 325_092) * 100,
+      netAssets: 28_831_564,
+      periodEndDate: "2025-03-31",
+      reportDate: "2026-03-31",
+    },
+    "2025Q2": {
+      revenue: 376_985,
+      earnings: -2_576_369,
+      grossMargin: (-21_281 / 376_985) * 100,
+      periodEndDate: "2025-06-30",
+      reportDate: "2026-03-31",
+    },
+    "2025Q3": {
+      revenue: 506_747,
+      earnings: -1_627_660,
+      grossMargin: (134_969 / 506_747) * 100,
+      netAssets: -73_407,
+      periodEndDate: "2025-09-30",
+      reportDate: "2026-03-31",
+    },
+    "2025Q4": {
+      revenue: 357_807,
+      earnings: -33_987_300,
+      grossMargin: (-24_591 / 357_807) * 100,
+      netAssets: -10_148_257,
+      periodEndDate: "2025-12-31",
+      reportDate: "2026-03-31",
+    },
+    "2026Q1": {
+      revenue: 294_014,
+      earnings: -19_915_764,
+      grossMargin: (-231_802 / 294_014) * 100,
+      netAssets: 88_630_821,
+      periodEndDate: "2026-03-31",
+      reportDate: "2026-05-15",
+    },
+  },
   apple: {
     // FY2004 Form 10-K, Note 13 selected quarterly financial information.
     "2004Q3": { earnings: 106_000_000, grossMargin: (634 / 2_350) * 100 },
@@ -1535,6 +1641,32 @@ function pruneCompanyDataBeforePeriod(company, minPeriod) {
   });
 }
 
+function clearCompanyDataThroughPeriod(company, maxPeriod) {
+  if (!maxPeriod) return;
+
+  [
+    "revenue",
+    "earnings",
+    "pe",
+    "netAssets",
+    "roe",
+    "grossMargin",
+    "revenueGrowth",
+    "periodEndDates",
+    "reportDates",
+  ].forEach((key) => {
+    if (!company[key] || typeof company[key] !== "object") return;
+    Object.keys(company[key]).forEach((period) => {
+      if (isPeriodLabel(period) && comparePeriods(period, maxPeriod) <= 0) delete company[key][period];
+    });
+  });
+
+  FORECAST_KEYS.forEach((key) => {
+    company.forecastFlags[key] = (company.forecastFlags[key] || [])
+      .filter((period) => comparePeriods(period, maxPeriod) > 0);
+  });
+}
+
 function setSeriesValue(series, key, value) {
   if (!Number.isFinite(value)) return false;
   const previous = series[key];
@@ -2405,6 +2537,11 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
       changedPoints += 1;
       changedPeriods.add(period);
     }
+
+    if (setPeriodEndDate(companyData, period, values.periodEndDate)) {
+      changedPoints += 1;
+      changedPeriods.add(period);
+    }
   });
 
   return {
@@ -2865,6 +3002,8 @@ async function run() {
         );
       }
     }
+
+    clearCompanyDataThroughPeriod(companyData, companySource.replaceThroughPeriod);
 
     const officialOverrideResult = applyOfficialQuarterlyOverrides(companySource.id, companyData);
     officialOverrideResult.changedPeriods.forEach((period) => {

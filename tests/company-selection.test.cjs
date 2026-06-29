@@ -61,7 +61,7 @@ test('includes the ten added enterprise software and cloud companies', () => {
 
   for (const [id, ticker] of expectedCompanies) {
     assert.match(script, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
-    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[\\s\\S]{0,300}?ticker: "${ticker}"`));
     assert.match(priceRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
     assert.match(fundamentalData, new RegExp(`    "${id}": \\{`));
     assert.match(priceData, new RegExp(`    "${id}": \\{`));
@@ -83,7 +83,7 @@ test('includes four neocloud companies in the dashboard and both refresh pipelin
 
   for (const [id, ticker] of expectedCompanies) {
     assert.match(script, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
-    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[\\s\\S]{0,300}?ticker: "${ticker}"`));
     assert.match(priceRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
     assert.match(fundamentalData, new RegExp(`    "${id}": \\{`));
     assert.match(priceData, new RegExp(`    "${id}": \\{`));

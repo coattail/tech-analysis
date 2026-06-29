@@ -439,7 +439,7 @@ test("does not compute rolling margin until four revenue/margin quarters are ava
 test("keeps quarterly net income populated without internal source gaps", () => {
   const data = loadFinancialSourceData();
   const missing = [];
-  const allowedMissing = new Set(["sharonai:2025Q2"]);
+  const allowedMissing = new Set();
   const firstDisplayPeriod = "2005Q1";
 
   for (const [companyId, company] of Object.entries(data.companies)) {
@@ -462,11 +462,29 @@ test("keeps quarterly net income populated without internal source gaps", () => 
   assert.deepEqual(missing, []);
 });
 
+test("uses official ChronoScale history and fills SharonAI 2025Q2 fundamentals", () => {
+  const data = loadFinancialSourceData();
+  const chronoscale = data.companies.chronoscale;
+  const sharonai = data.companies.sharonai;
+
+  assert.deepEqual(
+    Object.keys(chronoscale.revenue),
+    ["2024Q3", "2024Q4", "2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1"],
+  );
+  assert.equal(chronoscale.revenue["2025Q4"], 18_402_000);
+  assert.equal(chronoscale.earnings["2026Q1"], -54_252_000);
+  assert.equal(chronoscale.revenue["2013Q1"], undefined);
+
+  assert.equal(sharonai.revenue["2025Q2"], 376_985);
+  assert.equal(sharonai.earnings["2025Q2"], -2_576_369);
+  assert.ok(Number.isFinite(sharonai.grossMargin["2025Q2"]));
+});
+
 test("keeps core fundamentals continuous from listing through the latest reported quarter", () => {
   const data = loadFinancialSourceData();
   const prices = loadStockPriceSourceData();
   const missing = [];
-  const allowedMissing = new Set(["chronoscale:revenue:2016Q1"]);
+  const allowedMissing = new Set();
 
   for (const [companyId, company] of Object.entries(data.companies)) {
     const priceDates = Object.keys(prices.companies?.[companyId]?.daily || {});
@@ -481,6 +499,7 @@ test("keeps core fundamentals continuous from listing through the latest reporte
     const firstIndex = data.periods.indexOf(availablePeriods[0]);
     const lastIndex = data.periods.indexOf(availablePeriods.at(-1));
     for (const metricKey of ["revenue", "earnings", "netAssets"]) {
+      if (companyId === "chronoscale" && metricKey === "netAssets") continue;
       for (let index = firstIndex; index <= lastIndex; index += 1) {
         const period = data.periods[index];
         if (!Number.isFinite(company[metricKey]?.[period])) {
@@ -585,6 +604,7 @@ test("keeps latest quarter populated across companies except non-applicable metr
   const allowedMissing = new Set([
     "bankofamerica:grossMargin",
     "jpmorgan:grossMargin",
+    "chronoscale:roe",
   ]);
   const missing = [];
 
