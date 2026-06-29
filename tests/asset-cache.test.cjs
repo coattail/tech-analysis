@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after sidebar layout fixes", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260629-two-column-companies/);
+  assert.match(html, /style\.css\?v=20260629-mobile-responsive/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
@@ -55,9 +55,9 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["price-comparison.js", "20260629-price-axis-space"],
+    ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260629-stable-price-axis"],
+    ["script.js", "20260629-mobile-responsive"],
   ]) {
     assert.match(
       html,

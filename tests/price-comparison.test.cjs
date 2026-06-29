@@ -747,6 +747,11 @@ test("single-company chart modes share fixed horizontal axis reservations", () =
       { primaryWidth: 104, priceWidth: 76 },
     );
   }
+
+  assert.deepEqual(
+    getChartAxisReservations({ visibleCompanyCount: 1, measuredPrimaryWidth: 104, compact: true }),
+    { primaryWidth: 58, priceWidth: 52 },
+  );
 });
 
 test("multi-company charts keep their measured primary width without a price gutter", () => {
@@ -810,9 +815,20 @@ test("price comparison keeps the expanded single-company plot width when toggled
   const paddingBody = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
 
   assert.match(script, /const SINGLE_COMPANY_CHART_RIGHT_PADDING = 12;/);
-  assert.match(paddingBody, /right:\s*SINGLE_COMPANY_CHART_RIGHT_PADDING/);
+  assert.match(paddingBody, /right:\s*compact \? COMPACT_SINGLE_COMPANY_RIGHT_PADDING : SINGLE_COMPANY_CHART_RIGHT_PADDING/);
   assert.doesNotMatch(paddingBody, /hasPriceOverlay/);
   assert.match(script, /buildChartLayoutPadding\(effectiveChartMode\)/g);
+});
+
+test("compact charts reduce axes, labels, logo, and watermark pressure", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+
+  assert.match(script, /const COMPACT_CHART_MAX_WIDTH = 520;/);
+  assert.match(script, /if \(isCompactChartLayout\(\)\) return;/);
+  assert.match(script, /const targetArea = compact \? 36 \* 36 : BAR_CHART_LOGO_TARGET_AREA/);
+  assert.match(script, /COMPACT_SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE/);
+  assert.match(script, /maxYearTicks = getChartContainerWidth\(\) <= 380 \? 5 : 6/);
+  assert.match(script, /return numericValue < 0 \? "" : `\$\$\{decimalFormatter\.format\(numericValue\)\}`/);
 });
 
 test("single-company financial bars keep uniform quarter slots with price comparison", () => {

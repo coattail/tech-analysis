@@ -284,10 +284,12 @@ function drawSingleCompanyLogoBadge(
 ) {
   if (!company) return false;
 
-  const badgeX = chartArea.left + BAR_CHART_LOGO_LEFT;
+  const compact = isCompactChartLayout();
+  const badgeX = chartArea.left + (compact ? 7 : BAR_CHART_LOGO_LEFT);
   const badgeY = badgeVerticalPosition === "bottom"
-    ? chartArea.bottom - BAR_CHART_BADGE_VERTICAL_OFFSET
-    : chartArea.top + BAR_CHART_BADGE_VERTICAL_OFFSET;
+    ? chartArea.bottom - (compact ? 20 : BAR_CHART_BADGE_VERTICAL_OFFSET)
+    : chartArea.top + (compact ? 20 : BAR_CHART_BADGE_VERTICAL_OFFSET);
+  const targetArea = compact ? 36 * 36 : BAR_CHART_LOGO_TARGET_AREA;
   const logoImage = getCompanyLogo(company.id);
   const logoColor = isDeepTheme ? "#f4f7fb" : "#f3f6fa";
 
@@ -300,7 +302,7 @@ function drawSingleCompanyLogoBadge(
         logoImage,
         badgeX,
         badgeY,
-        BAR_CHART_LOGO_TARGET_AREA,
+        targetArea,
       )
       : drawMonochromeLogo(
         ctx,
@@ -308,7 +310,7 @@ function drawSingleCompanyLogoBadge(
         logoImage,
         badgeX,
         badgeY,
-        BAR_CHART_LOGO_TARGET_AREA,
+        targetArea,
         logoColor,
       ))
   ) {
@@ -468,7 +470,10 @@ const singleCompanyTickerWatermarkPlugin = {
       maxTextHeight,
       (maxTextWidth / measuredWidth) * baseFontSize,
     );
-    const fontSize = Math.max(SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE, fittedFontSize);
+    const minFontSize = isCompactChartLayout()
+      ? COMPACT_SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE
+      : SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE;
+    const fontSize = Math.max(minFontSize, fittedFontSize);
 
     ctx.save();
     ctx.font = `800 ${fontSize}px ${themeTokens.chartFontFamily}`;
@@ -489,6 +494,7 @@ const customYAxisTitlePlugin = {
   afterDraw(chart) {
     const yScale = chart.scales?.y;
     if (!yScale) return;
+    if (isCompactChartLayout()) return;
 
     const { mainText, detailText } = buildYAxisTitleParts(state.metric, state.frequency);
     if (!mainText) return;
@@ -603,7 +609,13 @@ const Y_AXIS_TITLE_MAIN_FONT_SIZE = 15.4;
 const Y_AXIS_TITLE_DETAIL_FONT_SIZE = 12.1;
 const Y_AXIS_TITLE_HORIZONTAL_OFFSET = 20;
 const Y_AXIS_TITLE_VERTICAL_OFFSET = -28;
+const COMPACT_CHART_MAX_WIDTH = 520;
+const COMPACT_Y_AXIS_MIN_RESERVED_WIDTH = 58;
+const COMPACT_Y_AXIS_RESERVED_EXTRA_WIDTH = 18;
+const COMPACT_SINGLE_COMPANY_RIGHT_PADDING = 4;
+const COMPACT_MULTI_COMPANY_RIGHT_PADDING = 22;
 const SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE = 64;
+const COMPACT_SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE = 34;
 const SINGLE_COMPANY_WATERMARK_ALPHA = 0.1;
 const EXPORT_DEVICE_PIXEL_RATIO = 8;
 const SINGLE_COMPANY_BAR_MIN_THICKNESS = 6;
@@ -704,6 +716,15 @@ function computeSingleCompanyBarThickness(visibleLabelCount) {
     SINGLE_COMPANY_BAR_MIN_THICKNESS,
     Math.min(SINGLE_COMPANY_BAR_MAX_THICKNESS, nextThickness),
   );
+}
+
+function getChartContainerWidth() {
+  return chartEl?.parentElement?.clientWidth || chartEl?.clientWidth || window.innerWidth || 0;
+}
+
+function isCompactChartLayout() {
+  const width = getChartContainerWidth();
+  return width > 0 && width <= COMPACT_CHART_MAX_WIDTH;
 }
 
 function setStatus(text, isError = false) {
@@ -1954,11 +1975,41 @@ function formatDateAxisTick(value) {
   return `${year}/${month}/${day}`;
 }
 
-function formatXAxisTick(value, label) {
+function buildXAxisDensity(labels) {
+  const compact = isCompactChartLayout();
+  const years = [...new Set((labels ?? [])
+    .map((label) => String(label).match(/^(\d{4})/)?.[1])
+    .filter(Boolean)
+    .map(Number))];
+  if (!compact || years.length <= 1) {
+    return { compact, firstYear: years[0] ?? null, lastYear: years[years.length - 1] ?? null, step: 1 };
+  }
+
+  const maxYearTicks = getChartContainerWidth() <= 380 ? 5 : 6;
+  return {
+    compact,
+    firstYear: years[0],
+    lastYear: years[years.length - 1],
+    step: Math.max(1, Math.ceil((years.length - 1) / Math.max(1, maxYearTicks - 1))),
+  };
+}
+
+function shouldShowXAxisYear(label, density) {
+  if (!density?.compact) return true;
+  const match = String(label).match(/^(\d{4})(?:Q([1-4]))?$/);
+  if (!match) return false;
+  if (match[2] && match[2] !== "1") return false;
+  const year = Number(match[1]);
+  return year === density.firstYear
+    || year === density.lastYear
+    || (year - density.firstYear) % density.step === 0;
+}
+
+function formatXAxisTick(value, label, density = null) {
   if (usesDateXAxis()) return formatDateAxisTick(value);
-  if (state.frequency === "annual") return label;
+  if (state.frequency === "annual") return shouldShowXAxisYear(label, density) ? label : "";
   if (typeof label !== "string") return "";
-  return label.endsWith("Q1") ? label.slice(0, 4) : "";
+  return label.endsWith("Q1") && shouldShowXAxisYear(label, density) ? label.slice(0, 4) : "";
 }
 
 function collectDateXAxisValues(datasets, { barOnly = false } = {}) {
@@ -2018,12 +2069,13 @@ function buildDateAxisTicks(scale) {
   scale.ticks = ticks;
 }
 
-function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets) {
+function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets, labels = []) {
   const dateAxis = usesDateXAxis(effectiveChartMode);
+  const density = buildXAxisDensity(labels);
   const common = {
     border: { color: "rgba(0,0,0,0)" },
     title: {
-      display: true,
+      display: !density.compact,
       text: (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).axisTitle,
       color: themeTokens.axisColor,
       font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
@@ -2040,9 +2092,11 @@ function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets) {
       ticks: {
         autoSkip: false,
         color: themeTokens.axisColor,
-        font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+        maxRotation: density.compact ? 0 : 50,
+        minRotation: 0,
+        font: { family: themeTokens.chartFontFamily, size: density.compact ? 9 : 10, weight: "600" },
         callback(value) {
-          return formatXAxisTick(value, "");
+          return formatXAxisTick(value, "", density);
         },
       },
       grid: {
@@ -2060,14 +2114,16 @@ function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets) {
     ticks: {
       autoSkip: false,
       color: themeTokens.axisColor,
-      font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+      maxRotation: density.compact ? 0 : 50,
+      minRotation: 0,
+      font: { family: themeTokens.chartFontFamily, size: density.compact ? 9 : 10, weight: "600" },
       callback(value) {
         const label = this.getLabelForValue(value);
-        return formatXAxisTick(value, label);
+        return formatXAxisTick(value, label, density);
       },
     },
     grid: {
-      color: buildXGridColorCallback(themeTokens),
+      color: buildXGridColorCallback(themeTokens, density),
       offset: effectiveChartMode === "bar",
       borderDash: [],
     },
@@ -2094,7 +2150,7 @@ function resolveXGridColor(themeTokens, label, tickIndex) {
   return label.endsWith("Q1") ? themeTokens.xGridColor : hidden;
 }
 
-function buildXGridColorCallback(themeTokens) {
+function buildXGridColorCallback(themeTokens, density = null) {
   return (context) => {
     const labels = context?.chart?.data?.labels ?? [];
     const rawIndex = context?.index;
@@ -2103,6 +2159,7 @@ function buildXGridColorCallback(themeTokens) {
     const labelFromTick = typeof context?.tick?.label === "string" ? context.tick.label : null;
     const labelFromValue = typeof context?.tick?.value === "string" ? context.tick.value : null;
     const label = labels[tickIndex] ?? labelFromTick ?? labelFromValue;
+    if (density?.compact && !shouldShowXAxisYear(label, density)) return "rgba(0,0,0,0)";
     return resolveXGridColor(themeTokens, label, tickIndex >= 0 ? tickIndex : 0);
   };
 }
@@ -2461,6 +2518,7 @@ function measureTextWidth(text, font) {
 }
 
 function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
+  const compact = isCompactChartLayout();
   const bounds = computeYAxisBounds(datasets, chartMode, true);
   const sampleValues = [bounds.min, bounds.max, 0];
   const font = `600 10px ${themeTokens.chartFontFamily}`;
@@ -2470,15 +2528,17 @@ function computeYAxisReservedWidth(datasets, chartMode, themeTokens) {
   }, 0);
 
   return Math.max(
-    Y_AXIS_MIN_RESERVED_WIDTH,
-    Math.ceil(widestLabel + Y_AXIS_RESERVED_EXTRA_WIDTH),
+    compact ? COMPACT_Y_AXIS_MIN_RESERVED_WIDTH : Y_AXIS_MIN_RESERVED_WIDTH,
+    Math.ceil(widestLabel + (compact ? COMPACT_Y_AXIS_RESERVED_EXTRA_WIDTH : Y_AXIS_RESERVED_EXTRA_WIDTH)),
   );
 }
 
 function computeChartAxisReservations(datasets, chartMode, themeTokens) {
+  const compact = isCompactChartLayout();
   return PriceComparisonUtils.getChartAxisReservations({
     visibleCompanyCount: state.visibleCompanies.size,
     measuredPrimaryWidth: computeYAxisReservedWidth(datasets, chartMode, themeTokens),
+    compact,
   });
 }
 
@@ -2555,16 +2615,17 @@ function applyVisibilityStateToChart() {
 }
 
 function buildChartLayoutPadding(effectiveChartMode) {
+  const compact = isCompactChartLayout();
   if (getSingleVisibleCompanyId()) {
     return {
       left: 0,
-      right: SINGLE_COMPANY_CHART_RIGHT_PADDING,
+      right: compact ? COMPACT_SINGLE_COMPANY_RIGHT_PADDING : SINGLE_COMPANY_CHART_RIGHT_PADDING,
     };
   }
 
   return {
     left: 0,
-    right: MULTI_COMPANY_CHART_RIGHT_PADDING,
+    right: compact ? COMPACT_MULTI_COMPANY_RIGHT_PADDING : MULTI_COMPANY_CHART_RIGHT_PADDING,
   };
 }
 
@@ -2596,7 +2657,7 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.min = priceBounds.min;
   state.chart.options.scales.yPrice.max = priceBounds.max;
-  state.chart.options.scales.x = buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets);
+  state.chart.options.scales.x = buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets, labels);
   state.chart.options.interaction = buildInteractionOptions(effectiveChartMode);
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
   state.chart.options.plugins.legend.display = reserveLegendLayout;
@@ -2776,7 +2837,7 @@ function buildChart() {
         },
       },
       scales: {
-        x: buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets),
+        x: buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets, labels),
         y: {
           afterFit(scale) {
             const reservedWidth = scale.options.reservedWidth ?? scale.width;
@@ -2798,8 +2859,8 @@ function buildChart() {
           },
           ticks: {
             color: themeTokens.axisColor,
-            font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
-            padding: Y_AXIS_TICK_PADDING,
+            font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 10, weight: "600" },
+            padding: isCompactChartLayout() ? 0 : Y_AXIS_TICK_PADDING,
             callback(value) {
               return formatPrimaryYAxisTick(
                 state.metric,
@@ -2826,16 +2887,17 @@ function buildChart() {
           reservedWidth: axisReservations.priceWidth,
           title: {
             display: hasPriceOverlay,
-            text: "股价（USD）",
+            text: isCompactChartLayout() ? "USD" : "股价（USD）",
             color: themeTokens.axisColor,
-            font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
+            font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
           },
           ticks: {
             display: hasPriceOverlay,
             color: themeTokens.axisColor,
-            font: { family: themeTokens.chartFontFamily, size: 10, weight: "600" },
+            font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 10, weight: "600" },
             callback(value) {
-              return `$${decimalFormatter.format(Number(value))}`;
+              const numericValue = Number(value);
+              return numericValue < 0 ? "" : `$${decimalFormatter.format(numericValue)}`;
             },
           },
           grid: {
@@ -2848,9 +2910,9 @@ function buildChart() {
           display: reserveLegendLayout,
           labels: {
             color: themeTokens.axisColor,
-            font: { family: themeTokens.chartFontFamily, size: 11, weight: "600" },
-            boxWidth: 12,
-            boxHeight: 12,
+            font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
+            boxWidth: isCompactChartLayout() ? 9 : 12,
+            boxHeight: isCompactChartLayout() ? 9 : 12,
             generateLabels(chart) {
               const defaults = Chart.defaults.plugins.legend.labels.generateLabels(chart);
               return defaults

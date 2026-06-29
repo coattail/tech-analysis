@@ -8,12 +8,14 @@
   const DATE_AXIS_MIN_PADDING_DAYS = 12;
   const SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH = 104;
   const SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH = 76;
+  const COMPACT_PRIMARY_AXIS_RESERVED_WIDTH = 58;
+  const COMPACT_PRICE_AXIS_RESERVED_WIDTH = 52;
 
-  function getChartAxisReservations({ visibleCompanyCount, measuredPrimaryWidth } = {}) {
+  function getChartAxisReservations({ visibleCompanyCount, measuredPrimaryWidth, compact = false } = {}) {
     if (Number(visibleCompanyCount) === 1) {
       return {
-        primaryWidth: SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH,
-        priceWidth: SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH,
+        primaryWidth: compact ? COMPACT_PRIMARY_AXIS_RESERVED_WIDTH : SINGLE_COMPANY_PRIMARY_AXIS_RESERVED_WIDTH,
+        priceWidth: compact ? COMPACT_PRICE_AXIS_RESERVED_WIDTH : SINGLE_COMPANY_PRICE_AXIS_RESERVED_WIDTH,
       };
     }
 

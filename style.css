@@ -1690,84 +1690,263 @@ body:not([data-theme="deep"]) .range-panel {
 }
 
 @media (max-width: 700px) {
+  body {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background-attachment: scroll;
+  }
+
   .layout {
-    width: min(96vw, 1360px);
-    margin: 14px auto 20px;
+    width: 100%;
+    margin: 0;
+    padding: 10px 8px 18px;
+    gap: 10px;
+  }
+
+  .panel {
+    border-radius: 16px;
   }
 
   .header-panel,
   .content-panel {
-    padding: 13px;
+    padding: 10px;
   }
 
   .header-shell,
   .header-intro,
   .header-rail {
-    gap: 12px;
+    gap: 8px;
+  }
+
+  .header-panel h1 {
+    font-size: clamp(1.3rem, 6.4vw, 1.72rem);
   }
 
   .header-rail .meta-chips {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .header-rail .chip {
+    min-height: 48px;
+    padding: 8px 9px;
+    font-size: 0.76rem;
+  }
+
+  .header-rail .chip:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .content-panel {
+    gap: 10px;
+  }
+
+  .control-panel,
+  .chart-panel {
+    padding: 9px;
+    border-radius: 14px;
+  }
+
+  .control-panel {
+    gap: 8px;
+  }
+
+  .control-header,
+  .control-group {
+    padding: 9px;
+  }
+
+  .company-control-group {
+    flex: none;
+    min-height: auto;
   }
 
   .control-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    position: relative;
+    z-index: 2;
+    background: var(--panel);
+    padding-top: 2px;
+  }
+
+  .control-actions button {
+    min-height: 42px;
+    font-size: 0.78rem;
   }
 
   .preset-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .chart-head {
     flex-direction: column;
     align-items: stretch;
+    gap: 9px;
+    padding-bottom: 9px;
   }
 
   .chart-side-tools {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .chart-mode-control,
   .price-comparison-control {
     min-width: 0;
+    padding: 7px;
+    gap: 5px;
+  }
+
+  .chart-mode-caption {
+    font-size: 0.58rem;
+  }
+
+  .chart-mode-pill span,
+  .price-comparison-toggle span {
+    min-height: 38px;
+    font-size: 0.78rem;
+  }
+
+  .chart-actions {
+    grid-column: 1 / -1;
   }
 
   .chart-actions button {
     width: 100%;
+    min-height: 38px;
   }
 
   .control-header h2 {
-    font-size: 1.06rem;
+    font-size: 1rem;
   }
 
   .control-group h3 {
-    font-size: 1rem;
+    font-size: 0.88rem;
   }
 
   .control-header p,
   .frequency-switch .segment-item span,
   .toggle-item,
   .hint {
-    font-size: 0.92rem;
-  }
-
-  .frequency-switch {
-    grid-template-columns: 1fr;
+    font-size: 0.82rem;
   }
 
   .toggle-list {
     grid-template-columns: 1fr;
+    flex: 0 0 auto;
     min-height: 0;
-    max-height: none;
-    overflow: visible;
+    max-height: 460px;
+    max-height: min(52svh, 520px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 3px;
+  }
+
+  .company-category-card {
+    align-self: start;
+    padding: 8px;
+  }
+
+  .company-category-card h4 {
+    margin-bottom: 6px;
+  }
+
+  .company-search input {
+    min-height: 44px;
+    font-size: 0.82rem;
+  }
+
+  .control-foot {
+    margin-top: 0;
+    padding-top: 9px;
+    gap: 7px;
+  }
+
+  .chart-head h2 {
+    font-size: 1.32rem;
+  }
+
+  .chart-kicker {
+    font-size: 0.62rem;
   }
 
   .chart-wrap {
-    min-height: 450px;
+    height: clamp(390px, 118vw, 510px);
+    min-height: 390px;
+    margin-top: 8px;
+    padding: 4px;
+    border-radius: 12px;
   }
 
-  .chart-summary,
+  .chart-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .summary-card {
+    padding: 8px 9px;
+  }
+
+  .summary-label {
+    font-size: 0.58rem;
+  }
+
+  .summary-card strong {
+    font-size: 0.86rem;
+  }
+
   .metric-toolbar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .metric-pill span {
+    min-height: 40px;
+    padding: 0 6px;
+    font-size: 0.78rem;
+  }
+
+  .range-panel {
+    margin-top: 8px;
+    padding: 9px;
+  }
+
+  .range-head {
+    gap: 6px;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+  }
+
+  .status-text {
+    margin-top: 8px;
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .layout {
+    padding-inline: 6px;
+  }
+
+  .company-category-list {
     grid-template-columns: 1fr;
+  }
+
+  .metric-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chart-wrap {
+    height: 420px;
+  }
+
+  .range-head {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
