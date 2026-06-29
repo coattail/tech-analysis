@@ -518,7 +518,7 @@ body:not([data-theme="deep"]) .header-panel {
 
 .content-panel {
   display: grid;
-  grid-template-columns: minmax(440px, 500px) minmax(640px, 1fr);
+  grid-template-columns: minmax(330px, 375px) minmax(640px, 1fr);
   gap: 18px;
   padding: 16px;
   align-items: stretch;
@@ -786,6 +786,14 @@ body:not([data-theme="deep"]) .control-group {
   display: grid;
   grid-template-columns: 1fr;
   gap: 6px;
+}
+
+.company-category-card[data-category="other"] {
+  grid-column: 1 / -1;
+}
+
+.company-category-card[data-category="other"] .company-category-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .company-search-empty {
@@ -1727,6 +1735,10 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .company-category-list {
+    grid-template-columns: 1fr;
+  }
+
+  .company-category-card[data-category="other"] .company-category-list {
     grid-template-columns: 1fr;
   }
 

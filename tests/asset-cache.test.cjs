@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after sidebar layout fixes", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260629-single-column-range/);
+  assert.match(html, /style\.css\?v=20260629-semiconductor-panel/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
@@ -57,7 +57,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260628-unified-zero-axis"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260629-single-column-range"],
+    ["script.js", "20260629-semiconductor-panel"],
   ]) {
     assert.match(
       html,

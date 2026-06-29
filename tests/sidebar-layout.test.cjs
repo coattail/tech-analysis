@@ -14,13 +14,17 @@ test("allows the company toggle list to shrink inside the sticky sidebar", () =>
   );
 });
 
-test("uses a two-by-two category grid with one company column per card", () => {
+test("narrows the sidebar and uses a full-width two-column other category", () => {
   const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
   const contentRule = css.match(/\.content-panel\s*\{[^}]+\}/)?.[0] ?? "";
   const toggleListRule = css.match(/\.toggle-list\s*\{[^}]+\}/)?.[0] ?? "";
   const categoryListRule = css.match(/\.company-category-list\s*\{[^}]+\}/)?.[0] ?? "";
+  const otherCardRule = css.match(/\.company-category-card\[data-category="other"\]\s*\{[^}]+\}/)?.[0] ?? "";
+  const otherListRule = css.match(/\.company-category-card\[data-category="other"\]\s+\.company-category-list\s*\{[^}]+\}/)?.[0] ?? "";
 
-  assert.match(contentRule, /grid-template-columns:\s*minmax\(440px, 500px\)/);
+  assert.match(contentRule, /grid-template-columns:\s*minmax\(330px, 375px\)/);
   assert.match(toggleListRule, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(categoryListRule, /grid-template-columns:\s*1fr/);
+  assert.match(otherCardRule, /grid-column:\s*1 \/ -1/);
+  assert.match(otherListRule, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
 });

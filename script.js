@@ -92,6 +92,7 @@ const COMPANY_CATEGORIES = [
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "alphabet", "apple", "microsoft", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"] },
   { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"] },
+  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"] },
   { id: "other", label: "其他", companyIds: [] },
 ];
 const CATEGORIZED_COMPANY_IDS = new Set(COMPANY_CATEGORIES.flatMap((category) => category.companyIds));

@@ -90,7 +90,7 @@ test('includes four neocloud companies in the dashboard and both refresh pipelin
   }
 });
 
-test('renders searchable company categories in a two-by-two module grid', () => {
+test('renders searchable company categories with semiconductor before other', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
   const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
 
@@ -98,6 +98,8 @@ test('renders searchable company categories in a two-by-two module grid', () => 
   assert.match(script, /label: "MAG7"/);
   assert.match(script, /label: "软件"/);
   assert.match(script, /label: "云服务"/);
+  assert.match(script, /id: "semiconductor", label: "半导体", companyIds: \["avgo", "tsmc", "asml", "micron", "amd"\]/);
+  assert.ok(script.indexOf('label: "半导体"') < script.indexOf('label: "其他"'));
   assert.match(script, /label: "其他"/);
   assert.match(script, /companySearchEl\?\.addEventListener\("input"/);
 });
