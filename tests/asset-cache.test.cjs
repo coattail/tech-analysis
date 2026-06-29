@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after sidebar layout fixes", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260629-responsive-sidebar/);
+  assert.match(html, /style\.css\?v=20260629-two-column-companies/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
