@@ -533,14 +533,14 @@ const customYAxisTitlePlugin = {
 
 const METRICS = {
   revenue: {
-    label: "营收（十亿美元）",
-    axisLabel: "营收（十亿美元，USD）",
+    label: "营收（美元）",
+    axisLabel: "营收（美元，USD）",
     sourceKey: "revenue",
     annualMode: "sum",
   },
   netIncome: {
-    label: "净利润（十亿美元）",
-    axisLabel: "净利润（十亿美元，USD）",
+    label: "净利润（美元）",
+    axisLabel: "净利润（美元，USD）",
     sourceKey: "earnings",
     annualMode: "sum",
   },
@@ -1547,10 +1547,7 @@ function formatYAxisTick(metricKey, value) {
   if (!isFiniteNumber(value)) return "";
 
   if (metricKey === "revenue" || metricKey === "netIncome") {
-    const inBillions = value / 1e9;
-    const abs = Math.abs(inBillions);
-    if (abs >= 1000) return `$${decimalFormatter.format(inBillions / 1000)}T`;
-    return `$${decimalFormatter.format(inBillions)}B`;
+    return formatUsdValue(value);
   }
 
   if (metricKey === "revenueGrowth" || metricKey === "roe" || metricKey === "grossMargin") {
@@ -1583,7 +1580,7 @@ function formatMetricValue(metricKey, value) {
   if (!isFiniteNumber(value)) return "无数据";
 
   if (metricKey === "revenue" || metricKey === "netIncome") {
-    return `$${decimalFormatter.format(value / 1e9)}B`;
+    return formatUsdValue(value);
   }
 
   if (metricKey === "revenueGrowth" || metricKey === "roe" || metricKey === "grossMargin") {
@@ -1591,6 +1588,15 @@ function formatMetricValue(metricKey, value) {
   }
 
   return `${decimalFormatter.format(value)}x`;
+}
+
+function formatUsdValue(value) {
+  const abs = Math.abs(value);
+  if (abs >= 1e12) return `$${decimalFormatter.format(value / 1e12)}T`;
+  if (abs >= 1e9) return `$${decimalFormatter.format(value / 1e9)}B`;
+  if (abs >= 1e6) return `$${decimalFormatter.format(value / 1e6)}M`;
+  if (abs >= 1e3) return `$${decimalFormatter.format(value / 1e3)}K`;
+  return `$${decimalFormatter.format(value)}`;
 }
 
 function buildYAxisTitleParts(metricKey, frequencyKey) {
@@ -1609,7 +1615,7 @@ function buildYAxisTitleParts(metricKey, frequencyKey) {
   let detailText = metricUnit;
 
   if (metricKey === "revenue" || metricKey === "netIncome") {
-    detailText = "（十亿美元，Billion USD）";
+    detailText = "（美元，USD）";
   }
 
   return {
@@ -2267,7 +2273,7 @@ function getTightPositiveAxisScale(max) {
 }
 
 function roundPositiveAxisBounds(min, max, clampMinToZero = false) {
-  const safeMax = Math.max(max, 1);
+  const safeMax = Math.max(max, Number.EPSILON);
   const { step, max: niceMax } = getTightPositiveAxisScale(safeMax);
   const niceMin = clampMinToZero ? 0 : Math.floor(min / step) * step;
 
@@ -2285,7 +2291,7 @@ function roundPositiveAxisBounds(min, max, clampMinToZero = false) {
 }
 
 function roundAxisBoundsToNiceValues(min, max, clampMinToZero = false) {
-  const span = Math.max(max - min, Math.abs(max), 1);
+  const span = Math.max(max - min, Math.abs(min), Math.abs(max), Number.EPSILON);
   const step = getNiceStep(span, 10);
 
   const niceMin = clampMinToZero ? 0 : Math.floor(min / step) * step;

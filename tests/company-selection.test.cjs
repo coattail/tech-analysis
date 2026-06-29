@@ -90,6 +90,14 @@ test('includes four neocloud companies in the dashboard and both refresh pipelin
   }
 });
 
+test('keeps small-company financial values visible with adaptive USD units', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+
+  assert.match(script, /const safeMax = Math\.max\(max, Number\.EPSILON\)/);
+  assert.match(script, /if \(abs >= 1e6\) return `\$\$\{decimalFormatter\.format\(value \/ 1e6\)\}M`/);
+  assert.match(script, /if \(abs >= 1e3\) return `\$\$\{decimalFormatter\.format\(value \/ 1e3\)\}K`/);
+});
+
 test('renders searchable company categories with semiconductor before other', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
   const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
