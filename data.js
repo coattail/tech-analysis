@@ -1,13 +1,13 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-07-01T00:21:35.210Z",
+    "generatedAt": "2026-07-03T00:19:32.065Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q2",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet + CompaniesMarketCap quarterly P/E",
-      "refreshedAt": "2026-07-01T00:21:35.210Z",
+      "refreshedAt": "2026-07-03T00:19:32.065Z",
       "updatedCompanies": [
         "nvidia",
         "alphabet",
@@ -51,7 +51,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "chronoscale",
         "sharonai"
       ],
-      "changedPoints": 3277,
+      "changedPoints": 3273,
       "changedPeriods": [
         "2004Q2",
         "2004Q3",
@@ -7072,19 +7072,19 @@ window.FINANCIAL_SOURCE_DATA = {
         "2021Q1": 21.320627586870728,
         "2021Q2": 24.1177,
         "2021Q3": 26.6046,
-        "2021Q4": 27.3548,
+        "2021Q4": 27.354816863254133,
         "2022Q1": 29.1107,
         "2022Q2": 25.002999999999997,
         "2022Q3": 25.086199999999998,
-        "2022Q4": 23.7561,
+        "2022Q4": 23.756065465910027,
         "2023Q1": 19.3364,
         "2023Q2": 18.185100000000002,
         "2023Q3": 17.8929,
-        "2023Q4": 17.6342,
+        "2023Q4": 17.634203520483172,
         "2024Q1": 17.3513,
         "2024Q2": 17.9529,
         "2024Q3": 19.8435,
-        "2024Q4": 16.256300000000003,
+        "2024Q4": 16.256272610572996,
         "2025Q1": 16.307199999999998,
         "2025Q2": 17.2386,
         "2025Q3": 17.989,
