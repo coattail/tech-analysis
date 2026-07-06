@@ -110,7 +110,7 @@ test('includes Samsung and SK hynix in the dashboard and both refresh pipelines'
   }
 });
 
-test('keeps the full available Samsung and SK hynix fundamental histories', () => {
+test('keeps official Samsung and SK hynix fundamental histories from 2011Q1', () => {
   const context = { window: {} };
   vm.runInNewContext(
     fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8'),
@@ -118,8 +118,27 @@ test('keeps the full available Samsung and SK hynix fundamental histories', () =
   );
   const companies = context.window.FINANCIAL_SOURCE_DATA.companies;
 
-  assert.equal(Object.keys(companies.samsung.revenue).find((period) => Number.isFinite(companies.samsung.revenue[period])), '2018Q1');
-  assert.equal(Object.keys(companies['sk-hynix'].revenue).find((period) => Number.isFinite(companies['sk-hynix'].revenue[period])), '2018Q1');
+  assert.equal(Object.keys(companies.samsung.revenue).find((period) => Number.isFinite(companies.samsung.revenue[period])), '2011Q1');
+  assert.equal(Object.keys(companies['sk-hynix'].revenue).find((period) => Number.isFinite(companies['sk-hynix'].revenue[period])), '2011Q1');
+  assert.ok(Number.isFinite(companies.samsung.grossMargin['2011Q1']));
+  assert.equal(companies['sk-hynix'].grossMargin['2011Q1'] ?? null, null);
+});
+
+test('stores reproducible official Korean historical backfills', () => {
+  const backfill = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '..', 'data', 'korean-historical-backfill.json'),
+    'utf8',
+  ));
+  const builder = fs.readFileSync(
+    path.join(__dirname, '..', 'scripts', 'build-korean-historical-backfill.mjs'),
+    'utf8',
+  );
+
+  assert.equal(backfill.companies.samsung.rows.length, 28);
+  assert.equal(backfill.companies['sk-hynix'].rows.length, 28);
+  assert.match(backfill.companies.samsung.rows[0].sourceUrl, /^https:\/\/images\.samsung\.com\//);
+  assert.match(backfill.companies['sk-hynix'].rows[0].sourceUrl, /^https:\/\/news\.skhynix\.com\//);
+  assert.match(builder, /pdftotext/);
 });
 
 test('keeps small-company financial values visible with adaptive USD units', () => {

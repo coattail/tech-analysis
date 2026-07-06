@@ -40,15 +40,9 @@ test("keeps the latest cache key for unchanged company-selection behavior", () =
 
 test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260706-korea-companies";
 
-  for (const asset of ["data.js", "price-data.js"]) {
-    assert.match(
-      html,
-      new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
-      `${asset} should use the full-history cache version`,
-    );
-  }
+  assert.match(html, /data\.js\?v=20260706-korea-history-v2/);
+  assert.match(html, /price-data\.js\?v=20260706-korea-companies/);
 });
 
 test("cache-busts chart scripts after normalizing visible logo area", () => {

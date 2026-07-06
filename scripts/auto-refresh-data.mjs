@@ -8,6 +8,7 @@ import { promisify } from "node:util";
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const CURATED_EARNINGS_DATASET_PATH = new URL("../../earnings-image-studio/data/earnings-dataset.json", import.meta.url);
 const HISTORICAL_SEC_BACKFILL_PATH = new URL("../data/historical-sec-backfill.json", import.meta.url);
+const KOREAN_HISTORICAL_BACKFILL_PATH = new URL("../data/korean-historical-backfill.json", import.meta.url);
 const STOCK_ANALYSIS_BASE = "https://stockanalysis.com";
 const COMPANIES_MARKET_CAP_BASE = "https://companiesmarketcap.com";
 const SEC_COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json";
@@ -479,6 +480,7 @@ const fxSeriesCache = new Map();
 let secTickerMapCache = null;
 let curatedQuarterlyDatasetCache = null;
 let historicalSecBackfillCache = null;
+let koreanHistoricalBackfillCache = null;
 
 function resolveCompanyId(token) {
   const normalized = String(token || "").trim().toLowerCase();
@@ -625,6 +627,25 @@ async function loadHistoricalSecBackfill() {
   }
 
   return historicalSecBackfillCache;
+}
+
+async function loadKoreanHistoricalBackfill() {
+  if (koreanHistoricalBackfillCache) return koreanHistoricalBackfillCache;
+
+  try {
+    const raw = await readFile(KOREAN_HISTORICAL_BACKFILL_PATH, "utf8");
+    const parsed = JSON.parse(raw);
+    koreanHistoricalBackfillCache = parsed?.companies && typeof parsed.companies === "object"
+      ? parsed.companies
+      : {};
+  } catch (error) {
+    if (error?.code !== "ENOENT") {
+      console.warn(`读取韩国公司历史回填缓存失败：${error.message}`);
+    }
+    koreanHistoricalBackfillCache = {};
+  }
+
+  return koreanHistoricalBackfillCache;
 }
 
 function sanitizeHistoricalBackfillRows(companyId, rows) {
@@ -2605,6 +2626,7 @@ async function run() {
   const options = parseArgs(process.argv.slice(2));
   const curatedQuarterlyDataset = await loadCuratedQuarterlyDataset();
   const historicalSecBackfill = await loadHistoricalSecBackfill();
+  const koreanHistoricalBackfill = await loadKoreanHistoricalBackfill();
 
   const selectedCompanies = options.companyIds
     ? COMPANY_SOURCES.filter((company) => options.companyIds.has(company.id))
@@ -2692,6 +2714,33 @@ async function run() {
       } catch (error) {
         console.warn(`  历史 SEC 回填载入失败：${error.message}`);
         historicalBackfillRows = [];
+      }
+    }
+
+    const koreanBackfill = koreanHistoricalBackfill[companySource.id];
+    if (koreanBackfill?.rows?.length) {
+      try {
+        let koreanRows = koreanBackfill.rows;
+        if (koreanBackfill.reportingCurrency && koreanBackfill.reportingCurrency !== "USD") {
+          const converted = await convertSecHistoryRowsToUsd(koreanRows, koreanBackfill.reportingCurrency);
+          if (!converted) {
+            console.warn(`  韩国历史回填口径为 ${koreanBackfill.reportingCurrency}，当前无换算配置，已跳过`);
+            koreanRows = [];
+          } else {
+            koreanRows = converted.rows.map((row) => ({
+              ...row,
+              officialHistoricalBackfill: true,
+            }));
+          }
+        }
+
+        historicalBackfillRows = [...koreanRows, ...historicalBackfillRows]
+          .sort((left, right) => comparePeriods(left.period, right.period));
+        if (koreanRows.length > 0) {
+          console.log(`  已载入韩国官方历史回填：${koreanRows[0].period} -> ${koreanRows.at(-1).period}`);
+        }
+      } catch (error) {
+        console.warn(`  韩国历史回填载入失败：${error.message}`);
       }
     }
 
@@ -2809,20 +2858,24 @@ async function run() {
         companyStats.changedPeriods.add(row.period);
       }
 
-      const useRevenue = isCompatibleHistoricalBackfillValue(
-        companyData.revenue,
-        qualityReferencePeriods,
-        row.period,
-        row.revenue,
-      );
-      const useNetIncome = isCompatibleHistoricalBackfillValue(
-        companyData.earnings,
-        qualityReferencePeriods,
-        row.period,
-        row.netIncome,
-        6,
-        0.15,
-      );
+      const useRevenue = row.officialHistoricalBackfill
+        ? Number.isFinite(row.revenue)
+        : isCompatibleHistoricalBackfillValue(
+          companyData.revenue,
+          qualityReferencePeriods,
+          row.period,
+          row.revenue,
+        );
+      const useNetIncome = row.officialHistoricalBackfill
+        ? Number.isFinite(row.netIncome)
+        : isCompatibleHistoricalBackfillValue(
+          companyData.earnings,
+          qualityReferencePeriods,
+          row.period,
+          row.netIncome,
+          6,
+          0.15,
+        );
 
       if (useRevenue && Number.isFinite(row.revenue)) {
         revenueActual.add(row.period);

@@ -41,7 +41,7 @@ As of July 6, 2026, the sample covers 46 leading global companies across mega-ca
 - IBM, SAP, CrowdStrike, Salesforce, ServiceNow, Datadog, Snowflake, Cloudflare, Adobe, Zoom
 - CoreWeave, Nebius, ChronoScale, SharonAI, Samsung Electronics, SK hynix
 
-Samsung Electronics and SK hynix complete quarterly fundamentals use KRX reporting, are converted to USD with quarterly exchange rates, and extend back to 2018Q1. Their earlier valuation series extend to 2005Q4 and 2007Q4 respectively, while stock prices use KRW quotes from the Korea Exchange.
+Samsung Electronics and SK hynix quarterly revenue and net income use official IR releases, are converted to USD with quarterly exchange rates, and extend back to 2011Q1. Samsung gross margins are also backfilled from its official income statements; SK hynix gross margins remain empty for 2011–2017 because its historical newsroom tables do not disclose gross profit. Their earlier valuation series extend to 2005Q4 and 2007Q4 respectively, while stock prices use KRW quotes from the Korea Exchange.
 
 ## Metric Definitions
 

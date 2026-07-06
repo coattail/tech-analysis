@@ -1,0 +1,466 @@
+{
+  "meta": {
+    "source": "Samsung Electronics IR earnings releases + SK hynix Newsroom earnings releases",
+    "note": "Quarterly reported values in KRW. Samsung gross profit is sourced from official earnings-release income statements; SK hynix historical newsroom tables do not disclose gross profit."
+  },
+  "companies": {
+    "samsung": {
+      "reportingCurrency": "KRW",
+      "rows": [
+        {
+          "period": "2011Q1",
+          "dateKey": "2011-03-31",
+          "revenue": 36990000000000,
+          "netIncome": 2780000000000,
+          "grossProfit": 10930000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20110429_conference_eng.pdf"
+        },
+        {
+          "period": "2011Q2",
+          "dateKey": "2011-06-30",
+          "revenue": 39440000000000,
+          "netIncome": 3510000000000,
+          "grossProfit": 12610000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20110729_conference_eng.pdf"
+        },
+        {
+          "period": "2011Q3",
+          "dateKey": "2011-09-30",
+          "revenue": 41270000000000,
+          "netIncome": 3440000000000,
+          "grossProfit": 13520000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20111028_conference_eng.pdf"
+        },
+        {
+          "period": "2011Q4",
+          "dateKey": "2011-12-31",
+          "revenue": 47300000000000,
+          "netIncome": 4000000000000,
+          "grossProfit": 15790000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20120127_conference_eng.pdf"
+        },
+        {
+          "period": "2012Q1",
+          "dateKey": "2012-03-31",
+          "revenue": 45270000000000,
+          "netIncome": 5050000000000,
+          "grossProfit": 15130000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20120429_conference_eng.pdf"
+        },
+        {
+          "period": "2012Q2",
+          "dateKey": "2012-06-30",
+          "revenue": 47600000000000,
+          "netIncome": 5190000000000,
+          "grossProfit": 17630000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20120727_conference_eng.pdf"
+        },
+        {
+          "period": "2012Q3",
+          "dateKey": "2012-09-30",
+          "revenue": 52180000000000,
+          "netIncome": 6560000000000,
+          "grossProfit": 20190000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20121026_conference_eng.pdf"
+        },
+        {
+          "period": "2012Q4",
+          "dateKey": "2012-12-31",
+          "revenue": 56060000000000,
+          "netIncome": 7040000000000,
+          "grossProfit": 21510000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20130125_conference_eng.pdf"
+        },
+        {
+          "period": "2013Q1",
+          "dateKey": "2013-03-31",
+          "revenue": 52870000000000,
+          "netIncome": 7150000000000,
+          "grossProfit": 21490000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20130426_conference_eng.pdf"
+        },
+        {
+          "period": "2013Q2",
+          "dateKey": "2013-06-30",
+          "revenue": 57460000000000,
+          "netIncome": 7770000000000,
+          "grossProfit": 23120000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20130726_conference_eng.pdf"
+        },
+        {
+          "period": "2013Q3",
+          "dateKey": "2013-09-30",
+          "revenue": 59080000000000,
+          "netIncome": 8240000000000,
+          "grossProfit": 23560000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20131025_conference_eng.pdf"
+        },
+        {
+          "period": "2013Q4",
+          "dateKey": "2013-12-31",
+          "revenue": 59280000000000,
+          "netIncome": 7300000000000,
+          "grossProfit": 22830000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20140124_conference_eng.pdf"
+        },
+        {
+          "period": "2014Q1",
+          "dateKey": "2014-03-31",
+          "revenue": 53680000000000,
+          "netIncome": 7570000000000,
+          "grossProfit": 21630000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20140429_conference_eng.pdf"
+        },
+        {
+          "period": "2014Q2",
+          "dateKey": "2014-06-30",
+          "revenue": 52350000000000,
+          "netIncome": 6250000000000,
+          "grossProfit": 20680000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20140731_conference_eng.pdf"
+        },
+        {
+          "period": "2014Q3",
+          "dateKey": "2014-09-30",
+          "revenue": 47450000000000,
+          "netIncome": 4220000000000,
+          "grossProfit": 16740000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20141030_conference_eng.pdf"
+        },
+        {
+          "period": "2014Q4",
+          "dateKey": "2014-12-31",
+          "revenue": 52730000000000,
+          "netIncome": 5350000000000,
+          "grossProfit": 18880000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20150129_conference_eng.pdf"
+        },
+        {
+          "period": "2015Q1",
+          "dateKey": "2015-03-31",
+          "revenue": 47120000000000,
+          "netIncome": 4630000000000,
+          "grossProfit": 18160000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20150429_conference_eng.pdf"
+        },
+        {
+          "period": "2015Q2",
+          "dateKey": "2015-06-30",
+          "revenue": 48540000000000,
+          "netIncome": 5750000000000,
+          "grossProfit": 19580000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20150730_conference_eng.pdf"
+        },
+        {
+          "period": "2015Q3",
+          "dateKey": "2015-09-30",
+          "revenue": 51680000000000,
+          "netIncome": 5460000000000,
+          "grossProfit": 20070000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20151029_conference_eng.pdf"
+        },
+        {
+          "period": "2015Q4",
+          "dateKey": "2015-12-31",
+          "revenue": 53320000000000,
+          "netIncome": 3220000000000,
+          "grossProfit": 19350000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20160128_conference_eng.pdf"
+        },
+        {
+          "period": "2016Q1",
+          "dateKey": "2016-03-31",
+          "revenue": 49780000000000,
+          "netIncome": 5250000000000,
+          "grossProfit": 19410000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20160428_conference_eng.pdf"
+        },
+        {
+          "period": "2016Q2",
+          "dateKey": "2016-06-30",
+          "revenue": 50940000000000,
+          "netIncome": 5850000000000,
+          "grossProfit": 21330000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20160728_conference_eng.pdf"
+        },
+        {
+          "period": "2016Q3",
+          "dateKey": "2016-09-30",
+          "revenue": 47820000000000,
+          "netIncome": 4540000000000,
+          "grossProfit": 18400000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20161027_conference_eng.pdf"
+        },
+        {
+          "period": "2016Q4",
+          "dateKey": "2016-12-31",
+          "revenue": 53330000000000,
+          "netIncome": 7090000000000,
+          "grossProfit": 22450000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/20170124_conference_eng.pdf"
+        },
+        {
+          "period": "2017Q1",
+          "dateKey": "2017-03-31",
+          "revenue": 50550000000000,
+          "netIncome": 7680000000000,
+          "grossProfit": 22390000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/p5/global/ir/docs/2017_1Q_Earnings_Release_Samsung_Electronics.pdf"
+        },
+        {
+          "period": "2017Q2",
+          "dateKey": "2017-06-30",
+          "revenue": 61000000000000,
+          "netIncome": 11050000000000,
+          "grossProfit": 28600000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/p5/global/ir/docs/2017_2Q_Earnings_Release_Samsung_Electronics.pdf"
+        },
+        {
+          "period": "2017Q3",
+          "dateKey": "2017-09-30",
+          "revenue": 62050000000000,
+          "netIncome": 11190000000000,
+          "grossProfit": 29040000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/p5/global/ir/docs/2017_3Q_Earnings_Release_Samsung_Electronics.pdf"
+        },
+        {
+          "period": "2017Q4",
+          "dateKey": "2017-12-31",
+          "revenue": 65980000000000,
+          "netIncome": 12260000000000,
+          "grossProfit": 30250000000000,
+          "sourceUrl": "https://images.samsung.com/is/content/samsung/p5/global/ir/docs/2017_4Q_Earnings_Release_Samsung_Electronics.pdf"
+        }
+      ]
+    },
+    "sk-hynix": {
+      "reportingCurrency": "KRW",
+      "rows": [
+        {
+          "period": "2011Q1",
+          "dateKey": "2011-03-31",
+          "revenue": 2793000000000,
+          "netIncome": 274000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/hynix-semiconductor-inc-reports-first-quarter-2011-results/"
+        },
+        {
+          "period": "2011Q2",
+          "dateKey": "2011-06-30",
+          "revenue": 2758000000000,
+          "netIncome": 473000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/hynix-semiconductor-inc-reports-second-quarter-2011-results/"
+        },
+        {
+          "period": "2011Q3",
+          "dateKey": "2011-09-30",
+          "revenue": 2291000000000,
+          "netIncome": -563000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/hynix-semiconductor-inc-reports-third-quarter-2011-results/"
+        },
+        {
+          "period": "2011Q4",
+          "dateKey": "2011-12-31",
+          "revenue": 2553000000000,
+          "netIncome": -240000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/hynix-semiconductor-inc-reports-fiscal-year-2011-and-fourth-quarter-results/"
+        },
+        {
+          "period": "2012Q1",
+          "dateKey": "2012-03-31",
+          "revenue": 2388000000000,
+          "netIncome": -271000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-first-quarter-2012-results/"
+        },
+        {
+          "period": "2012Q2",
+          "dateKey": "2012-06-30",
+          "revenue": 2632000000000,
+          "netIncome": -53000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-second-quarter-2012-results/"
+        },
+        {
+          "period": "2012Q3",
+          "dateKey": "2012-09-30",
+          "revenue": 2423000000000,
+          "netIncome": 2000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-third-quarter-2012-results/"
+        },
+        {
+          "period": "2012Q4",
+          "dateKey": "2012-12-31",
+          "revenue": 2718000000000,
+          "netIncome": 164000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-fourth-quarter-and-fiscal-year-2012-results/"
+        },
+        {
+          "period": "2013Q1",
+          "dateKey": "2013-03-31",
+          "revenue": 2781000000000,
+          "netIncome": 179000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-first-quarter-2013-results/"
+        },
+        {
+          "period": "2013Q2",
+          "dateKey": "2013-06-30",
+          "revenue": 3933000000000,
+          "netIncome": 947000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-second-quarter-2013-results/"
+        },
+        {
+          "period": "2013Q3",
+          "dateKey": "2013-09-30",
+          "revenue": 4084000000000,
+          "netIncome": 958000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-third-quarter-2013-results/"
+        },
+        {
+          "period": "2013Q4",
+          "dateKey": "2013-12-31",
+          "revenue": 3368000000000,
+          "netIncome": 789000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-fiscal-year-2013-and-fourth-quarter-results/"
+        },
+        {
+          "period": "2014Q1",
+          "dateKey": "2014-03-31",
+          "revenue": 3743000000000,
+          "netIncome": 802000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-first-quarter-2014-results/"
+        },
+        {
+          "period": "2014Q2",
+          "dateKey": "2014-06-30",
+          "revenue": 3923000000000,
+          "netIncome": 674000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-second-quarter-2014-results/"
+        },
+        {
+          "period": "2014Q3",
+          "dateKey": "2014-09-30",
+          "revenue": 4312000000000,
+          "netIncome": 1095000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-third-quarter-2014-results/"
+        },
+        {
+          "period": "2014Q4",
+          "dateKey": "2014-12-31",
+          "revenue": 5148000000000,
+          "netIncome": 1624000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-fiscal-year-2014-and-fourth-quarter-results/"
+        },
+        {
+          "period": "2015Q1",
+          "dateKey": "2015-03-31",
+          "revenue": 4818000000000,
+          "netIncome": 1295000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-first-quarter-2015-results/"
+        },
+        {
+          "period": "2015Q2",
+          "dateKey": "2015-06-30",
+          "revenue": 4639000000000,
+          "netIncome": 1108000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-second-quarter-2015-results/"
+        },
+        {
+          "period": "2015Q3",
+          "dateKey": "2015-09-30",
+          "revenue": 4925000000000,
+          "netIncome": 1048000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-third-quarter-2015-results/"
+        },
+        {
+          "period": "2015Q4",
+          "dateKey": "2015-12-31",
+          "revenue": 4400000000000,
+          "netIncome": 871000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-fiscal-year-2015-and-fourth-quarter-results/"
+        },
+        {
+          "period": "2016Q1",
+          "dateKey": "2016-03-31",
+          "revenue": 3660000000000,
+          "netIncome": 448000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-first-quarter-2016-results/"
+        },
+        {
+          "period": "2016Q2",
+          "dateKey": "2016-06-30",
+          "revenue": 3940000000000,
+          "netIncome": 286000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-second-quarter-2016-results/"
+        },
+        {
+          "period": "2016Q3",
+          "dateKey": "2016-09-30",
+          "revenue": 4240000000000,
+          "netIncome": 598000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-third-quarter-2016-results/"
+        },
+        {
+          "period": "2016Q4",
+          "dateKey": "2016-12-31",
+          "revenue": 5400000000000,
+          "netIncome": 1630000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-fiscal-year-2016-and-fourth-quarter-results/"
+        },
+        {
+          "period": "2017Q1",
+          "dateKey": "2017-03-31",
+          "revenue": 6290000000000,
+          "netIncome": 1900000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-first-quarter-2017-results/"
+        },
+        {
+          "period": "2017Q2",
+          "dateKey": "2017-06-30",
+          "revenue": 6690000000000,
+          "netIncome": 2470000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-second-quarter-2017-results/"
+        },
+        {
+          "period": "2017Q3",
+          "dateKey": "2017-09-30",
+          "revenue": 8100000000000,
+          "netIncome": 3060000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-third-quarter-2017-results/"
+        },
+        {
+          "period": "2017Q4",
+          "dateKey": "2017-12-31",
+          "revenue": 9030000000000,
+          "netIncome": 3220000000000,
+          "grossProfit": null,
+          "sourceUrl": "https://news.skhynix.com/sk-hynix-inc-reports-fiscal-year-2017-and-fourth-quarter-results/"
+        }
+      ]
+    }
+  }
+}
