@@ -55,6 +55,8 @@ const COMPANY_SOURCES = [
   { id: "nebius", ticker: "NBIS", minDate: "2024-04-01" },
   { id: "chronoscale", ticker: "CHRN" },
   { id: "sharonai", ticker: "SHAZ" },
+  { id: "samsung", ticker: "005930.KS" },
+  { id: "sk-hynix", ticker: "000660.KS" },
 ];
 
 function parsePriceDataJs(raw) {

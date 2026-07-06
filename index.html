@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>美股科技与头部市值公司财务数据可视化</title>
+    <title>全球科技与头部市值公司财务数据可视化</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,25 +12,25 @@
     />
     <link rel="stylesheet" href="style.css?v=20260629-mobile-responsive-v2" />
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script defer src="data.js?v=20260630-neocloud-fundamentals"></script>
-    <script defer src="price-data.js?v=20260630-neocloud-fundamentals"></script>
+    <script defer src="data.js?v=20260706-korea-companies"></script>
+    <script defer src="price-data.js?v=20260706-korea-companies"></script>
     <script defer src="price-comparison.js?v=20260629-mobile-responsive"></script>
     <script defer src="company-selection.js?v=20260629-contiguous-range"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
-    <script defer src="script.js?v=20260630-small-financial-scale"></script>
+    <script defer src="script.js?v=20260706-korea-companies"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
       <section class="panel header-panel">
         <div class="header-shell">
           <div class="header-intro">
-            <h1>美股科技与头部市值公司财务数据可视化</h1>
+            <h1>全球科技与头部市值公司财务数据可视化</h1>
           </div>
           <div class="header-rail">
             <div class="meta-chips" aria-label="页面信息">
               <span class="chip">
                 <span class="chip-label">Coverage</span>
-                <strong>44 家科技与头部市值公司</strong>
+                <strong>46 家科技与头部市值公司</strong>
               </span>
               <span class="chip">
                 <span class="chip-label">Range</span>
@@ -142,7 +142,7 @@
             </div>
             <div class="summary-card">
               <span class="summary-label">当前公司</span>
-              <strong id="visibleCompaniesLabel">1 / 44</strong>
+              <strong id="visibleCompaniesLabel">1 / 46</strong>
             </div>
             <div class="summary-card">
               <span class="summary-label">数据更新</span>
@@ -176,7 +176,7 @@
             </label>
           </div>
           <div class="chart-wrap">
-            <canvas id="financeChart" aria-label="美股头部市值公司财务指标对比图"></canvas>
+            <canvas id="financeChart" aria-label="全球头部市值公司财务指标对比图"></canvas>
           </div>
           <div class="range-panel" aria-label="时间区间滑块">
             <div class="range-head">

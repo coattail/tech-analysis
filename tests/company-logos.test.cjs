@@ -102,12 +102,12 @@ function hasFullCanvasRect(tag, viewBox) {
 test("every company uses a local SVG logo asset with a transparent canvas", async (t) => {
   const companies = getCompanyEntries();
 
-  assert.equal(companies.length, 44);
+  assert.equal(companies.length, 46);
   for (const company of companies) {
     await t.test(company.id, () => {
       assert.ok(company.logoPath, `${company.id} should declare logoPath`);
       assert.match(company.logoPath, /^assets\/logos\/[a-z0-9-]+\.svg(?:\?v=[a-z0-9-]+)?$/);
-      assert.match(company.logoPath, /\?v=20260629-visible-area-v4$/);
+      assert.match(company.logoPath, /\?v=(?:20260629-visible-area-v4|20260706-korea-v1|20260706-korea-v2)$/);
 
       const assetPath = company.logoPath.split("?")[0];
       const svg = fs.readFileSync(path.join(__dirname, "..", assetPath), "utf8");

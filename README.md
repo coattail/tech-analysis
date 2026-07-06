@@ -6,7 +6,7 @@
 [![Deploy GitHub Pages](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml)
 [![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
-一个基于原生前端与 Chart.js 的静态财务分析看板，用来对比美股头部市值公司的核心财务指标，并支持季度、年度、滚动年度（TTM）三种时间粒度。
+一个基于原生前端与 Chart.js 的静态财务分析看板，用来对比全球头部市值与科技公司的核心财务指标，并支持季度、年度、滚动年度（TTM）三种时间粒度。
 
 项目强调三件事：
 
@@ -33,13 +33,15 @@
 
 ## 覆盖公司
 
-截至 2026-06-29，样本覆盖 44 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
+截至 2026-07-06，样本覆盖 46 家全球头部市值、科技、企业软件与云计算公司（新增三星电子、SK 海力士两家韩国半导体公司）：
 
 - NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
 - Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
 - Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
 - IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
-- CoreWeave、Nebius、ChronoScale、SharonAI
+- CoreWeave、Nebius、ChronoScale、SharonAI、三星电子、SK 海力士
+
+三星电子与 SK 海力士的完整季度基本面使用 KRX 报告口径并按季度汇率换算为美元，均回溯至 2018Q1；更早的可用估值序列分别回溯至 2005Q4 和 2007Q4，股价使用韩国交易所韩元行情。
 
 Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及之后数据，股价仅保留 2024-04-01 及之后数据。
 

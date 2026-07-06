@@ -515,10 +515,11 @@ test("keeps core fundamentals continuous from listing through the latest reporte
 
 test("keeps adjusted-close prices complete across normal trading-calendar gaps", () => {
   const prices = loadStockPriceSourceData();
-  assert.equal(Object.keys(prices.companies || {}).length, 44);
+  assert.equal(Object.keys(prices.companies || {}).length, 46);
 
   const invalid = [];
   for (const [companyId, company] of Object.entries(prices.companies || {})) {
+    const maxTradingCalendarGapDays = ["samsung", "sk-hynix"].includes(companyId) ? 12 : 5;
     const entries = Object.entries(company.daily || {});
     if (entries.length === 0) invalid.push(`${companyId}:empty`);
     entries.forEach(([date, value], index) => {
@@ -526,7 +527,9 @@ test("keeps adjusted-close prices complete across normal trading-calendar gaps",
       if (index === 0) return;
       const previousDate = entries[index - 1][0];
       const gapDays = (Date.parse(date) - Date.parse(previousDate)) / 86400000;
-      if (gapDays <= 0 || gapDays > 5) invalid.push(`${companyId}:${previousDate}->${date}`);
+      if (gapDays <= 0 || gapDays > maxTradingCalendarGapDays) {
+        invalid.push(`${companyId}:${previousDate}->${date}`);
+      }
     });
   }
 

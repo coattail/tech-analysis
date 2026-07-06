@@ -86,13 +86,15 @@ const COMPANIES = [
   { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
   { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
   { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
+  { id: "samsung", name: "三星电子", ticker: "005930", color: "#4c7cff", logoPath: "assets/logos/samsung.svg?v=20260706-korea-v1" },
+  { id: "sk-hynix", name: "SK海力士", ticker: "000660", color: "#f26a2e", logoPath: "assets/logos/sk-hynix.svg?v=20260706-korea-v2" },
 ];
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
 const COMPANY_CATEGORIES = [
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "alphabet", "apple", "microsoft", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"] },
   { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"] },
-  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"] },
+  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd", "samsung", "sk-hynix"] },
   { id: "other", label: "其他", companyIds: [] },
 ];
 const CATEGORIZED_COMPANY_IDS = new Set(COMPANY_CATEGORIES.flatMap((category) => category.companyIds));

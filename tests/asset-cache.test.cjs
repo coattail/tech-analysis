@@ -40,7 +40,7 @@ test("keeps the latest cache key for unchanged company-selection behavior", () =
 
 test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260630-neocloud-fundamentals";
+  const expectedVersion = "20260706-korea-companies";
 
   for (const asset of ["data.js", "price-data.js"]) {
     assert.match(
@@ -57,7 +57,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260630-small-financial-scale"],
+    ["script.js", "20260706-korea-companies"],
   ]) {
     assert.match(
       html,

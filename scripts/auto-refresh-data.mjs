@@ -8,7 +8,7 @@ import { promisify } from "node:util";
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const CURATED_EARNINGS_DATASET_PATH = new URL("../../earnings-image-studio/data/earnings-dataset.json", import.meta.url);
 const HISTORICAL_SEC_BACKFILL_PATH = new URL("../data/historical-sec-backfill.json", import.meta.url);
-const STOCK_ANALYSIS_BASE = "https://stockanalysis.com/stocks";
+const STOCK_ANALYSIS_BASE = "https://stockanalysis.com";
 const COMPANIES_MARKET_CAP_BASE = "https://companiesmarketcap.com";
 const SEC_COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json";
 const SEC_COMPANYFACTS_BASE = "https://data.sec.gov/api/xbrl/companyfacts";
@@ -78,6 +78,8 @@ const COMPANY_SOURCES = [
     replaceThroughPeriod: "2026Q1",
   },
   { id: "sharonai", ticker: "SHAZ", slug: "shaz", name: "SharonAI" },
+  { id: "samsung", ticker: "005930", slug: "005930", name: "三星电子", financialPath: "quote/krx/005930" },
+  { id: "sk-hynix", ticker: "000660", slug: "000660", name: "SK海力士", financialPath: "quote/krx/000660" },
 ];
 
 const COMPANIES_MARKET_CAP_SLUGS = {
@@ -152,6 +154,11 @@ const FX_SERIES_CONFIG = {
     seriesId: "DEXTAUS",
     quoteMode: "local_per_usd",
     label: "FRED DEXTAUS (TWD per USD)",
+  },
+  KRW: {
+    seriesId: "DEXKOUS",
+    quoteMode: "local_per_usd",
+    label: "FRED DEXKOUS (KRW per USD)",
   },
 };
 const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
@@ -1709,8 +1716,12 @@ function sleep(ms) {
   });
 }
 
-async function fetchCompanyRows(slug) {
-  const url = `${STOCK_ANALYSIS_BASE}/${slug}/financials/?p=quarterly`;
+function getStockAnalysisFinancialBase(companySource) {
+  return `${STOCK_ANALYSIS_BASE}/${companySource.financialPath || `stocks/${companySource.slug}`}`;
+}
+
+async function fetchCompanyRows(companySource) {
+  const url = `${getStockAnalysisFinancialBase(companySource)}/financials/?p=quarterly`;
   const args = [
     "-L",
     "-sS",
@@ -1741,8 +1752,8 @@ async function fetchCompanyRows(slug) {
   return { rows, financialCurrency };
 }
 
-async function fetchCompanyRatios(slug) {
-  const url = `${STOCK_ANALYSIS_BASE}/${slug}/financials/ratios/?p=quarterly`;
+async function fetchCompanyRatios(companySource) {
+  const url = `${getStockAnalysisFinancialBase(companySource)}/financials/ratios/?p=quarterly`;
   const args = [
     "-L",
     "-sS",
@@ -1993,8 +2004,8 @@ function deriveMissingPeFromMarketCap(companyData, periods, marketCapRows) {
   return { changedPoints, changedPeriods };
 }
 
-async function fetchCompanyBalanceSheetRows(slug) {
-  const url = `${STOCK_ANALYSIS_BASE}/${slug}/financials/balance-sheet/?p=quarterly`;
+async function fetchCompanyBalanceSheetRows(companySource) {
+  const url = `${getStockAnalysisFinancialBase(companySource)}/financials/balance-sheet/?p=quarterly`;
   const args = [
     "-L",
     "-sS",
@@ -2685,7 +2696,7 @@ async function run() {
     }
 
     try {
-      const result = await fetchCompanyRows(companySource.slug);
+      const result = await fetchCompanyRows(companySource);
       rows = result.rows;
       financialCurrency = result.financialCurrency;
     } catch (error) {
@@ -2695,7 +2706,7 @@ async function run() {
     }
 
     try {
-      ratioRows = await fetchCompanyRatios(companySource.slug);
+      ratioRows = await fetchCompanyRatios(companySource);
     } catch (error) {
       console.warn(`  P/E 抓取失败：${error.message}`);
     }
@@ -2722,7 +2733,7 @@ async function run() {
     }
 
     try {
-      const result = await fetchCompanyBalanceSheetRows(companySource.slug);
+      const result = await fetchCompanyBalanceSheetRows(companySource);
       balanceRows = result.rows;
 
       if (result.financialCurrency !== "USD") {

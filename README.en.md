@@ -6,7 +6,7 @@ English | [简体中文](./README.md)
 [![Deploy GitHub Pages](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml/badge.svg)](https://github.com/coattail/tech-analysis/actions/workflows/pages.yml)
 [![Live Demo](https://img.shields.io/badge/Live-GitHub%20Pages-2ea44f?logo=github)](https://coattail.github.io/tech-analysis/)
 
-A static financial analytics dashboard built with plain frontend technologies and Chart.js. It is designed for comparing key metrics across the largest U.S.-listed companies over quarterly, annual, and rolling annual (TTM) views.
+A static financial analytics dashboard built with plain frontend technologies and Chart.js. It compares key metrics across leading global technology and mega-cap companies over quarterly, annual, and rolling annual (TTM) views.
 
 The project focuses on three things:
 
@@ -33,12 +33,15 @@ The project focuses on three things:
 
 ## Covered Companies
 
-As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across mega-cap, enterprise software, and cloud computing:
+As of July 6, 2026, the sample covers 46 leading global companies across mega-cap technology, enterprise software, cloud computing, and semiconductors:
 
 - NVIDIA, Alphabet, Apple, Microsoft, Amazon, Broadcom, Meta, TSMC, Tesla, Walmart
 - Berkshire Hathaway, JPMorgan Chase, Eli Lilly, Exxon Mobil, Visa, ASML, Micron, Johnson & Johnson, Oracle, AMD
 - Mastercard, Costco, Netflix, Bank of America, Caterpillar, Chevron, Palantir, Cisco, AbbVie, Home Depot
 - IBM, SAP, CrowdStrike, Salesforce, ServiceNow, Datadog, Snowflake, Cloudflare, Adobe, Zoom
+- CoreWeave, Nebius, ChronoScale, SharonAI, Samsung Electronics, SK hynix
+
+Samsung Electronics and SK hynix complete quarterly fundamentals use KRX reporting, are converted to USD with quarterly exchange rates, and extend back to 2018Q1. Their earlier valuation series extend to 2005Q4 and 2007Q4 respectively, while stock prices use KRW quotes from the Korea Exchange.
 
 ## Metric Definitions
 

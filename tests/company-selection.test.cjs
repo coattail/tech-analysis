@@ -1,6 +1,7 @@
 const test = require('node:test');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const {
   cloneCompanySet,
@@ -37,7 +38,7 @@ test('index html marks the same initial view controls as checked', () => {
   assert.doesNotMatch(html, /name="chartMode" value="line" checked/);
   assert.match(html, /id="priceComparisonToggle" type="checkbox" checked/);
   assert.match(html, /<strong id="activeMetricLabel">净利润<\/strong>/);
-  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 44<\/strong>/);
+  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 46<\/strong>/);
 });
 
 test('includes the ten added enterprise software and cloud companies', () => {
@@ -90,6 +91,37 @@ test('includes four neocloud companies in the dashboard and both refresh pipelin
   }
 });
 
+test('includes Samsung and SK hynix in the dashboard and both refresh pipelines', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+  const fundamentalData = fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8');
+  const priceData = fs.readFileSync(path.join(__dirname, '..', 'price-data.js'), 'utf8');
+  const fundamentalRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-data.mjs'), 'utf8');
+  const priceRefresh = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'auto-refresh-price-data.mjs'), 'utf8');
+
+  for (const [id, ticker, yahooTicker] of [
+    ['samsung', '005930', '005930.KS'],
+    ['sk-hynix', '000660', '000660.KS'],
+  ]) {
+    assert.match(script, new RegExp(`id: "${id}"[^\\n]+ticker: "${ticker}"`));
+    assert.match(fundamentalRefresh, new RegExp(`id: "${id}"[\\s\\S]{0,300}?ticker: "${ticker}"`));
+    assert.match(priceRefresh, new RegExp(`id: "${id}"[^\\n]+ticker: "${yahooTicker.replace('.', '\\.')}"`));
+    assert.match(fundamentalData, new RegExp(`    "${id}": \\{`));
+    assert.match(priceData, new RegExp(`    "${id}": \\{`));
+  }
+});
+
+test('keeps the full available Samsung and SK hynix fundamental histories', () => {
+  const context = { window: {} };
+  vm.runInNewContext(
+    fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8'),
+    context,
+  );
+  const companies = context.window.FINANCIAL_SOURCE_DATA.companies;
+
+  assert.equal(Object.keys(companies.samsung.revenue).find((period) => Number.isFinite(companies.samsung.revenue[period])), '2018Q1');
+  assert.equal(Object.keys(companies['sk-hynix'].revenue).find((period) => Number.isFinite(companies['sk-hynix'].revenue[period])), '2018Q1');
+});
+
 test('keeps small-company financial values visible with adaptive USD units', () => {
   const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
 
@@ -106,7 +138,7 @@ test('renders searchable company categories with semiconductor before other', ()
   assert.match(script, /label: "MAG7"/);
   assert.match(script, /label: "软件"/);
   assert.match(script, /label: "云服务"/);
-  assert.match(script, /id: "semiconductor", label: "半导体", companyIds: \["avgo", "tsmc", "asml", "micron", "amd"\]/);
+  assert.match(script, /id: "semiconductor", label: "半导体", companyIds: \["avgo", "tsmc", "asml", "micron", "amd", "samsung", "sk-hynix"\]/);
   assert.ok(script.indexOf('label: "半导体"') < script.indexOf('label: "其他"'));
   assert.match(script, /label: "其他"/);
   assert.match(script, /companySearchEl\?\.addEventListener\("input"/);
