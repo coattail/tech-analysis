@@ -40,6 +40,33 @@ test('index html marks the same initial view controls as checked', () => {
   assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 44<\/strong>/);
 });
 
+test('provides a persistent bilingual switch for page copy and chart annotations', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+
+  assert.match(html, /id="languageToggle"/);
+  assert.match(html, /data-i18n="pageTitle"/);
+  assert.match(html, /data-i18n-placeholder="searchPlaceholder"/);
+  assert.match(html, /data-i18n-aria-label="chartAria"/);
+  assert.match(script, /localStorage\.setItem\("tech-analysis-language", currentLanguage\)/);
+  assert.match(script, /function setLanguage\(nextLanguage\)/);
+  assert.match(script, /en: \{ label: "Net Income \(USD\)", name: "Net Income", unit: " \(USD\)" \}/);
+  assert.match(script, /label: t\("stockPrice"\)/);
+  assert.match(script, /getCompanyName\(company\)/);
+  assert.match(script, /state\.chart\.options\.scales\.yPrice\.title\.text = isCompactChartLayout\(\) \? "USD" : t\("priceAxis"\)/);
+  assert.match(script, /const suffix = isForecast \? t\("forecastSuffix"\) : ""/);
+});
+
+test('removes the oversized header module and relocates its utility controls', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+
+  assert.doesNotMatch(html, /class="panel header-panel"/);
+  assert.doesNotMatch(html, /class="meta-chips"/);
+  assert.doesNotMatch(html, /id="periodRangeChip"/);
+  assert.match(html, /<div class="control-foot">[\s\S]*?<details class="source-details">/);
+  assert.match(html, /<div class="chart-actions">[\s\S]*?id="languageToggle"[\s\S]*?id="downloadBtn"/);
+});
+
 test('includes the ten added enterprise software and cloud companies', () => {
   const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
   const fundamentalData = fs.readFileSync(path.join(__dirname, '..', 'data.js'), 'utf8');

@@ -1828,138 +1828,138 @@
         {
           "period": "2016Q4",
           "dateKey": "2016-12-31",
-          "revenue": 1907400000,
-          "grossProfit": 829300000,
-          "netIncome": 8212000000,
-          "grossMarginPct": 43.478032924399706
+          "revenue": 1907000000,
+          "grossProfit": 901000000,
+          "netIncome": 524000000,
+          "grossMarginPct": 47.24698479286838
         },
         {
           "period": "2017Q1",
           "dateKey": "2017-03-31",
-          "revenue": 1215800000,
-          "grossProfit": 853900000,
-          "netIncome": 8212000000,
-          "grossMarginPct": 70.23359105115972
+          "revenue": 1944000000,
+          "grossProfit": 925000000,
+          "netIncome": 452000000,
+          "grossMarginPct": 47.582304526748966
         },
         {
           "period": "2017Q2",
           "dateKey": "2017-06-30",
-          "revenue": 1384100000,
-          "grossProfit": 872900000,
-          "netIncome": 8212000000,
-          "grossMarginPct": 63.06625243840763
+          "revenue": 2101000000,
+          "grossProfit": 946000000,
+          "netIncome": 466000000,
+          "grossMarginPct": 45.02617705854355
         },
         {
           "period": "2017Q3",
           "dateKey": "2017-09-30",
-          "revenue": 1818900000,
-          "grossProfit": 1049500000,
-          "netIncome": 8212000000,
-          "grossMarginPct": 57.69970861509704
+          "revenue": 2447000000,
+          "grossProfit": 1050000000,
+          "netIncome": 557000000,
+          "grossMarginPct": 42.90968532897425
         },
         {
           "period": "2017Q4",
           "dateKey": "2017-12-31",
-          "revenue": 2560400000,
-          "grossProfit": 1083800000,
-          "netIncome": -16700000,
-          "grossMarginPct": 42.329323543196374
+          "revenue": 2561000000,
+          "grossProfit": 1156000000,
+          "netIncome": 644000000,
+          "grossMarginPct": 45.138617727450215
         },
         {
           "period": "2018Q1",
           "dateKey": "2018-03-31",
-          "revenue": 1667700000,
-          "grossProfit": 1052000000,
-          "netIncome": -17600000,
-          "grossMarginPct": 63.08088984829405
+          "revenue": 2285000000,
+          "grossProfit": 1113000000,
+          "netIncome": 540000000,
+          "grossMarginPct": 48.708971553610505
         },
         {
           "period": "2018Q2",
           "dateKey": "2018-06-30",
-          "revenue": 2086500000,
-          "grossProfit": 1125600000,
-          "netIncome": 4300000,
-          "grossMarginPct": 53.94680086268872
+          "revenue": 2740000000,
+          "grossProfit": 1187000000,
+          "netIncome": 584000000,
+          "grossMarginPct": 43.32116788321168
         },
         {
           "period": "2018Q3",
           "dateKey": "2018-09-30",
-          "revenue": 2080600000,
-          "grossProfit": 1335900000,
-          "netIncome": 300000,
-          "grossMarginPct": 64.20744016149187
+          "revenue": 2776000000,
+          "grossProfit": 1336000000,
+          "netIncome": 680000000,
+          "grossMarginPct": 48.12680115273775
         },
         {
           "period": "2018Q4",
           "dateKey": "2018-12-31",
-          "revenue": 5109200000,
+          "revenue": 3143000000,
           "grossProfit": 1392900000,
-          "netIncome": 2604600000,
-          "grossMarginPct": 57.455760425689895
+          "netIncome": 788000000,
+          "grossMarginPct": 44.320712694877506
         },
         {
           "period": "2019Q1",
           "dateKey": "2019-03-31",
-          "revenue": 1689000000,
+          "revenue": 2229000000,
           "grossProfit": 928000000,
-          "netIncome": 12000000,
-          "grossMarginPct": 54.94375370041445
+          "netIncome": 355000000,
+          "grossMarginPct": 41.63234634365186
         },
         {
           "period": "2019Q2",
           "dateKey": "2019-06-30",
-          "revenue": 1850800000,
+          "revenue": 2568000000,
           "grossProfit": 1105200000,
-          "netIncome": 7700000,
-          "grossMarginPct": 59.71471795980116
+          "netIncome": 476000000,
+          "grossMarginPct": 43.02959501557632
         },
         {
           "period": "2019Q3",
           "dateKey": "2019-09-30",
-          "revenue": 2325600000,
-          "grossProfit": 1306400000,
-          "netIncome": 11600000,
-          "grossMarginPct": 56.174750601995186
+          "revenue": 2987000000,
+          "grossProfit": 1307000000,
+          "netIncome": 627000000,
+          "grossMarginPct": 43.75627720120522
         },
         {
           "period": "2019Q4",
           "dateKey": "2019-12-31",
-          "revenue": 3198300000,
-          "grossProfit": 2211100000,
-          "netIncome": 25000000,
-          "grossMarginPct": 69.13360222618266
+          "revenue": 4036000000,
+          "grossProfit": 1940000000,
+          "netIncome": 1134000000,
+          "grossMarginPct": 48.06739345887017
         },
         {
           "period": "2020Q1",
           "dateKey": "2020-03-31",
-          "revenue": 3128800000,
-          "grossProfit": 2352400000,
-          "netIncome": 1331400000,
-          "grossMarginPct": 75.18537458450524
+          "revenue": 2441000000,
+          "grossProfit": 1101000000,
+          "netIncome": 391000000,
+          "grossMarginPct": 45.10446538303974
         },
         {
           "period": "2020Q2",
           "dateKey": "2020-06-30",
-          "revenue": 2949600000,
-          "grossProfit": 2044600000,
-          "netIncome": 1038200000,
-          "grossMarginPct": 69.31787360998102
+          "revenue": 3326000000,
+          "grossProfit": 1603000000,
+          "netIncome": 751000000,
+          "grossMarginPct": 48.195429945881386
         },
         {
           "period": "2020Q3",
           "dateKey": "2020-09-30",
-          "revenue": 4111100000,
-          "grossProfit": 2711400000,
-          "netIncome": 1740200000,
-          "grossMarginPct": 65.95315122473305
+          "revenue": 3958000000,
+          "grossProfit": 1881000000,
+          "netIncome": 1062000000,
+          "grossMarginPct": 47.52400101061142
         },
         {
           "period": "2020Q4",
           "dateKey": "2020-12-31",
-          "revenue": 3463200000,
-          "grossProfit": 2700600000,
-          "netIncome": 1773400000,
-          "grossMarginPct": 77.97990297990299
+          "revenue": 4254000000,
+          "grossProfit": 2212000000,
+          "netIncome": 1351000000,
+          "grossMarginPct": 52.00282181476258
         },
         {
           "period": "2021Q1",

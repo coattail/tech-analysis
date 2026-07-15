@@ -572,6 +572,48 @@ test("preserves audited historical starts and does not invent pre-IPO prices", (
   );
 });
 
+test("keeps ASML 2016Q4-2020Q4 on the official quarterly US GAAP basis", () => {
+  const data = loadFinancialSourceData();
+  const backfill = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "../data/historical-sec-backfill.json"), "utf8"),
+  );
+  const asmlBackfill = new Map(
+    backfill.companies.asml.rows.map((row) => [row.period, row]),
+  );
+  const officialNetIncomeEur = {
+    "2016Q4": 524_000_000,
+    "2017Q1": 452_000_000,
+    "2017Q2": 466_000_000,
+    "2017Q3": 557_000_000,
+    "2017Q4": 644_000_000,
+    "2018Q1": 540_000_000,
+    "2018Q2": 584_000_000,
+    "2018Q3": 680_000_000,
+    "2018Q4": 788_000_000,
+    "2019Q1": 355_000_000,
+    "2019Q2": 476_000_000,
+    "2019Q3": 627_000_000,
+    "2019Q4": 1_134_000_000,
+    "2020Q1": 391_000_000,
+    "2020Q2": 751_000_000,
+    "2020Q3": 1_062_000_000,
+    "2020Q4": 1_351_000_000,
+  };
+
+  for (const [period, expectedNetIncome] of Object.entries(officialNetIncomeEur)) {
+    const sourceRow = asmlBackfill.get(period);
+    assert.equal(sourceRow.netIncome, expectedNetIncome, `${period} should retain ASML's official EUR net income`);
+
+    const displayedRevenue = data.companies.asml.revenue[period];
+    const displayedNetIncome = data.companies.asml.earnings[period];
+    assert.ok(Number.isFinite(displayedRevenue) && Number.isFinite(displayedNetIncome));
+    assert.ok(
+      Math.abs(displayedNetIncome / displayedRevenue - sourceRow.netIncome / sourceRow.revenue) < 1e-8,
+      `${period} USD conversion should preserve ASML's reported net margin`,
+    );
+  }
+});
+
 test("real rolling annual flow values only appear after four complete source quarters", () => {
   const data = loadFinancialSourceData();
   const missingWindows = [];

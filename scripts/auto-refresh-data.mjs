@@ -468,6 +468,18 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2007Q4": { revenue: 302_355_000 },
   },
 };
+const COMPANY_OFFICIAL_HISTORICAL_BACKFILL_PERIODS = {
+  // These ASML rows are pinned to the official quarterly US GAAP summaries in
+  // data/historical-sec-backfill.json. Reapply them after live SEC/HTML sources
+  // so ambiguous auxiliary "net income" rows cannot overwrite the correction.
+  asml: new Set([
+    "2016Q4",
+    "2017Q1", "2017Q2", "2017Q3", "2017Q4",
+    "2018Q1", "2018Q2", "2018Q3", "2018Q4",
+    "2019Q1", "2019Q2", "2019Q3", "2019Q4",
+    "2020Q1", "2020Q2", "2020Q3", "2020Q4",
+  ]),
+};
 const fxSeriesCache = new Map();
 let secTickerMapCache = null;
 let curatedQuarterlyDatasetCache = null;
@@ -2477,6 +2489,49 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
   return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods, reportDatePeriods };
 }
 
+function applyOfficialHistoricalBackfillOverrides(companyId, companyData, rows) {
+  const officialPeriods = COMPANY_OFFICIAL_HISTORICAL_BACKFILL_PERIODS[companyId];
+  const changedPeriods = new Set();
+  const revenuePeriods = new Set();
+  const netIncomePeriods = new Set();
+  const grossMarginPeriods = new Set();
+  let changedPoints = 0;
+
+  if (!officialPeriods || !Array.isArray(rows)) {
+    return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods };
+  }
+
+  rows.forEach((row) => {
+    if (!officialPeriods.has(row.period)) return;
+    let rowChanged = false;
+
+    if (Number.isFinite(row.revenue)) {
+      revenuePeriods.add(row.period);
+      if (setSeriesValue(companyData.revenue, row.period, row.revenue)) {
+        changedPoints += 1;
+        rowChanged = true;
+      }
+    }
+    if (Number.isFinite(row.netIncome)) {
+      netIncomePeriods.add(row.period);
+      if (setSeriesValue(companyData.earnings, row.period, row.netIncome)) {
+        changedPoints += 1;
+        rowChanged = true;
+      }
+    }
+    if (Number.isFinite(row.grossMarginPct)) {
+      grossMarginPeriods.add(row.period);
+      if (setSeriesValue(companyData.grossMargin, row.period, row.grossMarginPct)) {
+        changedPoints += 1;
+        rowChanged = true;
+      }
+    }
+    if (rowChanged) changedPeriods.add(row.period);
+  });
+
+  return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods };
+}
+
 function applyOfficialQuarterlyOverrides(companyId, companyData) {
   const overrides = COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companyId];
   if (!overrides) {
@@ -3001,6 +3056,26 @@ async function run() {
           `  已应用本地季度校验数据：${curatedResult.changedPoints} 个修正点，涉及 ${curatedResult.changedPeriods.size} 个季度`,
         );
       }
+    }
+
+    const officialHistoricalResult = applyOfficialHistoricalBackfillOverrides(
+      companySource.id,
+      companyData,
+      historicalBackfillRows,
+    );
+    officialHistoricalResult.changedPeriods.forEach((period) => {
+      periodSet.add(period);
+      companyStats.changedPeriods.add(period);
+    });
+    officialHistoricalResult.revenuePeriods.forEach((period) => revenueActual.add(period));
+    officialHistoricalResult.netIncomePeriods.forEach((period) => netIncomeActual.add(period));
+    officialHistoricalResult.grossMarginPeriods.forEach((period) => grossMarginActual.add(period));
+    companyStats.qualityFixChanges += officialHistoricalResult.changedPoints;
+
+    if (officialHistoricalResult.changedPoints > 0) {
+      console.log(
+        `  已应用官方历史季度修正：${officialHistoricalResult.changedPoints} 个修正点，涉及 ${officialHistoricalResult.changedPeriods.size} 个季度`,
+      );
     }
 
     clearCompanyDataThroughPeriod(companyData, companySource.replaceThroughPeriod);

@@ -3,98 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>美股科技与头部市值公司财务数据可视化</title>
+    <title data-i18n="pageTitle">美股科技与头部市值公司财务数据可视化</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20260629-mobile-responsive-v2" />
+    <link rel="stylesheet" href="style.css?v=20260716-compact-toolbar-v2" />
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script defer src="data.js?v=20260630-neocloud-fundamentals"></script>
     <script defer src="price-data.js?v=20260630-neocloud-fundamentals"></script>
     <script defer src="price-comparison.js?v=20260629-mobile-responsive"></script>
     <script defer src="company-selection.js?v=20260629-contiguous-range"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
-    <script defer src="script.js?v=20260630-small-financial-scale"></script>
+    <script defer src="script.js?v=20260716-bilingual"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
-      <section class="panel header-panel">
-        <div class="header-shell">
-          <div class="header-intro">
-            <h1>美股科技与头部市值公司财务数据可视化</h1>
-          </div>
-          <div class="header-rail">
-            <div class="meta-chips" aria-label="页面信息">
-              <span class="chip">
-                <span class="chip-label">Coverage</span>
-                <strong>44 家科技与头部市值公司</strong>
-              </span>
-              <span class="chip">
-                <span class="chip-label">Range</span>
-                <strong id="periodRangeChip">2005Q1-2025Q4</strong>
-              </span>
-              <span class="chip">
-                <span class="chip-label">Mode</span>
-                <strong>季度 / 年度 / 滚动年化</strong>
-              </span>
-            </div>
-            <details class="source-details">
-              <summary>查看数据口径与来源</summary>
-              <p class="source-note">
-                数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收增速为同比。支持季度、年度与滚动年化浏览。
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
-
       <section class="panel content-panel">
         <aside class="control-panel">
           <div class="control-header">
-            <h2>视图设置</h2>
+            <h2 data-i18n="viewSettings">视图设置</h2>
           </div>
 
           <section class="control-group">
-            <h3>时间粒度</h3>
-            <div class="frequency-switch" role="radiogroup" aria-label="时间粒度切换">
+            <h3 data-i18n="timeGranularity">时间粒度</h3>
+            <div class="frequency-switch" role="radiogroup" aria-label="时间粒度切换" data-i18n-aria-label="frequencySwitch">
               <label class="metric-item segment-item">
                 <input type="radio" name="frequency" value="quarterly" checked />
-                <span>季度</span>
+                <span data-i18n="quarterly">季度</span>
               </label>
               <label class="metric-item segment-item">
                 <input type="radio" name="frequency" value="annual" />
-                <span>年度</span>
+                <span data-i18n="annual">年度</span>
               </label>
               <label class="metric-item segment-item">
                 <input type="radio" name="frequency" value="rollingAnnual" />
-                <span>滚动年化</span>
+                <span data-i18n="rollingAnnual">滚动年化</span>
               </label>
             </div>
           </section>
 
           <section class="control-group company-control-group">
-            <h3>公司显示</h3>
+            <h3 data-i18n="companyDisplay">公司显示</h3>
             <label class="company-search">
-              <span class="sr-only">搜索企业</span>
-              <input id="companySearch" type="search" placeholder="搜索企业名称或股票代码" autocomplete="off" />
+              <span class="sr-only" data-i18n="searchCompany">搜索企业</span>
+              <input id="companySearch" type="search" placeholder="搜索企业名称或股票代码" data-i18n-placeholder="searchPlaceholder" autocomplete="off" />
             </label>
-            <div id="companyToggles" class="toggle-list" aria-label="公司显示开关"></div>
+            <div id="companyToggles" class="toggle-list" aria-label="公司显示开关" data-i18n-aria-label="companySwitches"></div>
 
             <div class="control-actions">
-              <button id="generateBtn" type="button">生成</button>
-              <button id="showAllBtn" type="button">全部显示</button>
-              <button id="hideAllBtn" type="button">全部隐藏</button>
+              <button id="generateBtn" type="button" data-i18n="generate">生成</button>
+              <button id="showAllBtn" type="button" data-i18n="showAll">全部显示</button>
+              <button id="hideAllBtn" type="button" data-i18n="hideAll">全部隐藏</button>
             </div>
           </section>
 
           <div class="control-foot">
-            <p class="hint">提示：首屏默认展示完整历史，可切换季度/年度/滚动年化，并通过底部双端滑块聚焦时间区间。</p>
+            <p class="hint" data-i18n="hint">提示：首屏默认展示完整历史，可切换季度/年度/滚动年化，并通过底部双端滑块聚焦时间区间。</p>
+
+            <details class="source-details">
+              <summary data-i18n="sourceSummary">查看数据口径与来源</summary>
+              <p class="source-note" data-i18n="sourceNote">
+                数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收增速为同比。支持季度、年度与滚动年化浏览。
+              </p>
+            </details>
 
             <div class="sources">
-              <a href="https://companiesmarketcap.com/" target="_blank" rel="noopener noreferrer">数据来源链接</a>
+              <a href="https://companiesmarketcap.com/" target="_blank" rel="noopener noreferrer" data-i18n="dataSourceLink">数据来源链接</a>
             </div>
           </div>
         </aside>
@@ -102,65 +79,69 @@
         <div class="chart-panel">
           <div class="chart-head">
             <div>
-              <p class="chart-kicker">Comparative Lens</p>
-              <h2>财务趋势对比</h2>
+              <p class="chart-kicker" data-i18n="chartKicker">对比视角</p>
+              <h2 data-i18n="financialTrendComparison">财务趋势对比</h2>
             </div>
             <div class="chart-side-tools">
               <div id="chartModeControl" class="chart-mode-control" hidden>
-                <span class="chart-mode-caption">单公司视图</span>
-                <div class="chart-mode-switch" role="radiogroup" aria-label="图表类型切换">
+                <span class="chart-mode-caption" data-i18n="singleCompanyView">单公司视图</span>
+                <div class="chart-mode-switch" role="radiogroup" aria-label="图表类型切换" data-i18n-aria-label="chartTypeSwitch">
                   <label class="chart-mode-pill">
                     <input type="radio" name="chartMode" value="line" />
-                    <span>折线</span>
+                    <span data-i18n="line">折线</span>
                   </label>
                   <label class="chart-mode-pill">
                     <input type="radio" name="chartMode" value="bar" checked />
-                    <span>柱状</span>
+                    <span data-i18n="bar">柱状</span>
                   </label>
                 </div>
               </div>
               <div id="priceComparisonControl" class="price-comparison-control" hidden>
-                <span class="chart-mode-caption">辅助阅读</span>
+                <span class="chart-mode-caption" data-i18n="assistiveReading">辅助阅读</span>
                 <label class="price-comparison-toggle">
                   <input id="priceComparisonToggle" type="checkbox" checked />
-                  <span>股价对比</span>
+                  <span data-i18n="priceComparison">股价对比</span>
                 </label>
               </div>
               <div class="chart-actions">
-                <button id="downloadBtn" type="button">导出 PNG</button>
+                <button id="languageToggle" class="language-toggle" type="button" aria-label="Switch to English">
+                  <span class="language-toggle-mark" aria-hidden="true">中 / EN</span>
+                  <span id="languageToggleLabel">EN</span>
+                </button>
+                <button id="downloadBtn" type="button" data-i18n="exportPng">导出 PNG</button>
               </div>
             </div>
           </div>
-          <div class="chart-summary" aria-label="当前视图摘要">
+          <div class="chart-summary" aria-label="当前视图摘要" data-i18n-aria-label="currentViewSummary">
             <div class="summary-card">
-              <span class="summary-label">当前指标</span>
+              <span class="summary-label" data-i18n="currentMetric">当前指标</span>
               <strong id="activeMetricLabel">净利润</strong>
             </div>
             <div class="summary-card">
-              <span class="summary-label">时间粒度</span>
+              <span class="summary-label" data-i18n="currentFrequency">时间粒度</span>
               <strong id="activeFrequencyLabel">季度</strong>
             </div>
             <div class="summary-card">
-              <span class="summary-label">当前公司</span>
+              <span class="summary-label" data-i18n="currentCompanies">当前公司</span>
               <strong id="visibleCompaniesLabel">1 / 44</strong>
             </div>
             <div class="summary-card">
-              <span class="summary-label">数据更新</span>
+              <span class="summary-label" data-i18n="dataUpdated">数据更新</span>
               <strong id="generatedAtLabel">-</strong>
             </div>
           </div>
-          <div class="metric-toolbar" role="radiogroup" aria-label="指标切换">
+          <div class="metric-toolbar" role="radiogroup" aria-label="指标切换" data-i18n-aria-label="metricSwitch">
             <label class="metric-pill">
               <input type="radio" name="metric" value="revenue" />
-              <span>营收</span>
+              <span data-i18n="revenue">营收</span>
             </label>
             <label class="metric-pill">
               <input type="radio" name="metric" value="netIncome" checked />
-              <span>净利润</span>
+              <span data-i18n="netIncome">净利润</span>
             </label>
             <label class="metric-pill">
               <input type="radio" name="metric" value="grossMargin" />
-              <span>毛利率</span>
+              <span data-i18n="grossMargin">毛利率</span>
             </label>
             <label class="metric-pill">
               <input type="radio" name="metric" value="pe" />
@@ -172,27 +153,27 @@
             </label>
             <label class="metric-pill">
               <input type="radio" name="metric" value="revenueGrowth" />
-              <span>营收增速</span>
+              <span data-i18n="revenueGrowth">营收增速</span>
             </label>
           </div>
           <div class="chart-wrap">
-            <canvas id="financeChart" aria-label="美股头部市值公司财务指标对比图"></canvas>
+            <canvas id="financeChart" aria-label="美股头部市值公司财务指标对比图" data-i18n-aria-label="chartAria"></canvas>
           </div>
-          <div class="range-panel" aria-label="时间区间滑块">
+          <div class="range-panel" aria-label="时间区间滑块" data-i18n-aria-label="timeRangeSlider">
             <div class="range-head">
-              <span>显示区间</span>
+              <span data-i18n="displayRange">显示区间</span>
               <span id="rangeLabel">-</span>
             </div>
             <div id="rangeSliders" class="range-sliders">
               <div class="range-axis">
                 <div class="range-track"></div>
                 <div id="rangeFill" class="range-fill"></div>
-                <input id="rangeStart" type="range" min="0" max="0" value="0" aria-label="开始时间" />
-                <input id="rangeEnd" type="range" min="0" max="0" value="0" aria-label="结束时间" />
+                <input id="rangeStart" type="range" min="0" max="0" value="0" aria-label="开始时间" data-i18n-aria-label="startTime" />
+                <input id="rangeEnd" type="range" min="0" max="0" value="0" aria-label="结束时间" data-i18n-aria-label="endTime" />
               </div>
             </div>
           </div>
-          <p id="statusText" class="status-text">正在加载数据...</p>
+          <p id="statusText" class="status-text" data-i18n="loading">正在加载数据...</p>
         </div>
       </section>
     </main>

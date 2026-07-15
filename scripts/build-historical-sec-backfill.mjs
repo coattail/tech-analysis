@@ -155,6 +155,33 @@ const ROW_ALIASES = {
   ],
 };
 
+// ASML's older 6-K packages contain several tables with labels that normalize to
+// "net income".  The generic historical parser can therefore select an equity-
+// method or other auxiliary row instead of the consolidated statement.  Keep the
+// affected period on ASML's official US GAAP quarterly-summary basis (EUR).
+// Sources: ASML quarterly press releases for Q4 2016 through Q4 2020.
+const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  asml: {
+    "2016Q4": { revenue: 1_907_000_000, grossProfit: 901_000_000, netIncome: 524_000_000 },
+    "2017Q1": { revenue: 1_944_000_000, grossProfit: 925_000_000, netIncome: 452_000_000 },
+    "2017Q2": { revenue: 2_101_000_000, grossProfit: 946_000_000, netIncome: 466_000_000 },
+    "2017Q3": { revenue: 2_447_000_000, grossProfit: 1_050_000_000, netIncome: 557_000_000 },
+    "2017Q4": { revenue: 2_561_000_000, grossProfit: 1_156_000_000, netIncome: 644_000_000 },
+    "2018Q1": { revenue: 2_285_000_000, grossProfit: 1_113_000_000, netIncome: 540_000_000 },
+    "2018Q2": { revenue: 2_740_000_000, grossProfit: 1_187_000_000, netIncome: 584_000_000 },
+    "2018Q3": { revenue: 2_776_000_000, grossProfit: 1_336_000_000, netIncome: 680_000_000 },
+    "2018Q4": { revenue: 3_143_000_000, grossProfit: 1_393_000_000, netIncome: 788_000_000 },
+    "2019Q1": { revenue: 2_229_000_000, grossProfit: 928_000_000, netIncome: 355_000_000 },
+    "2019Q2": { revenue: 2_568_000_000, grossProfit: 1_105_000_000, netIncome: 476_000_000 },
+    "2019Q3": { revenue: 2_987_000_000, grossProfit: 1_307_000_000, netIncome: 627_000_000 },
+    "2019Q4": { revenue: 4_036_000_000, grossProfit: 1_940_000_000, netIncome: 1_134_000_000 },
+    "2020Q1": { revenue: 2_441_000_000, grossProfit: 1_101_000_000, netIncome: 391_000_000 },
+    "2020Q2": { revenue: 3_326_000_000, grossProfit: 1_603_000_000, netIncome: 751_000_000 },
+    "2020Q3": { revenue: 3_958_000_000, grossProfit: 1_881_000_000, netIncome: 1_062_000_000 },
+    "2020Q4": { revenue: 4_254_000_000, grossProfit: 2_212_000_000, netIncome: 1_351_000_000 },
+  },
+};
+
 let secTickerMapCache = null;
 const submissionsCache = new Map();
 
@@ -1608,8 +1635,6 @@ function extractEntriesFromDocument(documentText, filingDate, sourceUrl, company
 }
 
 function normalizeCompanyBackfillRows(companyId, rows) {
-  if (!["salesforce", "adobe"].includes(companyId)) return rows;
-
   const normalizeValue = (value) => {
     if (!Number.isFinite(value)) return null;
     const absolute = Math.abs(value);
@@ -1619,15 +1644,17 @@ function normalizeCompanyBackfillRows(companyId, rows) {
   };
 
   return rows.map((row) => {
-    const revenue = normalizeValue(row.revenue);
-    let grossProfit = normalizeValue(row.grossProfit);
-    let netIncome = normalizeValue(row.netIncome);
-    if (companyId === "salesforce" && Number.isFinite(revenue)) {
+    const shouldNormalizeScale = ["salesforce", "adobe"].includes(companyId);
+    const officialOverride = COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companyId]?.[row.period];
+    const revenue = officialOverride?.revenue ?? (shouldNormalizeScale ? normalizeValue(row.revenue) : row.revenue);
+    let grossProfit = officialOverride?.grossProfit ?? (shouldNormalizeScale ? normalizeValue(row.grossProfit) : row.grossProfit);
+    let netIncome = officialOverride?.netIncome ?? (shouldNormalizeScale ? normalizeValue(row.netIncome) : row.netIncome);
+    if (!officialOverride && companyId === "salesforce" && Number.isFinite(revenue)) {
       while (Number.isFinite(netIncome) && Math.abs(netIncome) > Math.abs(revenue) * 0.5) {
         netIncome = Math.round(netIncome / 1_000);
       }
     }
-    if (Number.isFinite(grossProfit) && Number.isFinite(revenue) && (grossProfit < 0 || grossProfit > revenue * 1.05)) {
+    if (!officialOverride && Number.isFinite(grossProfit) && Number.isFinite(revenue) && (grossProfit < 0 || grossProfit > revenue * 1.05)) {
       grossProfit = null;
     }
     return {

@@ -1,5 +1,184 @@
 const sourceData = window.FINANCIAL_SOURCE_DATA;
 
+const UI_TRANSLATIONS = {
+  zh: {
+    pageTitle: "美股科技与头部市值公司财务数据可视化",
+    pageInfo: "页面信息",
+    coverageLabel: "覆盖范围",
+    coverageValue: "44 家科技与头部市值公司",
+    rangeLabel: "区间",
+    modeLabel: "模式",
+    modeValue: "季度 / 年度 / 滚动年化",
+    sourceSummary: "查看数据口径与来源",
+    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收增速为同比。支持季度、年度与滚动年化浏览。",
+    viewSettings: "视图设置",
+    timeGranularity: "时间粒度",
+    frequencySwitch: "时间粒度切换",
+    quarterly: "季度",
+    annual: "年度",
+    rollingAnnual: "滚动年化",
+    companyDisplay: "公司显示",
+    searchCompany: "搜索企业",
+    searchPlaceholder: "搜索企业名称或股票代码",
+    companySwitches: "公司显示开关",
+    generate: "生成",
+    showAll: "全部显示",
+    hideAll: "全部隐藏",
+    hint: "提示：首屏默认展示完整历史，可切换季度/年度/滚动年化，并通过底部双端滑块聚焦时间区间。",
+    dataSourceLink: "数据来源链接",
+    chartKicker: "对比视角",
+    financialTrendComparison: "财务趋势对比",
+    singleCompanyView: "单公司视图",
+    chartTypeSwitch: "图表类型切换",
+    line: "折线",
+    bar: "柱状",
+    assistiveReading: "辅助阅读",
+    priceComparison: "股价对比",
+    exportPng: "导出 PNG",
+    currentViewSummary: "当前视图摘要",
+    currentMetric: "当前指标",
+    currentFrequency: "时间粒度",
+    currentCompanies: "当前公司",
+    dataUpdated: "数据更新",
+    metricSwitch: "指标切换",
+    revenue: "营收",
+    netIncome: "净利润",
+    grossMargin: "毛利率",
+    revenueGrowth: "营收增速",
+    chartAria: "美股头部市值公司财务指标对比图",
+    timeRangeSlider: "时间区间滑块",
+    displayRange: "显示区间",
+    startTime: "开始时间",
+    endTime: "结束时间",
+    loading: "正在加载数据...",
+    noData: "无数据",
+    stockPrice: "股价",
+    priceAxis: "股价（USD）",
+    forecastSuffix: "（预测）",
+    noMatchingCompanies: "未找到匹配企业",
+    unknownTime: "未知时间",
+    switchLanguage: "Switch to English",
+    switchLanguageLabel: "EN",
+    priceEnableFailed: "股价对比开启失败：{message}",
+    chartNotReady: "图表尚未加载完成，暂时无法下载。",
+    chartCanvasUnavailable: "图表画布不可用，暂时无法下载。",
+    exportContextFailed: "导出失败：无法创建图片上下文。",
+    exporting: "正在导出高清图片（{scale}x）...",
+    exportRenderFailed: "导出失败：高清重绘未完成。",
+    downloaded: "已下载：{filename}",
+    priceDataNotLoaded: "股价数据文件尚未载入，请刷新页面后重试。",
+    selectSingleCompany: "请选择单一公司后再开启股价对比。",
+    noDailyPrice: "暂无 {company} 的股价日线数据。",
+    noPriceInRange: "当前区间暂无可用股价数据，已保留财务柱状图。",
+    priceOverlayEnabled: "股价对比已开启：{count} 个日线点。",
+    loaded: "数据更新于 {stamp}，共载入 {count} 家公司，预测补点 {forecastCount} 个。",
+    loadedWithWarnings: "已载入 {loadedCount}/{count} 家公司，数据更新于 {stamp}。另有 {warningCount} 家存在缺失数据。",
+    localDataMissing: "未检测到本地 data.js 数据对象",
+    companyDataMissing: "{company} 缺少本地数据",
+    localDataEmpty: "本地数据为空，请重新生成 data.js",
+    loadFailed: "加载失败：{message}",
+  },
+  en: {
+    pageTitle: "Financial Data Visualization for Leading U.S.-Listed Companies",
+    pageInfo: "Page information",
+    coverageLabel: "Coverage",
+    coverageValue: "44 technology and large-cap companies",
+    rangeLabel: "Range",
+    modeLabel: "Mode",
+    modeValue: "Quarterly / Annual / Rolling Annual",
+    sourceSummary: "View methodology and sources",
+    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income use quarterly reported data in USD; gross margin is gross profit divided by revenue; P/E is the valuation metric for the reporting period; ROE is net income divided by net assets; revenue growth is year over year. Quarterly, annual, and rolling-annual views are supported.",
+    viewSettings: "View Settings",
+    timeGranularity: "Time Granularity",
+    frequencySwitch: "Time granularity switch",
+    quarterly: "Quarterly",
+    annual: "Annual",
+    rollingAnnual: "Rolling Annual",
+    companyDisplay: "Companies",
+    searchCompany: "Search companies",
+    searchPlaceholder: "Search by company name or ticker",
+    companySwitches: "Company visibility toggles",
+    generate: "Generate",
+    showAll: "Show All",
+    hideAll: "Hide All",
+    hint: "Tip: The initial view shows the full history. Switch among quarterly, annual, and rolling-annual views, or use the dual range slider below to focus the timeline.",
+    dataSourceLink: "Data source links",
+    chartKicker: "Comparative Lens",
+    financialTrendComparison: "Financial Trend Comparison",
+    singleCompanyView: "Single-Company View",
+    chartTypeSwitch: "Chart type switch",
+    line: "Line",
+    bar: "Bar",
+    assistiveReading: "Context",
+    priceComparison: "Price Overlay",
+    exportPng: "Export PNG",
+    currentViewSummary: "Current view summary",
+    currentMetric: "Metric",
+    currentFrequency: "Frequency",
+    currentCompanies: "Companies",
+    dataUpdated: "Data Updated",
+    metricSwitch: "Metric switch",
+    revenue: "Revenue",
+    netIncome: "Net Income",
+    grossMargin: "Gross Margin",
+    revenueGrowth: "Revenue Growth",
+    chartAria: "Financial metric comparison chart for leading U.S.-listed companies",
+    timeRangeSlider: "Time range slider",
+    displayRange: "Display Range",
+    startTime: "Start time",
+    endTime: "End time",
+    loading: "Loading data...",
+    noData: "No data",
+    stockPrice: "Stock Price",
+    priceAxis: "Stock Price (USD)",
+    forecastSuffix: " (Forecast)",
+    noMatchingCompanies: "No matching companies found",
+    unknownTime: "Unknown time",
+    switchLanguage: "切换到中文",
+    switchLanguageLabel: "中文",
+    priceEnableFailed: "Failed to enable the price overlay: {message}",
+    chartNotReady: "The chart is not ready to download yet.",
+    chartCanvasUnavailable: "The chart canvas is unavailable.",
+    exportContextFailed: "Export failed: unable to create an image context.",
+    exporting: "Exporting a high-resolution image ({scale}x)...",
+    exportRenderFailed: "Export failed: high-resolution rendering did not complete.",
+    downloaded: "Downloaded: {filename}",
+    priceDataNotLoaded: "The stock-price data file is not loaded. Refresh the page and try again.",
+    selectSingleCompany: "Select one company before enabling the price overlay.",
+    noDailyPrice: "No daily stock-price data is available for {company}.",
+    noPriceInRange: "No stock-price data is available in the current range; the financial bars remain visible.",
+    priceOverlayEnabled: "Price overlay enabled: {count} daily points.",
+    loaded: "Data updated {stamp}. Loaded {count} companies with {forecastCount} forecast points.",
+    loadedWithWarnings: "Loaded {loadedCount}/{count} companies; data updated {stamp}. {warningCount} companies have missing data.",
+    localDataMissing: "The local data.js object was not found",
+    companyDataMissing: "Local data is missing for {company}",
+    localDataEmpty: "Local data is empty. Regenerate data.js",
+    loadFailed: "Loading failed: {message}",
+  },
+};
+
+function readInitialLanguage() {
+  try {
+    return localStorage.getItem("tech-analysis-language") === "en" ? "en" : "zh";
+  } catch {
+    return "zh";
+  }
+}
+
+let currentLanguage = readInitialLanguage();
+
+function t(key, values = {}) {
+  const template = UI_TRANSLATIONS[currentLanguage]?.[key] ?? UI_TRANSLATIONS.zh[key] ?? key;
+  return Object.entries(values).reduce(
+    (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),
+    template,
+  );
+}
+
+function getLabelSeparator() {
+  return currentLanguage === "en" ? ": " : "：";
+}
+
 function buildPeriods(startYear, endYear) {
   const periods = [];
   for (let year = startYear; year <= endYear; year += 1) {
@@ -87,14 +266,72 @@ const COMPANIES = [
   { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
   { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
+const COMPANY_ENGLISH_NAMES = {
+  nvidia: "NVIDIA",
+  alphabet: "Alphabet",
+  apple: "Apple",
+  microsoft: "Microsoft",
+  amazon: "Amazon",
+  avgo: "Broadcom",
+  meta: "Meta",
+  tsmc: "TSMC",
+  tsla: "Tesla",
+  walmart: "Walmart",
+  berkshire: "Berkshire Hathaway",
+  jpmorgan: "JPMorgan Chase",
+  lilly: "Eli Lilly",
+  exxon: "Exxon Mobil",
+  visa: "Visa",
+  asml: "ASML",
+  micron: "Micron",
+  jnj: "Johnson & Johnson",
+  oracle: "Oracle",
+  amd: "AMD",
+  mastercard: "Mastercard",
+  costco: "Costco",
+  netflix: "Netflix",
+  bankofamerica: "Bank of America",
+  caterpillar: "Caterpillar",
+  chevron: "Chevron",
+  palantir: "Palantir",
+  cisco: "Cisco",
+  abbvie: "AbbVie",
+  homedepot: "Home Depot",
+  ibm: "IBM",
+  sap: "SAP",
+  crowdstrike: "CrowdStrike",
+  salesforce: "Salesforce",
+  servicenow: "ServiceNow",
+  datadog: "Datadog",
+  snowflake: "Snowflake",
+  cloudflare: "Cloudflare",
+  adobe: "Adobe",
+  zoom: "Zoom",
+  coreweave: "CoreWeave",
+  nebius: "Nebius",
+  chronoscale: "ChronoScale",
+  sharonai: "SharonAI",
+};
+
+function getCompanyName(company) {
+  if (!company) return "";
+  return currentLanguage === "en"
+    ? (COMPANY_ENGLISH_NAMES[company.id] ?? company.name)
+    : company.name;
+}
+
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
 const COMPANY_CATEGORIES = [
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "alphabet", "apple", "microsoft", "amazon", "meta", "tsla"] },
-  { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"] },
-  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"] },
-  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"] },
-  { id: "other", label: "其他", companyIds: [] },
+  { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"], labelEn: "Software" },
+  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"], labelEn: "Cloud" },
+  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"], labelEn: "Semiconductors" },
+  { id: "other", label: "其他", companyIds: [], labelEn: "Other" },
 ];
+
+function getCategoryLabel(category) {
+  return currentLanguage === "en" ? (category.labelEn ?? category.label) : category.label;
+}
 const CATEGORIZED_COMPANY_IDS = new Set(COMPANY_CATEGORIES.flatMap((category) => category.companyIds));
 COMPANY_CATEGORIES.find((category) => category.id === "other").companyIds = COMPANIES
   .map((company) => company.id)
@@ -322,7 +559,7 @@ function drawSingleCompanyLogoBadge(
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   ctx.fillStyle = logoColor;
-  ctx.fillText(`${company.name} ${company.ticker}`, badgeX, badgeY);
+  ctx.fillText(`${getCompanyName(company)} ${company.ticker}`, badgeX, badgeY);
   ctx.restore();
   return false;
 }
@@ -570,6 +807,46 @@ const METRICS = {
   },
 };
 
+const METRIC_TRANSLATIONS = {
+  revenue: {
+    zh: { label: "营收（美元）", name: "营收", unit: "（美元，USD）" },
+    en: { label: "Revenue (USD)", name: "Revenue", unit: " (USD)" },
+  },
+  netIncome: {
+    zh: { label: "净利润（美元）", name: "净利润", unit: "（美元，USD）" },
+    en: { label: "Net Income (USD)", name: "Net Income", unit: " (USD)" },
+  },
+  grossMargin: {
+    zh: { label: "毛利率（%）", name: "毛利率", unit: "（%）" },
+    en: { label: "Gross Margin (%)", name: "Gross Margin", unit: " (%)" },
+  },
+  pe: {
+    zh: { label: "市盈率（P/E）", name: "市盈率", unit: "（倍）" },
+    en: { label: "P/E Ratio", name: "P/E Ratio", unit: " (x)" },
+  },
+  roe: {
+    zh: { label: "ROE（%）", name: "ROE", unit: "（%）" },
+    en: { label: "ROE (%)", name: "ROE", unit: " (%)" },
+  },
+  revenueGrowth: {
+    zh: { label: "营收增速（同比 %）", name: "营收同比增速", unit: "（%）" },
+    en: { label: "Revenue Growth (YoY %)", name: "Revenue Growth YoY", unit: " (%)" },
+  },
+};
+
+function getMetricTranslation(metricKey) {
+  return METRIC_TRANSLATIONS[metricKey]?.[currentLanguage]
+    ?? METRIC_TRANSLATIONS.revenue[currentLanguage];
+}
+
+function getMetricLabel(metricKey) {
+  return getMetricTranslation(metricKey).label;
+}
+
+function getFrequencyLabel(frequencyKey) {
+  return t(frequencyKey in FREQUENCY_META ? frequencyKey : "quarterly");
+}
+
 const chartEl = document.getElementById("financeChart");
 const statusEl = document.getElementById("statusText");
 const togglesEl = document.getElementById("companyToggles");
@@ -588,6 +865,8 @@ const activeMetricLabelEl = document.getElementById("activeMetricLabel");
 const activeFrequencyLabelEl = document.getElementById("activeFrequencyLabel");
 const visibleCompaniesLabelEl = document.getElementById("visibleCompaniesLabel");
 const generatedAtLabelEl = document.getElementById("generatedAtLabel");
+const languageToggleEl = document.getElementById("languageToggle");
+const languageToggleLabelEl = document.getElementById("languageToggleLabel");
 const chartModeControlEl = document.getElementById("chartModeControl");
 const priceComparisonControlEl = document.getElementById("priceComparisonControl");
 const priceComparisonToggleEl = document.getElementById("priceComparisonToggle");
@@ -642,7 +921,9 @@ const state = {
   pendingCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   rangeStart: 0,
   rangeEnd: 0,
+  generatedAtIso: null,
   generatedAtLabel: "-",
+  loadSummary: null,
   loadedStatusText: "",
   loadedStatusIsError: false,
   pendingVisibilityRefreshId: null,
@@ -730,6 +1011,70 @@ function isCompactChartLayout() {
 function setStatus(text, isError = false) {
   statusEl.textContent = text;
   statusEl.classList.toggle("is-error", isError);
+}
+
+function applyStaticTranslations() {
+  document.documentElement.lang = currentLanguage === "en" ? "en" : "zh-CN";
+
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
+  });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
+  });
+
+  if (languageToggleLabelEl) {
+    languageToggleLabelEl.textContent = t("switchLanguageLabel");
+  }
+  if (languageToggleEl) {
+    languageToggleEl.setAttribute("aria-label", t("switchLanguage"));
+  }
+}
+
+function persistLanguage() {
+  try {
+    localStorage.setItem("tech-analysis-language", currentLanguage);
+  } catch {
+    // The page still switches languages if storage is unavailable.
+  }
+}
+
+function refreshLoadedStatusText() {
+  state.generatedAtLabel = formatGeneratedAt(state.generatedAtIso);
+  const summary = state.loadSummary;
+  if (!summary) return;
+
+  const values = {
+    stamp: state.generatedAtLabel,
+    count: COMPANIES.length,
+    loadedCount: summary.loadedCount,
+    forecastCount: summary.forecastCount,
+    warningCount: summary.warningCount,
+  };
+  state.loadedStatusText = summary.warningCount > 0
+    ? t("loadedWithWarnings", values)
+    : t("loaded", values);
+  state.loadedStatusIsError = summary.warningCount > 0;
+}
+
+function setLanguage(nextLanguage) {
+  currentLanguage = nextLanguage === "en" ? "en" : "zh";
+  persistLanguage();
+  applyStaticTranslations();
+  setupTogglePanel(companySearchEl?.value ?? "");
+  refreshLoadedStatusText();
+
+  if (state.chart) {
+    refreshChart("none");
+  } else {
+    updateViewSummary();
+    if (state.loadedStatusText) {
+      setStatus(state.loadedStatusText, state.loadedStatusIsError);
+    }
+  }
 }
 
 function getSingleVisibleCompanyId() {
@@ -1332,17 +1677,17 @@ function setPriceComparisonEnabled(enabled) {
       priceComparisonToggleEl.checked = false;
     }
     console.error(error);
-    setStatus(`股价对比开启失败：${error.message}`, true);
+    setStatus(t("priceEnableFailed", { message: error.message }), true);
   }
 }
 
 function updateViewSummary() {
   if (activeMetricLabelEl) {
-    activeMetricLabelEl.textContent = METRICS[state.metric]?.label ?? "-";
+    activeMetricLabelEl.textContent = getMetricLabel(state.metric);
   }
 
   if (activeFrequencyLabelEl) {
-    activeFrequencyLabelEl.textContent = FREQUENCY_META[state.frequency]?.granularityLabel ?? "-";
+    activeFrequencyLabelEl.textContent = getFrequencyLabel(state.frequency);
   }
 
   if (visibleCompaniesLabelEl) {
@@ -1577,7 +1922,7 @@ function formatPrimaryYAxisTick(
 }
 
 function formatMetricValue(metricKey, value) {
-  if (!isFiniteNumber(value)) return "无数据";
+  if (!isFiniteNumber(value)) return t("noData");
 
   if (metricKey === "revenue" || metricKey === "netIncome") {
     return formatUsdValue(value);
@@ -1600,27 +1945,11 @@ function formatUsdValue(value) {
 }
 
 function buildYAxisTitleParts(metricKey, frequencyKey) {
-  const metricMeta = METRICS[metricKey] ?? METRICS.revenue;
-  const frequencyMeta = FREQUENCY_META[frequencyKey] ?? FREQUENCY_META.quarterly;
-  const match = /^(.+?)(（.+）)$/.exec(metricMeta.axisLabel);
-
-  if (!match) {
-    return {
-      mainText: `${frequencyMeta.granularityLabel}${metricMeta.axisLabel}`,
-      detailText: "",
-    };
-  }
-
-  const [, metricName, metricUnit] = match;
-  let detailText = metricUnit;
-
-  if (metricKey === "revenue" || metricKey === "netIncome") {
-    detailText = "（美元，USD）";
-  }
-
+  const metric = getMetricTranslation(metricKey);
+  const frequency = getFrequencyLabel(frequencyKey);
   return {
-    mainText: `${frequencyMeta.granularityLabel}${metricName}`,
-    detailText,
+    mainText: currentLanguage === "en" ? `${frequency} ${metric.name}` : `${frequency}${metric.name}`,
+    detailText: metric.unit,
   };
 }
 
@@ -1649,14 +1978,14 @@ function waitForNextPaint() {
 
 async function downloadCurrentChartImage() {
   if (!state.chart) {
-    setStatus("图表尚未加载完成，暂时无法下载。", true);
+    setStatus(t("chartNotReady"), true);
     return;
   }
 
   const chart = state.chart;
   const sourceCanvas = chart.canvas;
   if (!sourceCanvas) {
-    setStatus("图表画布不可用，暂时无法下载。", true);
+    setStatus(t("chartCanvasUnavailable"), true);
     return;
   }
 
@@ -1680,7 +2009,7 @@ async function downloadCurrentChartImage() {
   const exportCanvas = document.createElement("canvas");
   const exportCtx = exportCanvas.getContext("2d");
   if (!exportCtx) {
-    setStatus("导出失败：无法创建图片上下文。", true);
+    setStatus(t("exportContextFailed"), true);
     return;
   }
 
@@ -1695,7 +2024,7 @@ async function downloadCurrentChartImage() {
   );
 
   try {
-    setStatus(`正在导出高清图片（${targetDevicePixelRatio}x）...`, false);
+    setStatus(t("exporting", { scale: targetDevicePixelRatio }), false);
 
     chart.options.animation = false;
     chart.options.responsive = false;
@@ -1711,7 +2040,7 @@ async function downloadCurrentChartImage() {
     exportCtx.drawImage(chart.canvas, 0, 0);
   } catch (error) {
     console.error(error);
-    setStatus("导出失败：高清重绘未完成。", true);
+    setStatus(t("exportRenderFailed"), true);
     return;
   } finally {
     chart.options.devicePixelRatio = originalDevicePixelRatio;
@@ -1729,7 +2058,7 @@ async function downloadCurrentChartImage() {
   anchor.click();
   anchor.remove();
 
-  setStatus(`已下载：${filename}`, false);
+  setStatus(t("downloaded", { filename }), false);
 }
 
 function syncRangeControls() {
@@ -1806,16 +2135,16 @@ function getSingleCompanyDailyPrices() {
 function getPriceComparisonUnavailableReason() {
   const singleCompanyId = getSingleVisibleCompanyId();
   if (!window.STOCK_PRICE_SOURCE_DATA?.companies) {
-    return "股价数据文件尚未载入，请刷新页面后重试。";
+    return t("priceDataNotLoaded");
   }
   if (!singleCompanyId) {
-    return "请选择单一公司后再开启股价对比。";
+    return t("selectSingleCompany");
   }
   if (!window.STOCK_PRICE_SOURCE_DATA.companies[singleCompanyId]?.daily) {
     const company = COMPANY_META.get(singleCompanyId);
-    return `暂无 ${company?.name ?? singleCompanyId} 的股价日线数据。`;
+    return t("noDailyPrice", { company: getCompanyName(company) || singleCompanyId });
   }
-  return "当前区间暂无可用股价数据，已保留财务柱状图。";
+  return t("noPriceInRange");
 }
 
 function buildPriceOverlayDataset(visibleLabels) {
@@ -1832,7 +2161,7 @@ function buildPriceOverlayDataset(visibleLabels) {
 
   return {
     type: "line",
-    label: "股价",
+    label: t("stockPrice"),
     priceOverlay: true,
     order: PriceComparisonUtils.getPriceOverlayDatasetOrder(),
     data: projected,
@@ -1881,8 +2210,8 @@ function buildDatasetsForView() {
     return {
       type: useBarDataset ? "bar" : "line",
       label: useBarDataset && state.priceComparisonEnabled
-        ? `${company.name} · ${METRICS[metricKey]?.label ?? ""}`
-        : company.name,
+        ? `${getCompanyName(company)} · ${getMetricLabel(metricKey)}`
+        : getCompanyName(company),
       companyId: company.id,
       order: useBarDataset ? PriceComparisonUtils.getFinancialBarDatasetOrder() : 0,
       fullData,
@@ -2660,6 +2989,7 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.yPrice.display = axisReservations.priceWidth > 0;
   state.chart.options.scales.yPrice.reservedWidth = axisReservations.priceWidth;
   state.chart.options.scales.yPrice.title.display = hasPriceOverlay;
+  state.chart.options.scales.yPrice.title.text = isCompactChartLayout() ? "USD" : t("priceAxis");
   state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
   state.chart.options.scales.yPrice.min = priceBounds.min;
   state.chart.options.scales.yPrice.max = priceBounds.max;
@@ -2676,7 +3006,7 @@ function refreshChart(updateMode = undefined) {
 
 function updateChartStatus(hasPriceOverlay = false) {
   if (state.priceComparisonEnabled && hasPriceOverlay && state.loadedStatusText) {
-    setStatus(`${state.loadedStatusText} 股价对比已开启：${state.lastPriceOverlayPointCount} 个日线点。`, state.loadedStatusIsError);
+    setStatus(`${state.loadedStatusText} ${t("priceOverlayEnabled", { count: state.lastPriceOverlayPointCount })}`, state.loadedStatusIsError);
   } else if (state.priceComparisonEnabled && !hasPriceOverlay) {
     setStatus(getPriceComparisonUnavailableReason(), true);
   } else if (state.loadedStatusText) {
@@ -2718,7 +3048,7 @@ function createToggle(company) {
   dot.style.backgroundColor = company.color;
 
   const text = document.createElement("span");
-  text.textContent = company.name;
+  text.textContent = getCompanyName(company);
 
   const ticker = document.createElement("small");
   ticker.textContent = company.ticker;
@@ -2739,14 +3069,18 @@ function createToggle(company) {
 
 function setupTogglePanel(query = "") {
   togglesEl.innerHTML = "";
-  const normalizedQuery = query.trim().toLocaleLowerCase("zh-CN");
+  const normalizedQuery = query.trim().toLocaleLowerCase(currentLanguage === "en" ? "en-US" : "zh-CN");
 
   COMPANY_CATEGORIES.forEach((category) => {
     const companies = category.companyIds
       .map((companyId) => COMPANY_META.get(companyId))
       .filter(Boolean)
-      .filter((company) => !normalizedQuery || [company.id, company.name, company.ticker]
-        .some((value) => value.toLocaleLowerCase("zh-CN").includes(normalizedQuery)));
+      .filter((company) => !normalizedQuery || [
+        company.id,
+        company.name,
+        COMPANY_ENGLISH_NAMES[company.id],
+        company.ticker,
+      ].filter(Boolean).some((value) => value.toLocaleLowerCase().includes(normalizedQuery)));
     if (companies.length === 0) return;
 
     const card = document.createElement("section");
@@ -2754,7 +3088,7 @@ function setupTogglePanel(query = "") {
     card.dataset.category = category.id;
 
     const heading = document.createElement("h4");
-    heading.textContent = category.label;
+    heading.textContent = getCategoryLabel(category);
 
     const list = document.createElement("div");
     list.className = "company-category-list";
@@ -2766,7 +3100,7 @@ function setupTogglePanel(query = "") {
   if (!togglesEl.children.length) {
     const empty = document.createElement("p");
     empty.className = "company-search-empty";
-    empty.textContent = "未找到匹配企业";
+    empty.textContent = t("noMatchingCompanies");
     togglesEl.appendChild(empty);
   }
   syncPresetButtons();
@@ -2893,7 +3227,7 @@ function buildChart() {
           reservedWidth: axisReservations.priceWidth,
           title: {
             display: hasPriceOverlay,
-            text: isCompactChartLayout() ? "USD" : "股价（USD）",
+            text: isCompactChartLayout() ? "USD" : t("priceAxis"),
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
           },
@@ -2947,31 +3281,33 @@ function buildChart() {
           bodyFont: { family: themeTokens.chartFontFamily, size: 11, weight: "500" },
           callbacks: {
             title(context) {
+              const separator = getLabelSeparator();
               const reportDateContext = context.find((item) => item.raw?.reportDate);
               if (reportDateContext?.raw?.reportDate) {
-                return `DATE：${reportDateContext.raw.reportDate}`;
+                return `DATE${separator}${reportDateContext.raw.reportDate}`;
               }
               const periodEndContext = context.find((item) => item.raw?.periodEndDate);
               if (periodEndContext?.raw?.periodEndDate) {
-                return `PERIOD END：${periodEndContext.raw.periodEndDate}`;
+                return `PERIOD END${separator}${periodEndContext.raw.periodEndDate}`;
               }
               const priceContext = context.find((item) => item.dataset.priceOverlay);
               if (priceContext?.raw?.date) {
-                return `DATE：${priceContext.raw.date}`;
+                return `DATE${separator}${priceContext.raw.date}`;
               }
               const prefix = (FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).tooltipPrefix;
-              return `${prefix}：${context[0].label}`;
+              return `${prefix}${separator}${context[0].label}`;
             },
             label(context) {
+              const separator = getLabelSeparator();
               if (context.dataset.priceOverlay) {
-                return `股价：$${decimalFormatter.format(context.parsed.y)}`;
+                return `${t("stockPrice")}${separator}$${decimalFormatter.format(context.parsed.y)}`;
               }
               const label = String(context.raw?.periodLabel ?? context.label);
               const isForecast =
                 Array.isArray(context.dataset.forecastedLabels) &&
                 context.dataset.forecastedLabels.includes(label);
-              const suffix = isForecast ? "（预测）" : "";
-              return `${context.dataset.label}：${formatMetricValue(state.metric, context.parsed.y)}${suffix}`;
+              const suffix = isForecast ? t("forecastSuffix") : "";
+              return `${context.dataset.label}${separator}${formatMetricValue(state.metric, context.parsed.y)}${suffix}`;
             },
           },
         },
@@ -2986,6 +3322,9 @@ function bindEvents() {
   showAllBtn.addEventListener("click", () => setAllVisibility(true));
   hideAllBtn.addEventListener("click", () => setAllVisibility(false));
   companySearchEl?.addEventListener("input", () => setupTogglePanel(companySearchEl.value));
+  languageToggleEl?.addEventListener("click", () => {
+    setLanguage(currentLanguage === "zh" ? "en" : "zh");
+  });
 
   metricInputs.forEach((input) => {
     input.addEventListener("change", () => {
@@ -3053,11 +3392,11 @@ function bindEvents() {
 }
 
 function formatGeneratedAt(isoString) {
-  if (!isoString) return "未知时间";
+  if (!isoString) return t("unknownTime");
   const date = new Date(isoString);
-  if (Number.isNaN(date.getTime())) return "未知时间";
+  if (Number.isNaN(date.getTime())) return t("unknownTime");
 
-  return new Intl.DateTimeFormat("zh-CN", {
+  return new Intl.DateTimeFormat(currentLanguage === "en" ? "en-US" : "zh-CN", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -3070,7 +3409,7 @@ function formatGeneratedAt(isoString) {
 
 function loadFromLocalData() {
   if (!sourceData || !sourceData.companies) {
-    throw new Error("未检测到本地 data.js 数据对象");
+    throw new Error(t("localDataMissing"));
   }
 
   const warnings = [];
@@ -3080,7 +3419,7 @@ function loadFromLocalData() {
   COMPANIES.forEach((company) => {
     const rawCompany = sourceData.companies[company.id];
     if (!rawCompany) {
-      warnings.push(`${company.name} 缺少本地数据`);
+      warnings.push(t("companyDataMissing", { company: getCompanyName(company) }));
       Object.keys(METRICS).forEach((metricKey) => {
         state.dataByFrequency.quarterly[metricKey].set(company.id, emptySeries(QUARTER_LABELS));
         state.dataByFrequency.annual[metricKey].set(company.id, emptySeries(ANNUAL_LABELS));
@@ -3160,6 +3499,7 @@ function loadFromLocalData() {
 }
 
 function init() {
+  applyStaticTranslations();
   registerInteractionModes();
   registerTooltipPositioners();
   syncPeriodRangeChip();
@@ -3172,10 +3512,16 @@ function init() {
     const { warnings, loadedCount, forecastCount, generatedAt } = loadFromLocalData();
 
     if (loadedCount === 0) {
-      throw new Error("本地数据为空，请重新生成 data.js");
+      throw new Error(t("localDataEmpty"));
     }
 
-    state.generatedAtLabel = formatGeneratedAt(generatedAt);
+    state.generatedAtIso = generatedAt;
+    state.loadSummary = {
+      loadedCount,
+      forecastCount,
+      warningCount: warnings.length,
+    };
+    refreshLoadedStatusText();
     setRangeToVisibleDataBounds(state.frequency, state.metric);
     syncRangeControls();
     buildChart();
@@ -3183,21 +3529,10 @@ function init() {
     updateRangeVisual();
     updateViewSummary();
 
-    const stamp = state.generatedAtLabel;
-
-    if (warnings.length > 0) {
-      state.loadedStatusText = `已载入 ${loadedCount}/${COMPANIES.length} 家公司，数据更新于 ${stamp}。另有 ${warnings.length} 家存在缺失数据。`;
-      state.loadedStatusIsError = true;
-      setStatus(state.loadedStatusText, state.loadedStatusIsError);
-      return;
-    }
-
-    state.loadedStatusText = `数据更新于 ${stamp}，共载入 ${COMPANIES.length} 家公司，预测补点 ${forecastCount} 个。`;
-    state.loadedStatusIsError = false;
     setStatus(state.loadedStatusText, state.loadedStatusIsError);
   } catch (error) {
     console.error(error);
-    setStatus(`加载失败：${error.message}`, true);
+    setStatus(t("loadFailed", { message: error.message }), true);
   }
 }
 

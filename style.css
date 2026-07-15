@@ -331,6 +331,46 @@ body:not([data-theme="deep"]) .panel {
   align-content: start;
 }
 
+.header-rail-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.language-toggle {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 11px;
+  border: 1px solid rgba(148, 163, 183, 0.28);
+  border-radius: 999px;
+  color: var(--text-strong);
+  background: linear-gradient(180deg, rgba(28, 37, 48, 0.96), rgba(17, 24, 32, 0.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 7px 16px rgba(0, 0, 0, 0.16);
+  font: 700 0.76rem var(--font-terminal);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.language-toggle:hover {
+  border-color: rgba(199, 170, 122, 0.52);
+  background: linear-gradient(180deg, rgba(36, 45, 57, 0.98), rgba(22, 29, 38, 0.98));
+  transform: translateY(-1px);
+}
+
+.language-toggle:active {
+  transform: translateY(0);
+}
+
+.language-toggle-mark {
+  color: var(--terminal-amber-muted);
+  letter-spacing: 0.08em;
+}
+
 body:not([data-theme="deep"]) .header-panel {
   box-shadow:
     inset 0 1px 0 rgba(149, 178, 232, 0.12),
@@ -609,7 +649,7 @@ body:not([data-theme="deep"]) .control-panel {
 .company-control-group {
   display: flex;
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 260px;
   flex-direction: column;
   container-type: inline-size;
 }
@@ -1150,6 +1190,7 @@ body:not([data-theme="deep"]) .chart-panel {
 .chart-actions {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .chart-mode-control,
@@ -1291,6 +1332,12 @@ body:not([data-theme="deep"]) .chart-panel {
 .chart-actions button:active {
   transform: translateY(0);
   box-shadow: 0 4px 10px rgba(12, 23, 56, 0.22);
+}
+
+.chart-actions .language-toggle {
+  border-radius: 999px;
+  text-transform: none;
+  letter-spacing: 0.04em;
 }
 
 .chart-summary {
@@ -1733,6 +1780,10 @@ body:not([data-theme="deep"]) .range-panel {
     gap: 8px;
   }
 
+  .header-rail-toolbar {
+    justify-content: flex-start;
+  }
+
   .header-panel h1 {
     font-size: clamp(1.3rem, 6.4vw, 1.72rem);
   }
@@ -1825,6 +1876,8 @@ body:not([data-theme="deep"]) .range-panel {
 
   .chart-actions {
     grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .chart-actions button {
