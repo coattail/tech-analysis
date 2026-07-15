@@ -3,7 +3,11 @@ name: Auto Refresh Financial Data
 on:
   workflow_dispatch:
   schedule:
+    # Daily baseline at 07:15 China Standard Time.
     - cron: "15 23 * * *"
+    # European issuers such as ASML publish after the baseline run. During the
+    # main quarterly reporting months, poll again at 16:15 China Standard Time.
+    - cron: "15 8 * 1,4,7,10 *"
 
 permissions:
   contents: write
