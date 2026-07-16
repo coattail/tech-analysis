@@ -754,15 +754,16 @@ test("extends the range control end through the latest price period", () => {
   );
 });
 
-test("initial chart build applies the same price overlay options as refresh", () => {
+test("initial chart build applies the same secondary overlay options as refresh", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const buildChartBody = script.match(/function buildChart\(\) \{([\s\S]*?)\nfunction /)?.[1] ?? "";
 
-  assert.match(buildChartBody, /const priceBounds = computeAlignedPriceYAxisBounds\(datasets, yBounds\);/);
+  assert.match(buildChartBody, /primaryBounds:\s*yBounds,[\s\S]*secondaryBounds,[\s\S]*= computeChartYAxisBounds\(datasets, effectiveChartMode\)/);
   assert.match(buildChartBody, /const hasPriceOverlay = datasets\.some\(\(dataset\) => dataset\.priceOverlay\);/);
-  assert.match(buildChartBody, /display: hasPriceOverlay,/);
-  assert.match(buildChartBody, /min: priceBounds\.min,/);
-  assert.match(buildChartBody, /max: priceBounds\.max,/);
+  assert.match(buildChartBody, /const hasSecondaryOverlay = Boolean\(secondaryOverlayType\);/);
+  assert.match(buildChartBody, /display: hasSecondaryOverlay,/);
+  assert.match(buildChartBody, /min: secondaryBounds\.min,/);
+  assert.match(buildChartBody, /max: secondaryBounds\.max,/);
 });
 
 test("visible-data range uses the longest continuous fundamental-or-price interval", () => {
@@ -880,8 +881,8 @@ test("chart build and refresh apply shared single-company axis reservations", ()
   assert.match(buildBody, /reservedWidth: axisReservations\.primaryWidth/);
   assert.match(buildBody, /display: axisReservations\.priceWidth > 0/);
   assert.match(buildBody, /reservedWidth: axisReservations\.priceWidth/);
-  assert.match(buildBody, /title:\s*\{\s*display: hasPriceOverlay/);
-  assert.match(buildBody, /ticks:\s*\{\s*display: hasPriceOverlay/);
+  assert.match(buildBody, /title:\s*\{\s*display: hasSecondaryOverlay/);
+  assert.match(buildBody, /ticks:\s*\{\s*display: hasSecondaryOverlay/);
 });
 
 test("price comparison keeps the expanded single-company plot width when toggled off", () => {
@@ -923,6 +924,18 @@ test("bar chart tooltips choose nearby anchors without covering the active bar",
   assert.match(script, /function registerInteractionModes/);
   assert.match(script, /Chart\.Interaction\.modes\.barPriority/);
   assert.match(script, /findVisibleBarInteractionItem\(chart, eventPosition, useFinalPosition\)/);
+  assert.match(script, /function collectGrowthInteractionItemsAtIndex/);
+  assert.match(script, /dataset\?\.growthOverlay/);
+  assert.match(script, /const growthItems = collectGrowthInteractionItemsAtIndex\(chart, barItem\.index\)/);
+  assert.match(script, /return \[barItem, \.\.\.growthItems\];/);
+  assert.match(script, /findVisibleGrowthLineInteractionItem\(chart, eventPosition, useFinalPosition\)/);
+  assert.match(script, /collectFinancialBarInteractionItemsAtIndex\(chart, growthItem\.index\)/);
+  assert.match(script, /return \[\.\.\.barItems, \.\.\.growthItems\];/);
+  assert.match(script, /element\.inRange\(eventX, eventY, useFinalPosition\)/);
+  assert.match(script, /function distanceToLineSegment/);
+  assert.match(script, /if \(segmentDistance > hitTolerance/);
+  assert.doesNotMatch(script, /const fallbackMode = Chart\.Interaction\.modes\.index/);
+  assert.match(script, /return \[\];\s*\n  \};/);
   assert.match(script, /mode:\s*usesDateXAxis\(effectiveChartMode\) \? "nearest" : "barPriority"/);
   assert.match(script, /Chart\.Tooltip\.positioners\.barAbove/);
   assert.match(script, /const barActiveItem =/);

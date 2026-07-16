@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after adding profit growth", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260716-profit-growth/);
+  assert.match(html, /style\.css\?v=20260716-growth-overlay-expand/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
@@ -40,9 +40,11 @@ test("keeps the latest cache key for unchanged company-selection behavior", () =
 
 test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260716-tsmc-q2";
 
-  for (const asset of ["data.js", "price-data.js"]) {
+  for (const [asset, expectedVersion] of [
+    ["data.js", "20260716-nvidia-quarterly-fix"],
+    ["price-data.js", "20260716-tsmc-q2"],
+  ]) {
     assert.match(
       html,
       new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
@@ -57,8 +59,8 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["financial-metrics.js", "20260716-profit-growth"],
-    ["script.js", "20260716-profit-growth"],
+    ["financial-metrics.js", "20260716-growth-overlay-v13"],
+    ["script.js", "20260716-growth-overlay-v15"],
   ]) {
     assert.match(
       html,

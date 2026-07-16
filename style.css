@@ -1388,6 +1388,11 @@ body:not([data-theme="deep"]) .chart-panel {
 
 .metric-pill {
   display: block;
+  position: relative;
+}
+
+.metric-pill-control {
+  display: block;
 }
 
 .metric-pill input {
@@ -1430,11 +1435,58 @@ body:not([data-theme="deep"]) .chart-panel {
   outline-offset: 2px;
 }
 
+.metric-pill-with-overlay.is-growth-available .metric-pill-control > span {
+  padding-right: 42px;
+}
+
+.growth-overlay-toggle {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 2;
+  min-width: 34px;
+  min-height: 18px;
+  padding: 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 11, 17, 0.82);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-terminal);
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 16px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.growth-overlay-toggle[hidden] {
+  display: none;
+}
+
+.growth-overlay-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.64);
+  color: #ffffff;
+}
+
+.growth-overlay-toggle.is-active {
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.96);
+  color: #111722;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+}
+
+.growth-overlay-toggle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
 .chart-wrap {
+  --chart-base-height: 660px;
+  --growth-chart-extra-height: 0px;
   position: relative;
   width: 100%;
-  height: auto;
-  min-height: 660px;
+  height: calc(var(--chart-base-height) + var(--growth-chart-extra-height));
+  min-height: calc(var(--chart-base-height) + var(--growth-chart-extra-height));
   margin-top: 12px;
   padding: 12px;
   border-radius: 16px;
@@ -1739,7 +1791,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-wrap {
-    min-height: 560px;
+    --chart-base-height: 560px;
   }
 
   .chart-summary {
@@ -1942,8 +1994,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-wrap {
-    height: clamp(390px, 118vw, 510px);
-    min-height: 390px;
+    --chart-base-height: clamp(390px, 118vw, 510px);
     margin-top: 8px;
     padding: 4px;
     border-radius: 12px;
@@ -2010,7 +2061,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-wrap {
-    height: 420px;
+    --chart-base-height: 420px;
   }
 
   .range-head {

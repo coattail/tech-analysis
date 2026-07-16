@@ -25,6 +25,7 @@ The project focuses on three things:
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
 - Enhanced single-company mode: switch between line and bar charts
 - Single-company stock-price comparison for revenue/net-income bar charts
+- Single-company growth overlay: add a white year-over-year growth line with a right-side percentage axis to revenue/net-income bars; mutually exclusive with the price overlay
 - Time-range filtering via dual-handle slider
 - Adaptive y-axis bounds based on the currently visible data
 - Trailing empty-period trimming: if the selected companies do not have data for the latest year or quarter, empty labels at the end are removed automatically

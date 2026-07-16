@@ -53,7 +53,8 @@ test('provides a persistent bilingual switch for page copy and chart annotations
   assert.match(script, /en: \{ label: "Net Income \(USD\)", name: "Net Income", unit: " \(USD\)" \}/);
   assert.match(script, /label: t\("stockPrice"\)/);
   assert.match(script, /getCompanyName\(company\)/);
-  assert.match(script, /state\.chart\.options\.scales\.yPrice\.title\.text = isCompactChartLayout\(\) \? "USD" : t\("priceAxis"\)/);
+  assert.match(script, /state\.chart\.options\.scales\.yPrice\.title\.text = getSecondaryAxisTitle\(secondaryOverlayType\)/);
+  assert.match(script, /if \(overlayType === "growth"\) return isCompactChartLayout\(\) \? "%" : t\("growthAxis"\)/);
   assert.match(script, /const suffix = isForecast \? t\("forecastSuffix"\) : ""/);
 });
 

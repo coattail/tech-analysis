@@ -35,6 +35,10 @@ const UI_TRANSLATIONS = {
     bar: "柱状",
     assistiveReading: "辅助阅读",
     priceComparison: "股价对比",
+    growthOverlay: "增速",
+    growthAxis: "同比增速（%）",
+    showGrowthOverlay: "显示{metric}同比增速",
+    hideGrowthOverlay: "隐藏{metric}同比增速",
     exportPng: "导出 PNG",
     currentViewSummary: "当前视图摘要",
     currentMetric: "当前指标",
@@ -113,6 +117,10 @@ const UI_TRANSLATIONS = {
     bar: "Bar",
     assistiveReading: "Context",
     priceComparison: "Price Overlay",
+    growthOverlay: "Growth",
+    growthAxis: "YoY Growth (%)",
+    showGrowthOverlay: "Show {metric} year-over-year growth",
+    hideGrowthOverlay: "Hide {metric} year-over-year growth",
     exportPng: "Export PNG",
     currentViewSummary: "Current view summary",
     currentMetric: "Metric",
@@ -861,6 +869,7 @@ function getFrequencyLabel(frequencyKey) {
 }
 
 const chartEl = document.getElementById("financeChart");
+const chartWrapEl = chartEl?.closest(".chart-wrap") ?? null;
 const statusEl = document.getElementById("statusText");
 const togglesEl = document.getElementById("companyToggles");
 const companySearchEl = document.getElementById("companySearch");
@@ -883,6 +892,7 @@ const languageToggleLabelEl = document.getElementById("languageToggleLabel");
 const chartModeControlEl = document.getElementById("chartModeControl");
 const priceComparisonControlEl = document.getElementById("priceComparisonControl");
 const priceComparisonToggleEl = document.getElementById("priceComparisonToggle");
+const growthOverlayButtons = Array.from(document.querySelectorAll("[data-growth-overlay-for]"));
 const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'));
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
 const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
@@ -901,6 +911,7 @@ const Y_AXIS_TITLE_MAIN_FONT_SIZE = 15.4;
 const Y_AXIS_TITLE_DETAIL_FONT_SIZE = 12.1;
 const Y_AXIS_TITLE_HORIZONTAL_OFFSET = 20;
 const Y_AXIS_TITLE_VERTICAL_OFFSET = -28;
+const GROWTH_AXIS_PADDING_RATIO = 0.005;
 const COMPACT_CHART_MAX_WIDTH = 520;
 const COMPACT_Y_AXIS_MIN_RESERVED_WIDTH = 58;
 const COMPACT_Y_AXIS_RESERVED_EXTRA_WIDTH = 18;
@@ -929,6 +940,11 @@ const state = {
   frequency: DEFAULT_INITIAL_VIEW.frequency,
   chartMode: DEFAULT_INITIAL_VIEW.chartMode,
   priceComparisonEnabled: DEFAULT_INITIAL_VIEW.priceComparisonEnabled,
+  growthOverlayEnabled: false,
+  growthChartExtraHeight: 0,
+  baseChartPlotHeight: null,
+  chartWrapperVerticalInset: null,
+  chartPlotVerticalInset: null,
   lastPriceOverlayPointCount: 0,
   visibleCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   pendingCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
@@ -1215,11 +1231,13 @@ function findVisibleBarInteractionItem(chart, eventPosition, useFinalPosition = 
 
       if (![x, y, base, width].every(Number.isFinite) || width <= 0) return;
 
-      const left = x - width / 2 - BAR_TOOLTIP_COLLISION_PADDING;
-      const right = x + width / 2 + BAR_TOOLTIP_COLLISION_PADDING;
-      const top = Math.min(y, base) - BAR_TOOLTIP_COLLISION_PADDING;
-      const bottom = Math.max(y, base) + BAR_TOOLTIP_COLLISION_PADDING;
-      if (eventX < left || eventX > right || eventY < top || eventY > bottom) return;
+      const isInside = typeof element.inRange === "function"
+        ? element.inRange(eventX, eventY, useFinalPosition)
+        : eventX >= x - width / 2
+          && eventX <= x + width / 2
+          && eventY >= Math.min(y, base)
+          && eventY <= Math.max(y, base);
+      if (!isInside) return;
 
       const score = Math.abs(eventX - x);
       if (!bestItem || score < bestItem.score) {
@@ -1239,6 +1257,124 @@ function findVisibleBarInteractionItem(chart, eventPosition, useFinalPosition = 
     datasetIndex: bestItem.datasetIndex,
     index: bestItem.index,
   };
+}
+
+function collectFinancialBarInteractionItemsAtIndex(chart, index) {
+  if (!chart || !Number.isInteger(index) || typeof chart.getSortedVisibleDatasetMetas !== "function") {
+    return [];
+  }
+
+  const items = [];
+  chart.getSortedVisibleDatasetMetas().forEach((meta) => {
+    const dataset = chart.data?.datasets?.[meta.index];
+    if (dataset?.priceOverlay || dataset?.growthOverlay || dataset?.type !== "bar") return;
+
+    const rawValue = dataset.data?.[index];
+    const yValue = typeof rawValue === "object" && rawValue !== null ? rawValue.y : rawValue;
+    const element = meta.data?.[index];
+    if (!isFiniteNumber(yValue) || !element || element.skip) return;
+
+    items.push({ element, datasetIndex: meta.index, index });
+  });
+
+  return items;
+}
+
+function distanceToLineSegment(point, start, end) {
+  const segmentX = end.x - start.x;
+  const segmentY = end.y - start.y;
+  const lengthSquared = segmentX ** 2 + segmentY ** 2;
+  if (lengthSquared === 0) return Math.hypot(point.x - start.x, point.y - start.y);
+
+  const projection = clampNumber(
+    ((point.x - start.x) * segmentX + (point.y - start.y) * segmentY) / lengthSquared,
+    0,
+    1,
+  );
+  const projectedX = start.x + projection * segmentX;
+  const projectedY = start.y + projection * segmentY;
+  return Math.hypot(point.x - projectedX, point.y - projectedY);
+}
+
+function findVisibleGrowthLineInteractionItem(chart, eventPosition, useFinalPosition = true) {
+  const eventX = Number(eventPosition?.x ?? eventPosition?.native?.offsetX);
+  const eventY = Number(eventPosition?.y ?? eventPosition?.native?.offsetY);
+  if (!isFiniteNumber(eventX) || !isFiniteNumber(eventY)) return null;
+  if (!chart || typeof chart.getSortedVisibleDatasetMetas !== "function") return null;
+
+  let bestItem = null;
+  chart.getSortedVisibleDatasetMetas().forEach((meta) => {
+    const dataset = chart.data?.datasets?.[meta.index];
+    if (!dataset?.growthOverlay) return;
+
+    const hitTolerance = Math.max(5, (Number(dataset.borderWidth) || 0) + 3);
+    const points = (meta.data || []).map((element, index) => {
+      const rawValue = dataset.data?.[index];
+      const yValue = typeof rawValue === "object" && rawValue !== null ? rawValue.y : rawValue;
+      if (!element || element.skip || !isFiniteNumber(yValue)) return null;
+      const props = typeof element.getProps === "function"
+        ? element.getProps(["x", "y"], useFinalPosition)
+        : element;
+      const x = Number(props.x);
+      const y = Number(props.y);
+      return Number.isFinite(x) && Number.isFinite(y) ? { element, index, x, y } : null;
+    });
+
+    points.forEach((point, pointIndex) => {
+      if (!point) return;
+      const pointDistance = Math.hypot(eventX - point.x, eventY - point.y);
+      if (pointDistance <= hitTolerance && (!bestItem || pointDistance < bestItem.score)) {
+        bestItem = { ...point, datasetIndex: meta.index, score: pointDistance };
+      }
+
+      const nextPoint = points[pointIndex + 1];
+      if (!nextPoint) return;
+      const segmentDistance = distanceToLineSegment(
+        { x: eventX, y: eventY },
+        point,
+        nextPoint,
+      );
+      if (segmentDistance > hitTolerance || (bestItem && segmentDistance >= bestItem.score)) return;
+
+      const nearestEndpoint = Math.hypot(eventX - point.x, eventY - point.y)
+        <= Math.hypot(eventX - nextPoint.x, eventY - nextPoint.y)
+        ? point
+        : nextPoint;
+      bestItem = { ...nearestEndpoint, datasetIndex: meta.index, score: segmentDistance };
+    });
+  });
+
+  if (!bestItem) return null;
+  return {
+    element: bestItem.element,
+    datasetIndex: bestItem.datasetIndex,
+    index: bestItem.index,
+  };
+}
+
+function collectGrowthInteractionItemsAtIndex(chart, index) {
+  if (!chart || !Number.isInteger(index) || typeof chart.getSortedVisibleDatasetMetas !== "function") {
+    return [];
+  }
+
+  const items = [];
+  chart.getSortedVisibleDatasetMetas().forEach((meta) => {
+    const dataset = chart.data?.datasets?.[meta.index];
+    if (!dataset?.growthOverlay) return;
+
+    const rawValue = dataset.data?.[index];
+    const yValue = typeof rawValue === "object" && rawValue !== null ? rawValue.y : rawValue;
+    const element = meta.data?.[index];
+    if (!isFiniteNumber(yValue) || !element || element.skip) return;
+
+    items.push({
+      element,
+      datasetIndex: meta.index,
+      index,
+    });
+  });
+
+  return items;
 }
 
 function getTooltipBoxSize(tooltip) {
@@ -1484,10 +1620,19 @@ function registerInteractionModes() {
 
   Chart.Interaction.modes.barPriority = function barPriorityInteraction(chart, eventPosition, options, useFinalPosition) {
     const barItem = findVisibleBarInteractionItem(chart, eventPosition, useFinalPosition);
-    if (barItem) return [barItem];
+    if (barItem) {
+      const growthItems = collectGrowthInteractionItemsAtIndex(chart, barItem.index);
+      return [barItem, ...growthItems];
+    }
 
-    const fallbackMode = Chart.Interaction.modes.index || Chart.Interaction.modes.nearest;
-    return fallbackMode?.call(this, chart, eventPosition, options, useFinalPosition) ?? [];
+    const growthItem = findVisibleGrowthLineInteractionItem(chart, eventPosition, useFinalPosition);
+    if (growthItem) {
+      const barItems = collectFinancialBarInteractionItemsAtIndex(chart, growthItem.index);
+      const growthItems = collectGrowthInteractionItemsAtIndex(chart, growthItem.index);
+      return [...barItems, ...growthItems];
+    }
+
+    return [];
   };
 }
 
@@ -1665,6 +1810,40 @@ function syncPriceComparisonControl() {
   }
 }
 
+function canEnableGrowthOverlayForCurrentView(metric = state.metric) {
+  return FinancialMetricsUtils.canShowGrowthOverlay({
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode: getEffectiveChartMode(),
+    metric,
+  });
+}
+
+function syncGrowthOverlayControl() {
+  state.growthOverlayEnabled = FinancialMetricsUtils.normalizeGrowthOverlayEnabled({
+    enabled: state.growthOverlayEnabled,
+    visibleCompanyCount: state.visibleCompanies.size,
+    chartMode: getEffectiveChartMode(),
+    metric: state.metric,
+  });
+
+  growthOverlayButtons.forEach((button) => {
+    const metric = button.dataset.growthOverlayFor;
+    const isCurrentMetric = metric === state.metric;
+    const canShow = isCurrentMetric && canEnableGrowthOverlayForCurrentView(metric);
+    const isActive = canShow && state.growthOverlayEnabled;
+    const metricName = getMetricTranslation(metric).name;
+    const labelKey = isActive ? "hideGrowthOverlay" : "showGrowthOverlay";
+    const accessibleLabel = t(labelKey, { metric: metricName });
+
+    button.hidden = !canShow;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+    button.setAttribute("aria-label", accessibleLabel);
+    button.title = accessibleLabel;
+    button.closest(".metric-pill-with-overlay")?.classList.toggle("is-growth-available", canShow);
+  });
+}
+
 function canEnablePriceComparisonForCurrentView() {
   return PriceComparisonUtils.canShowPriceComparison({
     visibleCompanyCount: state.visibleCompanies.size,
@@ -1684,6 +1863,10 @@ function shouldReserveSingleCompanyLegendLayout(hasPriceOverlay = false) {
 
 function setPriceComparisonEnabled(enabled) {
   const nextEnabled = Boolean(enabled) && canEnablePriceComparisonForCurrentView();
+  if (nextEnabled) {
+    state.growthOverlayEnabled = false;
+    syncGrowthOverlayControl();
+  }
   state.priceComparisonEnabled = nextEnabled;
   if (priceComparisonToggleEl) {
     priceComparisonToggleEl.checked = nextEnabled;
@@ -1698,6 +1881,19 @@ function setPriceComparisonEnabled(enabled) {
     console.error(error);
     setStatus(t("priceEnableFailed", { message: error.message }), true);
   }
+}
+
+function setGrowthOverlayEnabled(enabled) {
+  const nextEnabled = Boolean(enabled) && canEnableGrowthOverlayForCurrentView();
+  state.growthOverlayEnabled = nextEnabled;
+
+  if (nextEnabled) {
+    state.priceComparisonEnabled = false;
+    if (priceComparisonToggleEl) priceComparisonToggleEl.checked = false;
+  }
+
+  syncGrowthOverlayControl();
+  refreshChart("none");
 }
 
 function updateViewSummary() {
@@ -1719,6 +1915,7 @@ function updateViewSummary() {
 
   syncChartModeControl();
   syncPriceComparisonControl();
+  syncGrowthOverlayControl();
   syncPresetButtons();
 }
 
@@ -2176,6 +2373,41 @@ function buildPriceOverlayDataset(visibleLabels) {
   };
 }
 
+function buildGrowthOverlayDataset(visibleLabels) {
+  if (!state.growthOverlayEnabled) return null;
+
+  const singleCompanyId = getSingleVisibleCompanyId();
+  const growthMetric = FinancialMetricsUtils.getGrowthOverlayMetric(state.metric);
+  if (!singleCompanyId || !growthMetric) return null;
+
+  const growthSeries = state.dataByFrequency[state.frequency]?.[growthMetric]?.get(singleCompanyId);
+  if (!growthSeries) return null;
+
+  const data = visibleLabels.map((label) => growthSeries.get(label) ?? null);
+  if (!data.some(isFiniteNumber)) return null;
+
+  const forecasted = state.forecastFlagsByFrequency[state.frequency]?.[growthMetric]?.get(singleCompanyId) ?? new Set();
+  return {
+    type: "line",
+    label: getMetricLabel(growthMetric),
+    growthOverlay: true,
+    growthMetric,
+    order: PriceComparisonUtils.getPriceOverlayDatasetOrder(),
+    data,
+    forecastedLabels: [...forecasted],
+    yAxisID: "yPrice",
+    borderColor: "#ffffff",
+    backgroundColor: "#ffffff",
+    borderWidth: 2,
+    pointRadius: 1.6,
+    pointHoverRadius: 4,
+    pointHitRadius: 9,
+    spanGaps: false,
+    tension: 0.18,
+    hidden: false,
+  };
+}
+
 function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, useQuarterSlotPoints) {
   const values = dataset.data.slice(0, visibleLabels.length);
   if (!useQuarterSlotPoints || dataset.priceOverlay) return values;
@@ -2206,7 +2438,7 @@ function buildDatasetsForView() {
 
     return {
       type: useBarDataset ? "bar" : "line",
-      label: useBarDataset && state.priceComparisonEnabled
+      label: useBarDataset && (state.priceComparisonEnabled || state.growthOverlayEnabled)
         ? `${getCompanyName(company)} · ${getMetricLabel(metricKey)}`
         : getCompanyName(company),
       companyId: company.id,
@@ -2284,9 +2516,11 @@ function buildDatasetsForView() {
   }));
 
   const priceOverlayDataset = buildPriceOverlayDataset(visibleLabels);
+  const growthOverlayDataset = buildGrowthOverlayDataset(visibleLabels);
+  const overlayDatasets = [priceOverlayDataset, growthOverlayDataset].filter(Boolean);
   return {
     labels: visibleLabels,
-    datasets: priceOverlayDataset ? [...trimmedDatasets, priceOverlayDataset] : trimmedDatasets,
+    datasets: [...trimmedDatasets, ...overlayDatasets],
   };
 }
 
@@ -2348,7 +2582,7 @@ function collectDateXAxisValues(datasets, { barOnly = false } = {}) {
   const values = [];
   datasets.forEach((dataset) => {
     if (barOnly && dataset.type !== "bar") return;
-    if (dataset.hidden && !dataset.priceOverlay) return;
+    if (dataset.hidden && !dataset.priceOverlay && !dataset.growthOverlay) return;
     dataset.data.forEach((point) => {
       const x = typeof point === "object" && point !== null ? Number(point.x) : null;
       const y = typeof point === "object" && point !== null ? Number(point.y) : null;
@@ -2499,7 +2733,7 @@ function buildXGridColorCallback(themeTokens, density = null) {
 function collectDatasetValues(datasets, includeHidden = false) {
   const values = [];
   datasets.forEach((dataset) => {
-    if (dataset.priceOverlay) return;
+    if (dataset.priceOverlay || dataset.growthOverlay) return;
     if (!includeHidden && dataset.hidden) return;
     dataset.data.forEach((value) => {
       const yValue = typeof value === "object" && value !== null ? value.y : value;
@@ -2516,6 +2750,18 @@ function collectPriceOverlayValues(datasets) {
     if (!dataset.priceOverlay) return;
     dataset.data.forEach((point) => {
       if (isFiniteNumber(point?.y)) values.push(point.y);
+    });
+  });
+  return values;
+}
+
+function collectGrowthOverlayValues(datasets) {
+  const values = [];
+  datasets.forEach((dataset) => {
+    if (!dataset.growthOverlay) return;
+    dataset.data.forEach((value) => {
+      const yValue = typeof value === "object" && value !== null ? value.y : value;
+      if (isFiniteNumber(yValue)) values.push(yValue);
     });
   });
   return values;
@@ -2841,6 +3087,111 @@ function computeAlignedPriceYAxisBounds(datasets, primaryBounds) {
   });
 }
 
+function computeGrowthYAxisBounds(datasets) {
+  const values = collectGrowthOverlayValues(datasets);
+  if (values.length === 0) return { min: 0, max: 1 };
+
+  const rawMin = Math.min(...values);
+  const rawMax = Math.max(...values);
+  const span = Math.max(rawMax - rawMin, Math.abs(rawMin), Math.abs(rawMax), 1);
+  // Friendly tick rounding already contributes visual breathing room. Keep the
+  // explicit margin small so growth overlays do not leave oversized empty bands
+  // above and below the plotted data, especially when one quarter is an outlier.
+  const min = rawMin >= 0 ? 0 : rawMin - span * GROWTH_AXIS_PADDING_RATIO;
+  const max = rawMax <= 0 ? 0 : rawMax + span * GROWTH_AXIS_PADDING_RATIO;
+  // Keep the raw padded extrema here. Shared-zero alignment performs the only
+  // outward rounding pass; rounding twice can turn a -53% minimum into -100%
+  // and create a large empty band on both axes.
+  return { min, max };
+}
+
+function computeSecondaryYAxisBounds(datasets, primaryBounds) {
+  if (datasets.some((dataset) => dataset.growthOverlay)) {
+    return computeGrowthYAxisBounds(datasets);
+  }
+  return computeAlignedPriceYAxisBounds(datasets, primaryBounds);
+}
+
+function computeChartYAxisBounds(datasets, chartMode) {
+  const basePrimaryBounds = computeYAxisBounds(datasets, chartMode);
+  const secondaryBounds = computeSecondaryYAxisBounds(datasets, basePrimaryBounds);
+  if (!datasets.some((dataset) => dataset.growthOverlay)) {
+    return { primaryBounds: basePrimaryBounds, secondaryBounds, basePrimaryBounds };
+  }
+  return {
+    ...FinancialMetricsUtils.alignYAxisZeroPositions({
+      primaryBounds: basePrimaryBounds,
+      secondaryBounds,
+    }),
+    basePrimaryBounds,
+  };
+}
+
+function getChartAreaHeight(chart = state.chart) {
+  const area = chart?.chartArea;
+  if (!area) return 0;
+  return Math.max(0, Number(area.bottom) - Number(area.top));
+}
+
+function rememberChartGeometry(chart = state.chart) {
+  if (!chart || !chartWrapEl) return;
+  const chartHeight = Math.max(0, Number(chart.height) || 0);
+  const plotHeight = getChartAreaHeight(chart);
+  if (chartHeight <= 0 || plotHeight <= 0) return;
+
+  state.chartWrapperVerticalInset = Math.max(0, chartWrapEl.clientHeight - chartHeight);
+  state.chartPlotVerticalInset = Math.max(0, chartHeight - plotHeight);
+  state.baseChartPlotHeight = Math.max(1, plotHeight - state.growthChartExtraHeight);
+}
+
+function syncGrowthChartHeight(basePrimaryBounds, renderedPrimaryBounds, hasGrowthOverlay) {
+  if (!chartWrapEl) return;
+
+  const previousExtraHeight = Math.max(0, Number(state.growthChartExtraHeight) || 0);
+  const currentPlotHeight = getChartAreaHeight();
+  if (currentPlotHeight > 0) {
+    state.baseChartPlotHeight = Math.max(1, currentPlotHeight - previousExtraHeight);
+  }
+
+  const baseWrapperHeight = Math.max(1, chartWrapEl.clientHeight - previousExtraHeight);
+  const fallbackPlotHeight = Math.max(1, baseWrapperHeight
+    - (state.chartWrapperVerticalInset ?? 0)
+    - (state.chartPlotVerticalInset ?? (isCompactChartLayout() ? 82 : 118)));
+  const basePlotHeight = state.baseChartPlotHeight ?? fallbackPlotHeight;
+  const expansionRatio = hasGrowthOverlay
+    ? FinancialMetricsUtils.computeGrowthChartExpansionRatio({
+        primaryBounds: basePrimaryBounds,
+        alignedPrimaryBounds: renderedPrimaryBounds,
+      })
+    : 1;
+  const nextExtraHeight = Math.max(0, Math.round(basePlotHeight * (expansionRatio - 1)));
+
+  state.growthChartExtraHeight = nextExtraHeight;
+  chartWrapEl.style.setProperty("--growth-chart-extra-height", `${nextExtraHeight}px`);
+
+  if (state.chart && Math.abs(nextExtraHeight - previousExtraHeight) >= 1) {
+    state.chart.resize();
+  }
+}
+
+function getSecondaryOverlayType(datasets) {
+  if (datasets.some((dataset) => dataset.growthOverlay)) return "growth";
+  if (datasets.some((dataset) => dataset.priceOverlay)) return "price";
+  return null;
+}
+
+function getSecondaryAxisTitle(overlayType) {
+  if (overlayType === "growth") return isCompactChartLayout() ? "%" : t("growthAxis");
+  return isCompactChartLayout() ? "USD" : t("priceAxis");
+}
+
+function formatSecondaryAxisTick(overlayType, value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return "";
+  if (overlayType === "growth") return `${decimalFormatter.format(numericValue)}%`;
+  return numericValue < 0 ? "" : `$${decimalFormatter.format(numericValue)}`;
+}
+
 function measureTextWidth(text, font) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -2889,6 +3240,8 @@ function syncChartDatasets(nextDatasets) {
     currentDataset.label = nextDataset.label;
     currentDataset.companyId = nextDataset.companyId;
     currentDataset.priceOverlay = nextDataset.priceOverlay;
+    currentDataset.growthOverlay = nextDataset.growthOverlay;
+    currentDataset.growthMetric = nextDataset.growthMetric;
     currentDataset.order = nextDataset.order;
     currentDataset.type = nextDataset.type;
     currentDataset.forecastedLabels = [...(nextDataset.forecastedLabels ?? [])];
@@ -2916,7 +3269,9 @@ function syncChartDatasets(nextDatasets) {
 }
 
 function getDatasetKey(dataset) {
-  return dataset.priceOverlay ? "__price_overlay__" : dataset.companyId;
+  if (dataset.priceOverlay) return "__price_overlay__";
+  if (dataset.growthOverlay) return "__growth_overlay__";
+  return dataset.companyId;
 }
 
 function syncChartLabels(nextLabels) {
@@ -2965,19 +3320,30 @@ function refreshChart(updateMode = undefined) {
   if (!state.chart) return;
 
   syncPriceComparisonControl();
+  syncGrowthOverlayControl();
 
   const { labels, datasets } = buildDatasetsForView();
   const effectiveChartMode = getEffectiveChartMode();
-  const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
-  const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
+  const {
+    primaryBounds: yBounds,
+    secondaryBounds,
+    basePrimaryBounds,
+  } = computeChartYAxisBounds(datasets, effectiveChartMode);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
-  const reserveLegendLayout = shouldReserveSingleCompanyLegendLayout(hasPriceOverlay);
+  const hasGrowthOverlay = datasets.some((dataset) => dataset.growthOverlay);
+  syncGrowthChartHeight(basePrimaryBounds, yBounds, hasGrowthOverlay);
+  const secondaryOverlayType = getSecondaryOverlayType(datasets);
+  const hasSecondaryOverlay = Boolean(secondaryOverlayType);
+  const reserveLegendLayout = shouldReserveSingleCompanyLegendLayout(hasPriceOverlay || hasGrowthOverlay);
   const themeTokens = getChartThemeTokens();
   const axisReservations = computeChartAxisReservations(datasets, effectiveChartMode, themeTokens);
   syncChartLabels(labels);
   syncChartDatasets(datasets);
   state.chart.data.datasets.forEach((dataset, index) => {
-    state.chart.setDatasetVisibility(index, dataset.priceOverlay || state.visibleCompanies.has(dataset.companyId));
+    state.chart.setDatasetVisibility(
+      index,
+      dataset.priceOverlay || dataset.growthOverlay || state.visibleCompanies.has(dataset.companyId),
+    );
   });
   state.chart.options.scales.y.title.text = buildYAxisTitle(state.metric, state.frequency);
   state.chart.options.scales.y.min = yBounds.min;
@@ -2985,11 +3351,12 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.scales.y.reservedWidth = axisReservations.primaryWidth;
   state.chart.options.scales.yPrice.display = axisReservations.priceWidth > 0;
   state.chart.options.scales.yPrice.reservedWidth = axisReservations.priceWidth;
-  state.chart.options.scales.yPrice.title.display = hasPriceOverlay;
-  state.chart.options.scales.yPrice.title.text = isCompactChartLayout() ? "USD" : t("priceAxis");
-  state.chart.options.scales.yPrice.ticks.display = hasPriceOverlay;
-  state.chart.options.scales.yPrice.min = priceBounds.min;
-  state.chart.options.scales.yPrice.max = priceBounds.max;
+  state.chart.options.scales.yPrice.title.display = hasSecondaryOverlay;
+  state.chart.options.scales.yPrice.title.text = getSecondaryAxisTitle(secondaryOverlayType);
+  state.chart.options.scales.yPrice.ticks.display = hasSecondaryOverlay;
+  state.chart.options.scales.yPrice.ticks.callback = (value) => formatSecondaryAxisTick(secondaryOverlayType, value);
+  state.chart.options.scales.yPrice.min = secondaryBounds.min;
+  state.chart.options.scales.yPrice.max = secondaryBounds.max;
   state.chart.options.scales.x = buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets, labels);
   state.chart.options.interaction = buildInteractionOptions(effectiveChartMode);
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
@@ -2998,10 +3365,10 @@ function refreshChart(updateMode = undefined) {
   alignRangeWithChartAxis();
   updateRangeVisual();
   updateViewSummary();
-  updateChartStatus(hasPriceOverlay);
+  updateChartStatus(hasPriceOverlay, hasGrowthOverlay);
 }
 
-function updateChartStatus(hasPriceOverlay = false) {
+function updateChartStatus(hasPriceOverlay = false, _hasGrowthOverlay = false) {
   if (state.priceComparisonEnabled && hasPriceOverlay && state.loadedStatusText) {
     setStatus(`${state.loadedStatusText} ${t("priceOverlayEnabled", { count: state.lastPriceOverlayPointCount })}`, state.loadedStatusIsError);
   } else if (state.priceComparisonEnabled && !hasPriceOverlay) {
@@ -3018,7 +3385,9 @@ function rebuildChartForCurrentView() {
   }
 
   syncPriceComparisonControl();
+  syncGrowthOverlayControl();
 
+  rememberChartGeometry();
   if (state.chart && typeof state.chart.destroy === "function") {
     state.chart.destroy();
   }
@@ -3028,7 +3397,10 @@ function rebuildChartForCurrentView() {
   alignRangeWithChartAxis();
   updateRangeVisual();
   updateViewSummary();
-  updateChartStatus(Boolean(state.chart?.data?.datasets?.some((dataset) => dataset.priceOverlay)));
+  updateChartStatus(
+    Boolean(state.chart?.data?.datasets?.some((dataset) => dataset.priceOverlay)),
+    Boolean(state.chart?.data?.datasets?.some((dataset) => dataset.growthOverlay)),
+  );
 }
 
 function createToggle(company) {
@@ -3147,10 +3519,17 @@ function buildChart() {
 
   const { labels, datasets } = buildDatasetsForView();
   const effectiveChartMode = getEffectiveChartMode();
-  const yBounds = computeYAxisBounds(datasets, effectiveChartMode);
-  const priceBounds = computeAlignedPriceYAxisBounds(datasets, yBounds);
+  const {
+    primaryBounds: yBounds,
+    secondaryBounds,
+    basePrimaryBounds,
+  } = computeChartYAxisBounds(datasets, effectiveChartMode);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
-  const reserveLegendLayout = shouldReserveSingleCompanyLegendLayout(hasPriceOverlay);
+  const hasGrowthOverlay = datasets.some((dataset) => dataset.growthOverlay);
+  syncGrowthChartHeight(basePrimaryBounds, yBounds, hasGrowthOverlay);
+  const secondaryOverlayType = getSecondaryOverlayType(datasets);
+  const hasSecondaryOverlay = Boolean(secondaryOverlayType);
+  const reserveLegendLayout = shouldReserveSingleCompanyLegendLayout(hasPriceOverlay || hasGrowthOverlay);
   const axisReservations = computeChartAxisReservations(datasets, effectiveChartMode, themeTokens);
 
   state.chart = new Chart(chartEl, {
@@ -3162,7 +3541,8 @@ function buildChart() {
       layout: {
         padding: buildChartLayoutPadding(effectiveChartMode),
       },
-      onResize() {
+      onResize(chart) {
+        rememberChartGeometry(chart);
         alignRangeWithChartAxis();
         updateRangeVisual();
       },
@@ -3219,22 +3599,21 @@ function buildChart() {
             scale.width = scale.options.reservedWidth ?? scale.width;
           },
           border: { color: "rgba(0,0,0,0)" },
-          min: priceBounds.min,
-          max: priceBounds.max,
+          min: secondaryBounds.min,
+          max: secondaryBounds.max,
           reservedWidth: axisReservations.priceWidth,
           title: {
-            display: hasPriceOverlay,
-            text: isCompactChartLayout() ? "USD" : t("priceAxis"),
+            display: hasSecondaryOverlay,
+            text: getSecondaryAxisTitle(secondaryOverlayType),
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
           },
           ticks: {
-            display: hasPriceOverlay,
+            display: hasSecondaryOverlay,
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 10, weight: "600" },
             callback(value) {
-              const numericValue = Number(value);
-              return numericValue < 0 ? "" : `$${decimalFormatter.format(numericValue)}`;
+              return formatSecondaryAxisTick(secondaryOverlayType, value);
             },
           },
           grid: {
@@ -3255,12 +3634,14 @@ function buildChart() {
               return defaults
                 .filter((item) => {
                   const dataset = chart.data.datasets[item.datasetIndex];
-                  return dataset?.priceOverlay || state.visibleCompanies.has(dataset?.companyId);
+                  return dataset?.priceOverlay || dataset?.growthOverlay || state.visibleCompanies.has(dataset?.companyId);
                 })
                 .sort((left, right) => {
                   const leftDataset = chart.data.datasets[left.datasetIndex];
                   const rightDataset = chart.data.datasets[right.datasetIndex];
-                  return Number(Boolean(leftDataset?.priceOverlay)) - Number(Boolean(rightDataset?.priceOverlay));
+                  const leftOverlay = Boolean(leftDataset?.priceOverlay || leftDataset?.growthOverlay);
+                  const rightOverlay = Boolean(rightDataset?.priceOverlay || rightDataset?.growthOverlay);
+                  return Number(leftOverlay) - Number(rightOverlay);
                 });
             },
           },
@@ -3299,6 +3680,9 @@ function buildChart() {
               if (context.dataset.priceOverlay) {
                 return `${t("stockPrice")}${separator}$${decimalFormatter.format(context.parsed.y)}`;
               }
+              if (context.dataset.growthOverlay) {
+                return `${context.dataset.label}${separator}${decimalFormatter.format(context.parsed.y)}%`;
+              }
               const label = String(context.raw?.periodLabel ?? context.label);
               const isForecast =
                 Array.isArray(context.dataset.forecastedLabels) &&
@@ -3312,6 +3696,7 @@ function buildChart() {
     },
     plugins: [singleCompanyTickerWatermarkPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
   });
+  rememberChartGeometry();
 }
 
 function bindEvents() {
@@ -3326,6 +3711,10 @@ function bindEvents() {
   metricInputs.forEach((input) => {
     input.addEventListener("change", () => {
       if (!input.checked) return;
+      state.growthOverlayEnabled = FinancialMetricsUtils.shouldCarryGrowthOverlay({
+        enabled: state.growthOverlayEnabled,
+        nextMetric: input.value,
+      });
       state.metric = input.value;
       setRangeToVisibleDataBounds();
       syncRangeControls();
@@ -3356,6 +3745,13 @@ function bindEvents() {
       setPriceComparisonEnabled(priceComparisonToggleEl.checked, "none");
     });
   }
+
+  growthOverlayButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (button.dataset.growthOverlayFor !== state.metric) return;
+      setGrowthOverlayEnabled(!state.growthOverlayEnabled);
+    });
+  });
 
   presetButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -3437,7 +3833,7 @@ function loadFromLocalData() {
     const quarterGrossMargin = objectToSeries(QUARTER_LABELS, rawCompany.grossMargin);
     const quarterPe = objectToSeries(QUARTER_LABELS, rawCompany.pe);
     const quarterRoe = objectToSeries(QUARTER_LABELS, rawCompany.roe);
-    const quarterGrowth = objectToSeries(QUARTER_LABELS, rawCompany.revenueGrowth);
+    const quarterGrowth = computeQuarterlyGrowth(quarterRevenue);
     const quarterProfitGrowth = computeQuarterlyGrowth(quarterNetIncome);
 
     state.dataByFrequency.quarterly.revenue.set(company.id, quarterRevenue);
