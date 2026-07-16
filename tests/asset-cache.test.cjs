@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after adding profit growth", () => {
+test("cache-busts the stylesheet after responsive tablet improvements", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260716-growth-overlay-expand/);
+  assert.match(html, /style\.css\?v=20260717-responsive-tablet/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
