@@ -709,8 +709,27 @@ const singleCompanyTickerWatermarkPlugin = {
     const ticker = company.ticker;
     const plotWidth = chartArea.right - chartArea.left;
     const plotHeight = chartArea.bottom - chartArea.top;
+    const renderedGrowthOverlay = chart.data.datasets.some((dataset) => dataset.growthOverlay && !dataset.hidden);
+    const hasGrowthOverlay = typeof state.pendingGrowthOverlayLayout === "boolean"
+      ? state.pendingGrowthOverlayLayout
+      : renderedGrowthOverlay;
+    const compact = isCompactChartLayout();
+    const cachedLayout = state.baseWatermarkLayout;
+    const canReuseBaseLayout = hasGrowthOverlay
+      && cachedLayout?.companyId === singleCompanyId
+      && cachedLayout?.ticker === ticker
+      && cachedLayout?.compact === compact
+      && Math.abs(cachedLayout.chartWidth - chart.width) < 1;
+    const watermarkPlotHeight = canReuseBaseLayout
+      ? cachedLayout.plotHeight
+      : FinancialMetricsUtils.resolveWatermarkReferencePlotHeight({
+          plotHeight,
+          basePlotHeight: state.baseChartPlotHeight,
+          growthChartExtraHeight: state.growthChartExtraHeight,
+          hasGrowthOverlay,
+        });
     const maxTextWidth = plotWidth * 0.74;
-    const maxTextHeight = plotHeight * 0.34;
+    const maxTextHeight = watermarkPlotHeight * 0.34;
     const baseFontSize = 100;
     const baseFont = `800 ${baseFontSize}px ${themeTokens.chartFontFamily}`;
     const measuredWidth = Math.max(measureTextWidth(ticker, baseFont), 1);
@@ -718,10 +737,31 @@ const singleCompanyTickerWatermarkPlugin = {
       maxTextHeight,
       (maxTextWidth / measuredWidth) * baseFontSize,
     );
-    const minFontSize = isCompactChartLayout()
+    const minFontSize = compact
       ? COMPACT_SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE
       : SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE;
-    const fontSize = Math.max(minFontSize, fittedFontSize);
+    const fontSize = canReuseBaseLayout
+      ? cachedLayout.fontSize
+      : Math.max(minFontSize, fittedFontSize);
+    const centerX = canReuseBaseLayout
+      ? cachedLayout.centerX
+      : (chartArea.left + chartArea.right) / 2;
+    const centerY = canReuseBaseLayout
+      ? cachedLayout.centerY
+      : chartArea.top + watermarkPlotHeight / 2;
+
+    if (!hasGrowthOverlay) {
+      state.baseWatermarkLayout = {
+        companyId: singleCompanyId,
+        ticker,
+        compact,
+        chartWidth: chart.width,
+        plotHeight,
+        fontSize,
+        centerX,
+        centerY,
+      };
+    }
 
     ctx.save();
     ctx.font = `800 ${fontSize}px ${themeTokens.chartFontFamily}`;
@@ -730,8 +770,8 @@ const singleCompanyTickerWatermarkPlugin = {
     ctx.fillStyle = colorToRgba("#ffffff", SINGLE_COMPANY_WATERMARK_ALPHA);
     ctx.fillText(
       ticker,
-      (chartArea.left + chartArea.right) / 2,
-      (chartArea.top + chartArea.bottom) / 2,
+      centerX,
+      centerY,
     );
     ctx.restore();
   },
@@ -945,6 +985,8 @@ const state = {
   baseChartPlotHeight: null,
   chartWrapperVerticalInset: null,
   chartPlotVerticalInset: null,
+  baseWatermarkLayout: null,
+  pendingGrowthOverlayLayout: null,
   lastPriceOverlayPointCount: 0,
   visibleCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
   pendingCompanies: new Set(DEFAULT_VISIBLE_COMPANIES),
@@ -3331,6 +3373,7 @@ function refreshChart(updateMode = undefined) {
   } = computeChartYAxisBounds(datasets, effectiveChartMode);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
   const hasGrowthOverlay = datasets.some((dataset) => dataset.growthOverlay);
+  state.pendingGrowthOverlayLayout = hasGrowthOverlay;
   syncGrowthChartHeight(basePrimaryBounds, yBounds, hasGrowthOverlay);
   const secondaryOverlayType = getSecondaryOverlayType(datasets);
   const hasSecondaryOverlay = Boolean(secondaryOverlayType);
@@ -3362,6 +3405,7 @@ function refreshChart(updateMode = undefined) {
   state.chart.options.layout.padding = buildChartLayoutPadding(effectiveChartMode);
   state.chart.options.plugins.legend.display = reserveLegendLayout;
   state.chart.update(updateMode);
+  state.pendingGrowthOverlayLayout = null;
   alignRangeWithChartAxis();
   updateRangeVisual();
   updateViewSummary();
@@ -3526,6 +3570,7 @@ function buildChart() {
   } = computeChartYAxisBounds(datasets, effectiveChartMode);
   const hasPriceOverlay = datasets.some((dataset) => dataset.priceOverlay);
   const hasGrowthOverlay = datasets.some((dataset) => dataset.growthOverlay);
+  state.pendingGrowthOverlayLayout = hasGrowthOverlay;
   syncGrowthChartHeight(basePrimaryBounds, yBounds, hasGrowthOverlay);
   const secondaryOverlayType = getSecondaryOverlayType(datasets);
   const hasSecondaryOverlay = Boolean(secondaryOverlayType);
@@ -3696,6 +3741,7 @@ function buildChart() {
     },
     plugins: [singleCompanyTickerWatermarkPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
   });
+  state.pendingGrowthOverlayLayout = null;
   rememberChartGeometry();
 }
 

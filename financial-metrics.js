@@ -167,6 +167,25 @@
     return alignedSpan / primarySpan;
   }
 
+  function resolveWatermarkReferencePlotHeight({
+    plotHeight,
+    basePlotHeight,
+    growthChartExtraHeight,
+    hasGrowthOverlay,
+  }) {
+    const currentHeight = Number(plotHeight);
+    if (!Number.isFinite(currentHeight) || currentHeight <= 0) return 0;
+    if (!hasGrowthOverlay) return currentHeight;
+
+    const recordedBaseHeight = Number(basePlotHeight);
+    if (Number.isFinite(recordedBaseHeight) && recordedBaseHeight > 0) {
+      return Math.min(currentHeight, recordedBaseHeight);
+    }
+
+    const extraHeight = Math.max(0, Number(growthChartExtraHeight) || 0);
+    return Math.max(1, currentHeight - extraHeight);
+  }
+
   const api = {
     computeYearOverYearGrowth,
     getGrowthOverlayMetric,
@@ -175,6 +194,7 @@
     shouldCarryGrowthOverlay,
     alignYAxisZeroPositions,
     computeGrowthChartExpansionRatio,
+    resolveWatermarkReferencePlotHeight,
   };
 
   if (typeof module !== "undefined" && module.exports) {

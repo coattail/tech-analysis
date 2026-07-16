@@ -59,8 +59,8 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["financial-metrics.js", "20260716-growth-overlay-v13"],
-    ["script.js", "20260716-growth-overlay-v15"],
+    ["financial-metrics.js", "20260717-watermark-layout-lock-v2"],
+    ["script.js", "20260717-watermark-layout-lock-v2"],
   ]) {
     assert.match(
       html,

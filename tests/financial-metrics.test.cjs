@@ -11,6 +11,7 @@ const {
   shouldCarryGrowthOverlay,
   alignYAxisZeroPositions,
   computeGrowthChartExpansionRatio,
+  resolveWatermarkReferencePlotHeight,
 } = require("../financial-metrics.js");
 
 function loadFinancialSourceData() {
@@ -245,6 +246,27 @@ test("expands chart height by the aligned primary-axis span", () => {
   }), 1);
 });
 
+test("keeps the ticker watermark sized and positioned from the base plot when growth expands the chart", () => {
+  assert.equal(resolveWatermarkReferencePlotHeight({
+    plotHeight: 720,
+    basePlotHeight: 720,
+    growthChartExtraHeight: 0,
+    hasGrowthOverlay: false,
+  }), 720);
+  assert.equal(resolveWatermarkReferencePlotHeight({
+    plotHeight: 1080,
+    basePlotHeight: 720,
+    growthChartExtraHeight: 360,
+    hasGrowthOverlay: true,
+  }), 720);
+  assert.equal(resolveWatermarkReferencePlotHeight({
+    plotHeight: 1080,
+    basePlotHeight: null,
+    growthChartExtraHeight: 360,
+    hasGrowthOverlay: true,
+  }), 720);
+});
+
 test("wires the compact growth toggles, white line, and shared right axis into the chart", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const script = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
@@ -260,6 +282,14 @@ test("wires the compact growth toggles, white line, and shared right axis into t
   assert.match(script, /formatSecondaryAxisTick\(secondaryOverlayType, value\)/);
   assert.match(script, /FinancialMetricsUtils\.alignYAxisZeroPositions\(\{[\s\S]*primaryBounds: basePrimaryBounds,[\s\S]*secondaryBounds,[\s\S]*\}\)/);
   assert.match(script, /FinancialMetricsUtils\.computeGrowthChartExpansionRatio/);
+  assert.match(script, /FinancialMetricsUtils\.resolveWatermarkReferencePlotHeight/);
+  assert.match(script, /const canReuseBaseLayout = hasGrowthOverlay/);
+  assert.match(script, /state\.baseWatermarkLayout = \{/);
+  assert.match(script, /typeof state\.pendingGrowthOverlayLayout === "boolean"/);
+  assert.match(script, /state\.pendingGrowthOverlayLayout = hasGrowthOverlay;[\s\S]*syncGrowthChartHeight/);
+  assert.match(script, /fontSize = canReuseBaseLayout[\s\S]*cachedLayout\.fontSize/);
+  assert.match(script, /centerX = canReuseBaseLayout[\s\S]*cachedLayout\.centerX/);
+  assert.match(script, /centerY = canReuseBaseLayout[\s\S]*cachedLayout\.centerY/);
   assert.match(script, /GROWTH_AXIS_PADDING_RATIO = 0\.005/);
   assert.match(script, /rawMin - span \* GROWTH_AXIS_PADDING_RATIO/);
   assert.match(script, /rawMax \+ span \* GROWTH_AXIS_PADDING_RATIO/);
