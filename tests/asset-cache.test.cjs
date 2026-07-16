@@ -40,7 +40,7 @@ test("keeps the latest cache key for unchanged company-selection behavior", () =
 
 test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260630-neocloud-fundamentals";
+  const expectedVersion = "20260716-tsmc-q2";
 
   for (const asset of ["data.js", "price-data.js"]) {
     assert.match(

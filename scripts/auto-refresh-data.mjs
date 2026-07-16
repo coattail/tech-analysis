@@ -169,6 +169,7 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2025Q2": { revenueUsdBillions: 30.07, revenueTwdBillions: 933.79, netIncomeTwdBillions: 398.27, grossMarginPct: 58.6 },
   "2025Q3": { revenueUsdBillions: 33.1, revenueTwdBillions: 989.92, netIncomeTwdBillions: 452.3, grossMarginPct: 59.5 },
   "2025Q4": { revenueUsdBillions: 33.73, revenueTwdBillions: 1046.09, netIncomeTwdBillions: 505.74, grossMarginPct: 62.3 },
+  "2026Q2": { revenueUsdBillions: 40.201, revenueTwdBillions: 1270.381, netIncomeTwdBillions: 706.562, grossMarginPct: 67.7 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   chronoscale: {
@@ -288,6 +289,15 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       revenue: Math.round((63.87 / 31.378) * 1e9),
       earnings: Math.round((22.18 / 31.378) * 1e9),
       grossMargin: 42.5,
+    },
+    // TSMC 2Q26 consolidated financial statements, released 2026-07-16.
+    "2026Q2": {
+      revenue: 40_201_000_000,
+      earnings: 22_359_000_000,
+      grossMargin: 67.7,
+      netAssets: 201_533_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-07-16",
     },
   },
   walmart: {

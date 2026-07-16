@@ -296,6 +296,18 @@ test("includes Apple latest reported quarter and fiscal period-end metadata", ()
   assert.ok(Math.abs(apple.revenueGrowth["2026Q1"] - 16.595182415922984) < 1e-12);
 });
 
+test("includes TSMC 2026 Q2 official results and reporting dates", () => {
+  const data = loadFinancialSourceData();
+  const tsmc = data.companies.tsmc;
+
+  assert.equal(tsmc.revenue["2026Q2"], 40_201_000_000);
+  assert.equal(tsmc.earnings["2026Q2"], 22_359_000_000);
+  assert.equal(tsmc.grossMargin["2026Q2"], 67.7);
+  assert.equal(tsmc.netAssets["2026Q2"], 201_533_000_000);
+  assert.equal(tsmc.periodEndDates["2026Q2"], "2026-06-30");
+  assert.equal(tsmc.reportDates["2026Q2"], "2026-07-16");
+});
+
 test("includes Micron fiscal Q3 2026 results in calendar 2026Q2", () => {
   const data = loadFinancialSourceData();
   const micron = data.companies.micron;
