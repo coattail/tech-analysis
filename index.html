@@ -10,14 +10,15 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20260716-compact-toolbar-v2" />
+    <link rel="stylesheet" href="style.css?v=20260716-profit-growth" />
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script defer src="data.js?v=20260716-tsmc-q2"></script>
     <script defer src="price-data.js?v=20260716-tsmc-q2"></script>
     <script defer src="price-comparison.js?v=20260629-mobile-responsive"></script>
     <script defer src="company-selection.js?v=20260629-contiguous-range"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
-    <script defer src="script.js?v=20260716-bilingual"></script>
+    <script defer src="financial-metrics.js?v=20260716-profit-growth"></script>
+    <script defer src="script.js?v=20260716-profit-growth"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
@@ -154,6 +155,10 @@
             <label class="metric-pill">
               <input type="radio" name="metric" value="revenueGrowth" />
               <span data-i18n="revenueGrowth">营收增速</span>
+            </label>
+            <label class="metric-pill">
+              <input type="radio" name="metric" value="profitGrowth" />
+              <span data-i18n="profitGrowth">利润增速</span>
             </label>
           </div>
           <div class="chart-wrap">

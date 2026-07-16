@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after bilingual controls", () => {
+test("cache-busts the stylesheet after adding profit growth", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260716-compact-toolbar-v2/);
+  assert.match(html, /style\.css\?v=20260716-profit-growth/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
@@ -57,7 +57,8 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["script.js", "20260716-bilingual"],
+    ["financial-metrics.js", "20260716-profit-growth"],
+    ["script.js", "20260716-profit-growth"],
   ]) {
     assert.match(
       html,

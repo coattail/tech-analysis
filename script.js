@@ -1,4 +1,5 @@
 const sourceData = window.FINANCIAL_SOURCE_DATA;
+const FinancialMetricsUtils = window.FinancialMetricsUtils;
 
 const UI_TRANSLATIONS = {
   zh: {
@@ -10,7 +11,7 @@ const UI_TRANSLATIONS = {
     modeLabel: "模式",
     modeValue: "季度 / 年度 / 滚动年化",
     sourceSummary: "查看数据口径与来源",
-    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收增速为同比。支持季度、年度与滚动年化浏览。",
+    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收与利润增速均为同比。支持季度、年度与滚动年化浏览。",
     viewSettings: "视图设置",
     timeGranularity: "时间粒度",
     frequencySwitch: "时间粒度切换",
@@ -45,6 +46,7 @@ const UI_TRANSLATIONS = {
     netIncome: "净利润",
     grossMargin: "毛利率",
     revenueGrowth: "营收增速",
+    profitGrowth: "利润增速",
     chartAria: "美股头部市值公司财务指标对比图",
     timeRangeSlider: "时间区间滑块",
     displayRange: "显示区间",
@@ -87,7 +89,7 @@ const UI_TRANSLATIONS = {
     modeLabel: "Mode",
     modeValue: "Quarterly / Annual / Rolling Annual",
     sourceSummary: "View methodology and sources",
-    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income use quarterly reported data in USD; gross margin is gross profit divided by revenue; P/E is the valuation metric for the reporting period; ROE is net income divided by net assets; revenue growth is year over year. Quarterly, annual, and rolling-annual views are supported.",
+    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income use quarterly reported data in USD; gross margin is gross profit divided by revenue; P/E is the valuation metric for the reporting period; ROE is net income divided by net assets; revenue and profit growth are year over year. Quarterly, annual, and rolling-annual views are supported.",
     viewSettings: "View Settings",
     timeGranularity: "Time Granularity",
     frequencySwitch: "Time granularity switch",
@@ -122,6 +124,7 @@ const UI_TRANSLATIONS = {
     netIncome: "Net Income",
     grossMargin: "Gross Margin",
     revenueGrowth: "Revenue Growth",
+    profitGrowth: "Profit Growth",
     chartAria: "Financial metric comparison chart for leading U.S.-listed companies",
     timeRangeSlider: "Time range slider",
     displayRange: "Display Range",
@@ -805,6 +808,12 @@ const METRICS = {
     sourceKey: "revenueGrowth",
     annualMode: "derived",
   },
+  profitGrowth: {
+    label: "利润增速（同比 %）",
+    axisLabel: "利润同比增速（%）",
+    sourceKey: "earnings",
+    annualMode: "derived",
+  },
 };
 
 const METRIC_TRANSLATIONS = {
@@ -831,6 +840,10 @@ const METRIC_TRANSLATIONS = {
   revenueGrowth: {
     zh: { label: "营收增速（同比 %）", name: "营收同比增速", unit: "（%）" },
     en: { label: "Revenue Growth (YoY %)", name: "Revenue Growth YoY", unit: " (%)" },
+  },
+  profitGrowth: {
+    zh: { label: "利润增速（同比 %）", name: "利润同比增速", unit: "（%）" },
+    en: { label: "Profit Growth (YoY %)", name: "Profit Growth YoY", unit: " (%)" },
   },
 };
 
@@ -935,6 +948,7 @@ const state = {
       pe: new Map(),
       roe: new Map(),
       revenueGrowth: new Map(),
+      profitGrowth: new Map(),
     },
     annual: {
       revenue: new Map(),
@@ -943,6 +957,7 @@ const state = {
       pe: new Map(),
       roe: new Map(),
       revenueGrowth: new Map(),
+      profitGrowth: new Map(),
     },
     rollingAnnual: {
       revenue: new Map(),
@@ -951,6 +966,7 @@ const state = {
       pe: new Map(),
       roe: new Map(),
       revenueGrowth: new Map(),
+      profitGrowth: new Map(),
     },
   },
   periodEndDatesByCompany: new Map(),
@@ -963,6 +979,7 @@ const state = {
       pe: new Map(),
       roe: new Map(),
       revenueGrowth: new Map(),
+      profitGrowth: new Map(),
     },
     annual: {
       revenue: new Map(),
@@ -971,6 +988,7 @@ const state = {
       pe: new Map(),
       roe: new Map(),
       revenueGrowth: new Map(),
+      profitGrowth: new Map(),
     },
     rollingAnnual: {
       revenue: new Map(),
@@ -979,6 +997,7 @@ const state = {
       pe: new Map(),
       roe: new Map(),
       revenueGrowth: new Map(),
+      profitGrowth: new Map(),
     },
   },
 };
@@ -1821,49 +1840,16 @@ function aggregateMarginRollingAnnual(quarterMarginSeries, quarterRevenueSeries)
   return rolling;
 }
 
-function computeAnnualRevenueGrowth(annualRevenueSeries) {
-  const growth = emptySeries(ANNUAL_LABELS);
-
-  ANNUAL_LABELS.forEach((year, index) => {
-    if (index === 0) {
-      growth.set(year, null);
-      return;
-    }
-
-    const prev = annualRevenueSeries.get(ANNUAL_LABELS[index - 1]);
-    const curr = annualRevenueSeries.get(year);
-    if (!isFiniteNumber(prev) || !isFiniteNumber(curr) || prev === 0) {
-      growth.set(year, null);
-      return;
-    }
-
-    growth.set(year, ((curr - prev) / Math.abs(prev)) * 100);
-  });
-
-  return growth;
+function computeAnnualGrowth(annualFlowSeries) {
+  return FinancialMetricsUtils.computeYearOverYearGrowth(ANNUAL_LABELS, annualFlowSeries, 1);
 }
 
-function computeRollingAnnualRevenueGrowth(quarterRevenueSeries) {
-  const growth = emptySeries(QUARTER_LABELS);
-  const rollingRevenue = aggregateFlowRollingAnnual(quarterRevenueSeries);
+function computeQuarterlyGrowth(quarterFlowSeries) {
+  return FinancialMetricsUtils.computeYearOverYearGrowth(QUARTER_LABELS, quarterFlowSeries, 4);
+}
 
-  QUARTER_LABELS.forEach((period, index) => {
-    if (index < 4) {
-      growth.set(period, null);
-      return;
-    }
-
-    const prev = rollingRevenue.get(QUARTER_LABELS[index - 4]);
-    const curr = rollingRevenue.get(period);
-    if (!isFiniteNumber(prev) || !isFiniteNumber(curr) || prev === 0) {
-      growth.set(period, null);
-      return;
-    }
-
-    growth.set(period, ((curr - prev) / Math.abs(prev)) * 100);
-  });
-
-  return growth;
+function computeRollingAnnualGrowth(rollingFlowSeries) {
+  return FinancialMetricsUtils.computeYearOverYearGrowth(QUARTER_LABELS, rollingFlowSeries, 4);
 }
 
 function annualizeForecastFlags(quarterFlagsSet) {
@@ -1895,7 +1881,12 @@ function formatYAxisTick(metricKey, value) {
     return formatUsdValue(value);
   }
 
-  if (metricKey === "revenueGrowth" || metricKey === "roe" || metricKey === "grossMargin") {
+  if (
+    metricKey === "revenueGrowth" ||
+    metricKey === "profitGrowth" ||
+    metricKey === "roe" ||
+    metricKey === "grossMargin"
+  ) {
     return `${decimalFormatter.format(value)}%`;
   }
 
@@ -1928,7 +1919,12 @@ function formatMetricValue(metricKey, value) {
     return formatUsdValue(value);
   }
 
-  if (metricKey === "revenueGrowth" || metricKey === "roe" || metricKey === "grossMargin") {
+  if (
+    metricKey === "revenueGrowth" ||
+    metricKey === "profitGrowth" ||
+    metricKey === "roe" ||
+    metricKey === "grossMargin"
+  ) {
     return `${decimalFormatter.format(value)}%`;
   }
 
@@ -1966,6 +1962,7 @@ function toMetricFileToken(metricKey) {
     pe: "pe-ratio",
     roe: "roe",
     revenueGrowth: "revenue-growth",
+    profitGrowth: "profit-growth",
   };
   return map[metricKey] ?? metricKey;
 }
@@ -3441,6 +3438,7 @@ function loadFromLocalData() {
     const quarterPe = objectToSeries(QUARTER_LABELS, rawCompany.pe);
     const quarterRoe = objectToSeries(QUARTER_LABELS, rawCompany.roe);
     const quarterGrowth = objectToSeries(QUARTER_LABELS, rawCompany.revenueGrowth);
+    const quarterProfitGrowth = computeQuarterlyGrowth(quarterNetIncome);
 
     state.dataByFrequency.quarterly.revenue.set(company.id, quarterRevenue);
     state.dataByFrequency.quarterly.netIncome.set(company.id, quarterNetIncome);
@@ -3448,20 +3446,23 @@ function loadFromLocalData() {
     state.dataByFrequency.quarterly.pe.set(company.id, quarterPe);
     state.dataByFrequency.quarterly.roe.set(company.id, quarterRoe);
     state.dataByFrequency.quarterly.revenueGrowth.set(company.id, quarterGrowth);
+    state.dataByFrequency.quarterly.profitGrowth.set(company.id, quarterProfitGrowth);
 
     const annualRevenue = aggregateFlowAnnual(quarterRevenue);
     const annualNetIncome = aggregateFlowAnnual(quarterNetIncome);
     const annualGrossMargin = aggregateMarginAnnual(quarterGrossMargin, quarterRevenue);
     const annualPe = aggregatePointAnnual(quarterPe);
     const annualRoe = aggregatePointAnnual(quarterRoe);
-    const annualGrowth = computeAnnualRevenueGrowth(annualRevenue);
+    const annualGrowth = computeAnnualGrowth(annualRevenue);
+    const annualProfitGrowth = computeAnnualGrowth(annualNetIncome);
 
     const rollingRevenue = aggregateFlowRollingAnnual(quarterRevenue);
     const rollingNetIncome = aggregateFlowRollingAnnual(quarterNetIncome);
     const rollingGrossMargin = aggregateMarginRollingAnnual(quarterGrossMargin, quarterRevenue);
     const rollingPe = aggregatePointRollingAverage(quarterPe);
     const rollingRoe = aggregatePointRollingAverage(quarterRoe);
-    const rollingGrowth = computeRollingAnnualRevenueGrowth(quarterRevenue);
+    const rollingGrowth = computeRollingAnnualGrowth(rollingRevenue);
+    const rollingProfitGrowth = computeRollingAnnualGrowth(rollingNetIncome);
 
     state.dataByFrequency.annual.revenue.set(company.id, annualRevenue);
     state.dataByFrequency.annual.netIncome.set(company.id, annualNetIncome);
@@ -3469,6 +3470,7 @@ function loadFromLocalData() {
     state.dataByFrequency.annual.pe.set(company.id, annualPe);
     state.dataByFrequency.annual.roe.set(company.id, annualRoe);
     state.dataByFrequency.annual.revenueGrowth.set(company.id, annualGrowth);
+    state.dataByFrequency.annual.profitGrowth.set(company.id, annualProfitGrowth);
 
     state.dataByFrequency.rollingAnnual.revenue.set(company.id, rollingRevenue);
     state.dataByFrequency.rollingAnnual.netIncome.set(company.id, rollingNetIncome);
@@ -3476,9 +3478,12 @@ function loadFromLocalData() {
     state.dataByFrequency.rollingAnnual.pe.set(company.id, rollingPe);
     state.dataByFrequency.rollingAnnual.roe.set(company.id, rollingRoe);
     state.dataByFrequency.rollingAnnual.revenueGrowth.set(company.id, rollingGrowth);
+    state.dataByFrequency.rollingAnnual.profitGrowth.set(company.id, rollingProfitGrowth);
 
     Object.keys(METRICS).forEach((metricKey) => {
-      const qFlags = new Set(rawCompany?.forecastFlags?.[metricKey] || []);
+      const qFlags = metricKey === "profitGrowth"
+        ? new Set(rawCompany?.forecastFlags?.netIncome || [])
+        : new Set(rawCompany?.forecastFlags?.[metricKey] || []);
       const aFlags = annualizeForecastFlags(qFlags);
       const rFlags = rollingForecastFlags(qFlags);
 

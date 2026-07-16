@@ -20,7 +20,7 @@ The project focuses on three things:
 
 ## Features
 
-- Metric switching: Revenue, Net Income, Gross Margin, P/E, ROE, Revenue YoY Growth
+- Metric switching: Revenue, Net Income, Gross Margin, P/E, ROE, Revenue YoY Growth, Profit YoY Growth
 - Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
 - Enhanced single-company mode: switch between line and bar charts
@@ -50,12 +50,14 @@ As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across m
 | P/E | `pe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
 | ROE | `roe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
 | Revenue YoY Growth | `revenueGrowth` | Raw quarterly value | Calculated from annual revenue | Calculated from complete TTM revenue; null until four quarters are present |
+| Profit YoY Growth | Derived in the browser from `earnings` | Compared with the same quarter one year earlier | Calculated from annual net income | Calculated from complete TTM net income; null until four quarters are present |
 
 ## Stack
 
 - `index.html`: page structure
 - `style.css`: layout, colors, and visual system
 - `script.js`: data aggregation, interactions, and chart rendering
+- `financial-metrics.js`: reusable financial-metric calculations such as year-over-year growth
 - `data.js`: browser-loaded data source
 - `price-data.js`: browser-loaded daily adjusted-close stock-price data source
 - `assets/logos/`: transparent company logos used in single-company views
