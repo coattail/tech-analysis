@@ -2245,10 +2245,7 @@ html[data-theme="light"] {
   --surface-hover: #eaf1f8;
   --chart-panel-bg: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
   --chart-panel-border: rgba(91, 111, 138, 0.22);
-  --chart-wrap-bg:
-    radial-gradient(900px 420px at 100% 0, rgba(55, 111, 183, 0.075), transparent 68%),
-    radial-gradient(760px 360px at 0 100%, rgba(71, 92, 126, 0.05), transparent 72%),
-    linear-gradient(180deg, #fbfcfe 0%, #f4f7fa 100%);
+  --chart-wrap-bg: #ffffff;
   --chart-wrap-border: rgba(89, 108, 134, 0.2);
   --chart-wrap-glow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
@@ -2262,11 +2259,11 @@ html[data-theme="light"] {
   --chart-tooltip-border: rgba(68, 88, 116, 0.24);
   --chart-tooltip-title: #132033;
   --chart-tooltip-body: #33455d;
-  --chart-logo-color: #1f3149;
+  --chart-logo-color: #000000;
   --chart-label-color: #253850;
-  --chart-overlay-color: #123d6a;
+  --chart-overlay-color: #000000;
   --chart-watermark-color: #254566;
-  --chart-export-bg: #f7f9fc;
+  --chart-export-bg: #ffffff;
   --range-bg: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
   --range-track: rgba(72, 91, 116, 0.2);
   --range-fill: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
@@ -2492,13 +2489,11 @@ html[data-theme="light"] {
 }
 
 :is(html[data-theme="light"] body, body[data-theme="light"]) .chart-wrap::before {
-  background:
-    radial-gradient(820px 330px at 16% -12%, rgba(52, 103, 171, 0.055), transparent 65%),
-    radial-gradient(760px 420px at 100% 8%, rgba(93, 111, 138, 0.04), transparent 74%);
+  background: none;
 }
 
 :is(html[data-theme="light"] body, body[data-theme="light"]) .chart-wrap::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(38, 57, 83, 0.025));
+  background: none;
 }
 
 :is(html[data-theme="light"] body, body[data-theme="light"]) .range-panel {

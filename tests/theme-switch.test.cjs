@@ -21,7 +21,12 @@ test("defines a complete light palette for the page and chart", () => {
   assert.match(css, /html\[data-theme="light"\] body/);
   assert.match(css, /--chart-axis-color:\s*#43566f/);
   assert.match(css, /--chart-tooltip-bg:\s*rgba\(255, 255, 255, 0\.98\)/);
-  assert.match(css, /--chart-export-bg:\s*#f7f9fc/);
+  assert.match(css, /--chart-wrap-bg:\s*#ffffff/);
+  assert.match(css, /--chart-logo-color:\s*#000000/);
+  assert.match(css, /--chart-overlay-color:\s*#000000/);
+  assert.match(css, /--chart-export-bg:\s*#ffffff/);
+  assert.match(css, /data-theme="light"[^}]*body[^}]*\) \.chart-wrap::before\s*\{[^}]*background:\s*none/);
+  assert.match(css, /data-theme="light"[^}]*body[^}]*\) \.chart-wrap::after\s*\{[^}]*background:\s*none/);
   assert.match(css, /\.chart-panel\s*\{/);
   assert.match(css, /\.control-panel\s*\{/);
   assert.match(css, /\.chart-wrap\s*\{/);
