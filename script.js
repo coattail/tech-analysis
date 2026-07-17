@@ -63,6 +63,10 @@ const UI_TRANSLATIONS = {
     forecastSuffix: "（预测）",
     noMatchingCompanies: "未找到匹配企业",
     unknownTime: "未知时间",
+    lightTheme: "明亮模式",
+    deepTheme: "深色模式",
+    switchToLightTheme: "切换至明亮主题",
+    switchToDeepTheme: "切换至深色主题",
     switchLanguage: "Switch to English",
     switchLanguageLabel: "EN",
     priceEnableFailed: "股价对比开启失败：{message}",
@@ -145,6 +149,10 @@ const UI_TRANSLATIONS = {
     forecastSuffix: " (Forecast)",
     noMatchingCompanies: "No matching companies found",
     unknownTime: "Unknown time",
+    lightTheme: "Light",
+    deepTheme: "Dark",
+    switchToLightTheme: "Switch to light theme",
+    switchToDeepTheme: "Switch to dark theme",
     switchLanguage: "切换到中文",
     switchLanguageLabel: "中文",
     priceEnableFailed: "Failed to enable the price overlay: {message}",
@@ -527,7 +535,6 @@ function drawSingleCompanyLogoBadge(
   chartArea,
   company,
   chartFontFamily,
-  isDeepTheme,
   badgeVerticalPosition = "top",
 ) {
   if (!company) return false;
@@ -539,7 +546,7 @@ function drawSingleCompanyLogoBadge(
     : chartArea.top + (compact ? 20 : BAR_CHART_BADGE_VERTICAL_OFFSET);
   const targetArea = compact ? 36 * 36 : BAR_CHART_LOGO_TARGET_AREA;
   const logoImage = getCompanyLogo(company.id);
-  const logoColor = isDeepTheme ? "#f4f7fb" : "#f3f6fa";
+  const logoColor = getChartThemeTokens().logoColor;
 
   if (
     logoImage &&
@@ -588,6 +595,7 @@ const rightTickerLabelsPlugin = {
     const chartFontFamily =
       css.getPropertyValue("--font-chart").trim() || css.getPropertyValue("--font-main").trim() || '"Plus Jakarta Sans", sans-serif';
     const isDeepTheme = document.body.dataset.theme === "deep";
+    const labelColor = css.getPropertyValue("--chart-label-color").trim() || "#f4f7fb";
 
     if (singleCompanyId) {
       const company = COMPANY_META.get(singleCompanyId);
@@ -610,7 +618,6 @@ const rightTickerLabelsPlugin = {
         chartArea,
         company,
         chartFontFamily,
-        isDeepTheme,
         badgeVerticalPosition,
       );
 
@@ -682,7 +689,7 @@ const rightTickerLabelsPlugin = {
         ctx.strokeStyle = tickerStroke;
         ctx.strokeText(item.ticker, labelX, item.y);
       }
-      ctx.fillStyle = isDeepTheme ? "#f4f7fb" : "#f3f6fa";
+      ctx.fillStyle = labelColor;
       ctx.fillText(item.ticker, labelX, item.y);
     });
 
@@ -767,7 +774,7 @@ const singleCompanyTickerWatermarkPlugin = {
     ctx.font = `800 ${fontSize}px ${themeTokens.chartFontFamily}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = colorToRgba("#ffffff", SINGLE_COMPANY_WATERMARK_ALPHA);
+    ctx.fillStyle = colorToRgba(themeTokens.watermarkColor, SINGLE_COMPANY_WATERMARK_ALPHA);
     ctx.fillText(
       ticker,
       centerX,
@@ -927,6 +934,8 @@ const activeMetricLabelEl = document.getElementById("activeMetricLabel");
 const activeFrequencyLabelEl = document.getElementById("activeFrequencyLabel");
 const visibleCompaniesLabelEl = document.getElementById("visibleCompaniesLabel");
 const generatedAtLabelEl = document.getElementById("generatedAtLabel");
+const themeToggleEl = document.getElementById("themeToggle");
+const themeToggleLabelEl = document.getElementById("themeToggleLabel");
 const languageToggleEl = document.getElementById("languageToggle");
 const languageToggleLabelEl = document.getElementById("languageToggleLabel");
 const chartModeControlEl = document.getElementById("chartModeControl");
@@ -1109,6 +1118,7 @@ function applyStaticTranslations() {
   if (languageToggleEl) {
     languageToggleEl.setAttribute("aria-label", t("switchLanguage"));
   }
+  syncThemeToggle();
 }
 
 function persistLanguage() {
@@ -1198,13 +1208,93 @@ function getChartThemeTokens() {
     tooltipBorder: css.getPropertyValue("--chart-tooltip-border").trim() || tooltipBorderFallback,
     tooltipTitle: css.getPropertyValue("--chart-tooltip-title").trim() || tooltipTitleFallback,
     tooltipBody: css.getPropertyValue("--chart-tooltip-body").trim() || tooltipBodyFallback,
+    logoColor: css.getPropertyValue("--chart-logo-color").trim() || "#f4f7fb",
+    labelColor: css.getPropertyValue("--chart-label-color").trim() || "#f4f7fb",
+    overlayColor: css.getPropertyValue("--chart-overlay-color").trim() || "#ffffff",
+    watermarkColor: css.getPropertyValue("--chart-watermark-color").trim() || "#ffffff",
+    exportBackground: css.getPropertyValue("--chart-export-bg").trim() || "#101823",
     chartFontFamily: css.getPropertyValue("--font-chart").trim() || fontFallback,
     terminalFontFamily: css.getPropertyValue("--font-terminal").trim() || fontFallback,
   };
 }
 
+function getActiveTheme() {
+  return document.documentElement.dataset.theme === "light" || document.body.dataset.theme === "light"
+    ? "light"
+    : "deep";
+}
+
+function persistTheme(theme) {
+  try {
+    localStorage.setItem("tech-analysis-theme", theme);
+  } catch {
+    // The theme still changes for the current session if storage is unavailable.
+  }
+}
+
+function syncThemeToggle() {
+  if (!themeToggleEl) return;
+  const isLight = getActiveTheme() === "light";
+  const nextThemeLabel = t(isLight ? "switchToDeepTheme" : "switchToLightTheme");
+  themeToggleEl.setAttribute("aria-label", nextThemeLabel);
+  themeToggleEl.setAttribute("title", nextThemeLabel);
+  themeToggleEl.setAttribute("aria-pressed", String(isLight));
+  if (themeToggleLabelEl) {
+    themeToggleLabelEl.textContent = t(isLight ? "deepTheme" : "lightTheme");
+  }
+}
+
+function setTheme(nextTheme, { persist = true, refresh = true } = {}) {
+  const theme = nextTheme === "light" ? "light" : "deep";
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark";
+  document.body.dataset.theme = theme;
+  if (persist) persistTheme(theme);
+  syncThemeToggle();
+
+  if (!refresh) return;
+  setupTogglePanel(companySearchEl?.value ?? "");
+  if (state.chart) rebuildChartForCurrentView();
+}
+
 function initTheme() {
-  document.body.dataset.theme = "deep";
+  setTheme(document.documentElement.dataset.theme, { persist: false, refresh: false });
+}
+
+const lightSeriesColorCache = new Map();
+
+function getRelativeLuminance(red, green, blue) {
+  const channels = [red, green, blue].map((channel) => {
+    const normalized = channel / 255;
+    return normalized <= 0.04045
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+
+function tuneSeriesColorForLightTheme(hexColor) {
+  if (lightSeriesColorCache.has(hexColor)) return lightSeriesColorCache.get(hexColor);
+  const match = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hexColor ?? "");
+  if (!match) return hexColor;
+
+  const original = match.slice(1).map((part) => Number.parseInt(part, 16));
+  let factor = 1;
+  let tuned = original;
+  while ((1.05 / (getRelativeLuminance(...tuned) + 0.05)) < 3 && factor > 0.35) {
+    factor *= 0.88;
+    tuned = original.map((channel) => Math.round(channel * factor));
+  }
+
+  const result = `#${tuned.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+  lightSeriesColorCache.set(hexColor, result);
+  return result;
+}
+
+function getSeriesColor(company) {
+  return getActiveTheme() === "light"
+    ? tuneSeriesColorForLightTheme(company.color)
+    : company.color;
 }
 
 function isFiniteNumber(value) {
@@ -2238,9 +2328,8 @@ async function downloadCurrentChartImage() {
   const filename = `finance-chart-${freqToken}-${metricToken}-${fileStamp}.png`;
   const chartWrap = sourceCanvas.closest(".chart-wrap");
   const wrapStyle = chartWrap ? getComputedStyle(chartWrap) : null;
-  const backgroundColor = wrapStyle?.backgroundColor && wrapStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
-    ? wrapStyle.backgroundColor
-    : (document.body.dataset.theme === "deep" ? "#101823" : "#263567");
+  const backgroundColor = wrapStyle?.getPropertyValue("--chart-export-bg").trim()
+    || getChartThemeTokens().exportBackground;
 
   const exportCanvas = document.createElement("canvas");
   const exportCtx = exportCanvas.getContext("2d");
@@ -2394,6 +2483,7 @@ function buildPriceOverlayDataset(visibleLabels) {
 
   state.lastPriceOverlayPointCount = projected.length;
   if (projected.length === 0) return null;
+  const overlayColor = getChartThemeTokens().overlayColor;
 
   return {
     type: "line",
@@ -2403,8 +2493,8 @@ function buildPriceOverlayDataset(visibleLabels) {
     data: projected,
     parsing: false,
     yAxisID: "yPrice",
-    borderColor: "#ffffff",
-    backgroundColor: "#ffffff",
+    borderColor: overlayColor,
+    backgroundColor: overlayColor,
     borderWidth: 2,
     pointRadius: 0,
     pointHoverRadius: 3,
@@ -2429,6 +2519,7 @@ function buildGrowthOverlayDataset(visibleLabels) {
   if (!data.some(isFiniteNumber)) return null;
 
   const forecasted = state.forecastFlagsByFrequency[state.frequency]?.[growthMetric]?.get(singleCompanyId) ?? new Set();
+  const overlayColor = getChartThemeTokens().overlayColor;
   return {
     type: "line",
     label: getMetricLabel(growthMetric),
@@ -2438,8 +2529,8 @@ function buildGrowthOverlayDataset(visibleLabels) {
     data,
     forecastedLabels: [...forecasted],
     yAxisID: "yPrice",
-    borderColor: "#ffffff",
-    backgroundColor: "#ffffff",
+    borderColor: overlayColor,
+    backgroundColor: overlayColor,
     borderWidth: 2,
     pointRadius: 1.6,
     pointHoverRadius: 4,
@@ -2477,6 +2568,7 @@ function buildDatasetsForView() {
 
     const fullData = fullLabels.map((label) => series.get(label) ?? null);
     const useBarDataset = useBarForSingleCompany && singleCompanyId === company.id;
+    const seriesColor = getSeriesColor(company);
 
     return {
       type: useBarDataset ? "bar" : "line",
@@ -2488,8 +2580,8 @@ function buildDatasetsForView() {
       fullData,
       data: fullData.slice(state.rangeStart, state.rangeEnd + 1),
       forecastedLabels: [...forecasted],
-      borderColor: company.color,
-      backgroundColor: company.color,
+      borderColor: seriesColor,
+      backgroundColor: seriesColor,
       borderWidth: useBarDataset ? 0 : 2,
       borderRadius: useBarDataset ? 6 : 0,
       borderSkipped: false,
@@ -3458,7 +3550,7 @@ function createToggle(company) {
 
   const dot = document.createElement("span");
   dot.className = "color-dot";
-  dot.style.backgroundColor = company.color;
+  dot.style.backgroundColor = getSeriesColor(company);
 
   const text = document.createElement("span");
   text.textContent = getCompanyName(company);
@@ -3750,6 +3842,9 @@ function bindEvents() {
   showAllBtn.addEventListener("click", () => setAllVisibility(true));
   hideAllBtn.addEventListener("click", () => setAllVisibility(false));
   companySearchEl?.addEventListener("input", () => setupTogglePanel(companySearchEl.value));
+  themeToggleEl?.addEventListener("click", () => {
+    setTheme(getActiveTheme() === "light" ? "deep" : "light");
+  });
   languageToggleEl?.addEventListener("click", () => {
     setLanguage(currentLanguage === "zh" ? "en" : "zh");
   });

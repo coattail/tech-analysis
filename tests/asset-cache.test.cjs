@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after responsive tablet improvements", () => {
+test("cache-busts the stylesheet after adding theme switching", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260717-responsive-tablet/);
+  assert.match(html, /style\.css\?v=20260717-theme-toggle/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
@@ -60,7 +60,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-watermark-layout-lock-v2"],
-    ["script.js", "20260717-watermark-layout-lock-v2"],
+    ["script.js", "20260717-theme-toggle"],
   ]) {
     assert.match(
       html,

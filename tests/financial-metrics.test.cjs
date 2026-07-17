@@ -267,7 +267,7 @@ test("keeps the ticker watermark sized and positioned from the base plot when gr
   }), 720);
 });
 
-test("wires the compact growth toggles, white line, and shared right axis into the chart", () => {
+test("wires the compact growth toggles, theme-aware line, and shared right axis into the chart", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const script = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
   const style = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
@@ -276,7 +276,8 @@ test("wires the compact growth toggles, white line, and shared right axis into t
   assert.match(html, /data-growth-overlay-for="netIncome"/);
   assert.match(script, /growthOverlay:\s*true/);
   assert.match(script, /yAxisID:\s*"yPrice"/);
-  assert.match(script, /borderColor:\s*"#ffffff"/);
+  assert.match(script, /borderColor:\s*overlayColor/);
+  assert.match(script, /--chart-overlay-color/);
   assert.match(script, /state\.priceComparisonEnabled = false/);
   assert.match(script, /state\.growthOverlayEnabled = false/);
   assert.match(script, /formatSecondaryAxisTick\(secondaryOverlayType, value\)/);

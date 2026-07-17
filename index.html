@@ -1,16 +1,29 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="deep">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title data-i18n="pageTitle">美股科技与头部市值公司财务数据可视化</title>
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem("tech-analysis-theme");
+          if (savedTheme === "light" || savedTheme === "deep") {
+            document.documentElement.dataset.theme = savedTheme;
+          }
+        } catch {
+          // Keep the dark default when storage is unavailable.
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20260717-responsive-tablet" />
+    <link rel="stylesheet" href="style.css?v=20260717-theme-toggle" />
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script defer src="data.js?v=20260716-nvidia-quarterly-fix"></script>
     <script defer src="price-data.js?v=20260716-tsmc-q2"></script>
@@ -18,7 +31,7 @@
     <script defer src="company-selection.js?v=20260629-contiguous-range"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
     <script defer src="financial-metrics.js?v=20260717-watermark-layout-lock-v2"></script>
-    <script defer src="script.js?v=20260717-watermark-layout-lock-v2"></script>
+    <script defer src="script.js?v=20260717-theme-toggle"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">
@@ -105,6 +118,25 @@
                 </label>
               </div>
               <div class="chart-actions">
+                <button
+                  id="themeToggle"
+                  class="theme-toggle"
+                  type="button"
+                  aria-label="切换至明亮主题"
+                  aria-pressed="false"
+                  title="切换至明亮主题"
+                >
+                  <span class="theme-toggle-icon" aria-hidden="true">
+                    <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="3.75"></circle>
+                      <path d="M12 2.25v2M12 19.75v2M4.25 12h-2M21.75 12h-2M5.1 5.1l1.42 1.42M17.48 17.48l1.42 1.42M18.9 5.1l-1.42 1.42M6.52 17.48 5.1 18.9"></path>
+                    </svg>
+                    <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24">
+                      <path d="M20.3 15.4A8.5 8.5 0 0 1 8.6 3.7a8.5 8.5 0 1 0 11.7 11.7Z"></path>
+                    </svg>
+                  </span>
+                  <span id="themeToggleLabel">明亮模式</span>
+                </button>
                 <button id="languageToggle" class="language-toggle" type="button" aria-label="Switch to English">
                   <span class="language-toggle-mark" aria-hidden="true">中 / EN</span>
                   <span id="languageToggleLabel">EN</span>
