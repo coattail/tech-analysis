@@ -39,4 +39,12 @@ test("adapts chart series and overlays for a light background", () => {
   assert.match(script, /overlayColor:\s*css\.getPropertyValue\("--chart-overlay-color"\)/);
   assert.match(script, /watermarkColor:\s*css\.getPropertyValue\("--chart-watermark-color"\)/);
   assert.match(script, /getPropertyValue\("--chart-export-bg"\)/);
+  assert.match(script, /const logoColor = isLightTheme[\s\S]*?company\.logoColor \|\| getChartThemeTokens\(\)\.logoColor/);
+  assert.match(script, /const useOriginalLogoColors = company\.preserveLogoColors[\s\S]*?isLightTheme && company\.preserveLightLogoColors/);
+  assert.match(script, /useOriginalLogoColors[\s\S]*?drawOriginalLogo/);
+  assert.match(script, /useOriginalLogoColors[\s\S]*?drawMonochromeLogo/);
+  assert.match(script, /id: "nvidia"[^\n]*logoColor: "#76b900"/);
+  assert.match(script, /id: "microsoft"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "amazon"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "adobe"[^\n]*preserveLightLogoColors: true/);
 });

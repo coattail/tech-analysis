@@ -240,50 +240,50 @@ const FREQUENCY_META = {
 };
 
 const COMPANIES = [
-  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
-  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoPath: "assets/logos/alphabet.svg?v=20260629-visible-area-v4" },
-  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
-  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
-  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
-  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
-  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
-  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
-  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
-  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoPath: "assets/logos/walmart.svg?v=20260629-visible-area-v4" },
-  { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoPath: "assets/logos/berkshire.svg?v=20260629-visible-area-v4" },
-  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
-  { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b", logoPath: "assets/logos/lilly.svg?v=20260629-visible-area-v4" },
-  { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoPath: "assets/logos/exxon.svg?v=20260629-visible-area-v4" },
-  { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoPath: "assets/logos/visa.svg?v=20260629-visible-area-v4" },
-  { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoPath: "assets/logos/asml.svg?v=20260629-visible-area-v4" },
-  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
-  { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoPath: "assets/logos/jnj.svg?v=20260629-visible-area-v4" },
-  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
-  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoPath: "assets/logos/amd.svg?v=20260629-visible-area-v4" },
-  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoPath: "assets/logos/mastercard.svg?v=20260629-visible-area-v4" },
-  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoPath: "assets/logos/costco.svg?v=20260629-visible-area-v4" },
-  { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914", logoPath: "assets/logos/netflix.svg?v=20260629-visible-area-v4" },
-  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoPath: "assets/logos/bankofamerica.svg?v=20260629-visible-area-v4" },
-  { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c", logoPath: "assets/logos/caterpillar.svg?v=20260629-visible-area-v4" },
-  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoPath: "assets/logos/chevron.svg?v=20260629-visible-area-v4" },
-  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff", logoPath: "assets/logos/palantir.svg?v=20260629-visible-area-v4" },
-  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoPath: "assets/logos/cisco.svg?v=20260629-visible-area-v4" },
-  { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2", logoPath: "assets/logos/abbvie.svg?v=20260629-visible-area-v4" },
-  { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316", logoPath: "assets/logos/homedepot.svg?v=20260629-visible-area-v4" },
-  { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff", logoPath: "assets/logos/ibm.svg?v=20260629-visible-area-v4" },
-  { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1", logoPath: "assets/logos/sap.svg?v=20260629-visible-area-v4" },
-  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoPath: "assets/logos/crowdstrike.svg?v=20260629-visible-area-v4" },
-  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoPath: "assets/logos/salesforce.svg?v=20260629-visible-area-v4" },
-  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoPath: "assets/logos/servicenow.svg?v=20260629-visible-area-v4" },
-  { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5", logoPath: "assets/logos/datadog.svg?v=20260629-visible-area-v4" },
-  { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8", logoPath: "assets/logos/snowflake.svg?v=20260629-visible-area-v4" },
-  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoPath: "assets/logos/cloudflare.svg?v=20260629-visible-area-v4" },
-  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
-  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
-  { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
-  { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
-  { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
-  { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
+  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoColor: "#76b900", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
+  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoColor: "#4285f4", logoPath: "assets/logos/alphabet.svg?v=20260629-visible-area-v4" },
+  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
+  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoColor: "#737373", preserveLightLogoColors: true, logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
+  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
+  { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoColor: "#cc092f", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
+  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoColor: "#0866ff", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
+  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoColor: "#e60012", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
+  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoColor: "#e82127", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
+  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoColor: "#0071ce", logoPath: "assets/logos/walmart.svg?v=20260629-visible-area-v4" },
+  { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoColor: "#003f73", logoPath: "assets/logos/berkshire.svg?v=20260629-visible-area-v4" },
+  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoColor: "#005eb8", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
+  { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b", logoColor: "#d52b1e", logoPath: "assets/logos/lilly.svg?v=20260629-visible-area-v4" },
+  { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoColor: "#ed1b2f", logoPath: "assets/logos/exxon.svg?v=20260629-visible-area-v4" },
+  { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoColor: "#1434cb", logoPath: "assets/logos/visa.svg?v=20260629-visible-area-v4" },
+  { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoColor: "#0074c8", logoPath: "assets/logos/asml.svg?v=20260629-visible-area-v4" },
+  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoColor: "#0057b8", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
+  { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoColor: "#d71920", logoPath: "assets/logos/jnj.svg?v=20260629-visible-area-v4" },
+  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoColor: "#f80000", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
+  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoColor: "#000000", logoPath: "assets/logos/amd.svg?v=20260629-visible-area-v4" },
+  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoColor: "#eb001b", logoPath: "assets/logos/mastercard.svg?v=20260629-visible-area-v4" },
+  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoColor: "#e31837", logoPath: "assets/logos/costco.svg?v=20260629-visible-area-v4" },
+  { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914", logoColor: "#e50914", logoPath: "assets/logos/netflix.svg?v=20260629-visible-area-v4" },
+  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoColor: "#e31837", logoPath: "assets/logos/bankofamerica.svg?v=20260629-visible-area-v4" },
+  { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c", logoColor: "#1a1a1a", logoPath: "assets/logos/caterpillar.svg?v=20260629-visible-area-v4" },
+  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoColor: "#0054a6", logoPath: "assets/logos/chevron.svg?v=20260629-visible-area-v4" },
+  { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff", logoColor: "#101820", logoPath: "assets/logos/palantir.svg?v=20260629-visible-area-v4" },
+  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoColor: "#1ba0d7", logoPath: "assets/logos/cisco.svg?v=20260629-visible-area-v4" },
+  { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2", logoColor: "#071d49", logoPath: "assets/logos/abbvie.svg?v=20260629-visible-area-v4" },
+  { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316", logoColor: "#f96302", logoPath: "assets/logos/homedepot.svg?v=20260629-visible-area-v4" },
+  { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff", logoColor: "#0f62fe", logoPath: "assets/logos/ibm.svg?v=20260629-visible-area-v4" },
+  { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1", logoColor: "#008fd3", logoPath: "assets/logos/sap.svg?v=20260629-visible-area-v4" },
+  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoColor: "#fc0000", logoPath: "assets/logos/crowdstrike.svg?v=20260629-visible-area-v4" },
+  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoColor: "#00a1e0", logoPath: "assets/logos/salesforce.svg?v=20260629-visible-area-v4" },
+  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoColor: "#3a7d44", logoPath: "assets/logos/servicenow.svg?v=20260629-visible-area-v4" },
+  { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5", logoColor: "#632ca6", logoPath: "assets/logos/datadog.svg?v=20260629-visible-area-v4" },
+  { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8", logoColor: "#29b5e8", logoPath: "assets/logos/snowflake.svg?v=20260629-visible-area-v4" },
+  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoColor: "#f48120", logoPath: "assets/logos/cloudflare.svg?v=20260629-visible-area-v4" },
+  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoColor: "#eb1000", preserveLightLogoColors: true, logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
+  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoColor: "#2d8cff", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
+  { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoColor: "#000000", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
+  { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoColor: "#000000", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
+  { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoColor: "#4f46e5", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
+  { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoColor: "#d97706", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_ENGLISH_NAMES = {
   nvidia: "NVIDIA",
@@ -546,11 +546,16 @@ function drawSingleCompanyLogoBadge(
     : chartArea.top + (compact ? 20 : BAR_CHART_BADGE_VERTICAL_OFFSET);
   const targetArea = compact ? 36 * 36 : BAR_CHART_LOGO_TARGET_AREA;
   const logoImage = getCompanyLogo(company.id);
-  const logoColor = getChartThemeTokens().logoColor;
+  const isLightTheme = getActiveTheme() === "light";
+  const logoColor = isLightTheme
+    ? company.logoColor || getChartThemeTokens().logoColor
+    : getChartThemeTokens().logoColor;
+  const useOriginalLogoColors = company.preserveLogoColors
+    || (isLightTheme && company.preserveLightLogoColors);
 
   if (
     logoImage &&
-    (company.preserveLogoColors
+    (useOriginalLogoColors
       ? drawOriginalLogo(
         ctx,
         chart,
