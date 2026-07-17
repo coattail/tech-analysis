@@ -13,6 +13,8 @@ function getCompanyEntries() {
       ticker: match[3],
       extra: match[5],
       logoPath: match[5].match(/logoPath: "([^"]+)"/)?.[1] ?? null,
+      logoColor: match[5].match(/logoColor: "([^"]+)"/)?.[1] ?? null,
+      preserveLightLogoColors: /preserveLightLogoColors: true/.test(match[5]),
     }));
 }
 
@@ -107,7 +109,8 @@ test("every company uses a local SVG logo asset with a transparent canvas", asyn
     await t.test(company.id, () => {
       assert.ok(company.logoPath, `${company.id} should declare logoPath`);
       assert.match(company.logoPath, /^assets\/logos\/[a-z0-9-]+\.svg(?:\?v=[a-z0-9-]+)?$/);
-      assert.match(company.logoPath, /\?v=20260629-visible-area-v4$/);
+      assert.match(company.logoPath, /\?v=(?:20260629-visible-area-v4|20260717-brand-colors-v5)$/);
+      assert.match(company.logoColor, /^#[0-9a-f]{6}$/i, `${company.id} should declare an audited light-theme brand color`);
 
       const assetPath = company.logoPath.split("?")[0];
       const svg = fs.readFileSync(path.join(__dirname, "..", assetPath), "utf8");
@@ -125,5 +128,38 @@ test("every company uses a local SVG logo asset with a transparent canvas", asyn
         assert.equal(hasFullCanvasRect(rectTag, viewBox), false, `${company.id} logo should not include a full-canvas rect`);
       }
     });
+  }
+});
+
+test("light mode preserves every audited original-color logo palette", () => {
+  const expectedPalettes = {
+    alphabet: ["#34a853", "#4285f4", "#ea4335", "#fbbc05"],
+    microsoft: ["#00a4ef", "#737373", "#7fba00", "#f25022", "#ffb900"],
+    amazon: ["#221f1f", "#ff9900"],
+    walmart: ["#0071ce", "#ffc220"],
+    mastercard: ["#eb001b", "#f79e1b", "#ff5f00"],
+    costco: ["#005daa", "#e31837"],
+    bankofamerica: ["#012169", "#e31837"],
+    caterpillar: ["#000000", "#ffcd11"],
+    chevron: ["#0054a6", "#e21836"],
+    cloudflare: ["#f48120", "#faad3d"],
+    adobe: ["#eb1000"],
+  };
+  const companies = getCompanyEntries();
+  const preservedIds = companies
+    .filter((company) => company.preserveLightLogoColors)
+    .map((company) => company.id)
+    .sort();
+
+  assert.deepEqual(preservedIds, Object.keys(expectedPalettes).sort());
+
+  for (const company of companies.filter((item) => item.preserveLightLogoColors)) {
+    const assetPath = company.logoPath.split("?")[0];
+    const svg = fs.readFileSync(path.join(__dirname, "..", assetPath), "utf8");
+    const actualPalette = [...new Set(
+      [...svg.matchAll(/#[0-9a-f]{6}/gi)].map((match) => match[0].toLowerCase()),
+    )].sort();
+
+    assert.deepEqual(actualPalette, expectedPalettes[company.id], `${company.id} should retain its audited original palette`);
   }
 });

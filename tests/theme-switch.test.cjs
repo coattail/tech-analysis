@@ -44,7 +44,15 @@ test("adapts chart series and overlays for a light background", () => {
   assert.match(script, /useOriginalLogoColors[\s\S]*?drawOriginalLogo/);
   assert.match(script, /useOriginalLogoColors[\s\S]*?drawMonochromeLogo/);
   assert.match(script, /id: "nvidia"[^\n]*logoColor: "#76b900"/);
+  assert.match(script, /id: "alphabet"[^\n]*preserveLightLogoColors: true/);
   assert.match(script, /id: "microsoft"[^\n]*preserveLightLogoColors: true/);
   assert.match(script, /id: "amazon"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "walmart"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "mastercard"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "costco"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "bankofamerica"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "caterpillar"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "chevron"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "cloudflare"[^\n]*preserveLightLogoColors: true/);
   assert.match(script, /id: "adobe"[^\n]*preserveLightLogoColors: true/);
 });
