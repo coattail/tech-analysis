@@ -9,6 +9,7 @@ const {
   canShowGrowthOverlay,
   normalizeGrowthOverlayEnabled,
   shouldCarryGrowthOverlay,
+  computeTightMixedAxisBounds,
   alignYAxisZeroPositions,
   computeGrowthChartExpansionRatio,
   resolveWatermarkReferencePlotHeight,
@@ -37,7 +38,7 @@ test("computes quarterly profit growth against the same quarter one year earlier
   assert.equal(growth.get("2026Q1"), 50);
 });
 
-test("uses the absolute prior profit as denominator across losses and profits", () => {
+test("keeps loss-to-loss growth comparable but omits a profit/loss crossover", () => {
   const labels = ["2024", "2025", "2026"];
   const earnings = new Map([
     ["2024", -20],
@@ -48,7 +49,21 @@ test("uses the absolute prior profit as denominator across losses and profits", 
   const growth = computeYearOverYearGrowth(labels, earnings, 1);
 
   assert.equal(growth.get("2025"), 50);
-  assert.equal(growth.get("2026"), 200);
+  assert.equal(growth.get("2026"), null);
+});
+
+test("omits four-digit growth caused by an immaterial comparison base", () => {
+  const labels = ["2024", "2025", "2026"];
+  const earnings = new Map([
+    ["2024", 0.09],
+    ["2025", 10],
+    ["2026", 110],
+  ]);
+
+  const growth = computeYearOverYearGrowth(labels, earnings, 1);
+
+  assert.equal(growth.get("2025"), null);
+  assert.equal(growth.get("2026"), 1000);
 });
 
 test("leaves profit growth empty when the comparison value is missing or zero", () => {
@@ -89,6 +104,40 @@ test("uses reported Google quarters instead of annual totals divided by four", (
   const dashboard = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
   assert.match(updater, /alphabet:\s*\{[\s\S]*"2005Q1": \{ revenue: 1_256_516_000/);
   assert.match(dashboard, /const quarterGrowth = computeQuarterlyGrowth\(quarterRevenue\)/);
+});
+
+test("uses Broadcom's official 2009 Q4 profit and removes the false growth spike", () => {
+  const sourceData = loadFinancialSourceData();
+  const broadcom = sourceData.companies.avgo;
+  const labels = sourceData.periods.filter((period) => period >= "2009Q4" && period <= "2010Q4");
+  const earnings = new Map(labels.map((period) => [period, broadcom.earnings[period]]));
+  const growth = computeYearOverYearGrowth(labels, earnings, 4);
+
+  assert.equal(broadcom.earnings["2009Q4"], 72_000_000);
+  assert.equal(broadcom.periodEndDates["2009Q4"], "2009-11-01");
+  assert.equal(broadcom.reportDates["2009Q4"], "2009-12-03");
+  assert.ok(Math.abs(growth.get("2010Q4") - 127.7777777778) < 1e-9);
+
+  const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
+  assert.match(updater, /avgo:\s*\{[\s\S]*"2009Q4": \{[\s\S]*earnings: 72_000_000/);
+});
+
+test("keeps every computed quarterly growth point within the comparable range", () => {
+  const sourceData = loadFinancialSourceData();
+
+  Object.entries(sourceData.companies).forEach(([companyId, company]) => {
+    ["revenue", "earnings"].forEach((sourceKey) => {
+      const series = new Map(sourceData.periods.map((period) => [period, company[sourceKey]?.[period] ?? null]));
+      const growth = computeYearOverYearGrowth(sourceData.periods, series, 4);
+      growth.forEach((value, period) => {
+        if (value == null) return;
+        assert.ok(
+          Math.abs(value) <= 1000,
+          `${companyId}:${sourceKey}:${period} produced ${value}%`,
+        );
+      });
+    });
+  });
 });
 
 test("uses NVIDIA reported quarters instead of annual averages and operating-income plugs", () => {
@@ -166,6 +215,30 @@ test("carries an enabled growth overlay between revenue and net income metrics",
   assert.equal(shouldCarryGrowthOverlay({ enabled: true, nextMetric: "revenue" }), true);
   assert.equal(shouldCarryGrowthOverlay({ enabled: true, nextMetric: "grossMargin" }), false);
   assert.equal(shouldCarryGrowthOverlay({ enabled: false, nextMetric: "netIncome" }), false);
+});
+
+test("keeps mixed-sign bar bounds tight without a redundant negative tick band", () => {
+  assert.deepEqual(
+    computeTightMixedAxisBounds({ min: -1.9, max: 9.31 }),
+    { min: -2, max: 10 },
+  );
+});
+
+test("applies tight mixed-sign bounds consistently across value scales", () => {
+  assert.deepEqual(
+    computeTightMixedAxisBounds({ min: -1_900_000_000, max: 9_310_000_000 }),
+    { min: -2_000_000_000, max: 10_000_000_000 },
+  );
+  assert.deepEqual(
+    computeTightMixedAxisBounds({ min: -0.18, max: 0.92 }),
+    { min: -0.2, max: 1 },
+  );
+});
+
+test("rejects non-mixed or invalid bounds", () => {
+  assert.equal(computeTightMixedAxisBounds({ min: 0, max: 9 }), null);
+  assert.equal(computeTightMixedAxisBounds({ min: -9, max: 0 }), null);
+  assert.equal(computeTightMixedAxisBounds({ min: Number.NaN, max: 9 }), null);
 });
 
 test("aligns primary and growth-axis zero positions without clipping either range", () => {
@@ -282,6 +355,7 @@ test("wires the compact growth toggles, theme-aware line, and shared right axis 
   assert.match(script, /state\.growthOverlayEnabled = false/);
   assert.match(script, /formatSecondaryAxisTick\(secondaryOverlayType, value\)/);
   assert.match(script, /FinancialMetricsUtils\.alignYAxisZeroPositions\(\{[\s\S]*primaryBounds: basePrimaryBounds,[\s\S]*secondaryBounds,[\s\S]*\}\)/);
+  assert.match(script, /FinancialMetricsUtils\.computeTightMixedAxisBounds\(\{[\s\S]*min: toAxisDisplayValue\(state\.metric, min\),[\s\S]*max: toAxisDisplayValue\(state\.metric, includesPositive \? max : 0\)/);
   assert.match(script, /FinancialMetricsUtils\.computeGrowthChartExpansionRatio/);
   assert.match(script, /FinancialMetricsUtils\.resolveWatermarkReferencePlotHeight/);
   assert.match(script, /const canReuseBaseLayout = hasGrowthOverlay/);

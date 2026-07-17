@@ -3064,10 +3064,10 @@
       "rows": [
         {
           "period": "2009Q4",
-          "dateKey": "2009-12-31",
+          "dateKey": "2009-11-01",
           "revenue": 428000000,
           "grossProfit": 192000000,
-          "netIncome": -90000,
+          "netIncome": 72000000,
           "grossMarginPct": 44.85981308411215
         },
         {

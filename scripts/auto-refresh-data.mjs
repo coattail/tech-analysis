@@ -438,6 +438,13 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2007Q4": { revenue: 911_211_000, earnings: 222_208_000, grossMargin: (812_615 / 911_211) * 100 },
   },
   avgo: {
+    // Avago FY2009 Q4 official results: GAAP net income was $72 million for
+    // the quarter ended Nov. 1, 2009 (reported Dec. 3, 2009).
+    "2009Q4": {
+      earnings: 72_000_000,
+      periodEndDate: "2009-11-01",
+      reportDate: "2009-12-03",
+    },
     "2014Q3": { revenue: 1_269_000_000 },
     "2015Q2": { revenue: 1_614_000_000 },
     "2015Q3": { revenue: 1_735_000_000 },

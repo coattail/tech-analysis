@@ -11,7 +11,7 @@ const UI_TRANSLATIONS = {
     modeLabel: "模式",
     modeValue: "季度 / 年度 / 滚动年化",
     sourceSummary: "查看数据口径与来源",
-    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收与利润增速均为同比。支持季度、年度与滚动年化浏览。",
+    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收与利润增速均为同比，跨越盈亏平衡点或绝对同比超过 1,000% 时视为不可比并留空。支持季度、年度与滚动年化浏览。",
     viewSettings: "视图设置",
     timeGranularity: "时间粒度",
     frequencySwitch: "时间粒度切换",
@@ -97,7 +97,7 @@ const UI_TRANSLATIONS = {
     modeLabel: "Mode",
     modeValue: "Quarterly / Annual / Rolling Annual",
     sourceSummary: "View methodology and sources",
-    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income use quarterly reported data in USD; gross margin is gross profit divided by revenue; P/E is the valuation metric for the reporting period; ROE is net income divided by net assets; revenue and profit growth are year over year. Quarterly, annual, and rolling-annual views are supported.",
+    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income use quarterly reported data in USD; gross margin is gross profit divided by revenue; P/E is the valuation metric for the reporting period; ROE is net income divided by net assets; revenue and profit growth are year over year. Growth that crosses break-even or exceeds 1,000% in absolute terms is treated as not meaningful and left blank. Quarterly, annual, and rolling-annual views are supported.",
     viewSettings: "View Settings",
     timeGranularity: "Time Granularity",
     frequencySwitch: "Time granularity switch",
@@ -3154,8 +3154,11 @@ function computeYAxisBounds(datasets, chartMode = "line", includeHidden = false)
       };
     }
 
-    const rounded = roundAxisBoundsToNiceValues(
-      toAxisDisplayValue(state.metric, min - minPadding),
+    const rounded = FinancialMetricsUtils.computeTightMixedAxisBounds({
+      min: toAxisDisplayValue(state.metric, min),
+      max: toAxisDisplayValue(state.metric, includesPositive ? max : 0),
+    }) ?? roundAxisBoundsToNiceValues(
+      toAxisDisplayValue(state.metric, min),
       toAxisDisplayValue(state.metric, includesPositive ? max : 0),
       false,
     );

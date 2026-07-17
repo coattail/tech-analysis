@@ -1,4 +1,5 @@
 (function attachFinancialMetrics(globalScope) {
+  const MAX_COMPARABLE_GROWTH_PERCENT = 1000;
   const GROWTH_OVERLAY_METRICS = Object.freeze({
     revenue: "revenueGrowth",
     netIncome: "profitGrowth",
@@ -18,7 +19,14 @@
       const current = valueSeries.get(label);
       if (!isFiniteNumber(previous) || !isFiniteNumber(current) || previous === 0) return;
 
-      growth.set(label, ((current - previous) / Math.abs(previous)) * 100);
+      // A percentage change across the profit/loss boundary is conventionally
+      // not meaningful. The same applies to four-digit changes produced by an
+      // immaterial comparison base; plotting either case distorts the chart.
+      if ((previous < 0 && current >= 0) || (previous >= 0 && current < 0)) return;
+
+      const value = ((current - previous) / Math.abs(previous)) * 100;
+      if (Math.abs(value) > MAX_COMPARABLE_GROWTH_PERCENT) return;
+      growth.set(label, value);
     });
 
     return growth;
@@ -40,6 +48,39 @@
 
   function shouldCarryGrowthOverlay({ enabled, nextMetric }) {
     return Boolean(enabled) && getGrowthOverlayMetric(nextMetric) != null;
+  }
+
+  function getNiceAxisStep(range, targetMaxTicks = 10) {
+    if (!Number.isFinite(range) || range <= 0) return 1;
+
+    const magnitude = 10 ** Math.floor(Math.log10(range));
+    const multipliers = [1, 2, 2.5, 5, 10];
+
+    for (let powerOffset = -1; powerOffset <= 2; powerOffset += 1) {
+      const base = magnitude * (10 ** powerOffset);
+      for (const multiplier of multipliers) {
+        const step = base * multiplier;
+        if (range / step <= targetMaxTicks) return step;
+      }
+    }
+
+    return magnitude * 10;
+  }
+
+  function computeTightMixedAxisBounds({ min, max, targetMaxTicks = 10 } = {}) {
+    const numericMin = Number(min);
+    const numericMax = Number(max);
+    if (!Number.isFinite(numericMin) || !Number.isFinite(numericMax)) return null;
+    if (numericMin >= 0 || numericMax <= 0 || numericMax <= numericMin) return null;
+
+    // Tick rounding already supplies breathing room around mixed-sign bars.
+    // Padding before this pass can cross a tick boundary and create an entire
+    // unused band (for example, -1.9B becoming a -4B axis minimum).
+    const step = getNiceAxisStep(numericMax - numericMin, targetMaxTicks);
+    return {
+      min: Number((Math.floor(numericMin / step) * step).toPrecision(12)),
+      max: Number((Math.ceil(numericMax / step) * step).toPrecision(12)),
+    };
   }
 
   function normalizeAxisBounds(bounds) {
@@ -192,6 +233,7 @@
     canShowGrowthOverlay,
     normalizeGrowthOverlayEnabled,
     shouldCarryGrowthOverlay,
+    computeTightMixedAxisBounds,
     alignYAxisZeroPositions,
     computeGrowthChartExpansionRatio,
     resolveWatermarkReferencePlotHeight,

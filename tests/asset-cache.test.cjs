@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20260716-nvidia-quarterly-fix"],
+    ["data.js", "20260717-growth-sanity"],
     ["price-data.js", "20260716-tsmc-q2"],
   ]) {
     assert.match(
@@ -59,8 +59,8 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["financial-metrics.js", "20260717-watermark-layout-lock-v2"],
-    ["script.js", "20260717-theme-toggle"],
+    ["financial-metrics.js", "20260717-growth-sanity"],
+    ["script.js", "20260717-growth-sanity"],
   ]) {
     assert.match(
       html,
