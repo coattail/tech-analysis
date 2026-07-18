@@ -912,6 +912,10 @@ function classifySecFactQuarterType(fact) {
   const fiscalPeriod = String(fact.fiscalPeriod || "").toUpperCase();
 
   if (fiscalPeriod === "FY") {
+    // Some first-quarter 10-Q facts are tagged FY in companyfacts. Their
+    // duration still identifies them as a single quarter; treating them as an
+    // annual fact makes the following year's comparative filing win instead.
+    if (fact.daySpan >= 45 && fact.daySpan <= 120) return "direct";
     return fact.daySpan >= 300 && fact.daySpan <= 390 ? "cumulative" : null;
   }
 
@@ -1007,8 +1011,6 @@ function buildSecFieldQuarterSeries(facts) {
         return left.daySpan - right.daySpan;
       })
       .forEach((fact) => {
-        if (derived.has(fact.endDate)) return;
-
         const coverageChain = findBestSecCoverageChain(fact, [...derived.values(), ...cumulative.values()]);
         if (!coverageChain || coverageChain.length === 0) return;
 
@@ -1028,23 +1030,28 @@ function buildSecFieldQuarterSeries(facts) {
         if (coveredValue === fact.value) return;
         if (!lastEndDate) return;
 
-        derived.set(
-          fact.endDate,
-          cloneSecFact(fact, {
-            concept: `${fact.concept}:derived`,
-            conceptPriority: Math.max(fact.conceptPriority - 1, 1),
-            startDate: tailStartDate,
-            daySpan: tailDaySpan,
-            value: derivedValue,
-          }),
-        );
-        changed = true;
+        const derivedFact = cloneSecFact(fact, {
+          concept: `${fact.concept}:derived`,
+          conceptPriority: Math.max(fact.conceptPriority - 1, 1),
+          startDate: tailStartDate,
+          daySpan: tailDaySpan,
+          value: derivedValue,
+        });
+        const current = derived.get(fact.endDate);
+        if (!current || betterSecFact(derivedFact, current)) {
+          derived.set(fact.endDate, derivedFact);
+          changed = true;
+        }
       });
   }
 
   const quarterRows = new Map();
   [...derived.values()].forEach((fact) => {
-    const quarter = calendarQuarterFromRange(fact.startDate, fact.endDate);
+    // Financial data from the other providers is keyed by the fiscal period's
+    // end date.  Using the midpoint here moves fiscal quarters that straddle a
+    // calendar boundary back one slot, which in turn attaches the next
+    // quarter's filing date to the wrong bar.
+    const quarter = calendarQuarterFromDate(fact.endDate);
     if (!quarter) return;
     const current = quarterRows.get(quarter);
     if (!current || betterSecFact(fact, current)) {
@@ -2536,7 +2543,9 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
     if (!financial || typeof financial !== "object") return;
 
     const reportDate = getCuratedReportDate(financial);
-    if (setReportDate(companyData, period, reportDate)) {
+    // SEC companyfacts supplies the primary, period-specific filing date. The
+    // curated dataset remains a fallback for issuers without an SEC quarter.
+    if (!companyData.reportDates[period] && setReportDate(companyData, period, reportDate)) {
       reportDatePeriods.add(period);
       changedPeriods.add(period);
       changedPoints += 1;

@@ -3811,10 +3811,18 @@ function buildChart() {
             title(context) {
               const separator = getLabelSeparator();
               const reportDateContext = context.find((item) => item.raw?.reportDate);
-              if (reportDateContext?.raw?.reportDate) {
-                return `DATE${separator}${reportDateContext.raw.reportDate}`;
-              }
               const periodEndContext = context.find((item) => item.raw?.periodEndDate);
+              const reportDate = reportDateContext?.raw?.reportDate;
+              const periodEndDate = periodEndContext?.raw?.periodEndDate;
+              if (periodEndDate && reportDate && periodEndDate !== reportDate) {
+                return [
+                  `PERIOD END${separator}${periodEndDate}`,
+                  `FILED${separator}${reportDate}`,
+                ];
+              }
+              if (reportDate) {
+                return `DATE${separator}${reportDate}`;
+              }
               if (periodEndContext?.raw?.periodEndDate) {
                 return `PERIOD END${separator}${periodEndContext.raw.periodEndDate}`;
               }

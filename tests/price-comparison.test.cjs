@@ -292,7 +292,7 @@ test("includes Apple latest reported quarter and fiscal period-end metadata", ()
   assert.equal(apple.revenue["2026Q1"], 111_184_000_000);
   assert.equal(apple.earnings["2026Q1"], 29_578_000_000);
   assert.equal(apple.periodEndDates["2026Q1"], "2026-03-28");
-  assert.equal(apple.reportDates["2026Q1"], "2026-04-30");
+  assert.equal(apple.reportDates["2026Q1"], "2026-05-01");
   assert.ok(Math.abs(apple.revenueGrowth["2026Q1"] - 16.595182415922984) < 1e-12);
 });
 
@@ -315,7 +315,7 @@ test("includes Micron fiscal Q3 2026 results in calendar 2026Q2", () => {
   assert.equal(micron.revenue["2026Q2"], 41_456_000_000);
   assert.equal(micron.earnings["2026Q2"], 28_243_000_000);
   assert.equal(micron.periodEndDates["2026Q2"], "2026-05-28");
-  assert.equal(micron.reportDates["2026Q2"], "2026-06-24");
+  assert.equal(micron.reportDates["2026Q2"], "2026-06-25");
   assert.ok(Math.abs(micron.grossMargin["2026Q2"] - 84.562) < 0.001);
   assert.ok(Math.abs(micron.revenueGrowth["2026Q2"] - 345.71551446081065) < 1e-12);
 });
@@ -326,7 +326,7 @@ test("stores Nvidia fiscal period ends for every available quarter", () => {
   const availablePeriods = data.periods.filter((period) => nvidia.revenue[period] != null);
 
   assert.equal(availablePeriods.filter((period) => !nvidia.periodEndDates[period]).length, 0);
-  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-01-30");
+  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-04-30");
   assert.equal(nvidia.periodEndDates["2025Q4"], "2025-10-26");
   assert.equal(nvidia.periodEndDates["2026Q1"], "2026-01-25");
   assert.equal(nvidia.periodEndDates["2026Q2"], "2026-04-26");
@@ -351,6 +351,49 @@ test("uses Nvidia fiscal metadata while keeping uniform bar spacing", () => {
   assert.deepEqual(result.map((point) => point.x), [0, 1, 2]);
 });
 
+test("keeps Nvidia filing dates attached to their matching fiscal quarters", () => {
+  const data = loadFinancialSourceData();
+  const nvidia = data.companies.nvidia;
+
+  assert.deepEqual(
+    ["2025Q2", "2025Q3", "2025Q4", "2026Q1", "2026Q2"].map((period) => ({
+      periodEndDate: nvidia.periodEndDates[period],
+      reportDate: nvidia.reportDates[period],
+    })),
+    [
+      { periodEndDate: "2025-04-27", reportDate: "2025-05-28" },
+      { periodEndDate: "2025-07-27", reportDate: "2025-08-27" },
+      { periodEndDate: "2025-10-26", reportDate: "2025-11-19" },
+      { periodEndDate: "2026-01-25", reportDate: "2026-02-25" },
+      { periodEndDate: "2026-04-26", reportDate: "2026-05-20" },
+    ],
+  );
+});
+
+test("keeps public-company filing dates inside their own fiscal period window", () => {
+  const data = loadFinancialSourceData();
+  const reconstructedHistoryCompanyIds = new Set(["coreweave", "sharonai"]);
+  const invalid = [];
+
+  Object.entries(data.companies).forEach(([companyId, company]) => {
+    if (reconstructedHistoryCompanyIds.has(companyId)) return;
+    const entries = Object.entries(company.periodEndDates || {})
+      .filter(([period, date]) => period >= "2021Q1" && /^\d{4}-\d{2}-\d{2}$/.test(date))
+      .sort((left, right) => left[1].localeCompare(right[1]));
+
+    entries.forEach(([period, periodEndDate], index) => {
+      const reportDate = company.reportDates?.[period];
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(reportDate || "")) return;
+      const nextPeriodEndDate = entries[index + 1]?.[1];
+      if (reportDate <= periodEndDate || (nextPeriodEndDate && reportDate >= nextPeriodEndDate)) {
+        invalid.push(`${companyId}:${period}:${periodEndDate}:${reportDate}`);
+      }
+    });
+  });
+
+  assert.deepEqual(invalid, []);
+});
+
 test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   const data = loadFinancialSourceData();
   const broadcom = data.companies.avgo;
@@ -368,13 +411,13 @@ test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   const gaps = visiblePoints.slice(1).map((point, index) => point.x - visiblePoints[index].x);
 
   assert.equal(latest.periodLabel, "2026Q2");
-  assert.equal(latest.reportDate, "2026-06-03");
+  assert.equal(latest.reportDate, "2026-06-09");
   assert.equal(latest.periodEndDate, "2026-05-03");
   assert.equal(latest.x, visibleLabels.length - 1);
   assert.equal(byLabel.get("2025Q3").reportDate, "2025-09-10");
   assert.equal(byLabel.get("2025Q4").reportDate, "2025-12-18");
   assert.equal(byLabel.get("2026Q1").reportDate, "2026-03-11");
-  assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-03");
+  assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-09");
   assert.ok(gaps.every((gap) => gap === 1));
 });
 
@@ -496,7 +539,10 @@ test("keeps core fundamentals continuous from listing through the latest reporte
   const data = loadFinancialSourceData();
   const prices = loadStockPriceSourceData();
   const missing = [];
-  const allowedMissing = new Set();
+  // J&J's June 2026 balance-sheet filing has not yet been published in SEC
+  // companyfacts; the income-statement estimate must not be presented as a
+  // fabricated equity value.
+  const allowedMissing = new Set(["jnj:netAssets:2026Q2"]);
 
   for (const [companyId, company] of Object.entries(data.companies)) {
     const priceDates = Object.keys(prices.companies?.[companyId]?.daily || {});
@@ -964,13 +1010,24 @@ test("bar chart tooltips choose nearby anchors without covering the active bar",
   assert.match(script, /position:\s*"barAbove"/);
 });
 
-test("bar tooltip titles prefer financial report dates before stock-price dates", () => {
+test("bar tooltips distinguish fiscal period ends from filing dates", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const titleBody = script.match(/title\(context\) \{([\s\S]*?)\n              const prefix =/)?.[1] ?? "";
 
   assert.match(titleBody, /const reportDateContext =/);
+  assert.match(titleBody, /const periodEndDate =/);
+  assert.match(titleBody, /PERIOD END/);
+  assert.match(titleBody, /FILED/);
   assert.match(titleBody, /const priceContext =/);
-  assert.ok(titleBody.indexOf("const reportDateContext =") < titleBody.indexOf("const priceContext ="));
+  assert.ok(titleBody.indexOf("const periodEndDate =") < titleBody.indexOf("const priceContext ="));
+});
+
+test("keys SEC quarterly facts by their period end, including FY-tagged first quarters", () => {
+  const updater = fs.readFileSync(path.join(__dirname, "../scripts/auto-refresh-data.mjs"), "utf8");
+
+  assert.match(updater, /if \(fact\.daySpan >= 45 && fact\.daySpan <= 120\) return "direct";/);
+  assert.match(updater, /const quarter = calendarQuarterFromDate\(fact\.endDate\);/);
+  assert.match(updater, /betterSecFact\(derivedFact, current\)/);
 });
 
 test("single-company bars pin thickness when price overlay is dense", () => {
