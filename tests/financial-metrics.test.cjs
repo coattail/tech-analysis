@@ -457,8 +457,7 @@ test("wires the compact growth toggles, theme-aware line, and shared right axis 
   assert.match(html, /data-growth-overlay-for="revenue"/);
   assert.match(html, /data-growth-overlay-for="netIncome"/);
   assert.match(script, /growthOverlay:\s*true/);
-  assert.match(growthOverlayBuilder, /spanGaps:\s*true/);
-  assert.match(growthOverlayBuilder, /borderDash\(context\)[\s\S]*p1DataIndex - context\.p0DataIndex > 1/);
+  assert.match(growthOverlayBuilder, /spanGaps:\s*2/);
   assert.match(script, /yAxisID:\s*"yPrice"/);
   assert.match(script, /borderColor:\s*overlayColor/);
   assert.match(script, /--chart-overlay-color/);
