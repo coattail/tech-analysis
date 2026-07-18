@@ -1,7 +1,7 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC companyfacts + CompaniesMarketCap + StockAnalysis",
-    "generatedAt": "2026-07-18T09:46:01.699Z",
+    "generatedAt": "2026-07-18T18:10:01.000Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q2",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
@@ -1034,6 +1034,7 @@ window.FINANCIAL_SOURCE_DATA = {
     },
     "microsoft": {
       "revenue": {
+        "2004Q2": 9292000000,
         "2004Q3": 9189000000,
         "2004Q4": 10818000000,
         "2005Q1": 10339750000,
@@ -1123,6 +1124,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q1": 82886000000
       },
       "earnings": {
+        "2004Q2": 2690000000,
         "2004Q3": 2528000000,
         "2004Q4": 3463000000,
         "2005Q1": 1315000000,
@@ -1485,7 +1487,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2004Q3": null,
         "2004Q4": null,
         "2005Q1": null,
-        "2005Q2": null,
+        "2005Q2": 11.275828669823508,
         "2005Q3": 12.523125476112742,
         "2005Q4": -4.420872619707894,
         "2006Q1": 11.359075412848473,
@@ -1835,6 +1837,9 @@ window.FINANCIAL_SOURCE_DATA = {
     },
     "alphabet": {
       "revenue": {
+        "2004Q2": 700212000,
+        "2004Q3": 805887000,
+        "2004Q4": 1031501000,
         "2005Q1": 1256516000,
         "2005Q2": 1384495000,
         "2005Q3": 1578456000,
@@ -1922,6 +1927,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q1": 109896000000
       },
       "earnings": {
+        "2004Q2": 79063000,
+        "2004Q3": 51983000,
+        "2004Q4": 204100000,
         "2005Q1": 369193000,
         "2005Q2": 342814000,
         "2005Q3": 381182000,
@@ -2279,9 +2287,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2004Q3": null,
         "2004Q4": null,
         "2005Q1": null,
-        "2005Q2": null,
-        "2005Q3": null,
-        "2005Q4": null,
+        "2005Q2": 97.725117535832,
+        "2005Q3": 95.86567347531354,
+        "2005Q4": 86.04858356899314,
         "2006Q1": 79.36540402191457,
         "2006Q2": 77.39255107457954,
         "2006Q3": 70.39898483074599,
@@ -4159,6 +4167,9 @@ window.FINANCIAL_SOURCE_DATA = {
     },
     "nvidia": {
       "revenue": {
+        "2004Q2": 471905000,
+        "2004Q3": 456061000,
+        "2004Q4": 515591000,
         "2005Q1": 583846000,
         "2005Q2": 574812000,
         "2005Q3": 583415000,
@@ -4247,6 +4258,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q2": 81615000000
       },
       "earnings": {
+        "2004Q2": 21349000,
+        "2004Q3": 5119000,
+        "2004Q4": 25879000,
         "2005Q1": 65522000,
         "2005Q2": 73833000,
         "2005Q3": 64447000,
@@ -4609,9 +4623,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2004Q3": null,
         "2004Q4": null,
         "2005Q1": null,
-        "2005Q2": null,
-        "2005Q3": null,
-        "2005Q4": null,
+        "2005Q2": 21.806719572795362,
+        "2005Q3": 27.92477322112612,
+        "2005Q4": 22.89081849760759,
         "2006Q1": 16.778568321098373,
         "2006Q2": 19.60762823323104,
         "2006Q3": 40.64979474302169,
@@ -10368,6 +10382,9 @@ window.FINANCIAL_SOURCE_DATA = {
     },
     "exxon": {
       "revenue": {
+        "2004Q2": 69220000000,
+        "2004Q3": 74854000000,
+        "2004Q4": 81118000000,
         "2005Q1": 79475000000,
         "2005Q2": 86622000000,
         "2005Q3": 96731000000,
@@ -10455,6 +10472,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q1": 83161000000
       },
       "earnings": {
+        "2004Q2": 5790000000,
+        "2004Q3": 5680000000,
+        "2004Q4": 8420000000,
         "2005Q1": 7860000000,
         "2005Q2": 7640000000,
         "2005Q3": 9920000000,
@@ -10896,9 +10916,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2004Q3": null,
         "2004Q4": null,
         "2005Q1": null,
-        "2005Q2": null,
-        "2005Q3": null,
-        "2005Q4": null,
+        "2005Q2": 25.140132909563718,
+        "2005Q3": 29.226227055334377,
+        "2005Q4": 18.50267511526418,
         "2006Q1": 8.608996539792388,
         "2006Q2": 10.854055551707418,
         "2006Q3": -0.47864696943068924,
@@ -15819,7 +15839,9 @@ window.FINANCIAL_SOURCE_DATA = {
     },
     "mastercard": {
       "revenue": {
+        "2004Q2": 647275000,
         "2004Q3": 667841000,
+        "2004Q4": 683904000,
         "2005Q1": 658238000,
         "2005Q2": 771867000,
         "2005Q3": 791605000,
@@ -15907,7 +15929,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q1": 8398000000
       },
       "earnings": {
+        "2004Q2": 65707000,
         "2004Q3": 97515000,
+        "2004Q4": 1270000,
         "2005Q1": 93294000,
         "2005Q2": 120248000,
         "2005Q3": 106085000,
@@ -16162,6 +16186,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2026Q1": 6722000000
       },
       "roe": {
+        "2004Q4": 0.1296484587146223,
         "2005Q4": -4.507534708732901,
         "2006Q1": 9.657958725226258,
         "2006Q2": -14.633116298537066,
@@ -16285,9 +16310,9 @@ window.FINANCIAL_SOURCE_DATA = {
         "2004Q3": null,
         "2004Q4": null,
         "2005Q1": null,
-        "2005Q2": null,
+        "2005Q2": 19.248696458228732,
         "2005Q3": 18.531955959577203,
-        "2005Q4": null,
+        "2005Q4": 4.681066348493356,
         "2006Q1": 12.186321664808169,
         "2006Q2": 9.667727730295503,
         "2006Q3": 13.941801782454633,

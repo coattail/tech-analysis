@@ -122,6 +122,112 @@ test("uses Broadcom's official 2009 Q4 profit and removes the false growth spike
   assert.match(updater, /avgo:\s*\{[\s\S]*"2009Q4": \{[\s\S]*earnings: 72_000_000/);
 });
 
+test("fills Mastercard's audited 2004 data so 2005 Q2/Q4 revenue growth is real", () => {
+  const sourceData = loadFinancialSourceData();
+  const mastercard = sourceData.companies.mastercard;
+  const revenue = new Map(sourceData.periods.map((period) => [period, mastercard.revenue[period] ?? null]));
+  const revenueGrowth = computeYearOverYearGrowth(sourceData.periods, revenue, 4);
+  const backfill = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "..", "data", "historical-sec-backfill.json"), "utf8"),
+  );
+  const officialQ2 = backfill.companies.mastercard.rows.find((row) => row.period === "2004Q2");
+  const officialQ4 = backfill.companies.mastercard.rows.find((row) => row.period === "2004Q4");
+  const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
+
+  assert.deepEqual(officialQ2, {
+    period: "2004Q2",
+    dateKey: "2004-06-30",
+    revenue: 647_275_000,
+    grossProfit: null,
+    netIncome: 65_707_000,
+    grossMarginPct: null,
+  });
+  assert.deepEqual(officialQ4, {
+    period: "2004Q4",
+    dateKey: "2004-12-31",
+    revenue: 683_904_000,
+    grossProfit: null,
+    netIncome: 1_270_000,
+    grossMarginPct: null,
+  });
+  assert.equal(mastercard.revenue["2004Q2"], 647_275_000);
+  assert.equal(mastercard.earnings["2004Q2"], 65_707_000);
+  assert.equal(mastercard.revenue["2004Q4"], 683_904_000);
+  assert.equal(mastercard.earnings["2004Q4"], 1_270_000);
+  assert.ok(Math.abs(revenueGrowth.get("2005Q2") - 19.248696458228732) < 1e-12);
+  assert.ok(Math.abs(revenueGrowth.get("2005Q4") - 4.681066348493356) < 1e-12);
+  assert.match(updater, /mastercard:\s*new Set\(\["2004Q2", "2004Q4"\]\)/);
+});
+
+test("fills every remaining 2004 comparison period behind the early 2005 YoY gaps", () => {
+  const sourceData = loadFinancialSourceData();
+  const backfill = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "..", "data", "historical-sec-backfill.json"), "utf8"),
+  );
+  const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
+  const expected = {
+    microsoft: {
+      quarters: { "2004Q2": [9_292_000_000, 2_690_000_000] },
+      growth: { "2005Q2": 11.275828669823508 },
+    },
+    alphabet: {
+      quarters: {
+        "2004Q2": [700_212_000, 79_063_000],
+        "2004Q3": [805_887_000, 51_983_000],
+        "2004Q4": [1_031_501_000, 204_100_000],
+      },
+      growth: {
+        "2005Q2": 97.725117535832,
+        "2005Q3": 95.86567347531354,
+        "2005Q4": 86.04858356899314,
+      },
+    },
+    nvidia: {
+      quarters: {
+        "2004Q2": [471_905_000, 21_349_000],
+        "2004Q3": [456_061_000, 5_119_000],
+        "2004Q4": [515_591_000, 25_879_000],
+      },
+      growth: {
+        "2005Q2": 21.806719572795362,
+        "2005Q3": 27.92477322112612,
+        "2005Q4": 22.89081849760759,
+      },
+    },
+    exxon: {
+      quarters: {
+        "2004Q2": [69_220_000_000, 5_790_000_000],
+        "2004Q3": [74_854_000_000, 5_680_000_000],
+        "2004Q4": [81_118_000_000, 8_420_000_000],
+      },
+      growth: {
+        "2005Q2": 25.140132909563718,
+        "2005Q3": 29.226227055334377,
+        "2005Q4": 18.50267511526418,
+      },
+    },
+  };
+
+  Object.entries(expected).forEach(([companyId, { quarters, growth: expectedGrowth }]) => {
+    const company = sourceData.companies[companyId];
+    const revenue = new Map(sourceData.periods.map((period) => [period, company.revenue[period] ?? null]));
+    const growth = computeYearOverYearGrowth(sourceData.periods, revenue, 4);
+
+    Object.entries(quarters).forEach(([period, [expectedRevenue, expectedNetIncome]]) => {
+      const officialRow = backfill.companies[companyId].rows.find((row) => row.period === period);
+      assert.equal(officialRow.revenue, expectedRevenue, `${companyId}:${period}:backfill revenue`);
+      assert.equal(officialRow.netIncome, expectedNetIncome, `${companyId}:${period}:backfill net income`);
+      assert.equal(company.revenue[period], expectedRevenue, `${companyId}:${period}:data revenue`);
+      assert.equal(company.earnings[period], expectedNetIncome, `${companyId}:${period}:data net income`);
+    });
+    Object.entries(expectedGrowth).forEach(([period, value]) => {
+      assert.ok(Math.abs(growth.get(period) - value) < 1e-12, `${companyId}:${period}:computed growth`);
+      assert.ok(Math.abs(company.revenueGrowth[period] - value) < 1e-12, `${companyId}:${period}:stored growth`);
+    });
+    assert.match(updater, new RegExp(`${companyId}:\\s*new Set\\(`));
+  });
+});
+
 test("keeps every computed quarterly growth point within the comparable range", () => {
   const sourceData = loadFinancialSourceData();
 
@@ -344,10 +450,14 @@ test("wires the compact growth toggles, theme-aware line, and shared right axis 
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const script = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
   const style = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
+  const growthOverlayBuilder = script.match(
+    /function buildGrowthOverlayDataset\([\s\S]*?\n}\n\nfunction buildFinancialDatasetValuesForVisibleLabels/,
+  )?.[0] ?? "";
 
   assert.match(html, /data-growth-overlay-for="revenue"/);
   assert.match(html, /data-growth-overlay-for="netIncome"/);
   assert.match(script, /growthOverlay:\s*true/);
+  assert.match(growthOverlayBuilder, /spanGaps:\s*2/);
   assert.match(script, /yAxisID:\s*"yPrice"/);
   assert.match(script, /borderColor:\s*overlayColor/);
   assert.match(script, /--chart-overlay-color/);

@@ -984,6 +984,30 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 69220000000,
+          "grossProfit": 28202000000,
+          "netIncome": 5790000000,
+          "grossMarginPct": 40.74255995377059
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 74854000000,
+          "grossProfit": 29655000000,
+          "netIncome": 5680000000,
+          "grossMarginPct": 39.617121329521474
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 81118000000,
+          "grossProfit": 33560000000,
+          "netIncome": 8420000000,
+          "grossMarginPct": 41.37182869400134
+        },
+        {
           "period": "2005Q1",
           "dateKey": "2005-03-31",
           "revenue": 7238000000,
@@ -2297,11 +2321,27 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 647275000,
+          "grossProfit": null,
+          "netIncome": 65707000,
+          "grossMarginPct": null
+        },
+        {
           "period": "2004Q3",
           "dateKey": "2004-09-30",
           "revenue": 667841000,
           "grossProfit": null,
           "netIncome": 97515000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 683904000,
+          "grossProfit": null,
+          "netIncome": 1270000,
           "grossMarginPct": null
         },
         {
@@ -3443,25 +3483,25 @@
         {
           "period": "2004Q2",
           "dateKey": "2004-06-30",
-          "revenue": 471905000000,
-          "grossProfit": 148836000000,
-          "netIncome": 21349000000,
+          "revenue": 471905000,
+          "grossProfit": 148836000,
+          "netIncome": 21349000,
           "grossMarginPct": 31.53939881967769
         },
         {
           "period": "2004Q3",
           "dateKey": "2004-09-30",
-          "revenue": 456061,
-          "grossProfit": 140093,
-          "netIncome": 5119,
+          "revenue": 456061000,
+          "grossProfit": 140093000,
+          "netIncome": 5119000,
           "grossMarginPct": 30.71803991132765
         },
         {
           "period": "2004Q4",
           "dateKey": "2004-12-31",
-          "revenue": 515591,
-          "grossProfit": 166742,
-          "netIncome": 25879,
+          "revenue": 515591000,
+          "grossProfit": 166742000,
+          "netIncome": 25879000,
           "grossMarginPct": 32.339974902587514
         }
       ]
@@ -3499,6 +3539,14 @@
       "reportingCurrency": "USD",
       "rows": [
         {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 9292000000,
+          "grossProfit": 7811000000,
+          "netIncome": 2690000000,
+          "grossMarginPct": 84.06155832974602
+        },
+        {
           "period": "2004Q3",
           "dateKey": "2004-09-30",
           "revenue": 9189000000,
@@ -3513,6 +3561,35 @@
           "grossProfit": 8896000000,
           "netIncome": 3463000000,
           "grossMarginPct": 82.23331484562766
+        }
+      ]
+    },
+    "alphabet": {
+      "reportingCurrency": "USD",
+      "rows": [
+        {
+          "period": "2004Q2",
+          "dateKey": "2004-06-30",
+          "revenue": 700212000,
+          "grossProfit": null,
+          "netIncome": 79063000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q3",
+          "dateKey": "2004-09-30",
+          "revenue": 805887000,
+          "grossProfit": null,
+          "netIncome": 51983000,
+          "grossMarginPct": null
+        },
+        {
+          "period": "2004Q4",
+          "dateKey": "2004-12-31",
+          "revenue": 1031501000,
+          "grossProfit": null,
+          "netIncome": 204100000,
+          "grossMarginPct": null
         }
       ]
     },

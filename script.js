@@ -2540,7 +2540,12 @@ function buildGrowthOverlayDataset(visibleLabels) {
     pointRadius: 1.6,
     pointHoverRadius: 4,
     pointHitRadius: 9,
-    spanGaps: false,
+    // A single unavailable comparison period should not split an otherwise
+    // continuous growth trend. Longer missing ranges still remain visibly
+    // disconnected so they are not presented as observed growth values.
+    // Category-scale points on opposite sides of one missing quarter are two
+    // scale units apart, so allow a maximum gap length of two.
+    spanGaps: 2,
     tension: 0.18,
     hidden: false,
   };

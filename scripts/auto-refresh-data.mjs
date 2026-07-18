@@ -556,6 +556,15 @@ const COMPANY_OFFICIAL_HISTORICAL_BACKFILL_PERIODS = {
     "2019Q1", "2019Q2", "2019Q3", "2019Q4",
     "2020Q1", "2020Q2", "2020Q3", "2020Q4",
   ]),
+  // Mastercard's 2004 Form 10-K has the only audited quarterly summary for
+  // the pre-IPO 2004Q2/Q4 periods, which are needed for 2005 year-over-year growth.
+  mastercard: new Set(["2004Q2", "2004Q4"]),
+  // Quarterly summaries in the issuers' SEC annual filings provide the missing
+  // prior-year observations required to calculate the first displayed 2005 YoY points.
+  microsoft: new Set(["2004Q2"]),
+  alphabet: new Set(["2004Q2", "2004Q3", "2004Q4"]),
+  nvidia: new Set(["2004Q2", "2004Q3", "2004Q4"]),
+  exxon: new Set(["2004Q2", "2004Q3", "2004Q4"]),
 };
 const fxSeriesCache = new Map();
 let secTickerMapCache = null;
