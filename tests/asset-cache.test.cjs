@@ -60,7 +60,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-growth-sanity"],
-    ["script.js", "20260719-growth-gap"],
+    ["script.js", "20260719-growth-connectors"],
   ]) {
     assert.match(
       html,
