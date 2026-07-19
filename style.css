@@ -2046,6 +2046,17 @@ body:not([data-theme="deep"]) .range-panel {
     grid-column: auto;
   }
 
+  .frequency-switch .segment-item span,
+  .chart-actions button {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .frequency-switch .segment-item span {
+    line-height: 1.2;
+    text-align: center;
+  }
+
   .toggle-list {
     grid-template-columns: 1fr;
     flex: 0 0 auto;
@@ -2152,6 +2163,14 @@ body:not([data-theme="deep"]) .range-panel {
 
   .metric-toolbar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .frequency-switch {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .frequency-switch .segment-item:last-child {
+    grid-column: 1 / -1;
   }
 
   .chart-wrap {
@@ -2526,5 +2545,32 @@ html[data-theme="light"] {
 
   .chart-actions #downloadBtn {
     grid-column: 1 / -1;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button,
+  .frequency-switch .segment-item span,
+  .toggle-item,
+  .chart-mode-pill span,
+  .price-comparison-toggle span,
+  .metric-pill span {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .range-sliders input[type="range"] {
+    touch-action: pan-y;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

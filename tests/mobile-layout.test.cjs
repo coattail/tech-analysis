@@ -9,6 +9,7 @@ const landscapeTabletCss = css.match(/@media \(min-width: 981px\) and \(max-widt
 const portraitTabletCss = css.match(/@media \(min-width: 701px\) and \(max-width: 980px\) \{([\s\S]*?)\n\}\n\n@media \(max-width: 980px\)/)?.[1] ?? "";
 const stackedCss = css.match(/@media \(max-width: 980px\) \{([\s\S]*?)\n\}\n\n@media \(max-width: 700px\)/)?.[1] ?? "";
 const mobileCss = css.match(/@media \(max-width: 700px\) \{([\s\S]*?)\n\}\n\n@media \(max-width: 380px\)/)?.[1] ?? "";
+const narrowMobileCss = css.match(/@media \(max-width: 380px\) \{([\s\S]*?)\n\}\n\n@media \(hover: none\)/)?.[1] ?? "";
 
 test("uses safe-area aware mobile viewport and page spacing", () => {
   assert.match(html, /viewport-fit=cover/);
@@ -48,4 +49,15 @@ test("uses touch-friendly controls and a shorter mobile company list", () => {
   assert.match(stackedCss, /\.frequency-switch \.segment-item span,[\s\S]*?\.company-search input\s*\{[^}]*min-height:\s*44px/);
   assert.match(mobileCss, /\.frequency-switch\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(mobileCss, /\.toggle-list\s*\{[^}]*max-height:\s*min\(38svh, 380px\)/);
+});
+
+test("keeps English mobile controls readable on narrow screens", () => {
+  assert.match(mobileCss, /\.frequency-switch \.segment-item span,[\s\S]*?\.chart-actions button\s*\{[^}]*overflow-wrap:\s*anywhere[^}]*white-space:\s*normal/);
+  assert.match(narrowMobileCss, /\.frequency-switch\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(narrowMobileCss, /\.frequency-switch \.segment-item:last-child\s*\{[^}]*grid-column:\s*1 \/ -1/);
+});
+
+test("uses touch-safe chart controls and honors reduced-motion preferences", () => {
+  assert.match(css, /@media \(hover: none\) and \(pointer: coarse\) \{[\s\S]*?\.range-sliders input\[type="range"\]\s*\{[^}]*touch-action:\s*pan-y/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*?transition-duration:\s*0\.01ms !important/);
 });

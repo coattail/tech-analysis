@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after adding theme switching", () => {
+test("cache-busts the stylesheet after responsive touch improvements", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260717-theme-toggle/);
+  assert.match(html, /style\.css\?v=20260719-responsive-touch/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
