@@ -5,18 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title data-i18n="pageTitle">美股科技与头部市值公司财务数据可视化</title>
     <meta name="color-scheme" content="dark light" />
-    <script>
-      (() => {
-        try {
-          const savedTheme = localStorage.getItem("tech-analysis-theme");
-          if (savedTheme === "light" || savedTheme === "deep") {
-            document.documentElement.dataset.theme = savedTheme;
-          }
-        } catch {
-          // Keep the dark default when storage is unavailable.
-        }
-      })();
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -31,7 +19,7 @@
     <script defer src="company-selection.js?v=20260629-contiguous-range"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
     <script defer src="financial-metrics.js?v=20260717-growth-sanity"></script>
-    <script defer src="script.js?v=20260719-growth-gap"></script>
+    <script defer src="script.js?v=20260720-dark-default"></script>
   </head>
   <body data-theme="deep">
     <main class="layout">

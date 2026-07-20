@@ -1229,14 +1229,6 @@ function getActiveTheme() {
     : "deep";
 }
 
-function persistTheme(theme) {
-  try {
-    localStorage.setItem("tech-analysis-theme", theme);
-  } catch {
-    // The theme still changes for the current session if storage is unavailable.
-  }
-}
-
 function syncThemeToggle() {
   if (!themeToggleEl) return;
   const isLight = getActiveTheme() === "light";
@@ -1249,12 +1241,11 @@ function syncThemeToggle() {
   }
 }
 
-function setTheme(nextTheme, { persist = true, refresh = true } = {}) {
+function setTheme(nextTheme, { refresh = true } = {}) {
   const theme = nextTheme === "light" ? "light" : "deep";
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark";
   document.body.dataset.theme = theme;
-  if (persist) persistTheme(theme);
   syncThemeToggle();
 
   if (!refresh) return;
@@ -1263,7 +1254,7 @@ function setTheme(nextTheme, { persist = true, refresh = true } = {}) {
 }
 
 function initTheme() {
-  setTheme(document.documentElement.dataset.theme, { persist: false, refresh: false });
+  setTheme("deep", { refresh: false });
 }
 
 const lightSeriesColorCache = new Map();

@@ -7,11 +7,14 @@ const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 const script = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
 const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
 
-test("provides an accessible persistent theme switch", () => {
+test("starts every visit in dark mode and provides an accessible theme switch", () => {
   assert.match(html, /id="themeToggle"/);
   assert.match(html, /aria-pressed="false"/);
-  assert.match(html, /localStorage\.getItem\("tech-analysis-theme"\)/);
-  assert.match(script, /localStorage\.setItem\("tech-analysis-theme", theme\)/);
+  assert.match(html, /<html lang="zh-CN" data-theme="deep">/);
+  assert.match(html, /<body data-theme="deep">/);
+  assert.match(script, /function initTheme\(\)\s*\{\s*setTheme\("deep", \{ refresh: false \}\);\s*\}/);
+  assert.doesNotMatch(html, /localStorage\.getItem\("tech-analysis-theme"\)/);
+  assert.doesNotMatch(script, /localStorage\.setItem\("tech-analysis-theme"/);
   assert.match(script, /setTheme\(getActiveTheme\(\) === "light" \? "deep" : "light"\)/);
   assert.match(script, /themeToggleEl\.setAttribute\("aria-label", nextThemeLabel\)/);
   assert.match(css, /\.chart-actions #downloadBtn\s*\{[^}]*grid-column:\s*1 \/ -1/);
