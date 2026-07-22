@@ -231,6 +231,26 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2013Q4": { revenue: 15_707_000_000, earnings: 3_376_000_000 },
     "2014Q1": { revenue: 15_420_000_000, earnings: 3_452_000_000 },
     "2014Q2": { revenue: 15_955_000_000, earnings: 3_422_000_000 },
+    // Alphabet Q2 2026 EX-99.1 earnings release, filed 2026-07-22.
+    "2026Q2": {
+      revenue: 119_796_000_000,
+      earnings: 112_193_000_000,
+      grossMargin: (73_853 / 119_796) * 100,
+      netAssets: 640_480_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-07-22",
+    },
+  },
+  tsla: {
+    // Tesla Q2 2026 shareholder update, released 2026-07-22.
+    "2026Q2": {
+      revenue: 28_236_000_000,
+      earnings: 1_114_000_000,
+      grossMargin: (4_751 / 28_236) * 100,
+      netAssets: 87_465_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-07-22",
+    },
   },
   chronoscale: {
     // Applied Digital Cloud (ChronoScale predecessor) quarterly results.

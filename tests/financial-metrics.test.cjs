@@ -106,6 +106,30 @@ test("uses reported Google quarters instead of annual totals divided by four", (
   assert.match(dashboard, /const quarterGrowth = computeQuarterlyGrowth\(quarterRevenue\)/);
 });
 
+test("includes Alphabet and Tesla Q2 2026 official results", () => {
+  const sourceData = loadFinancialSourceData();
+  const alphabet = sourceData.companies.alphabet;
+  const tesla = sourceData.companies.tsla;
+  const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
+
+  assert.equal(alphabet.revenue["2026Q2"], 119_796_000_000);
+  assert.equal(alphabet.earnings["2026Q2"], 112_193_000_000);
+  assert.equal(alphabet.netAssets["2026Q2"], 640_480_000_000);
+  assert.equal(alphabet.periodEndDates["2026Q2"], "2026-06-30");
+  assert.equal(alphabet.reportDates["2026Q2"], "2026-07-22");
+  assert.ok(Math.abs(alphabet.grossMargin["2026Q2"] - (73_853 / 119_796) * 100) < 1e-12);
+
+  assert.equal(tesla.revenue["2026Q2"], 28_236_000_000);
+  assert.equal(tesla.earnings["2026Q2"], 1_114_000_000);
+  assert.equal(tesla.netAssets["2026Q2"], 87_465_000_000);
+  assert.equal(tesla.periodEndDates["2026Q2"], "2026-06-30");
+  assert.equal(tesla.reportDates["2026Q2"], "2026-07-22");
+  assert.ok(Math.abs(tesla.grossMargin["2026Q2"] - (4_751 / 28_236) * 100) < 1e-12);
+
+  assert.match(updater, /alphabet:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 119_796_000_000/);
+  assert.match(updater, /tsla:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 28_236_000_000/);
+});
+
 test("uses Broadcom's official 2009 Q4 profit and removes the false growth spike", () => {
   const sourceData = loadFinancialSourceData();
   const broadcom = sourceData.companies.avgo;
