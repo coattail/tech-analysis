@@ -425,6 +425,15 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     // ServiceNow FY2012 Form 10-K quarterly results table (USD thousands).
     "2011Q1": { revenue: 25_212_000, earnings: 2_991_000, grossMargin: (15_998 / 25_212) * 100 },
     "2011Q4": { revenue: 39_178_000, earnings: -6_805_000, grossMargin: (23_187 / 39_178) * 100 },
+    // ServiceNow Q2 2026 earnings release, released 2026-07-22.
+    "2026Q2": {
+      revenue: 3_987_000_000,
+      earnings: 298_000_000,
+      grossMargin: (2_818 / 3_987) * 100,
+      netAssets: 12_516_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-07-22",
+    },
   },
   salesforce: {
     // Salesforce FY2005-FY2008 Forms 10-K, selected quarterly data (USD thousands).

@@ -106,10 +106,11 @@ test("uses reported Google quarters instead of annual totals divided by four", (
   assert.match(dashboard, /const quarterGrowth = computeQuarterlyGrowth\(quarterRevenue\)/);
 });
 
-test("includes Alphabet and Tesla Q2 2026 official results", () => {
+test("includes Alphabet, Tesla, and ServiceNow Q2 2026 official results", () => {
   const sourceData = loadFinancialSourceData();
   const alphabet = sourceData.companies.alphabet;
   const tesla = sourceData.companies.tsla;
+  const servicenow = sourceData.companies.servicenow;
   const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
 
   assert.equal(alphabet.revenue["2026Q2"], 119_796_000_000);
@@ -126,8 +127,16 @@ test("includes Alphabet and Tesla Q2 2026 official results", () => {
   assert.equal(tesla.reportDates["2026Q2"], "2026-07-22");
   assert.ok(Math.abs(tesla.grossMargin["2026Q2"] - (4_751 / 28_236) * 100) < 1e-12);
 
+  assert.equal(servicenow.revenue["2026Q2"], 3_987_000_000);
+  assert.equal(servicenow.earnings["2026Q2"], 298_000_000);
+  assert.equal(servicenow.netAssets["2026Q2"], 12_516_000_000);
+  assert.equal(servicenow.periodEndDates["2026Q2"], "2026-06-30");
+  assert.equal(servicenow.reportDates["2026Q2"], "2026-07-22");
+  assert.ok(Math.abs(servicenow.grossMargin["2026Q2"] - (2_818 / 3_987) * 100) < 1e-12);
+
   assert.match(updater, /alphabet:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 119_796_000_000/);
   assert.match(updater, /tsla:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 28_236_000_000/);
+  assert.match(updater, /servicenow:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 3_987_000_000/);
 });
 
 test("uses Broadcom's official 2009 Q4 profit and removes the false growth spike", () => {
