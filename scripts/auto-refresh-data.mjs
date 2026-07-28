@@ -252,6 +252,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       reportDate: "2026-07-22",
     },
   },
+  visa: {
+    // Visa FY2026 Q3 earnings release, furnished on Form 8-K on 2026-07-28.
+    "2026Q2": {
+      revenue: 11_633_000_000,
+      earnings: 5_628_000_000,
+      grossMargin: (11_353 / 11_633) * 100,
+      netAssets: 35_178_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-07-28",
+    },
+  },
   chronoscale: {
     // Applied Digital Cloud (ChronoScale predecessor) quarterly results.
     // Sources: APLD FY2025 10-K, FY2025/FY2026 10-Q segment and discontinued-operation tables,
@@ -2814,6 +2825,7 @@ async function run() {
     let balanceRows = [];
     let secHistoryRows = [];
     let historicalBackfillRows = [];
+    let officialOnly = false;
 
     if (shouldRefreshHistoricalSeries) {
       try {
@@ -2869,8 +2881,14 @@ async function run() {
       financialCurrency = result.financialCurrency;
     } catch (error) {
       console.warn(`  抓取失败：${error.message}`);
-      if (index < selectedCompanies.length - 1) await sleep(500);
-      continue;
+      if (!COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companySource.id]) {
+        if (index < selectedCompanies.length - 1) await sleep(500);
+        continue;
+      }
+      rows = [];
+      financialCurrency = "USD";
+      officialOnly = true;
+      console.log("  将仅应用已配置的官方季度修正");
     }
 
     try {
@@ -2942,7 +2960,7 @@ async function run() {
       }
     }
 
-    if (!rows || rows.length === 0) {
+    if ((!rows || rows.length === 0) && !COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companySource.id]) {
       console.warn("  未拿到季度数据，跳过");
       if (index < selectedCompanies.length - 1) await sleep(500);
       continue;
@@ -3161,7 +3179,7 @@ async function run() {
     });
 
     const curatedCompany = curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
-    if (curatedCompany) {
+    if (curatedCompany && !officialOnly) {
       const curatedResult = applyCuratedQuarterlyOverrides(companyData, curatedCompany);
 
       curatedResult.changedPeriods.forEach((period) => {

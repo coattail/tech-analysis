@@ -106,10 +106,11 @@ test("uses reported Google quarters instead of annual totals divided by four", (
   assert.match(dashboard, /const quarterGrowth = computeQuarterlyGrowth\(quarterRevenue\)/);
 });
 
-test("includes Alphabet, Tesla, and ServiceNow Q2 2026 official results", () => {
+test("includes Alphabet, Tesla, Visa, and ServiceNow Q2 2026 official results", () => {
   const sourceData = loadFinancialSourceData();
   const alphabet = sourceData.companies.alphabet;
   const tesla = sourceData.companies.tsla;
+  const visa = sourceData.companies.visa;
   const servicenow = sourceData.companies.servicenow;
   const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
 
@@ -127,6 +128,13 @@ test("includes Alphabet, Tesla, and ServiceNow Q2 2026 official results", () => 
   assert.equal(tesla.reportDates["2026Q2"], "2026-07-22");
   assert.ok(Math.abs(tesla.grossMargin["2026Q2"] - (4_751 / 28_236) * 100) < 1e-12);
 
+  assert.equal(visa.revenue["2026Q2"], 11_633_000_000);
+  assert.equal(visa.earnings["2026Q2"], 5_628_000_000);
+  assert.equal(visa.netAssets["2026Q2"], 35_178_000_000);
+  assert.equal(visa.periodEndDates["2026Q2"], "2026-06-30");
+  assert.equal(visa.reportDates["2026Q2"], "2026-07-28");
+  assert.ok(Math.abs(visa.grossMargin["2026Q2"] - (11_353 / 11_633) * 100) < 1e-12);
+
   assert.equal(servicenow.revenue["2026Q2"], 3_987_000_000);
   assert.equal(servicenow.earnings["2026Q2"], 298_000_000);
   assert.equal(servicenow.netAssets["2026Q2"], 12_516_000_000);
@@ -136,6 +144,7 @@ test("includes Alphabet, Tesla, and ServiceNow Q2 2026 official results", () => 
 
   assert.match(updater, /alphabet:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 119_796_000_000/);
   assert.match(updater, /tsla:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 28_236_000_000/);
+  assert.match(updater, /visa:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 11_633_000_000/);
   assert.match(updater, /servicenow:\s*\{[\s\S]*"2026Q2": \{[\s\S]*revenue: 3_987_000_000/);
 });
 
