@@ -244,7 +244,7 @@ const FREQUENCY_META = {
 const COMPANIES = [
   { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoColor: "#76b900", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
   { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoColor: "#4285f4", preserveLightLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
-  { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
+  { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", deepColor: "#7b8490", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
   { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoColor: "#737373", preserveLightLogoColors: true, logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
   { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
   { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoColor: "#cc092f", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
@@ -1335,7 +1335,7 @@ function tuneSeriesColorForLightTheme(hexColor) {
 function getSeriesColor(company) {
   return getActiveTheme() === "light"
     ? tuneSeriesColorForLightTheme(company.color)
-    : company.color;
+    : company.deepColor || company.color;
 }
 
 function isFiniteNumber(value) {
