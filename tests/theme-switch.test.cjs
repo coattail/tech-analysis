@@ -39,6 +39,9 @@ test("adapts chart series and overlays for a light background", () => {
   assert.match(script, /tuneSeriesColorForLightTheme/);
   assert.match(script, /getRelativeLuminance/);
   assert.match(script, /getSeriesColor\(company\)/);
+  assert.match(script, /id: "apple"[^\n]*color: "#4b5563"/);
+  assert.match(script, /borderColor: seriesColor/);
+  assert.match(script, /backgroundColor: seriesColor/);
   assert.match(script, /overlayColor:\s*css\.getPropertyValue\("--chart-overlay-color"\)/);
   assert.match(script, /watermarkColor:\s*css\.getPropertyValue\("--chart-watermark-color"\)/);
   assert.match(script, /getPropertyValue\("--chart-export-bg"\)/);

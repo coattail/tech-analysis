@@ -95,7 +95,7 @@ const COMPANIES_MARKET_CAP_SLUGS = {
   homedepot: "home-depot",
 };
 
-const FORECAST_KEYS = ["revenue", "netIncome", "grossMargin", "pe", "roe", "revenueGrowth"];
+const FORECAST_KEYS = ["revenue", "netIncome", "operatingIncome", "grossMargin", "pe", "roe", "revenueGrowth"];
 const SEC_ALLOWED_FORMS = new Set(["10-Q", "10-K", "20-F", "6-K"]);
 const SEC_FIELD_CONCEPTS = {
   revenue: [
@@ -134,6 +134,10 @@ const SEC_FIELD_CONCEPTS = {
     "ProfitLoss",
     "ProfitLossAttributableToOwnersOfParent",
     "NetIncomeLossAvailableToCommonStockholdersBasic",
+  ],
+  operatingIncome: [
+    "OperatingIncomeLoss",
+    "ProfitLossFromOperatingActivities",
   ],
   netAssets: [
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
@@ -634,12 +638,18 @@ function parseArgs(argv) {
   const options = {
     dryRun: false,
     companyIds: null,
+    operatingIncomeOnly: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
     if (token === "--dry-run") {
       options.dryRun = true;
+      continue;
+    }
+
+    if (token === "--operating-income-only") {
+      options.operatingIncomeOnly = true;
       continue;
     }
 
@@ -676,7 +686,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`用法：\n  node scripts/auto-refresh-data.mjs [--dry-run] [--company nvidia,apple]\n\n参数：\n  --dry-run      仅输出更新结果，不写入 data.js\n  --company      仅更新指定公司（可逗号分隔多个，支持 id/ticker/slug）\n  --help, -h     显示帮助`);
+  console.log(`用法：\n  node scripts/auto-refresh-data.mjs [--dry-run] [--operating-income-only] [--company nvidia,apple]\n\n参数：\n  --dry-run               仅输出更新结果，不写入 data.js\n  --operating-income-only 仅补齐营业利润，保持其他财务指标不变\n  --company               仅更新指定公司（可逗号分隔多个，支持 id/ticker/slug）\n  --help, -h              显示帮助`);
 }
 
 function parseDataJs(rawText) {
@@ -1161,10 +1171,16 @@ function getQuarterWindowFromDate(dateKey) {
 
 function extractFinancialBlock(html) {
   const match = html.match(/financialData:\{([\s\S]*?)\},map:\[/);
-  if (!match) {
-    throw new Error("页面结构变化：未找到 financialData 数据块");
+  if (match) return match[1];
+
+  const operatingIncomeIndex = html.indexOf("opinc:[");
+  const dataStartIndex = html.lastIndexOf("data:{", operatingIncomeIndex);
+  const dataEndIndex = html.indexOf("}", operatingIncomeIndex);
+  if (operatingIncomeIndex >= 0 && dataStartIndex >= 0 && dataEndIndex > operatingIncomeIndex) {
+    return html.slice(dataStartIndex + "data:{".length, dataEndIndex);
   }
-  return match[1];
+
+  throw new Error("页面结构变化：未找到季度财务数据块");
 }
 
 function extractArrayRaw(block, key) {
@@ -1228,7 +1244,12 @@ function extractFinancialSeries(html) {
   const dateKeys = parseStringArray(extractArrayRaw(block, "datekey"));
   const fiscalQuarter = parseStringArray(extractArrayRaw(block, "fiscalQuarter"));
   const revenue = parseNumberArray(extractArrayRaw(block, "revenue"));
-  const netIncome = parseNumberArray(extractArrayRawWithFallback(block, ["netIncome", "netinc"]));
+  const netIncome = parseNumberArray(
+    extractArrayRawWithFallback(block, ["netIncome", "netinc", "netinccmn"]),
+  );
+  const operatingIncome = parseNumberArray(
+    extractOptionalArrayRawWithFallback(block, ["operatingIncome", "opinc"]) || "",
+  );
   const grossMarginRatio = parseNumberArray(extractOptionalArrayRaw(block, "grossMargin") || "");
 
   const maxLength = Math.min(dateKeys.length, fiscalQuarter.length, revenue.length, netIncome.length);
@@ -1245,6 +1266,7 @@ function extractFinancialSeries(html) {
       fiscalQuarter: fiscalQuarter[index],
       revenue: revenue[index],
       netIncome: netIncome[index],
+      operatingIncome: operatingIncome[index] ?? null,
       grossMarginPct: Number.isFinite(grossMarginRatio[index]) ? grossMarginRatio[index] * 100 : null,
     });
   }
@@ -1351,7 +1373,8 @@ function selectSecReportingCurrency(companyfacts) {
   if (!factsPayload || typeof factsPayload !== "object") return null;
 
   const scoreByUnit = new Map();
-  ["revenue", "netIncome", "netAssets", "grossProfit"].forEach((fieldKey, fieldIndex) => {
+  const currencyFields = ["revenue", "netIncome", "operatingIncome", "netAssets", "grossProfit"];
+  currencyFields.forEach((fieldKey, fieldIndex) => {
     const concepts = SEC_FIELD_CONCEPTS[fieldKey] || [];
     const fieldWeight = concepts.length + 2;
 
@@ -1374,7 +1397,10 @@ function selectSecReportingCurrency(companyfacts) {
 
           if (!validCount) return;
           const previousScore = scoreByUnit.get(unit) || 0;
-          scoreByUnit.set(unit, previousScore + validCount * conceptWeight * (4 - fieldIndex));
+          scoreByUnit.set(
+            unit,
+            previousScore + validCount * conceptWeight * (currencyFields.length - fieldIndex),
+          );
         });
       });
     });
@@ -1486,16 +1512,19 @@ async function fetchSecQuarterlyHistory(companySource) {
       const grossProfitFact = fieldSeries.grossProfit?.get(period) || null;
       const costOfRevenueFact = fieldSeries.costOfRevenue?.get(period) || null;
       const netIncomeFact = fieldSeries.netIncome?.get(period) || null;
+      const operatingIncomeFact = fieldSeries.operatingIncome?.get(period) || null;
       const netAssetsFact = fieldSeries.netAssets?.get(period) || null;
       const endDate =
         revenueFact?.endDate ||
         netIncomeFact?.endDate ||
+        operatingIncomeFact?.endDate ||
         grossProfitFact?.endDate ||
         netAssetsFact?.endDate ||
         null;
       const reportDate =
         revenueFact?.filed ||
         netIncomeFact?.filed ||
+        operatingIncomeFact?.filed ||
         grossProfitFact?.filed ||
         netAssetsFact?.filed ||
         null;
@@ -1511,6 +1540,7 @@ async function fetchSecQuarterlyHistory(companySource) {
         reportDate,
         revenue: revenueFact?.value ?? null,
         netIncome: netIncomeFact?.value ?? null,
+        operatingIncome: operatingIncomeFact?.value ?? null,
         grossProfit: grossProfitValue,
         netAssets: netAssetsFact?.value ?? null,
         grossMarginPct:
@@ -1625,11 +1655,15 @@ async function convertRowsToUsd(rows, currencyCode) {
     const netIncomeUsd = Number.isFinite(row.netIncome)
       ? convertAmountToUsd(row.netIncome, avgRate, series.quoteMode)
       : row.netIncome;
+    const operatingIncomeUsd = Number.isFinite(row.operatingIncome)
+      ? convertAmountToUsd(row.operatingIncome, avgRate, series.quoteMode)
+      : row.operatingIncome;
 
     return {
       ...row,
       revenue: revenueUsd,
       netIncome: netIncomeUsd,
+      operatingIncome: operatingIncomeUsd,
     };
   });
 
@@ -1693,6 +1727,7 @@ async function convertSecHistoryRowsToUsd(rows, currencyCode) {
       ...row,
       revenue: Number.isFinite(row.revenue) ? convertAmountToUsd(row.revenue, avgRate, series.quoteMode) : row.revenue,
       netIncome: Number.isFinite(row.netIncome) ? convertAmountToUsd(row.netIncome, avgRate, series.quoteMode) : row.netIncome,
+      operatingIncome: Number.isFinite(row.operatingIncome) ? convertAmountToUsd(row.operatingIncome, avgRate, series.quoteMode) : row.operatingIncome,
       grossProfit: Number.isFinite(row.grossProfit) ? convertAmountToUsd(row.grossProfit, avgRate, series.quoteMode) : row.grossProfit,
       netAssets: Number.isFinite(row.netAssets) ? convertAmountToUsd(row.netAssets, spotRate, series.quoteMode) : row.netAssets,
       grossMarginPct:
@@ -1741,6 +1776,7 @@ function applyTsmcOfficialOverrides(rows) {
 function ensureCompanyShape(company) {
   if (!company.revenue || typeof company.revenue !== "object") company.revenue = {};
   if (!company.earnings || typeof company.earnings !== "object") company.earnings = {};
+  if (!company.operatingIncome || typeof company.operatingIncome !== "object") company.operatingIncome = {};
   if (!company.pe || typeof company.pe !== "object") company.pe = {};
   if (!company.netAssets || typeof company.netAssets !== "object") company.netAssets = {};
   if (!company.roe || typeof company.roe !== "object") company.roe = {};
@@ -1765,6 +1801,7 @@ function pruneCompanyDataBeforePeriod(company, minPeriod) {
   const seriesKeys = [
     "revenue",
     "earnings",
+    "operatingIncome",
     "pe",
     "netAssets",
     "roe",
@@ -1792,6 +1829,7 @@ function clearCompanyDataThroughPeriod(company, maxPeriod) {
   [
     "revenue",
     "earnings",
+    "operatingIncome",
     "pe",
     "netAssets",
     "roe",
@@ -2454,6 +2492,7 @@ function trimLeadingDisconnectedSeries(companyData, periods) {
   });
 
   [
+    companyData.operatingIncome,
     companyData.grossMargin,
     companyData.pe,
     companyData.roe,
@@ -2516,6 +2555,34 @@ function getCuratedUsdScaleFactor(financial) {
   return 1;
 }
 
+function isCuratedOperatingIncomeLikelyReliable(financial) {
+  if (!Number.isFinite(financial?.operatingIncomeBn)) return false;
+  if (financial?.parserFinancialFieldSources?.operatingIncomeBn !== "official") return false;
+  if (financial?.parserFinancialValidation?.status !== "high") return false;
+
+  const revenueBn = Number(financial.revenueBn);
+  const grossProfitBn = Number(financial.grossProfitBn);
+  const operatingExpensesBn = Number(financial.operatingExpensesBn);
+  const operatingIncomeBn = Number(financial.operatingIncomeBn);
+  if (
+    !Number.isFinite(revenueBn) ||
+    revenueBn <= 0 ||
+    !Number.isFinite(grossProfitBn) ||
+    !Number.isFinite(operatingExpensesBn)
+  ) {
+    return false;
+  }
+
+  // Guard against providers mapping total costs and expenses to operating
+  // expenses (notably oil majors), which can produce a plausible-looking but
+  // economically incorrect negative operating income.
+  if (grossProfitBn > 0 && operatingExpensesBn > grossProfitBn * 1.5) return false;
+
+  const reconstructedOperatingIncomeBn = grossProfitBn - operatingExpensesBn;
+  const toleranceBn = Math.max(0.01, Math.abs(operatingIncomeBn) * 0.02);
+  return Math.abs(reconstructedOperatingIncomeBn - operatingIncomeBn) <= toleranceBn;
+}
+
 function collectCuratedReportDateCandidates(value, candidates = []) {
   if (!value || typeof value !== "object") return candidates;
 
@@ -2566,6 +2633,7 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
       changedPeriods: new Set(),
       revenuePeriods: new Set(),
       netIncomePeriods: new Set(),
+      operatingIncomePeriods: new Set(),
       grossMarginPeriods: new Set(),
       reportDatePeriods: new Set(),
     };
@@ -2574,6 +2642,7 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
   const changedPeriods = new Set();
   const revenuePeriods = new Set();
   const netIncomePeriods = new Set();
+  const operatingIncomePeriods = new Set();
   const grossMarginPeriods = new Set();
   const reportDatePeriods = new Set();
   let changedPoints = 0;
@@ -2611,6 +2680,18 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
       }
     }
 
+    const operatingIncome = Number(financial.operatingIncomeBn) * usdScaleFactor * 1e9;
+    if (
+      isCuratedOperatingIncomeLikelyReliable(financial) &&
+      Number.isFinite(operatingIncome)
+    ) {
+      operatingIncomePeriods.add(period);
+      if (setSeriesValueIfMissing(companyData.operatingIncome, period, Math.round(operatingIncome))) {
+        changedPoints += 1;
+        changedPeriods.add(period);
+      }
+    }
+
     const grossMargin = Number(financial.grossMarginPct);
     if (revenueLooksReliable && Number.isFinite(grossMargin)) {
       grossMarginPeriods.add(period);
@@ -2621,7 +2702,15 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
     }
   });
 
-  return { changedPoints, changedPeriods, revenuePeriods, netIncomePeriods, grossMarginPeriods, reportDatePeriods };
+  return {
+    changedPoints,
+    changedPeriods,
+    revenuePeriods,
+    netIncomePeriods,
+    operatingIncomePeriods,
+    grossMarginPeriods,
+    reportDatePeriods,
+  };
 }
 
 function applyOfficialHistoricalBackfillOverrides(companyId, companyData, rows) {
@@ -2745,7 +2834,105 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
   };
 }
 
-function updateMeta(data, summary, refreshedAtIso) {
+async function refreshOperatingIncomeOnly(companySource, companyData, validPeriods, curatedCompany) {
+  const changedPeriods = new Set();
+  let changedPoints = 0;
+  let secPointCount = 0;
+  let supplementalPointCount = 0;
+  let secHistoryRows = [];
+  let supplementalRows = [];
+
+  try {
+    const secHistory = await fetchSecQuarterlyHistory(companySource);
+    if (secHistory?.rows?.length) {
+      secHistoryRows = secHistory.rows;
+      if (secHistory.reportingCurrency !== "USD") {
+        const converted = await convertSecHistoryRowsToUsd(
+          secHistoryRows,
+          secHistory.reportingCurrency,
+        );
+        if (!converted) {
+          console.warn(`  SEC 营业利润口径为 ${secHistory.reportingCurrency}，当前无换算配置，已跳过`);
+          secHistoryRows = [];
+        } else {
+          secHistoryRows = converted.rows;
+          console.log(
+            `  已完成 SEC 营业利润 ${secHistory.reportingCurrency} -> USD 换算（${converted.fxLabel}）`,
+          );
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(`  SEC 营业利润补齐失败：${error.message}`);
+  }
+
+  try {
+    const result = await fetchCompanyRows(companySource.slug);
+    supplementalRows = result.rows;
+    if (result.financialCurrency !== "USD") {
+      const converted = await convertRowsToUsd(supplementalRows, result.financialCurrency);
+      if (!converted) {
+        console.warn(`  营业利润补充口径为 ${result.financialCurrency}，当前无换算配置，已跳过`);
+        supplementalRows = [];
+      } else {
+        supplementalRows = converted.rows;
+      }
+    }
+  } catch (error) {
+    console.warn(`  营业利润补充抓取失败：${error.message}`);
+  }
+
+  secHistoryRows.forEach((row) => {
+    if (!validPeriods.has(row.period) || !Number.isFinite(row.operatingIncome)) return;
+    secPointCount += 1;
+    if (setSeriesValue(companyData.operatingIncome, row.period, row.operatingIncome)) {
+      changedPoints += 1;
+      changedPeriods.add(row.period);
+    }
+  });
+
+  supplementalRows.forEach((row) => {
+    if (!validPeriods.has(row.period) || !Number.isFinite(row.operatingIncome)) return;
+    supplementalPointCount += 1;
+    if (setSeriesValueIfMissing(companyData.operatingIncome, row.period, row.operatingIncome)) {
+      changedPoints += 1;
+      changedPeriods.add(row.period);
+    }
+  });
+
+  let curatedPointCount = 0;
+  if (curatedCompany?.financials && Array.isArray(curatedCompany.quarters)) {
+    curatedCompany.quarters.forEach((period) => {
+      if (!validPeriods.has(period)) return;
+      const financial = curatedCompany.financials[period];
+      if (!isCuratedOperatingIncomeLikelyReliable(financial)) return;
+
+      const usdScaleFactor = getCuratedUsdScaleFactor(financial);
+      const operatingIncome = Number(financial.operatingIncomeBn) * usdScaleFactor * 1e9;
+      if (!Number.isFinite(operatingIncome)) return;
+
+      curatedPointCount += 1;
+      if (setSeriesValueIfMissing(companyData.operatingIncome, period, Math.round(operatingIncome))) {
+        changedPoints += 1;
+        changedPeriods.add(period);
+      }
+    });
+  }
+
+  companyData.operatingIncome = sortObjectByPeriodKeys(companyData.operatingIncome, validPeriods);
+  companyData.forecastFlags.operatingIncome = [];
+
+  return {
+    changedPoints,
+    changedPeriods: [...changedPeriods].sort(comparePeriods),
+    secPointCount,
+    supplementalPointCount,
+    curatedPointCount,
+    totalPointCount: Object.values(companyData.operatingIncome).filter(Number.isFinite).length,
+  };
+}
+
+function updateMeta(data, summary, refreshedAtIso, options = {}) {
   if (!data.meta || typeof data.meta !== "object") {
     data.meta = {};
   }
@@ -2757,7 +2944,9 @@ function updateMeta(data, summary, refreshedAtIso) {
   }
 
   data.meta.autoRefresh = {
-    source: "StockAnalysis quarterly financials / ratios / balance sheet + CompaniesMarketCap quarterly P/E",
+    source: options.operatingIncomeOnly
+      ? "SEC CompanyFacts operating income history + StockAnalysis quarterly supplemental data"
+      : "StockAnalysis quarterly financials / ratios / balance sheet + CompaniesMarketCap quarterly P/E",
     refreshedAt: refreshedAtIso,
     updatedCompanies: summary.updatedCompanyIds,
     changedPoints: summary.changedPoints,
@@ -2770,6 +2959,7 @@ function summarizeCompanyStats(companyStats) {
     changedPoints:
       companyStats.revenueChanges +
       companyStats.netIncomeChanges +
+      companyStats.operatingIncomeChanges +
       companyStats.peChanges +
       companyStats.netAssetChanges +
       companyStats.roeChanges +
@@ -2783,7 +2973,9 @@ function summarizeCompanyStats(companyStats) {
 async function run() {
   const options = parseArgs(process.argv.slice(2));
   const curatedQuarterlyDataset = await loadCuratedQuarterlyDataset();
-  const historicalSecBackfill = await loadHistoricalSecBackfill();
+  const historicalSecBackfill = options.operatingIncomeOnly
+    ? {}
+    : await loadHistoricalSecBackfill();
 
   const selectedCompanies = options.companyIds
     ? COMPANY_SOURCES.filter((company) => options.companyIds.has(company.id))
@@ -2814,6 +3006,25 @@ async function run() {
 
     ensureCompanyShape(companyData);
     console.log(`抓取 ${companySource.ticker} (${companySource.name})...`);
+
+    if (options.operatingIncomeOnly) {
+      const operatingIncomeResult = await refreshOperatingIncomeOnly(
+        companySource,
+        companyData,
+        periodSet,
+        curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker)),
+      );
+      if (operatingIncomeResult.changedPoints > 0) {
+        summary.updatedCompanyIds.push(companySource.id);
+        summary.changedPoints += operatingIncomeResult.changedPoints;
+        summary.changedPeriods.push(...operatingIncomeResult.changedPeriods);
+      }
+      console.log(
+        `  营业利润：SEC ${operatingIncomeResult.secPointCount} 点，补充 ${operatingIncomeResult.supplementalPointCount} 点，本地官方季度 ${operatingIncomeResult.curatedPointCount} 点，当前共 ${operatingIncomeResult.totalPointCount} 个季度，新增/修正 ${operatingIncomeResult.changedPoints} 点`,
+      );
+      if (index < selectedCompanies.length - 1) await sleep(250);
+      continue;
+    }
 
     const shouldRefreshHistoricalSeries = true;
 
@@ -2969,6 +3180,7 @@ async function run() {
     const companyStats = {
       revenueChanges: 0,
       netIncomeChanges: 0,
+      operatingIncomeChanges: 0,
       peChanges: 0,
       netAssetChanges: 0,
       roeChanges: 0,
@@ -2980,6 +3192,7 @@ async function run() {
 
     const revenueActual = new Set();
     const netIncomeActual = new Set();
+    const operatingIncomeActual = new Set();
     const grossMarginActual = new Set();
     const qualityReferencePeriods = [...periodSet].sort(comparePeriods);
 
@@ -3064,6 +3277,15 @@ async function run() {
         }
       }
 
+      if (Number.isFinite(row.operatingIncome)) {
+        operatingIncomeActual.add(row.period);
+        const changed = setSeriesValue(companyData.operatingIncome, row.period, row.operatingIncome);
+        if (changed) {
+          companyStats.operatingIncomeChanges += 1;
+          companyStats.changedPeriods.add(row.period);
+        }
+      }
+
       if (Number.isFinite(row.grossMarginPct)) {
         grossMarginActual.add(row.period);
         const changed = setSeriesValue(companyData.grossMargin, row.period, row.grossMarginPct);
@@ -3123,6 +3345,30 @@ async function run() {
           const changed = setSeriesValue(companyData.earnings, row.period, row.netIncome);
           if (changed) {
             companyStats.netIncomeChanges += 1;
+            companyStats.changedPeriods.add(row.period);
+          }
+        }
+      }
+
+      if (Number.isFinite(row.operatingIncome)) {
+        const currentOperatingIncome = companyData.operatingIncome[row.period];
+        const keepPreferredActual =
+          operatingIncomeActual.has(row.period) &&
+          isConflictingActualValue(
+            Math.abs(currentOperatingIncome),
+            Math.abs(row.operatingIncome),
+            4,
+            0.25,
+          );
+        if (!keepPreferredActual) {
+          operatingIncomeActual.add(row.period);
+          const changed = setSeriesValue(
+            companyData.operatingIncome,
+            row.period,
+            row.operatingIncome,
+          );
+          if (changed) {
+            companyStats.operatingIncomeChanges += 1;
             companyStats.changedPeriods.add(row.period);
           }
         }
@@ -3268,6 +3514,7 @@ async function run() {
 
     clearForecastFlags(companyData, "revenue", revenueActual);
     clearForecastFlags(companyData, "netIncome", netIncomeActual);
+    clearForecastFlags(companyData, "operatingIncome", operatingIncomeActual);
     clearForecastFlags(companyData, "grossMargin", grossMarginActual);
 
     const sanitized = sanitizeSeriesQuality(companyData);
@@ -3294,6 +3541,7 @@ async function run() {
 
     companyData.revenue = sortObjectByPeriodKeys(companyData.revenue, periodSet);
     companyData.earnings = sortObjectByPeriodKeys(companyData.earnings, periodSet);
+    companyData.operatingIncome = sortObjectByPeriodKeys(companyData.operatingIncome, periodSet);
     companyData.pe = sortObjectByPeriodKeys(companyData.pe, periodSet);
     companyData.netAssets = sortObjectByPeriodKeys(companyData.netAssets, periodSet);
     companyData.roe = sortObjectByPeriodKeys(companyData.roe, periodSet);
@@ -3356,7 +3604,7 @@ async function run() {
   }
 
   const refreshedAtIso = new Date().toISOString();
-  updateMeta(data, summary, refreshedAtIso);
+  updateMeta(data, summary, refreshedAtIso, options);
   await writeFile(DATA_JS_PATH, formatDataJs(data), "utf8");
   console.log(
     `\n完成写入 data.js：更新公司 ${summary.updatedCompanyIds.length} 家，变更点 ${summary.changedPoints} 个，季度 ${summary.changedPeriods.length} 个`,

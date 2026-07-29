@@ -1209,6 +1209,11 @@ body:not([data-theme="deep"]) .chart-panel {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
+.chart-mode-control[hidden],
+.price-comparison-control[hidden] {
+  display: none;
+}
+
 .chart-mode-caption {
   font-family: var(--font-terminal);
   font-size: 0.65rem;
@@ -1381,11 +1386,12 @@ body:not([data-theme="deep"]) .chart-panel {
 
 .metric-toolbar {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 7px;
   margin: 10px 2px 0;
   position: relative;
   z-index: 1;
+  container-type: inline-size;
 }
 
 .metric-pill {
@@ -1408,15 +1414,29 @@ body:not([data-theme="deep"]) .chart-panel {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 10px;
+  min-width: 0;
+  padding: 0 clamp(4px, 0.65cqi, 10px);
   border-radius: 9px;
   border: 1px solid rgba(112, 128, 151, 0.14);
   background: linear-gradient(180deg, rgba(22, 30, 42, 0.92), rgba(17, 24, 34, 0.96));
   color: var(--text-body);
-  font-size: 0.88rem;
+  font-size: clamp(0.68rem, 1.5cqi, 0.88rem);
   font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
   transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
   cursor: pointer;
+}
+
+html[lang="en"] .metric-pill span:is(
+  [data-i18n="operatingIncome"],
+  [data-i18n="revenueGrowth"],
+  [data-i18n="profitGrowth"]
+) {
+  font-size: clamp(0.56rem, 1.25cqi, 0.8rem);
+  letter-spacing: -0.01em;
 }
 
 .metric-pill:hover span {
@@ -1438,7 +1458,10 @@ body:not([data-theme="deep"]) .chart-panel {
 }
 
 .metric-pill-with-overlay.is-growth-available .metric-pill-control > span {
-  padding-right: 42px;
+  justify-content: flex-start;
+  padding-left: 6px;
+  padding-right: 34px;
+  font-size: clamp(0.48rem, 1cqi, 0.68rem);
 }
 
 .growth-overlay-toggle {
@@ -1446,15 +1469,15 @@ body:not([data-theme="deep"]) .chart-panel {
   right: 4px;
   bottom: 4px;
   z-index: 2;
-  min-width: 34px;
+  min-width: 28px;
   min-height: 18px;
-  padding: 0 6px;
+  padding: 0 3px;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
   background: rgba(7, 11, 17, 0.82);
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-terminal);
-  font-size: 0.6rem;
+  font-size: 0.48rem;
   font-weight: 700;
   line-height: 16px;
   cursor: pointer;
@@ -2132,7 +2155,6 @@ body:not([data-theme="deep"]) .range-panel {
   .metric-pill span {
     min-height: 44px;
     padding: 0 6px;
-    font-size: 0.78rem;
   }
 
   .range-panel {

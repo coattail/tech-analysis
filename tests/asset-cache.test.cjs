@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after responsive touch improvements", () => {
+test("cache-busts the stylesheet after adding operating income and dual bars", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260719-responsive-touch/);
+  assert.match(html, /style\.css\?v=20260729-metric-label-nowrap/);
 });
 
 test("keeps the latest cache key for unchanged company-selection behavior", () => {
@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20260719-yoy-backfill"],
+    ["data.js", "20260729-operating-income-complete"],
     ["price-data.js", "20260716-tsmc-q2"],
   ]) {
     assert.match(
@@ -60,7 +60,7 @@ test("cache-busts chart scripts after normalizing visible logo area", () => {
     ["price-comparison.js", "20260629-mobile-responsive"],
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-growth-sanity"],
-    ["script.js", "20260720-dark-default"],
+    ["script.js", "20260729-apple-dark-gray"],
   ]) {
     assert.match(
       html,

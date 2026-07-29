@@ -11,7 +11,7 @@ const UI_TRANSLATIONS = {
     modeLabel: "模式",
     modeValue: "季度 / 年度 / 滚动年化",
     sourceSummary: "查看数据口径与来源",
-    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis。口径：营收与净利润为季度财报数据（美元）；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算；营收与利润增速均为同比，跨越盈亏平衡点或绝对同比超过 1,000% 时视为不可比并留空。支持季度、年度与滚动年化浏览。",
+    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis、Macrotrends。营业利润自公司上市后（不早于 2005Q1）逐季覆盖；较早季度由已发布的单季值与相邻 TTM 值反推。营收、营业利润与净利润统一为美元；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算。支持季度、年度与滚动年化浏览。",
     viewSettings: "视图设置",
     timeGranularity: "时间粒度",
     frequencySwitch: "时间粒度切换",
@@ -29,7 +29,7 @@ const UI_TRANSLATIONS = {
     dataSourceLink: "数据来源链接",
     chartKicker: "对比视角",
     financialTrendComparison: "财务趋势对比",
-    singleCompanyView: "单公司视图",
+    focusedCompanyView: "单/双公司视图",
     chartTypeSwitch: "图表类型切换",
     line: "折线",
     bar: "柱状",
@@ -47,6 +47,7 @@ const UI_TRANSLATIONS = {
     dataUpdated: "数据更新",
     metricSwitch: "指标切换",
     revenue: "营收",
+    operatingIncome: "营业利润",
     netIncome: "净利润",
     grossMargin: "毛利率",
     revenueGrowth: "营收增速",
@@ -97,7 +98,7 @@ const UI_TRANSLATIONS = {
     modeLabel: "Mode",
     modeValue: "Quarterly / Annual / Rolling Annual",
     sourceSummary: "View methodology and sources",
-    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, and StockAnalysis. Revenue and net income use quarterly reported data in USD; gross margin is gross profit divided by revenue; P/E is the valuation metric for the reporting period; ROE is net income divided by net assets; revenue and profit growth are year over year. Growth that crosses break-even or exceeds 1,000% in absolute terms is treated as not meaningful and left blank. Quarterly, annual, and rolling-annual views are supported.",
+    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and Macrotrends. Operating income is covered quarter by quarter from listing, no earlier than 2005Q1; older quarters are reconstructed from published quarterly values and adjacent TTM values. Revenue, operating income, and net income are normalized to USD; gross margin is gross profit divided by revenue; P/E is the reporting-period valuation metric; and ROE is net income divided by net assets. Quarterly, annual, and rolling-annual views are supported.",
     viewSettings: "View Settings",
     timeGranularity: "Time Granularity",
     frequencySwitch: "Time granularity switch",
@@ -115,7 +116,7 @@ const UI_TRANSLATIONS = {
     dataSourceLink: "Data source links",
     chartKicker: "Comparative Lens",
     financialTrendComparison: "Financial Trend Comparison",
-    singleCompanyView: "Single-Company View",
+    focusedCompanyView: "One/Two-Company View",
     chartTypeSwitch: "Chart type switch",
     line: "Line",
     bar: "Bar",
@@ -133,6 +134,7 @@ const UI_TRANSLATIONS = {
     dataUpdated: "Data Updated",
     metricSwitch: "Metric switch",
     revenue: "Revenue",
+    operatingIncome: "Operating Income",
     netIncome: "Net Income",
     grossMargin: "Gross Margin",
     revenueGrowth: "Revenue Growth",
@@ -242,7 +244,7 @@ const FREQUENCY_META = {
 const COMPANIES = [
   { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoColor: "#76b900", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
   { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#2fd4b0", logoColor: "#4285f4", preserveLightLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
-  { id: "apple", name: "苹果", ticker: "AAPL", color: "#ff9f1c", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
+  { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
   { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoColor: "#737373", preserveLightLogoColors: true, logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
   { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
   { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoColor: "#cc092f", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
@@ -844,6 +846,12 @@ const METRICS = {
     sourceKey: "earnings",
     annualMode: "sum",
   },
+  operatingIncome: {
+    label: "营业利润（美元）",
+    axisLabel: "营业利润（美元，USD）",
+    sourceKey: "operatingIncome",
+    annualMode: "sum",
+  },
   grossMargin: {
     label: "毛利率（%）",
     axisLabel: "毛利率（%）",
@@ -884,6 +892,10 @@ const METRIC_TRANSLATIONS = {
   netIncome: {
     zh: { label: "净利润（美元）", name: "净利润", unit: "（美元，USD）" },
     en: { label: "Net Income (USD)", name: "Net Income", unit: " (USD)" },
+  },
+  operatingIncome: {
+    zh: { label: "营业利润（美元）", name: "营业利润", unit: "（美元，USD）" },
+    en: { label: "Operating Income (USD)", name: "Operating Income", unit: " (USD)" },
   },
   grossMargin: {
     zh: { label: "毛利率（%）", name: "毛利率", unit: "（%）" },
@@ -980,6 +992,10 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.56;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
+const DUAL_COMPANY_BAR_MIN_THICKNESS = 5;
+const DUAL_COMPANY_BAR_MAX_THICKNESS = 18;
+const DUAL_COMPANY_BAR_WIDTH_RATIO = 0.36;
+const DUAL_COMPANY_BAR_MIN_GROUP_GAP = 2;
 const DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
@@ -1016,6 +1032,7 @@ const state = {
     quarterly: {
       revenue: new Map(),
       netIncome: new Map(),
+      operatingIncome: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1025,6 +1042,7 @@ const state = {
     annual: {
       revenue: new Map(),
       netIncome: new Map(),
+      operatingIncome: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1034,6 +1052,7 @@ const state = {
     rollingAnnual: {
       revenue: new Map(),
       netIncome: new Map(),
+      operatingIncome: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1047,6 +1066,7 @@ const state = {
     quarterly: {
       revenue: new Map(),
       netIncome: new Map(),
+      operatingIncome: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1056,6 +1076,7 @@ const state = {
     annual: {
       revenue: new Map(),
       netIncome: new Map(),
+      operatingIncome: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1065,6 +1086,7 @@ const state = {
     rollingAnnual: {
       revenue: new Map(),
       netIncome: new Map(),
+      operatingIncome: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1088,6 +1110,27 @@ function computeSingleCompanyBarThickness(visibleLabelCount) {
     SINGLE_COMPANY_BAR_MIN_THICKNESS,
     Math.min(SINGLE_COMPANY_BAR_MAX_THICKNESS, nextThickness),
   );
+}
+
+function computeDualCompanyBarThickness(visibleLabelCount) {
+  const count = Math.max(1, Number(visibleLabelCount) || 1);
+  const containerWidth =
+    chartEl?.parentElement?.clientWidth ||
+    chartEl?.clientWidth ||
+    SINGLE_COMPANY_BAR_FALLBACK_WIDTH;
+  const usableWidth = Math.max(320, containerWidth - SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE);
+  const slotWidth = usableWidth / count;
+  const nextThickness = slotWidth * DUAL_COMPANY_BAR_WIDTH_RATIO;
+  const desiredThickness = Math.max(
+    DUAL_COMPANY_BAR_MIN_THICKNESS,
+    Math.min(DUAL_COMPANY_BAR_MAX_THICKNESS, nextThickness),
+  );
+  const maxThicknessWithGroupGap = Math.max(
+    1,
+    (slotWidth - DUAL_COMPANY_BAR_MIN_GROUP_GAP) / 2,
+  );
+
+  return Math.min(desiredThickness, maxThicknessWithGroupGap);
 }
 
 function getChartContainerWidth() {
@@ -1175,7 +1218,9 @@ function getSingleVisibleCompanyId() {
 }
 
 function getEffectiveChartMode() {
-  return getSingleVisibleCompanyId() ? state.chartMode : "line";
+  return state.visibleCompanies.size >= 1 && state.visibleCompanies.size <= 2
+    ? state.chartMode
+    : "line";
 }
 
 function usesDateXAxis(_effectiveChartMode = getEffectiveChartMode()) {
@@ -1607,7 +1652,7 @@ function isTooltipRectInsideChart(tooltipRect, chartArea) {
 }
 
 function shouldAvoidBarTooltipCollisions(metricKey) {
-  return metricKey === "revenue" || metricKey === "netIncome";
+  return metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome";
 }
 
 function buildNearbyTooltipPosition({ chartArea, activeElement, preferredX, preferredY, tooltipSize }) {
@@ -1894,7 +1939,7 @@ function syncPresetButtons() {
 }
 
 function syncChartModeControl() {
-  const shouldShow = Boolean(getSingleVisibleCompanyId());
+  const shouldShow = state.visibleCompanies.size >= 1 && state.visibleCompanies.size <= 2;
 
   if (!shouldShow) {
     state.chartMode = "line";
@@ -1986,6 +2031,7 @@ function shouldReservePriceComparisonLayout(hasPriceOverlay = false) {
 
 function shouldReserveSingleCompanyLegendLayout(hasPriceOverlay = false) {
   return Boolean(getSingleVisibleCompanyId())
+    || (state.visibleCompanies.size === 2 && getEffectiveChartMode() === "bar")
     || shouldReservePriceComparisonLayout(hasPriceOverlay);
 }
 
@@ -2202,7 +2248,7 @@ function rollingForecastFlags(quarterFlagsSet) {
 function formatYAxisTick(metricKey, value) {
   if (!isFiniteNumber(value)) return "";
 
-  if (metricKey === "revenue" || metricKey === "netIncome") {
+  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
     return formatUsdValue(value);
   }
 
@@ -2240,7 +2286,7 @@ function formatPrimaryYAxisTick(
 function formatMetricValue(metricKey, value) {
   if (!isFiniteNumber(value)) return t("noData");
 
-  if (metricKey === "revenue" || metricKey === "netIncome") {
+  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
     return formatUsdValue(value);
   }
 
@@ -2283,6 +2329,7 @@ function toMetricFileToken(metricKey) {
   const map = {
     revenue: "revenue",
     netIncome: "net-income",
+    operatingIncome: "operating-income",
     grossMargin: "gross-margin",
     pe: "pe-ratio",
     roe: "roe",
@@ -2560,15 +2607,19 @@ function buildDatasetsForView() {
   const rangeLabels = fullLabels.slice(state.rangeStart, state.rangeEnd + 1);
   const metricKey = state.metric;
   const spanGapThreshold = metricKey === "pe" || metricKey === "roe" || metricKey === "grossMargin" ? 4 : false;
-  const singleCompanyId = getSingleVisibleCompanyId();
-  const useBarForSingleCompany = getEffectiveChartMode() === "bar" && Boolean(singleCompanyId);
+  const visibleCompanyCount = state.visibleCompanies.size;
+  const useBarForFocusedCompanies =
+    getEffectiveChartMode() === "bar" &&
+    visibleCompanyCount >= 1 &&
+    visibleCompanyCount <= 2;
+  const dualCompanyBars = useBarForFocusedCompanies && visibleCompanyCount === 2;
 
   const datasets = COMPANIES.map((company) => {
     const series = state.dataByFrequency[state.frequency][metricKey].get(company.id) ?? emptySeries(fullLabels);
     const forecasted = state.forecastFlagsByFrequency[state.frequency][metricKey].get(company.id) ?? new Set();
 
     const fullData = fullLabels.map((label) => series.get(label) ?? null);
-    const useBarDataset = useBarForSingleCompany && singleCompanyId === company.id;
+    const useBarDataset = useBarForFocusedCompanies && state.visibleCompanies.has(company.id);
     const seriesColor = getSeriesColor(company);
 
     return {
@@ -2586,11 +2637,15 @@ function buildDatasetsForView() {
       borderWidth: useBarDataset ? 0 : 2,
       borderRadius: useBarDataset ? 6 : 0,
       borderSkipped: false,
-      grouped: useBarDataset ? false : undefined,
-      barPercentage: useBarDataset ? 0.72 : 0.9,
-      categoryPercentage: useBarDataset ? 0.82 : 0.9,
-      barThickness: useBarDataset ? computeSingleCompanyBarThickness(rangeLabels.length) : undefined,
-      maxBarThickness: useBarDataset ? 28 : undefined,
+      grouped: useBarDataset ? dualCompanyBars : undefined,
+      barPercentage: useBarDataset ? (dualCompanyBars ? 0.78 : 0.72) : 0.9,
+      categoryPercentage: useBarDataset ? (dualCompanyBars ? 0.84 : 0.82) : 0.9,
+      barThickness: useBarDataset
+        ? (dualCompanyBars
+          ? computeDualCompanyBarThickness(rangeLabels.length)
+          : computeSingleCompanyBarThickness(rangeLabels.length))
+        : undefined,
+      maxBarThickness: useBarDataset ? (dualCompanyBars ? DUAL_COMPANY_BAR_MAX_THICKNESS : 28) : undefined,
       pointRadius: useBarDataset ? 0 : 1.4,
       pointHoverRadius: 4.2,
       pointHitRadius: 10,
@@ -2639,7 +2694,7 @@ function buildDatasetsForView() {
       ...Array(Math.max(0, visibleLabels.length - financialVisibleLabels.length)).fill(null),
     ],
   }));
-  const shouldUseFinancialQuarterSlotPoints = useBarForSingleCompany;
+  const shouldUseFinancialQuarterSlotPoints = useBarForFocusedCompanies;
   const trimmedDatasets = paddedDatasets.map((dataset) => ({
     ...dataset,
     data: buildFinancialDatasetValuesForVisibleLabels(
@@ -2904,7 +2959,7 @@ function collectGrowthOverlayValues(datasets) {
 
 function toAxisDisplayValue(metricKey, value) {
   if (!isFiniteNumber(value)) return value;
-  if (metricKey === "revenue" || metricKey === "netIncome") {
+  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
     return value / 1e9;
   }
   return value;
@@ -2912,7 +2967,7 @@ function toAxisDisplayValue(metricKey, value) {
 
 function fromAxisDisplayValue(metricKey, value) {
   if (!isFiniteNumber(value)) return value;
-  if (metricKey === "revenue" || metricKey === "netIncome") {
+  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
     return value * 1e9;
   }
   return value;
@@ -3887,7 +3942,11 @@ function bindEvents() {
 
   chartModeInputs.forEach((input) => {
     input.addEventListener("change", () => {
-      if (!input.checked || !getSingleVisibleCompanyId()) return;
+      if (
+        !input.checked ||
+        state.visibleCompanies.size < 1 ||
+        state.visibleCompanies.size > 2
+      ) return;
       state.chartMode = input.value;
       refreshChart("none");
     });
@@ -3983,6 +4042,7 @@ function loadFromLocalData() {
 
     const quarterRevenue = objectToSeries(QUARTER_LABELS, rawCompany.revenue);
     const quarterNetIncome = objectToSeries(QUARTER_LABELS, rawCompany.earnings);
+    const quarterOperatingIncome = objectToSeries(QUARTER_LABELS, rawCompany.operatingIncome);
     const quarterGrossMargin = objectToSeries(QUARTER_LABELS, rawCompany.grossMargin);
     const quarterPe = objectToSeries(QUARTER_LABELS, rawCompany.pe);
     const quarterRoe = objectToSeries(QUARTER_LABELS, rawCompany.roe);
@@ -3991,6 +4051,7 @@ function loadFromLocalData() {
 
     state.dataByFrequency.quarterly.revenue.set(company.id, quarterRevenue);
     state.dataByFrequency.quarterly.netIncome.set(company.id, quarterNetIncome);
+    state.dataByFrequency.quarterly.operatingIncome.set(company.id, quarterOperatingIncome);
     state.dataByFrequency.quarterly.grossMargin.set(company.id, quarterGrossMargin);
     state.dataByFrequency.quarterly.pe.set(company.id, quarterPe);
     state.dataByFrequency.quarterly.roe.set(company.id, quarterRoe);
@@ -3999,6 +4060,7 @@ function loadFromLocalData() {
 
     const annualRevenue = aggregateFlowAnnual(quarterRevenue);
     const annualNetIncome = aggregateFlowAnnual(quarterNetIncome);
+    const annualOperatingIncome = aggregateFlowAnnual(quarterOperatingIncome);
     const annualGrossMargin = aggregateMarginAnnual(quarterGrossMargin, quarterRevenue);
     const annualPe = aggregatePointAnnual(quarterPe);
     const annualRoe = aggregatePointAnnual(quarterRoe);
@@ -4007,6 +4069,7 @@ function loadFromLocalData() {
 
     const rollingRevenue = aggregateFlowRollingAnnual(quarterRevenue);
     const rollingNetIncome = aggregateFlowRollingAnnual(quarterNetIncome);
+    const rollingOperatingIncome = aggregateFlowRollingAnnual(quarterOperatingIncome);
     const rollingGrossMargin = aggregateMarginRollingAnnual(quarterGrossMargin, quarterRevenue);
     const rollingPe = aggregatePointRollingAverage(quarterPe);
     const rollingRoe = aggregatePointRollingAverage(quarterRoe);
@@ -4015,6 +4078,7 @@ function loadFromLocalData() {
 
     state.dataByFrequency.annual.revenue.set(company.id, annualRevenue);
     state.dataByFrequency.annual.netIncome.set(company.id, annualNetIncome);
+    state.dataByFrequency.annual.operatingIncome.set(company.id, annualOperatingIncome);
     state.dataByFrequency.annual.grossMargin.set(company.id, annualGrossMargin);
     state.dataByFrequency.annual.pe.set(company.id, annualPe);
     state.dataByFrequency.annual.roe.set(company.id, annualRoe);
@@ -4023,6 +4087,7 @@ function loadFromLocalData() {
 
     state.dataByFrequency.rollingAnnual.revenue.set(company.id, rollingRevenue);
     state.dataByFrequency.rollingAnnual.netIncome.set(company.id, rollingNetIncome);
+    state.dataByFrequency.rollingAnnual.operatingIncome.set(company.id, rollingOperatingIncome);
     state.dataByFrequency.rollingAnnual.grossMargin.set(company.id, rollingGrossMargin);
     state.dataByFrequency.rollingAnnual.pe.set(company.id, rollingPe);
     state.dataByFrequency.rollingAnnual.roe.set(company.id, rollingRoe);

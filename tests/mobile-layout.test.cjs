@@ -32,6 +32,26 @@ test("uses compact mobile controls and a bounded chart canvas", () => {
   assert.match(mobileCss, /\.chart-wrap\s*\{[^}]*height:\s*clamp\(390px, 118vw, 510px\)/);
 });
 
+test("keeps metric labels on one responsive line", () => {
+  assert.match(css, /\.metric-toolbar\s*\{[^}]*container-type:\s*inline-size/);
+  assert.match(
+    css,
+    /\.metric-pill span\s*\{[^}]*font-size:\s*clamp\(0\.68rem, 1\.5cqi, 0\.88rem\)[^}]*white-space:\s*nowrap[^}]*overflow-wrap:\s*normal[^}]*word-break:\s*normal/,
+  );
+  assert.match(
+    css,
+    /html\[lang="en"\] \.metric-pill span:is\([\s\S]*?\[data-i18n="operatingIncome"\][\s\S]*?\[data-i18n="revenueGrowth"\][\s\S]*?\[data-i18n="profitGrowth"\][\s\S]*?font-size:\s*clamp\(0\.56rem, 1\.25cqi, 0\.8rem\)/,
+  );
+  assert.match(
+    css,
+    /\.metric-pill-with-overlay\.is-growth-available \.metric-pill-control > span\s*\{[^}]*justify-content:\s*flex-start[^}]*padding-right:\s*34px[^}]*font-size:\s*clamp\(0\.48rem, 1cqi, 0\.68rem\)/,
+  );
+  assert.match(
+    css,
+    /\.growth-overlay-toggle\s*\{[^}]*min-width:\s*28px[^}]*padding:\s*0 3px[^}]*font-size:\s*0\.48rem/,
+  );
+});
+
 test("keeps landscape tablet columns inside the available width", () => {
   assert.match(landscapeTabletCss, /\.content-panel\s*\{[^}]*grid-template-columns:\s*minmax\(286px, 310px\) minmax\(0, 1fr\)/);
   assert.match(landscapeTabletCss, /\.chart-head\s*\{[^}]*flex-direction:\s*column/);

@@ -20,10 +20,10 @@
 
 ## 功能特性
 
-- 多指标切换：营收、净利润、毛利率、P/E、ROE、营收同比增速、利润同比增速
+- 多指标切换：营收、营业利润、净利润、毛利率、P/E、ROE、营收同比增速、利润同比增速
 - 多时间粒度：季度、年度、滚动年度（TTM）
 - 多公司对比：支持单独显隐、全部显示、全部隐藏
-- 单公司增强视图：单公司时可切换折线图与柱状图
+- 单/双公司增强视图：选中一至两家公司时可切换折线图与柱状图；双公司柱状图按季度并列显示
 - 单公司股价对比：在营收/净利润柱状图中叠加每日复权股价曲线
 - 单公司增速叠加：在营收/净利润柱状图中以白色曲线和右侧百分比轴叠加同比增速，并与股价对比互斥
 - 时间区间过滤：底部双端滑块快速聚焦任意时间窗
@@ -49,12 +49,16 @@ Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及�
 | 指标 | 数据键 | 季度口径 | 年度口径 | 滚动年度（TTM）口径 |
 | --- | --- | --- | --- | --- |
 | 营收 | `revenue` | 原始季度值 | 四季度求和 | 完整近四季度求和，不足四季度则为空 |
+| 营业利润 | `operatingIncome` | 原始季度值 | 四季度求和 | 完整近四季度求和，不足四季度则为空 |
 | 净利润 | `earnings` | 原始季度值 | 四季度求和 | 完整近四季度求和，不足四季度则为空 |
 | 毛利率 | `grossMargin` | 原始季度值 | 以营收加权重算 | 完整近四季度营收加权重算，不足四季度则为空 |
 | 市盈率 | `pe` | 原始季度值 | 取 Q4 | 完整近四季度均值，不足四季度则为空 |
 | ROE | `roe` | 原始季度值 | 取 Q4 | 完整近四季度均值，不足四季度则为空 |
 | 营收同比增速 | `revenueGrowth` | 原始季度值 | 基于年度营收同比计算 | 基于完整 TTM 营收同比计算，不足四季度则为空 |
 | 利润同比增速 | 前端基于 `earnings` 派生 | 与上年同季度净利润比较 | 基于年度净利润同比计算 | 基于完整 TTM 净利润同比计算，不足四季度则为空 |
+
+营业利润自公司上市季度开始连续覆盖，最早追溯至 2005Q1。2012 年前后缺少直接单季值的区间，使用相邻 TTM 营业利润与已知单季值按
+`Q[t-4] = Q[t] - (TTM[t] - TTM[t-1])` 反推；由于历史 TTM 来源以十亿美元、两位小数发布，早期反推值精确到百万美元。银行采用数据源统一展示的营业利润口径，以保证 JPMorgan Chase 与 Bank of America 也能连续比较。
 
 ## 技术栈
 
@@ -108,6 +112,7 @@ window.FINANCIAL_SOURCE_DATA = {
   companies: {
     microsoft: {
       revenue: { "2025Q4": 81273000000 },
+      operatingIncome: { "2025Q4": 32458000000 },
       earnings: { "2025Q4": 25824000000 },
       grossMargin: { "2025Q4": 69.4 },
       pe: { "2025Q4": 34.1 },
@@ -139,6 +144,15 @@ node scripts/auto-refresh-data.mjs
 # 仅预览，不写回文件
 node scripts/auto-refresh-data.mjs --dry-run
 
+# 仅补齐营业利润，不改动其他财务指标
+node scripts/auto-refresh-data.mjs --operating-income-only
+
+# 从本地历史快照重建上市后、且不早于 2005Q1 的连续营业利润序列
+node scripts/backfill-operating-income-history.mjs
+
+# 检查营业利润连续性，但不写回
+node scripts/backfill-operating-income-history.mjs --dry-run
+
 # 只更新指定公司
 node scripts/auto-refresh-data.mjs --company nvidia
 node scripts/auto-refresh-data.mjs --company msft,tsm
@@ -147,6 +161,8 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 脚本当前会处理：
 
 - 财务数据抓取
+- SEC Company Facts、StockAnalysis 与本地官方季度报表的营业利润补齐；本地回填仅采用通过一致性校验的官方季度值
+- Macrotrends 单季与 TTM 历史快照的长期营业利润重建；写入 `data/operating-income-history.json` 逐公司记录直接值、反推值与缺口
 - StockAnalysis 与 CompaniesMarketCap 季度 P/E 抓取，缺失点可按历史市值 / TTM 净利润推导
 - SEC 时点型净资产与 CompaniesMarketCap 历史净资产回填，并自动重算 ROE
 - SEC 毛利润直接值或“营收－营业成本”毛利率推导
@@ -193,6 +209,9 @@ node scripts/auto-refresh-price-data.mjs
 │   ├── data-auto-refresh.yml
 │   └── pages.yml
 ├── assets/logos/
+├── data/
+│   ├── operating-income-history.json
+│   └── operating-income-source.json
 ├── data.js
 ├── price-data.js
 ├── index.html
@@ -200,6 +219,7 @@ node scripts/auto-refresh-price-data.mjs
 ├── style.css
 ├── scripts/
 │   ├── auto-refresh-data.mjs
+│   ├── backfill-operating-income-history.mjs
 │   └── auto-refresh-price-data.mjs
 ├── README.md
 └── README.en.md

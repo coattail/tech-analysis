@@ -20,10 +20,10 @@ The project focuses on three things:
 
 ## Features
 
-- Metric switching: Revenue, Net Income, Gross Margin, P/E, ROE, Revenue YoY Growth, Profit YoY Growth
+- Metric switching: Revenue, Operating Income, Net Income, Gross Margin, P/E, ROE, Revenue YoY Growth, Profit YoY Growth
 - Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
-- Enhanced single-company mode: switch between line and bar charts
+- Enhanced one/two-company mode: switch between line and bar charts; two-company bars are grouped side by side by quarter
 - Single-company stock-price comparison for revenue/net-income bar charts
 - Single-company growth overlay: add a white year-over-year growth line with a right-side percentage axis to revenue/net-income bars; mutually exclusive with the price overlay
 - Time-range filtering via dual-handle slider
@@ -46,12 +46,16 @@ As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across m
 | Metric | Data Key | Quarterly | Annual | Rolling Annual (TTM) |
 | --- | --- | --- | --- | --- |
 | Revenue | `revenue` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
+| Operating Income | `operatingIncome` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
 | Net Income | `earnings` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
 | Gross Margin | `grossMargin` | Raw quarterly value | Revenue-weighted recomputation | Revenue-weighted recomputation over the latest complete four quarters; null until four quarters are present |
 | P/E | `pe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
 | ROE | `roe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
 | Revenue YoY Growth | `revenueGrowth` | Raw quarterly value | Calculated from annual revenue | Calculated from complete TTM revenue; null until four quarters are present |
 | Profit YoY Growth | Derived in the browser from `earnings` | Compared with the same quarter one year earlier | Calculated from annual net income | Calculated from complete TTM net income; null until four quarters are present |
+
+Operating income is continuously covered from each company's listing quarter, with a floor of 2005Q1. Where direct quarterly values are unavailable around the pre-2012 period, quarters are reconstructed from adjacent TTM operating income and a known quarter using
+`Q[t-4] = Q[t] - (TTM[t] - TTM[t-1])`. Because the historical TTM source is published in USD billions to two decimal places, reconstructed early values have USD-million precision. Banks use the source's standardized operating-income presentation so JPMorgan Chase and Bank of America remain continuously comparable.
 
 ## Stack
 
@@ -105,6 +109,7 @@ window.FINANCIAL_SOURCE_DATA = {
   companies: {
     microsoft: {
       revenue: { "2025Q4": 81273000000 },
+      operatingIncome: { "2025Q4": 32458000000 },
       earnings: { "2025Q4": 25824000000 },
       grossMargin: { "2025Q4": 69.4 },
       pe: { "2025Q4": 34.1 },
@@ -136,6 +141,15 @@ node scripts/auto-refresh-data.mjs
 # Dry run only
 node scripts/auto-refresh-data.mjs --dry-run
 
+# Backfill operating income only, without changing other financial metrics
+node scripts/auto-refresh-data.mjs --operating-income-only
+
+# Rebuild continuous operating-income history from listing, no earlier than 2005Q1
+node scripts/backfill-operating-income-history.mjs
+
+# Audit continuity without writing files
+node scripts/backfill-operating-income-history.mjs --dry-run
+
 # Refresh selected companies only
 node scripts/auto-refresh-data.mjs --company nvidia
 node scripts/auto-refresh-data.mjs --company msft,tsm
@@ -144,6 +158,8 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 The script currently handles:
 
 - financial data fetching
+- operating-income backfills from SEC Company Facts, StockAnalysis, and locally curated official quarterly filings; local values must pass consistency checks
+- long-range operating-income reconstruction from the local Macrotrends quarterly/TTM snapshot, with direct, reconstructed, and missing periods recorded per company in `data/operating-income-history.json`
 - quarterly P/E from StockAnalysis and CompaniesMarketCap, with auditable gaps derived from historical market cap / TTM earnings
 - SEC instant net-assets facts plus CompaniesMarketCap historical net-assets backfills and automatic ROE recalculation
 - gross margin from direct SEC gross-profit facts or revenue minus cost of revenue
@@ -189,6 +205,9 @@ If you fork this repository, update the badge links and demo URL in the README f
 │   ├── data-auto-refresh.yml
 │   └── pages.yml
 ├── assets/logos/
+├── data/
+│   ├── operating-income-history.json
+│   └── operating-income-source.json
 ├── data.js
 ├── price-data.js
 ├── index.html
@@ -196,6 +215,7 @@ If you fork this repository, update the badge links and demo URL in the README f
 ├── style.css
 ├── scripts/
 │   ├── auto-refresh-data.mjs
+│   ├── backfill-operating-income-history.mjs
 │   └── auto-refresh-price-data.mjs
 ├── README.md
 └── README.en.md

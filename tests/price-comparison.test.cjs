@@ -952,10 +952,10 @@ test("compact charts reduce axes, labels, logo, and watermark pressure", () => {
   assert.match(script, /return numericValue < 0 \? "" : `\$\$\{decimalFormatter\.format\(numericValue\)\}`/);
 });
 
-test("single-company financial bars keep uniform quarter slots with price comparison", () => {
+test("focused-company financial bars keep uniform quarter slots with price comparison", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
-  assert.match(script, /const shouldUseFinancialQuarterSlotPoints = useBarForSingleCompany;/);
+  assert.match(script, /const shouldUseFinancialQuarterSlotPoints = useBarForFocusedCompanies;/);
   assert.doesNotMatch(script, /const shouldUseDateXAxis = usesDateXAxis\(\);/);
   assert.doesNotMatch(script, /useDateXAxis/);
   assert.match(script, /const shouldReservePriceComparisonRange = canEnablePriceComparisonForCurrentView\(\);/);
@@ -1002,7 +1002,7 @@ test("bar chart tooltips choose nearby anchors without covering the active bar",
   assert.match(script, /function collectVisibleBarRects/);
   assert.match(script, /function tooltipRectIntersectsBar/);
   assert.match(script, /function shouldAvoidBarTooltipCollisions/);
-  assert.match(script, /return metricKey === "revenue" \|\| metricKey === "netIncome";/);
+  assert.match(script, /return metricKey === "revenue" \|\| metricKey === "netIncome" \|\| metricKey === "operatingIncome";/);
   assert.match(script, /avoidBarCollisions:\s*shouldAvoidBarTooltipCollisions\(state\.metric\)/);
   assert.match(script, /findNonOverlappingTooltipPosition/);
   assert.match(script, /xAlign:\s*"right"/);
@@ -1034,14 +1034,15 @@ test("single-company bars pin thickness when price overlay is dense", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
   assert.match(script, /function computeSingleCompanyBarThickness/);
-  assert.match(script, /barThickness:\s*useBarDataset\s*\?\s*computeSingleCompanyBarThickness\(rangeLabels\.length\)/);
+  assert.match(script, /computeSingleCompanyBarThickness\(rangeLabels\.length\)/);
   assert.match(script, /currentDataset\.barThickness = nextDataset\.barThickness;/);
 });
 
-test("single-company bars disable grouping so the bar center stays on the quarter slot", () => {
+test("single-company bars stay centered while two-company bars are grouped", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
-  assert.match(script, /grouped:\s*useBarDataset\s*\?\s*false\s*:\s*undefined/);
+  assert.match(script, /const dualCompanyBars = useBarForFocusedCompanies && visibleCompanyCount === 2/);
+  assert.match(script, /grouped:\s*useBarDataset\s*\?\s*dualCompanyBars\s*:\s*undefined/);
   assert.match(script, /currentDataset\.grouped = nextDataset\.grouped;/);
 });
 
