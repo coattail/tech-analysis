@@ -49,8 +49,9 @@ function loadStockPriceSourceData() {
   return context.STOCK_PRICE_SOURCE_DATA;
 }
 
-test("shows price comparison only for one visible company in revenue/net-income bar mode", () => {
+test("shows price comparison only for one visible company in financial bar mode", () => {
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "revenue" }), true);
+  assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "operatingIncome" }), true);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "netIncome" }), true);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 2, chartMode: "bar", metric: "revenue" }), false);
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "line", metric: "revenue" }), false);

@@ -1,5 +1,5 @@
 (function attachPriceComparison(globalScope) {
-  const ALLOWED_PRICE_COMPARISON_METRICS = new Set(["revenue", "netIncome"]);
+  const ALLOWED_PRICE_COMPARISON_METRICS = new Set(["revenue", "operatingIncome", "netIncome"]);
   const PRICE_OVERLAY_DATASET_ORDER = 0;
   const FINANCIAL_BAR_DATASET_ORDER = 1;
   const DEFAULT_DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
