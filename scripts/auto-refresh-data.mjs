@@ -377,6 +377,16 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       earnings: 346_688_000,
       grossMargin: (544_466 / 2_540_959) * 100,
     },
+    // Amazon Q2 2026 earnings release, furnished on Form 8-K on 2026-07-30.
+    "2026Q2": {
+      revenue: 200_606_000_000,
+      earnings: 62_647_000_000,
+      operatingIncome: 27_461_000_000,
+      grossMargin: ((200_606 - 95_778) / 200_606) * 100,
+      netAssets: 551_620_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-07-30",
+    },
   },
   tsmc: {
     // TSMC 2004Q4 Form 6-K; TWD values converted at the FRED quarter-average rate.
@@ -2764,6 +2774,7 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
       changedPeriods: new Set(),
       revenuePeriods: new Set(),
       netIncomePeriods: new Set(),
+      operatingIncomePeriods: new Set(),
       grossMarginPeriods: new Set(),
       netAssetPeriods: new Set(),
       reportDatePeriods: new Set(),
@@ -2773,6 +2784,7 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
   const changedPeriods = new Set();
   const revenuePeriods = new Set();
   const netIncomePeriods = new Set();
+  const operatingIncomePeriods = new Set();
   const grossMarginPeriods = new Set();
   const netAssetPeriods = new Set();
   const reportDatePeriods = new Set();
@@ -2790,6 +2802,14 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
     if (Number.isFinite(values.earnings)) {
       netIncomePeriods.add(period);
       if (setSeriesValue(companyData.earnings, period, values.earnings)) {
+        changedPoints += 1;
+        changedPeriods.add(period);
+      }
+    }
+
+    if (Number.isFinite(values.operatingIncome)) {
+      operatingIncomePeriods.add(period);
+      if (setSeriesValue(companyData.operatingIncome, period, values.operatingIncome)) {
         changedPoints += 1;
         changedPeriods.add(period);
       }
@@ -2828,6 +2848,7 @@ function applyOfficialQuarterlyOverrides(companyId, companyData) {
     changedPeriods,
     revenuePeriods,
     netIncomePeriods,
+    operatingIncomePeriods,
     grossMarginPeriods,
     netAssetPeriods,
     reportDatePeriods,
@@ -3475,6 +3496,7 @@ async function run() {
     });
     officialOverrideResult.revenuePeriods.forEach((period) => revenueActual.add(period));
     officialOverrideResult.netIncomePeriods.forEach((period) => netIncomeActual.add(period));
+    officialOverrideResult.operatingIncomePeriods.forEach((period) => operatingIncomeActual.add(period));
     officialOverrideResult.grossMarginPeriods.forEach((period) => grossMarginActual.add(period));
     companyStats.qualityFixChanges += officialOverrideResult.changedPoints;
 
