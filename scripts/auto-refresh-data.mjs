@@ -369,6 +369,16 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   apple: {
     // FY2004 Form 10-K, Note 13 selected quarterly financial information.
     "2004Q3": { earnings: 106_000_000, grossMargin: (634 / 2_350) * 100 },
+    // Apple FY2026 Q3 earnings release, furnished on Form 8-K on 2026-07-30.
+    "2026Q2": {
+      revenue: 109_417_000_000,
+      earnings: 29_789_000_000,
+      operatingIncome: 35_695_000_000,
+      grossMargin: (54_770 / 109_417) * 100,
+      netAssets: 107_520_000_000,
+      periodEndDate: "2026-06-27",
+      reportDate: "2026-07-30",
+    },
   },
   amazon: {
     // FY2004 Form 10-K, Note 14 quarterly results.
