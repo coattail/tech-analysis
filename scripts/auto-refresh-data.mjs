@@ -267,6 +267,18 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       reportDate: "2026-07-28",
     },
   },
+  palantir: {
+    // Palantir Q2 2026 earnings release, furnished on Form 8-K on 2026-08-03.
+    "2026Q2": {
+      revenue: 1_935_464_000,
+      earnings: 1_061_890_000,
+      operatingIncome: 912_004_000,
+      grossMargin: (1_638_594 / 1_935_464) * 100,
+      netAssets: 9_774_194_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-08-03",
+    },
+  },
   chronoscale: {
     // Applied Digital Cloud (ChronoScale predecessor) quarterly results.
     // Sources: APLD FY2025 10-K, FY2025/FY2026 10-Q segment and discontinued-operation tables,
