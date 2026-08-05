@@ -581,6 +581,16 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2011Q2": { earnings: 3_209_000_000 },
   },
   amd: {
+    // AMD Q2 2026 earnings release, published on 2026-08-04.
+    "2026Q2": {
+      revenue: 11_536_000_000,
+      earnings: 2_297_000_000,
+      operatingIncome: 1_990_000_000,
+      grossMargin: (6_203 / 11_536) * 100,
+      netAssets: 67_224_000_000,
+      periodEndDate: "2026-06-27",
+      reportDate: "2026-08-04",
+    },
     // FY2005/FY2007 Form 10-K selected quarterly financial data.
     "2004Q4": { earnings: -30_000_000, grossMargin: 41.0 },
     "2005Q4": { earnings: 95_588_000 },
