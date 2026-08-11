@@ -279,6 +279,18 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       reportDate: "2026-08-03",
     },
   },
+  coreweave: {
+    // CoreWeave Q2 2026 earnings release, published on 2026-08-11.
+    "2026Q2": {
+      revenue: 2_575_000_000,
+      earnings: -626_000_000,
+      operatingIncome: -49_000_000,
+      grossMargin: ((2_575 - 879) / 2_575) * 100,
+      netAssets: 5_024_000_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-08-11",
+    },
+  },
   chronoscale: {
     // Applied Digital Cloud (ChronoScale predecessor) quarterly results.
     // Sources: APLD FY2025 10-K, FY2025/FY2026 10-Q segment and discontinued-operation tables,
