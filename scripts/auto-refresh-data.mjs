@@ -291,6 +291,18 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       reportDate: "2026-08-11",
     },
   },
+  nebius: {
+    // Nebius Q2 2026 earnings release, published on 2026-08-12.
+    "2026Q2": {
+      revenue: 582_300_000,
+      earnings: -190_400_000,
+      operatingIncome: -175_900_000,
+      grossMargin: ((582.3 - 133.6) / 582.3) * 100,
+      netAssets: 10_340_500_000,
+      periodEndDate: "2026-06-30",
+      reportDate: "2026-08-12",
+    },
+  },
   chronoscale: {
     // Applied Digital Cloud (ChronoScale predecessor) quarterly results.
     // Sources: APLD FY2025 10-K, FY2025/FY2026 10-Q segment and discontinued-operation tables,
