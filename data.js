@@ -1,17 +1,18 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC Company Facts + StockAnalysis + Macrotrends historical Operating Income/TTM reconstruction",
-    "generatedAt": "2026-08-12T23:57:16.593Z",
+    "generatedAt": "2026-08-13T23:57:32.723Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q3",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet + CompaniesMarketCap quarterly P/E",
-      "refreshedAt": "2026-08-12T23:57:16.593Z",
+      "refreshedAt": "2026-08-13T23:57:32.723Z",
       "updatedCompanies": [
         "nvidia",
         "alphabet",
         "apple",
+        "microsoft",
         "amazon",
         "avgo",
         "meta",
@@ -19,27 +20,26 @@ window.FINANCIAL_SOURCE_DATA = {
         "tsla",
         "walmart",
         "berkshire",
+        "jpmorgan",
         "lilly",
         "exxon",
+        "visa",
+        "asml",
+        "micron",
         "jnj",
         "oracle",
         "amd",
         "mastercard",
+        "costco",
         "netflix",
         "caterpillar",
+        "chevron",
         "palantir",
         "cisco",
-        "abbvie",
-        "homedepot",
         "ibm",
         "sap",
         "crowdstrike",
-        "salesforce",
         "servicenow",
-        "datadog",
-        "snowflake",
-        "cloudflare",
-        "adobe",
         "zoom",
         "coreweave",
         "nebius",
@@ -497,7 +497,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 33.846,
         "2025Q4": 34.301,
         "2026Q1": 30.0846,
-        "2026Q2": 33.6791
+        "2026Q2": 33.6791,
+        "2026Q3": 36.8227
       },
       "netAssets": {
         "2004Q2": 4812000000,
@@ -1401,7 +1402,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 36.698,
         "2025Q4": 30.139,
         "2026Q1": 22.0339,
-        "2026Q2": 22.0154
+        "2026Q2": 22.0154,
+        "2026Q3": 29.4884
       },
       "netAssets": {
         "2004Q2": 74825000000,
@@ -2305,7 +2307,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 23.682,
         "2025Q4": 28.609,
         "2026Q1": 21.689,
-        "2026Q2": 25.7356
+        "2026Q2": 25.7356,
+        "2026Q3": 25.9773
       },
       "netAssets": {
         "2004Q2": 1016999000,
@@ -3181,7 +3184,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 30.618,
         "2025Q4": 31.769,
         "2026Q1": 24.9127,
-        "2026Q2": 27.1985
+        "2026Q2": 27.1985,
+        "2026Q3": 31.2285
       },
       "netAssets": {
         "2004Q2": -790858000,
@@ -4077,7 +4081,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 31.521,
         "2025Q4": 27.52,
         "2026Q1": 20.7972,
-        "2026Q2": 19.8626
+        "2026Q2": 19.8626,
+        "2026Q3": 21.2869
       },
       "netAssets": {
         "2005Q1": null,
@@ -4906,7 +4911,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 48.886,
         "2025Q4": 45.627,
         "2026Q1": 38.3,
-        "2026Q2": 31.8943
+        "2026Q2": 31.8943,
+        "2026Q3": 34.3445
       },
       "netAssets": {
         "2004Q2": 1086103000,
@@ -6665,7 +6671,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 73.0597014925373,
         "2025Q4": 75.43469387755101,
         "2026Q1": 64.707,
-        "2026Q2": 70.2133
+        "2026Q2": 70.2133,
+        "2026Q3": 67.4992
       },
       "netAssets": {
         "2005Q1": null,
@@ -7481,7 +7488,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 271.1707317073171,
         "2025Q4": 381.1186440677967,
         "2026Q1": 341.055,
-        "2026Q2": 320.608
+        "2026Q2": 320.608,
+        "2026Q3": 283.3
       },
       "netAssets": {
         "2005Q1": null,
@@ -8328,7 +8336,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 36.8346,
         "2025Q4": 35.3776,
         "2026Q1": 43.4818,
-        "2026Q2": 46.2912
+        "2026Q2": 46.2912,
+        "2026Q3": 40.6035
       },
       "netAssets": {
         "2004Q2": 42384000000,
@@ -9230,7 +9239,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 16.0779,
         "2025Q4": 16.2103,
         "2026Q1": 14.2516,
-        "2026Q2": 18.4994
+        "2026Q2": 18.4994,
+        "2026Q3": 18.896
       },
       "netAssets": {
         "2004Q2": 81279000000,
@@ -10081,7 +10091,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 15.6153,
         "2025Q4": 16.1029,
         "2026Q1": 14.0881,
-        "2026Q2": 15.7749
+        "2026Q2": 15.7749,
+        "2026Q3": 15.5308
       },
       "netAssets": {
         "2004Q2": 52503000000,
@@ -10926,7 +10937,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 37.3288,
         "2025Q4": 46.827,
         "2026Q1": 32.6739,
-        "2026Q2": 42.756
+        "2026Q2": 42.756,
+        "2026Q3": 42.8339
       },
       "netAssets": {
         "2004Q2": 10499200000,
@@ -11828,7 +11840,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 16.3881,
         "2025Q4": 17.988,
         "2026Q1": 28.6105,
-        "2026Q2": 22.984
+        "2026Q2": 22.984,
+        "2026Q3": 26.747
       },
       "netAssets": {
         "2004Q2": 93535000000,
@@ -12693,7 +12706,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 33.4358,
         "2025Q4": 32.8996,
         "2026Q1": 26.3275,
-        "2026Q2": 29.3803
+        "2026Q2": 29.3803,
+        "2026Q3": 31.8059
       },
       "netAssets": {
         "2006Q3": 583000000,
@@ -13499,7 +13513,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 33.571,
         "2025Q4": 36.8875,
         "2026Q1": 43.6053,
-        "2026Q2": 59.7344
+        "2026Q2": 59.7344,
+        "2026Q3": 57.7189
       },
       "netAssets": {
         "2004Q2": 1507054663.9230165,
@@ -14367,7 +14382,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 16.0738,
         "2025Q4": 21.8878,
         "2026Q1": 19.4269,
-        "2026Q2": 20.9083
+        "2026Q2": 20.9083,
+        "2026Q3": 21.2016
       },
       "netAssets": {
         "2004Q2": 5509500000,
@@ -15260,7 +15276,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 17.3465,
         "2025Q4": 18.8241,
         "2026Q1": 28.3244,
-        "2026Q2": 29.0212
+        "2026Q2": 29.0212,
+        "2026Q3": 30.0045
       },
       "netAssets": {
         "2004Q2": 30052000000,
@@ -16161,7 +16178,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 51.054,
         "2025Q4": 37.324,
         "2026Q1": 25.815,
-        "2026Q2": 38.7273
+        "2026Q2": 38.7273,
+        "2026Q3": 26.2997
       },
       "netAssets": {
         "2004Q2": 7995000000,
@@ -17040,7 +17058,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 78.9406,
         "2025Q4": 81.1283,
         "2026Q1": 65.9323,
-        "2026Q2": 194.401
+        "2026Q2": 194.401,
+        "2026Q3": 156.821
       },
       "netAssets": {
         "2004Q2": 3238062000,
@@ -17932,7 +17951,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 36.3689,
         "2025Q4": 34.5569,
         "2026Q1": 28.9155,
-        "2026Q2": 28.9936
+        "2026Q2": 28.9936,
+        "2026Q3": 32.7579
       },
       "netAssets": {
         "2004Q4": 979572000,
@@ -18765,7 +18785,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 51.7982,
         "2025Q4": 48.1487,
         "2026Q1": 52.9589,
-        "2026Q2": 50.744
+        "2026Q2": 50.744,
+        "2026Q3": 48.3099
       },
       "netAssets": {
         "2004Q2": 7274022000,
@@ -19651,7 +19672,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 49.9758,
         "2025Q4": 37.0739,
         "2026Q1": 31.0261,
-        "2026Q2": 23.4168
+        "2026Q2": 23.4168,
+        "2026Q3": 24.2229
       },
       "netAssets": {
         "2004Q2": 121906000,
@@ -21400,7 +21422,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 24.4944,
         "2025Q4": 30.4394,
         "2026Q1": 35.2643,
-        "2026Q2": 49.9614
+        "2026Q2": 49.9614,
+        "2026Q3": 42.3069
       },
       "netAssets": {
         "2004Q2": 6610000000,
@@ -22300,7 +22323,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 21.8411,
         "2025Q4": 22.8844,
         "2026Q1": 35.8579,
-        "2026Q2": 29.4387
+        "2026Q2": 29.4387,
+        "2026Q3": 34.1451
       },
       "netAssets": {
         "2004Q2": 41218000000,
@@ -22970,7 +22994,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 434.333,
         "2025Q4": 282.143,
         "2026Q1": 164.36,
-        "2026Q2": 117.97
+        "2026Q2": 117.97,
+        "2026Q3": 186.372
       },
       "netAssets": {
         "2017Q4": -1501562000,
