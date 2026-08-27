@@ -1081,6 +1081,18 @@ test("compresses tiny negative net-income history instead of rounding it to a la
   );
 });
 
+test("compresses tiny negative operating-income history across the full chart", () => {
+  assert.equal(
+    computeCompactBarZeroBaselineMin({
+      metricKey: "operatingIncome",
+      chartMode: "bar",
+      min: -0.230965,
+      max: 63.734,
+    }),
+    -1.59335,
+  );
+});
+
 test("preserves substantial net-income losses instead of hiding them in a compact baseline", () => {
   assert.equal(
     computeCompactBarZeroBaselineMin({
@@ -1093,7 +1105,38 @@ test("preserves substantial net-income losses instead of hiding them in a compac
   );
 });
 
+test("does not compact unrelated metrics or meaningful operating losses", () => {
+  assert.equal(
+    computeCompactBarZeroBaselineMin({
+      metricKey: "operatingIncome",
+      chartMode: "bar",
+      min: -14,
+      max: 63,
+    }),
+    null,
+  );
+  assert.equal(
+    computeCompactBarZeroBaselineMin({
+      metricKey: "grossMargin",
+      chartMode: "bar",
+      min: -0.2,
+      max: 63,
+    }),
+    null,
+  );
+});
+
 test("hides only compact padding ticks and keeps real negative units visible", () => {
+  assert.equal(
+    shouldHidePrimaryYAxisTickLabel({
+      metricKey: "operatingIncome",
+      chartMode: "bar",
+      value: -1_000_000_000,
+      axisMin: -1_593_350_000,
+      axisMax: 65_000_000_000,
+    }),
+    true,
+  );
   assert.equal(
     shouldHidePrimaryYAxisTickLabel({
       metricKey: "netIncome",

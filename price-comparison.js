@@ -554,7 +554,10 @@
     };
   }
 
-  const COMPACT_ZERO_BASELINE_METRICS = new Set(["netIncome"]);
+  // Profit metrics can contain a few early, immaterial losses beside much
+  // larger later profits. Keep those real losses visible without letting a
+  // rounded negative tick band consume a disproportionate part of the plot.
+  const COMPACT_ZERO_BASELINE_METRICS = new Set(["netIncome", "operatingIncome"]);
   const COMPACT_ZERO_BASELINE_RATIO = 0.025;
   const COMPACT_NEGATIVE_VALUE_PADDING_RATIO = 0.15;
   const COMPACT_NEGATIVE_MAX_SHARE = 0.12;
@@ -591,7 +594,7 @@
     const numericValue = Number(value);
     const numericAxisMin = Number(axisMin);
     const numericAxisMax = Number(axisMax);
-    if (metricKey !== "netIncome" || chartMode !== "bar") return false;
+    if (!COMPACT_ZERO_BASELINE_METRICS.has(metricKey) || chartMode !== "bar") return false;
     if (!Number.isFinite(numericValue) || numericValue >= 0) return false;
     if (!Number.isFinite(numericAxisMin) || !Number.isFinite(numericAxisMax)) return false;
     if (numericAxisMin >= 0 || numericAxisMax <= 0) return false;

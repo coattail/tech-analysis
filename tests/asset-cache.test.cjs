@@ -57,7 +57,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["price-comparison.js", "20260729-operating-income-overlay"],
+    ["price-comparison.js", "20260827-compact-profit-axis"],
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-growth-sanity"],
     ["script.js", "20260729-apple-dark-gray-contrast"],
