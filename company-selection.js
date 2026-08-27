@@ -100,6 +100,39 @@
     };
   }
 
+  function extendRangeEndToLatestAvailablePeriod(
+    sharedBounds,
+    availablePeriods,
+    minimumStartIndex = 0,
+  ) {
+    const values = Array.isArray(availablePeriods) ? availablePeriods : [];
+    const minimum = Math.max(0, Number.isInteger(minimumStartIndex) ? minimumStartIndex : 0);
+    let firstAvailableIndex = -1;
+    let latestAvailableIndex = -1;
+
+    for (let index = minimum; index < values.length; index += 1) {
+      if (!values[index]) continue;
+      if (firstAvailableIndex < 0) firstAvailableIndex = index;
+      latestAvailableIndex = index;
+    }
+
+    if (latestAvailableIndex < 0) return sharedBounds;
+
+    const hasSharedData = Boolean(sharedBounds?.hasData)
+      && Number.isInteger(sharedBounds.start)
+      && Number.isInteger(sharedBounds.end)
+      && sharedBounds.end >= sharedBounds.start;
+    const start = hasSharedData
+      ? Math.max(minimum, sharedBounds.start)
+      : firstAvailableIndex;
+
+    return {
+      hasData: true,
+      start,
+      end: Math.max(start, hasSharedData ? sharedBounds.end : start, latestAvailableIndex),
+    };
+  }
+
   const api = {
     DEFAULT_INITIAL_COMPANIES,
     DEFAULT_INITIAL_VIEW,
@@ -112,6 +145,7 @@
     shouldResetRangeAfterApplyingCompanies,
     getDisplayPeriodStart,
     findLongestContiguousDataRange,
+    extendRangeEndToLatestAvailablePeriod,
   };
 
   if (typeof module !== "undefined" && module.exports) {

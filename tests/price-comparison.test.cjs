@@ -813,13 +813,15 @@ test("initial chart build applies the same secondary overlay options as refresh"
   assert.match(buildChartBody, /max: secondaryBounds\.max,/);
 });
 
-test("visible-data range uses the longest continuous fundamental-or-price interval", () => {
+test("visible-data range keeps the shared start and extends through either company's latest value", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const boundsBody = script.match(/function getVisibleDataBounds\([\s\S]*?\n\}/)?.[0] ?? "";
 
   assert.match(boundsBody, /allFundamentalsPresent/);
+  assert.match(boundsBody, /anyFundamentalPresent/);
   assert.match(boundsBody, /pricePeriods\.has\(label\)/);
   assert.match(boundsBody, /findLongestContiguousDataRange/);
+  assert.match(boundsBody, /extendRangeEndToLatestAvailablePeriod/);
 });
 
 test("Nebius datasets start at 2024Q2 and never expose pre-spinoff history", () => {

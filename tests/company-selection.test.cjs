@@ -12,6 +12,7 @@ const {
   shouldResetRangeAfterApplyingCompanies,
   getDisplayPeriodStart,
   findLongestContiguousDataRange,
+  extendRangeEndToLatestAvailablePeriod,
   DEFAULT_INITIAL_COMPANIES,
   DEFAULT_INITIAL_VIEW,
 } = require('../company-selection.js');
@@ -261,4 +262,26 @@ test('finds the longest continuous range without empty periods and prefers the l
     start: 2,
     end: 4,
   });
+});
+
+test('extends only the right edge through the latest period available from any selected company', () => {
+  assert.deepEqual(
+    extendRangeEndToLatestAvailablePeriod(
+      { hasData: true, start: 2, end: 4 },
+      [false, true, true, true, true, true],
+      1,
+    ),
+    { hasData: true, start: 2, end: 5 },
+  );
+});
+
+test('falls back to the full available span when selected companies have no shared period', () => {
+  assert.deepEqual(
+    extendRangeEndToLatestAvailablePeriod(
+      { hasData: false, start: 1, end: 1 },
+      [false, false, true, false, true],
+      1,
+    ),
+    { hasData: true, start: 2, end: 4 },
+  );
 });

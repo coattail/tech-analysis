@@ -367,6 +367,7 @@ const {
   shouldResetRangeAfterApplyingCompanies,
   getDisplayPeriodStart,
   findLongestContiguousDataRange,
+  extendRangeEndToLatestAvailablePeriod,
 } = window.CompanySelectionUtils;
 
 const DEFAULT_VISIBLE_COMPANIES = DEFAULT_INITIAL_COMPANIES;
@@ -1895,7 +1896,7 @@ function getVisibleDataBounds(frequency = state.frequency, metric = state.metric
     });
   }
 
-  const validPeriods = labels.map((label, index) => {
+  const sharedPeriods = labels.map((label, index) => {
     if (index < displayStartIndex) return false;
     const allFundamentalsPresent = visibleCompanyIds.every((companyId) => (
       isFiniteNumber(seriesMap.get(companyId)?.get(label))
@@ -1903,7 +1904,20 @@ function getVisibleDataBounds(frequency = state.frequency, metric = state.metric
     return allFundamentalsPresent || pricePeriods.has(label);
   });
 
-  return findLongestContiguousDataRange(validPeriods, displayStartIndex);
+  const availablePeriods = labels.map((label, index) => {
+    if (index < displayStartIndex) return false;
+    const anyFundamentalPresent = visibleCompanyIds.some((companyId) => (
+      isFiniteNumber(seriesMap.get(companyId)?.get(label))
+    ));
+    return anyFundamentalPresent || pricePeriods.has(label);
+  });
+  const sharedBounds = findLongestContiguousDataRange(sharedPeriods, displayStartIndex);
+
+  return extendRangeEndToLatestAvailablePeriod(
+    sharedBounds,
+    availablePeriods,
+    displayStartIndex,
+  );
 }
 
 function setRangeToVisibleDataBounds(frequency = state.frequency, metric = state.metric) {
