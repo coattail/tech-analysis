@@ -3905,6 +3905,9 @@ function buildChart() {
           labels: {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
+            usePointStyle: true,
+            pointStyle: "circle",
+            pointStyleWidth: isCompactChartLayout() ? 9 : 12,
             boxWidth: isCompactChartLayout() ? 9 : 12,
             boxHeight: isCompactChartLayout() ? 9 : 12,
             generateLabels(chart) {

@@ -977,6 +977,9 @@ test("chart rendering applies unified zero bounds, adaptive badge placement, and
   assert.match(script, /function shouldReserveSingleCompanyLegendLayout/);
   assert.match(script, /plugins\.legend\.display = reserveLegendLayout/);
   assert.match(script, /display: reserveLegendLayout/);
+  assert.match(script, /usePointStyle:\s*true/);
+  assert.match(script, /pointStyle:\s*"circle"/);
+  assert.match(script, /pointStyleWidth:\s*isCompactChartLayout\(\) \? 9 : 12/);
   assert.match(script, /shouldPlaceCompanyBadgeAtBottom/);
   assert.match(script, /badgeVerticalPosition === "bottom"/);
   assert.match(script, /\{ min: this\.min, max: this\.max \}/);
