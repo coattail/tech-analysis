@@ -4,11 +4,17 @@ import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const { normalizeYahooChartPayload } = require("../price-refresh-helpers.cjs");
+const {
+  assessYahooChartFreshness,
+  getLatestPriceDate,
+  normalizeYahooChartPayload,
+} = require("../price-refresh-helpers.cjs");
 
 const PRICE_DATA_JS_PATH = new URL("../price-data.js", import.meta.url);
 const YAHOO_CHART_BASE = "https://query2.finance.yahoo.com/v8/finance/chart";
 const START_DATE_UNIX = Math.floor(Date.UTC(2005, 0, 1) / 1000);
+const FETCH_ATTEMPTS = 3;
+const RETRY_DELAYS_MS = [2_000, 5_000];
 
 const COMPANY_SOURCES = [
   { id: "nvidia", ticker: "NVDA" },
@@ -94,33 +100,57 @@ function pruneDailyPrices(daily, minDate) {
 }
 
 async function fetchDailyAdjustedSeries(company) {
-  const endDateUnix = Math.floor(Date.now() / 1000) + 86400;
-  const url = new URL(`${YAHOO_CHART_BASE}/${encodeURIComponent(company.ticker)}`);
-  const startDateUnix = company.minDate
-    ? Math.floor(Date.parse(`${company.minDate}T00:00:00Z`) / 1000)
-    : START_DATE_UNIX;
-  url.searchParams.set("period1", String(startDateUnix));
-  url.searchParams.set("period2", String(endDateUnix));
-  url.searchParams.set("interval", "1d");
-  url.searchParams.set("events", "div,splits");
-  url.searchParams.set("includeAdjustedClose", "true");
+  let lastError;
 
-  const response = await fetch(url, {
-    headers: {
-      "user-agent": "Mozilla/5.0",
-      accept: "application/json",
-    },
-  });
-  if (!response.ok) throw new Error(`Yahoo Finance 请求失败（${company.ticker}）：${response.status}`);
+  for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt += 1) {
+    try {
+      const endDateUnix = Math.floor(Date.now() / 1000) + 86400;
+      const url = new URL(`${YAHOO_CHART_BASE}/${encodeURIComponent(company.ticker)}`);
+      const startDateUnix = company.minDate
+        ? Math.floor(Date.parse(`${company.minDate}T00:00:00Z`) / 1000)
+        : START_DATE_UNIX;
+      url.searchParams.set("period1", String(startDateUnix));
+      url.searchParams.set("period2", String(endDateUnix));
+      url.searchParams.set("interval", "1d");
+      url.searchParams.set("events", "div,splits");
+      url.searchParams.set("includeAdjustedClose", "true");
 
-  const payload = await response.json();
-  const daily = normalizeYahooChartPayload(payload);
-  if (Object.keys(daily).length === 0) {
-    const providerMessage = payload?.chart?.error?.description || "响应缺少日线数据";
-    throw new Error(`Yahoo Finance 响应异常（${company.ticker}）：${providerMessage}`);
+      const response = await fetch(url, {
+        headers: {
+          "user-agent": "Mozilla/5.0",
+          accept: "application/json",
+          "cache-control": "no-cache",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Yahoo Finance 请求失败（${company.ticker}）：${response.status}`);
+      }
+
+      const payload = await response.json();
+      const daily = normalizeYahooChartPayload(payload);
+      if (Object.keys(daily).length === 0) {
+        const providerMessage = payload?.chart?.error?.description || "响应缺少日线数据";
+        throw new Error(`Yahoo Finance 响应异常（${company.ticker}）：${providerMessage}`);
+      }
+
+      const freshness = assessYahooChartFreshness(payload, daily);
+      if (!freshness.isFresh) {
+        throw new Error(
+          `Yahoo Finance 日线滞后（${company.ticker}）：最新 ${freshness.latestDate || "未知"}，应到 ${freshness.expectedDate || "未知"}`,
+        );
+      }
+
+      return daily;
+    } catch (error) {
+      lastError = error;
+      if (attempt >= FETCH_ATTEMPTS) break;
+      const retryDelay = RETRY_DELAYS_MS[attempt - 1] || RETRY_DELAYS_MS.at(-1);
+      console.warn(`${error.message}；${retryDelay / 1000} 秒后重试（${attempt}/${FETCH_ATTEMPTS}）`);
+      await sleep(retryDelay);
+    }
   }
 
-  return daily;
+  throw lastError;
 }
 
 async function main() {
@@ -128,7 +158,9 @@ async function main() {
   const companies = { ...(existing.companies || {}) };
   const updatedCompanies = [];
   const failedCompanies = [];
-  const selectedCompanies = getSelectedCompanies(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const selectedCompanies = getSelectedCompanies(argv);
+  const allowPartial = argv.includes("--allow-partial");
 
   for (const company of selectedCompanies) {
     try {
@@ -152,12 +184,26 @@ async function main() {
   if (updatedCompanies.length === 0) {
     throw new Error("所有公司股价刷新均失败，未写入 price-data.js");
   }
+  if (failedCompanies.length > 0 && !allowPartial) {
+    throw new Error(
+      `${failedCompanies.length} 家公司股价未通过刷新/新鲜度检查，拒绝写入过期数据：${failedCompanies.join(", ")}`,
+    );
+  }
+
+  const latestDates = COMPANY_SOURCES
+    .map((company) => getLatestPriceDate(companies[company.id]?.daily))
+    .filter(Boolean)
+    .sort();
 
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
       source: "Yahoo Finance chart API",
       priceType: "adjusted-close",
+      latestDateRange: {
+        earliest: latestDates[0] || null,
+        latest: latestDates.at(-1) || null,
+      },
       updatedCompanies,
       failedCompanies,
     },

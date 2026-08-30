@@ -175,7 +175,7 @@ Stock-price data uses a standalone refresh script:
 node scripts/auto-refresh-price-data.mjs
 ```
 
-The script pulls daily adjusted-close values from the Yahoo Finance chart endpoint and writes them into `price-data.js` for the single-company stock-price comparison view.
+The script pulls daily adjusted-close values from the Yahoo Finance chart endpoint and writes them into `price-data.js` for the single-company stock-price comparison view. Each refresh checks the last price date against the provider's latest regular-market session and retries transient failures. By default, any company that remains stale aborts the write instead of silently publishing a successful-but-one-session-behind dataset; `--allow-partial` is available only for deliberate manual partial refreshes.
 
 ## Automation and Deployment
 
@@ -184,7 +184,8 @@ The script pulls daily adjusted-close values from the Yahoo Finance chart endpoi
 Workflow: `.github/workflows/data-auto-refresh.yml`
 
 - supports manual runs
-- supports scheduled updates
+- runs daily at 10:15 UTC, the morning after the US close, so adjusted daily bars have time to settle
+- validates every company's latest trading date and fails visibly on stale or partial results
 - auto-commits when `data.js` or `price-data.js` changes
 
 ### GitHub Pages Deployment

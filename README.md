@@ -178,7 +178,7 @@ node scripts/auto-refresh-data.mjs --company msft,tsm
 node scripts/auto-refresh-price-data.mjs
 ```
 
-脚本会从 Yahoo Finance chart 端点拉取每日复权收盘价并写入 `price-data.js`，供单公司营收/营业利润/净利润柱状图的“股价对比”功能使用。
+脚本会从 Yahoo Finance chart 端点拉取每日复权收盘价并写入 `price-data.js`，供单公司营收/营业利润/净利润柱状图的“股价对比”功能使用。刷新时会以行情响应中的最近常规交易时段为基准检查末日期，并自动重试；任一公司仍滞后时默认拒绝写入，避免自动任务把“请求成功但少一个交易日”的数据静默发布。仅在人工确认需要部分刷新时可使用 `--allow-partial`。
 
 ## 自动化与部署
 
@@ -187,7 +187,8 @@ node scripts/auto-refresh-price-data.mjs
 仓库内置工作流：`.github/workflows/data-auto-refresh.yml`
 
 - 支持手动触发
-- 支持定时更新
+- 支持定时更新；每日任务安排在美股收盘后的次日早晨（10:15 UTC），为复权日线生成预留足够时间
+- 股价数据提交前校验每家公司的最新交易日，过期或部分失败会使任务明确失败而不是提交陈旧数据
 - 当 `data.js` 或 `price-data.js` 发生变化时自动提交到 `main`
 
 ### GitHub Pages 发布

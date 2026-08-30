@@ -3,8 +3,10 @@ name: Auto Refresh Financial Data
 on:
   workflow_dispatch:
   schedule:
-    # Daily baseline at 07:15 China Standard Time.
-    - cron: "15 23 * * *"
+    # Daily baseline at 18:15 China Standard Time / 05:15-06:15 US Eastern Time.
+    # Yahoo's adjusted-close bar can lag the US close by several hours, so the
+    # next-morning run avoids publishing a dataset that silently ends a day early.
+    - cron: "15 10 * * *"
     # European issuers such as ASML publish after the baseline run. During the
     # main quarterly reporting months, poll again at 16:15 China Standard Time.
     - cron: "15 8 * 1,4,7,10 *"

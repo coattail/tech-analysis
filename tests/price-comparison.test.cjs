@@ -24,6 +24,10 @@ const {
   aggregateMarginRollingAnnualEntries,
 } = require("../price-comparison.js");
 const {
+  assessYahooChartFreshness,
+  formatUnixDateInTimeZone,
+  getLatestPriceDate,
+  getYahooExpectedLatestDate,
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
 } = require("../price-refresh-helpers.cjs");
@@ -48,6 +52,66 @@ function loadStockPriceSourceData() {
   vm.runInNewContext(priceDataJs, context);
   return context.STOCK_PRICE_SOURCE_DATA;
 }
+
+test("uses the exchange date when checking the provider's latest closed session", () => {
+  const regularMarketTime = Date.parse("2026-08-28T20:00:00Z") / 1000;
+  const payload = {
+    chart: {
+      result: [{
+        meta: {
+          regularMarketTime,
+          exchangeTimezoneName: "America/New_York",
+        },
+      }],
+    },
+  };
+
+  assert.equal(formatUnixDateInTimeZone(regularMarketTime, "America/New_York"), "2026-08-28");
+  assert.equal(getYahooExpectedLatestDate(payload), "2026-08-28");
+});
+
+test("rejects a successful provider response whose adjusted close is one session stale", () => {
+  const payload = {
+    chart: {
+      result: [{
+        meta: {
+          regularMarketTime: Date.parse("2026-08-28T20:00:00Z") / 1000,
+          exchangeTimezoneName: "America/New_York",
+        },
+      }],
+    },
+  };
+  const daily = {
+    "2026-08-26": 209.66,
+    "2026-08-27": 227.98,
+  };
+
+  assert.equal(getLatestPriceDate(daily), "2026-08-27");
+  assert.deepEqual(assessYahooChartFreshness(payload, daily), {
+    latestDate: "2026-08-27",
+    expectedDate: "2026-08-28",
+    isFresh: false,
+  });
+});
+
+test("accepts adjusted-close data through the provider's latest closed session", () => {
+  const payload = {
+    chart: {
+      result: [{
+        meta: {
+          regularMarketTime: Date.parse("2026-08-28T20:00:00Z") / 1000,
+          exchangeTimezoneName: "America/New_York",
+        },
+      }],
+    },
+  };
+  const daily = {
+    "2026-08-27": 227.98,
+    "2026-08-28": 217.55,
+  };
+
+  assert.equal(assessYahooChartFreshness(payload, daily).isFresh, true);
+});
 
 test("shows price comparison only for one visible company in financial bar mode", () => {
   assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "revenue" }), true);
