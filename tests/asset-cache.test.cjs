@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after replacing option dots with company logos", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260830-balanced-logo-sizes/);
+  assert.match(html, /style\.css\?v=20260830-summary-stamp-nowrap/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {

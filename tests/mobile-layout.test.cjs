@@ -28,6 +28,7 @@ test("keeps the mobile company picker in normal flow without action overlap", ()
 test("uses compact mobile controls and a bounded chart canvas", () => {
   assert.match(mobileCss, /\.chart-side-tools\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(mobileCss, /\.chart-summary\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /#generatedAtLabel\s*\{[^}]*font-size:\s*clamp\(0\.64rem, 1\.05vw, 0\.78rem\)[^}]*white-space:\s*nowrap/);
   assert.match(mobileCss, /\.metric-toolbar\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(mobileCss, /\.chart-wrap\s*\{[^}]*height:\s*clamp\(390px, 118vw, 510px\)/);
 });

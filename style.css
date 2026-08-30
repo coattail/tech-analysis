@@ -1427,6 +1427,14 @@ body:not([data-theme="deep"]) .chart-panel {
   line-height: 1.35;
 }
 
+#generatedAtLabel {
+  font-size: clamp(0.64rem, 1.05vw, 0.78rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .metric-toolbar {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
