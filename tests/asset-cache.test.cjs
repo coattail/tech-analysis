@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after rebalancing chart geometry", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260830-chart-geometry/);
+  assert.match(html, /style\.css\?v=20260830-restored-chart-height/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {

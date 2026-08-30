@@ -1557,7 +1557,7 @@ html[lang="en"] .metric-pill span:is(
 }
 
 .chart-wrap {
-  --chart-base-height: clamp(520px, 38vw, 580px);
+  --chart-base-height: 660px;
   --growth-chart-extra-height: 0px;
   position: relative;
   width: 100%;
@@ -1928,7 +1928,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-wrap {
-    --chart-base-height: 520px;
+    --chart-base-height: 560px;
   }
 
   .chart-summary {
@@ -2176,7 +2176,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-wrap {
-    --chart-base-height: clamp(360px, 105vw, 460px);
+    --chart-base-height: clamp(390px, 118vw, 510px);
     margin-top: 8px;
     padding: 4px;
     border-radius: 12px;
@@ -2250,7 +2250,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-wrap {
-    --chart-base-height: 360px;
+    --chart-base-height: 420px;
   }
 
   .range-head {
