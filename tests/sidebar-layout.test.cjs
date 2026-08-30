@@ -15,7 +15,7 @@ test("allows the company toggle list to shrink inside the sidebar", () => {
   assert.match(toggleListRule, /overflow-x:\s*hidden/);
 });
 
-test("stretches the desktop company sidebar to the chart panel bottom", () => {
+test("stretches the desktop sidebar while letting the chart header fit its content", () => {
   const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
   const desktopRule = css.match(/@media \(min-width:\s*981px\) \{([\s\S]*?)\n\}/)?.[1] ?? "";
 
@@ -24,7 +24,7 @@ test("stretches the desktop company sidebar to the chart panel bottom", () => {
   assert.match(desktopRule, /height:\s*100%/);
   assert.match(desktopRule, /max-height:\s*none/);
   assert.match(desktopRule, /overflow:\s*hidden/);
-  assert.match(desktopRule, /\.chart-head\s*\{[^}]*min-height:\s*123px/);
+  assert.match(desktopRule, /\.chart-head\s*\{[^}]*min-height:\s*auto/);
   assert.match(desktopRule, /\.chart-summary\s*\{[^}]*min-height:\s*63px/);
   assert.match(desktopRule, /\.range-panel\s*\{[^}]*min-height:\s*72px/);
 });

@@ -1801,7 +1801,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .chart-head {
-    min-height: 123px;
+    min-height: auto;
   }
 
   .chart-summary {
