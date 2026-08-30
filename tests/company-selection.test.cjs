@@ -59,6 +59,15 @@ test('provides a persistent bilingual switch for page copy and chart annotations
   assert.match(script, /const suffix = isForecast \? t\("forecastSuffix"\) : ""/);
 });
 
+test('keeps the English status summary compact enough for the aligned desktop columns', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+
+  assert.match(script, /priceOverlayEnabled: "Price overlay: \{count\} daily points\."/);
+  assert.match(script, /loaded: "Updated \{stamp\} · \{count\} companies · \{forecastCount\} forecasts\."/);
+  assert.match(script, /loadedWithWarnings: "Updated \{stamp\} · \{loadedCount\}\/\{count\} companies · \{warningCount\} with missing data\."/);
+  assert.doesNotMatch(script, /Data updated \{stamp\}\. Loaded \{count\} companies/);
+});
+
 test('removes the oversized header module and relocates its utility controls', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 

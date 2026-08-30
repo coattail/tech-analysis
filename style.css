@@ -1795,6 +1795,18 @@ body:not([data-theme="deep"]) .range-panel {
     max-height: none;
     overflow: hidden;
   }
+
+  .chart-head {
+    min-height: 123px;
+  }
+
+  .chart-summary {
+    min-height: 63px;
+  }
+
+  .range-panel {
+    min-height: 72px;
+  }
 }
 
 .range-sliders input[type="range"] {

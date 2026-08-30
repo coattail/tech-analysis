@@ -24,6 +24,9 @@ test("stretches the desktop company sidebar to the chart panel bottom", () => {
   assert.match(desktopRule, /height:\s*100%/);
   assert.match(desktopRule, /max-height:\s*none/);
   assert.match(desktopRule, /overflow:\s*hidden/);
+  assert.match(desktopRule, /\.chart-head\s*\{[^}]*min-height:\s*123px/);
+  assert.match(desktopRule, /\.chart-summary\s*\{[^}]*min-height:\s*63px/);
+  assert.match(desktopRule, /\.range-panel\s*\{[^}]*min-height:\s*72px/);
 });
 
 test("narrows the sidebar and uses two company columns in every category", () => {
