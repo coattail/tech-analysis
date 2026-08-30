@@ -76,6 +76,8 @@ test("renders a company logo instead of a color dot for every company option", (
   assert.match(createToggleBody, /--company-logo-color-deep/);
   assert.match(createToggleBody, /company\.optionLogoPath \|\| company\.logoPath/);
   assert.match(createToggleBody, /company\.optionLogoDeepColor/);
+  assert.match(createToggleBody, /company\.optionLogoFit === "symbol"/);
+  assert.match(createToggleBody, /company-option-logo--\$\{company\.optionLogoFit\}/);
   assert.match(createToggleBody, /"#f5f7fa"/);
   assert.doesNotMatch(createToggleBody, /color-dot|FIXED_COMPANY_IDS/);
   assert.match(stylesheet, /\.company-option-logo-mark/);

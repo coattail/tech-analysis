@@ -15,6 +15,7 @@ function getCompanyEntries() {
       logoPath: match[5].match(/logoPath: "([^"]+)"/)?.[1] ?? null,
       optionLogoPath: match[5].match(/optionLogoPath: "([^"]+)"/)?.[1] ?? null,
       optionLogoColor: match[5].match(/optionLogoColor: "([^"]+)"/)?.[1] ?? null,
+      optionLogoFit: match[5].match(/optionLogoFit: "([^"]+)"/)?.[1] ?? null,
       logoColor: match[5].match(/logoColor: "([^"]+)"/)?.[1] ?? null,
       preserveLightLogoColors: /preserveLightLogoColors: true/.test(match[5]),
       preserveOptionLogoColors: /preserveOptionLogoColors: true/.test(match[5]),
@@ -32,6 +33,21 @@ test("compact option-logo assets are local transparent SVG symbols", () => {
     assert.match(svg, /<svg\b/);
     assert.doesNotMatch(svg, /<rect\b[^>]*(?:width="100%"|height="100%")/i);
   });
+});
+
+test("picker applies bounded size classes to pictorial marks", () => {
+  const companies = getCompanyEntries();
+  const fitted = companies.filter((company) => company.optionLogoFit);
+  assert.ok(fitted.length >= 25, "pictorial marks should be normalized instead of filling the entire logo slot");
+  fitted.forEach((company) => {
+    assert.match(company.optionLogoFit, /^(?:symbol|wide-symbol)$/);
+  });
+
+  const byId = new Map(companies.map((company) => [company.id, company]));
+  assert.equal(byId.get("alphabet").optionLogoFit, "symbol");
+  assert.equal(byId.get("microsoft").optionLogoFit, "symbol");
+  assert.equal(byId.get("mastercard").optionLogoFit, "wide-symbol");
+  assert.equal(byId.get("jpmorgan").optionLogoFit, "symbol");
 });
 
 test("picker retains audited multicolor brand marks and the Chase symbol", () => {

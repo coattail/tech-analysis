@@ -37,6 +37,8 @@ test("stacks category cards when the narrowed sidebar cannot fit two columns", (
   assert.match(css, /@container\s*\(max-width:\s*560px\)\s*\{[\s\S]*?\.toggle-list\s*\{[^}]*grid-template-columns:\s*1fr/);
   assert.match(css, /\.toggle-item\s*\{[^}]*min-width:\s*0[^}]*overflow:\s*hidden/);
   assert.match(css, /\.toggle-item\s*\{[^}]*grid-template-columns:\s*auto 36px minmax\(0, 1fr\)/);
+  assert.match(css, /\.company-option-logo--symbol[\s\S]*?width:\s*24px;[\s\S]*?height:\s*18px;/);
+  assert.match(css, /\.company-option-logo--wide-symbol[\s\S]*?width:\s*30px;[\s\S]*?height:\s*18px;/);
   assert.match(css, /\.toggle-item \.company-option-name\s*\{[^}]*font-size:\s*clamp\(/);
   assert.match(css, /\.toggle-item small\s*\{[^}]*font:\s*600 clamp\(/);
 });
