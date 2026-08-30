@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after rebalancing chart geometry", () => {
+test("cache-busts the stylesheet after aligning the sidebar height", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260830-restored-chart-height/);
+  assert.match(html, /style\.css\?v=20260830-aligned-sidebar-height/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {

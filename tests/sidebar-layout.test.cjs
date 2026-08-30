@@ -3,7 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("allows the company toggle list to shrink inside the sticky sidebar", () => {
+test("allows the company toggle list to shrink inside the sidebar", () => {
   const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
   const toggleListRule = css.match(/\.toggle-list\s*\{[^}]+\}/)?.[0] ?? "";
 
@@ -13,6 +13,17 @@ test("allows the company toggle list to shrink inside the sticky sidebar", () =>
     "the company list must not force a fixed minimum height that can overlap sidebar actions",
   );
   assert.match(toggleListRule, /overflow-x:\s*hidden/);
+});
+
+test("stretches the desktop company sidebar to the chart panel bottom", () => {
+  const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
+  const desktopRule = css.match(/@media \(min-width:\s*981px\) \{([\s\S]*?)\n\}/)?.[1] ?? "";
+
+  assert.match(desktopRule, /\.control-panel\s*\{[^}]*position:\s*relative/);
+  assert.match(desktopRule, /align-self:\s*stretch/);
+  assert.match(desktopRule, /height:\s*100%/);
+  assert.match(desktopRule, /max-height:\s*none/);
+  assert.match(desktopRule, /overflow:\s*hidden/);
 });
 
 test("narrows the sidebar and uses two company columns in every category", () => {

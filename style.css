@@ -1786,6 +1786,17 @@ body:not([data-theme="deep"]) .range-panel {
   }
 }
 
+@media (min-width: 981px) {
+  .control-panel {
+    position: relative;
+    top: auto;
+    align-self: stretch;
+    height: 100%;
+    max-height: none;
+    overflow: hidden;
+  }
+}
+
 .range-sliders input[type="range"] {
   position: absolute;
   inset: 0;
