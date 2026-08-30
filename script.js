@@ -1315,6 +1315,12 @@ function getRelativeLuminance(red, green, blue) {
   return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
 }
 
+function getHexRelativeLuminance(hexColor) {
+  const match = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hexColor ?? "");
+  if (!match) return 0;
+  return getRelativeLuminance(...match.slice(1).map((part) => Number.parseInt(part, 16)));
+}
+
 function tuneSeriesColorForLightTheme(hexColor) {
   if (lightSeriesColorCache.has(hexColor)) return lightSeriesColorCache.get(hexColor);
   const match = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hexColor ?? "");
@@ -3650,19 +3656,27 @@ function createToggle(company) {
   logo.className = "company-option-logo";
   logo.setAttribute("aria-hidden", "true");
 
+  const mark = document.createElement("span");
+  mark.className = "company-option-logo-mark";
+  mark.style.setProperty("--company-logo-mask", `url("${company.logoPath}")`);
+  mark.style.setProperty("--company-logo-color", company.logoColor);
+  mark.style.setProperty(
+    "--company-logo-color-deep",
+    getHexRelativeLuminance(company.logoColor) < 0.13
+      ? company.deepColor || company.color
+      : company.logoColor,
+  );
+  logo.append(mark);
+
   if (company.preserveLogoColors || company.preserveLightLogoColors) {
+    logo.classList.toggle("preserve-logo-colors", Boolean(company.preserveLogoColors));
+    logo.classList.toggle("preserve-light-logo-colors", Boolean(company.preserveLightLogoColors));
     const image = document.createElement("img");
     image.src = company.logoPath;
     image.alt = "";
     image.loading = "lazy";
     image.decoding = "async";
     logo.append(image);
-  } else {
-    const mark = document.createElement("span");
-    mark.className = "company-option-logo-mark";
-    mark.style.setProperty("--company-logo-mask", `url("${company.logoPath}")`);
-    mark.style.setProperty("--company-logo-color", company.logoColor);
-    logo.append(mark);
   }
 
   const text = document.createElement("span");

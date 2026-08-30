@@ -981,12 +981,11 @@ body:not([data-theme="deep"]) .control-group {
   box-sizing: border-box;
   width: 28px;
   height: 20px;
-  padding: 2px;
+  padding: 1px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 4px;
-  background: #f7f9fc;
-  box-shadow: 0 1px 3px rgba(4, 12, 25, 0.22);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .company-option-logo img,
@@ -997,13 +996,22 @@ body:not([data-theme="deep"]) .control-group {
 }
 
 .company-option-logo img {
+  display: none;
   object-fit: contain;
 }
 
 .company-option-logo-mark {
-  background: var(--company-logo-color);
+  background: var(--company-logo-color-deep, var(--company-logo-color));
   -webkit-mask: var(--company-logo-mask) center / contain no-repeat;
   mask: var(--company-logo-mask) center / contain no-repeat;
+}
+
+.company-option-logo.preserve-logo-colors .company-option-logo-mark {
+  display: none;
+}
+
+.company-option-logo.preserve-logo-colors img {
+  display: block;
 }
 
 .control-actions {
@@ -2471,9 +2479,16 @@ html[data-theme="light"] {
   box-shadow: 0 5px 12px rgba(39, 57, 82, 0.08);
 }
 
-:is(html[data-theme="light"] body, body[data-theme="light"]) .company-option-logo {
-  border-color: rgba(73, 92, 117, 0.2);
-  box-shadow: 0 1px 3px rgba(39, 57, 82, 0.1);
+:is(html[data-theme="light"] body, body[data-theme="light"]) .company-option-logo-mark {
+  background: var(--company-logo-color);
+}
+
+:is(html[data-theme="light"] body, body[data-theme="light"]) .company-option-logo.preserve-light-logo-colors .company-option-logo-mark {
+  display: none;
+}
+
+:is(html[data-theme="light"] body, body[data-theme="light"]) .company-option-logo.preserve-light-logo-colors img {
+  display: block;
 }
 
 :is(html[data-theme="light"] body, body[data-theme="light"]) .source-details summary,

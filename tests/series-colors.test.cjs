@@ -73,8 +73,10 @@ test("renders a company logo instead of a color dot for every company option", (
   assert.match(createToggleBody, /image\.src = company\.logoPath/);
   assert.match(createToggleBody, /--company-logo-mask/);
   assert.match(createToggleBody, /--company-logo-color/);
+  assert.match(createToggleBody, /--company-logo-color-deep/);
   assert.doesNotMatch(createToggleBody, /color-dot|FIXED_COMPANY_IDS/);
   assert.match(stylesheet, /\.company-option-logo-mark/);
+  assert.match(stylesheet, /\.company-option-logo\s*\{[^}]*background:\s*transparent/);
   assert.doesNotMatch(stylesheet, /\.color-dot/);
 });
 
