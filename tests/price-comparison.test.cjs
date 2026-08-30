@@ -979,7 +979,10 @@ test("chart rendering applies unified zero bounds, adaptive badge placement, and
   assert.match(script, /display: reserveLegendLayout/);
   assert.match(script, /usePointStyle:\s*true/);
   assert.match(script, /pointStyle:\s*"circle"/);
-  assert.match(script, /pointStyleWidth:\s*isCompactChartLayout\(\) \? 9 : 12/);
+  assert.doesNotMatch(script, /pointStyleWidth:/);
+  assert.match(script, /boxWidth:\s*isCompactChartLayout\(\) \? 10 : 12/);
+  assert.match(script, /boxHeight:\s*8/);
+  assert.match(script, /\.map\(\(item\) => \(\{ \.\.\.item, pointStyle: "circle" \}\)\)/);
   assert.match(script, /shouldPlaceCompanyBadgeAtBottom/);
   assert.match(script, /badgeVerticalPosition === "bottom"/);
   assert.match(script, /\{ min: this\.min, max: this\.max \}/);
@@ -1006,7 +1009,10 @@ test("price comparison keeps the expanded single-company plot width when toggled
   const paddingBody = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
 
   assert.match(script, /const SINGLE_COMPANY_CHART_RIGHT_PADDING = 12;/);
+  assert.match(script, /const MULTI_COMPANY_CHART_RIGHT_PADDING = 12;/);
+  assert.match(script, /const COMPACT_MULTI_COMPANY_RIGHT_PADDING = 4;/);
   assert.match(paddingBody, /right:\s*compact \? COMPACT_SINGLE_COMPANY_RIGHT_PADDING : SINGLE_COMPANY_CHART_RIGHT_PADDING/);
+  assert.match(paddingBody, /right:\s*compact \? COMPACT_MULTI_COMPANY_RIGHT_PADDING : MULTI_COMPANY_CHART_RIGHT_PADDING/);
   assert.doesNotMatch(paddingBody, /hasPriceOverlay/);
   assert.match(script, /buildChartLayoutPadding\(effectiveChartMode\)/g);
 });

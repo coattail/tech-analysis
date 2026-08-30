@@ -969,7 +969,7 @@ const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
 const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.28;
 const CHART_PLOT_LEFT_NUDGE = 6;
 const SINGLE_COMPANY_CHART_RIGHT_PADDING = 12;
-const MULTI_COMPANY_CHART_RIGHT_PADDING = 52;
+const MULTI_COMPANY_CHART_RIGHT_PADDING = 12;
 const Y_AXIS_TICK_PADDING = 2;
 const Y_AXIS_TITLE_PADDING = 28;
 const Y_AXIS_RESERVED_EXTRA_WIDTH = 44;
@@ -983,7 +983,7 @@ const COMPACT_CHART_MAX_WIDTH = 520;
 const COMPACT_Y_AXIS_MIN_RESERVED_WIDTH = 58;
 const COMPACT_Y_AXIS_RESERVED_EXTRA_WIDTH = 18;
 const COMPACT_SINGLE_COMPANY_RIGHT_PADDING = 4;
-const COMPACT_MULTI_COMPANY_RIGHT_PADDING = 22;
+const COMPACT_MULTI_COMPANY_RIGHT_PADDING = 4;
 const SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE = 64;
 const COMPACT_SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE = 34;
 const SINGLE_COMPANY_WATERMARK_ALPHA = 0.1;
@@ -3907,9 +3907,8 @@ function buildChart() {
             font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
             usePointStyle: true,
             pointStyle: "circle",
-            pointStyleWidth: isCompactChartLayout() ? 9 : 12,
-            boxWidth: isCompactChartLayout() ? 9 : 12,
-            boxHeight: isCompactChartLayout() ? 9 : 12,
+            boxWidth: isCompactChartLayout() ? 10 : 12,
+            boxHeight: 8,
             generateLabels(chart) {
               const defaults = Chart.defaults.plugins.legend.labels.generateLabels(chart);
               return defaults
@@ -3917,6 +3916,7 @@ function buildChart() {
                   const dataset = chart.data.datasets[item.datasetIndex];
                   return dataset?.priceOverlay || dataset?.growthOverlay || state.visibleCompanies.has(dataset?.companyId);
                 })
+                .map((item) => ({ ...item, pointStyle: "circle" }))
                 .sort((left, right) => {
                   const leftDataset = chart.data.datasets[left.datasetIndex];
                   const rightDataset = chart.data.datasets[right.datasetIndex];
