@@ -30,14 +30,19 @@ test("keeps every MAG7 fixed color pair above the stricter separation floor", ()
   const fixedCompanies = loadCompanyColors().filter((company) => FIXED_COMPANY_IDS.has(company.id));
   const expectedColors = {
     nvidia: "#9be000",
-    alphabet: "#fbbc04",
+    alphabet: "#ff9500",
     apple: "#7b8490",
-    microsoft: "#00b7c3",
-    amazon: "#c45500",
-    meta: "#0064e0",
+    microsoft: "#2563eb",
+    amazon: "#a94700",
+    meta: "#c026d3",
     tsla: "#ff3b5c",
   };
   assert.deepEqual(Object.fromEntries(fixedCompanies.map((company) => [company.id, company.brandColor])), expectedColors);
+  assert.equal(expectedColors.nvidia, "#9be000", "NVIDIA should retain its current lime green");
+  assert.equal(expectedColors.apple, "#7b8490", "Apple should retain its current slate gray");
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  assert.match(script, /id: "nvidia"[^\n]*color: "#9be000"/);
+  assert.match(script, /id: "apple"[^\n]*color: "#4b5563", deepColor: "#7b8490"/);
 
   for (let leftIndex = 0; leftIndex < fixedCompanies.length; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < fixedCompanies.length; rightIndex += 1) {
@@ -45,11 +50,15 @@ test("keeps every MAG7 fixed color pair above the stricter separation floor", ()
       const right = fixedCompanies[rightIndex];
       const distance = perceptualColorDistance(left.brandColor, right.brandColor);
       assert.ok(
-        distance >= 0.14,
+        distance >= 0.18,
         `${left.id}/${right.id} fixed colors should remain clearly separated (distance ${distance})`,
       );
     }
   }
+
+  assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.amazon) >= 0.24);
+  assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.nvidia) >= 0.22);
+  assert.ok(perceptualColorDistance(expectedColors.microsoft, expectedColors.meta) >= 0.24);
 });
 
 test("uses the color-vision-friendly blue-orange pair for two non-MAG7 companies", () => {
