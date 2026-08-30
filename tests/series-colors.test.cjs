@@ -26,6 +26,32 @@ test("keeps MAG7 colors fixed in every focused comparison", () => {
   }
 });
 
+test("keeps every MAG7 fixed color pair above the stricter separation floor", () => {
+  const fixedCompanies = loadCompanyColors().filter((company) => FIXED_COMPANY_IDS.has(company.id));
+  const expectedColors = {
+    nvidia: "#9be000",
+    alphabet: "#fbbc04",
+    apple: "#7b8490",
+    microsoft: "#00b7c3",
+    amazon: "#ff7a00",
+    meta: "#0064e0",
+    tsla: "#e82127",
+  };
+  assert.deepEqual(Object.fromEntries(fixedCompanies.map((company) => [company.id, company.brandColor])), expectedColors);
+
+  for (let leftIndex = 0; leftIndex < fixedCompanies.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < fixedCompanies.length; rightIndex += 1) {
+      const left = fixedCompanies[leftIndex];
+      const right = fixedCompanies[rightIndex];
+      const distance = perceptualColorDistance(left.brandColor, right.brandColor);
+      assert.ok(
+        distance >= 0.14,
+        `${left.id}/${right.id} fixed colors should remain clearly separated (distance ${distance})`,
+      );
+    }
+  }
+});
+
 test("uses the color-vision-friendly blue-orange pair for two non-MAG7 companies", () => {
   const colors = resolveSeriesColors([
     { id: "oracle", brandColor: "#f45d48" },
