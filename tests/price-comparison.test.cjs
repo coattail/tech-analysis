@@ -1009,8 +1009,8 @@ test("price comparison keeps the expanded single-company plot width when toggled
   const paddingBody = script.match(/function buildChartLayoutPadding\([\s\S]*?\n\}/)?.[0] ?? "";
 
   assert.match(script, /const SINGLE_COMPANY_CHART_RIGHT_PADDING = 12;/);
-  assert.match(script, /const MULTI_COMPANY_CHART_RIGHT_PADDING = 12;/);
-  assert.match(script, /const COMPACT_MULTI_COMPANY_RIGHT_PADDING = 4;/);
+  assert.match(script, /const MULTI_COMPANY_CHART_RIGHT_PADDING = 52;/);
+  assert.match(script, /const COMPACT_MULTI_COMPANY_RIGHT_PADDING = 22;/);
   assert.match(paddingBody, /right:\s*compact \? COMPACT_SINGLE_COMPANY_RIGHT_PADDING : SINGLE_COMPANY_CHART_RIGHT_PADDING/);
   assert.match(paddingBody, /right:\s*compact \? COMPACT_MULTI_COMPANY_RIGHT_PADDING : MULTI_COMPANY_CHART_RIGHT_PADDING/);
   assert.doesNotMatch(paddingBody, /hasPriceOverlay/);
