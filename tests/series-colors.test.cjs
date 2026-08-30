@@ -64,6 +64,17 @@ test("uses the color-vision-friendly blue-orange pair for two non-MAG7 companies
   });
 });
 
+test("renders fixed color dots only for MAG7 company options", () => {
+  const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
+  const createToggleBody = script.match(/function createToggle\(company\) \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const stylesheet = fs.readFileSync(path.join(__dirname, "../style.css"), "utf8");
+
+  assert.match(createToggleBody, /FIXED_COMPANY_IDS\.has\(company\.id\)/);
+  assert.match(createToggleBody, /hasFixedSeriesColor \? document\.createElement\("span"\) : null/);
+  assert.match(createToggleBody, /if \(dot\) label\.append\(dot\)/);
+  assert.match(stylesheet, /\.toggle-item\.has-fixed-color span:not\(\.color-dot\)/);
+});
+
 test("keeps every possible two-company selection visually distinct", () => {
   const companies = loadCompanyColors();
   assert.equal(companies.length, 44);

@@ -3640,15 +3640,19 @@ function rebuildChartForCurrentView() {
 function createToggle(company) {
   const label = document.createElement("label");
   label.className = "toggle-item";
+  const hasFixedSeriesColor = SeriesColorUtils.FIXED_COMPANY_IDS.has(company.id);
+  label.classList.toggle("has-fixed-color", hasFixedSeriesColor);
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.checked = state.pendingCompanies.has(company.id);
   checkbox.dataset.companyId = company.id;
 
-  const dot = document.createElement("span");
-  dot.className = "color-dot";
-  dot.style.backgroundColor = getSeriesColor(company);
+  const dot = hasFixedSeriesColor ? document.createElement("span") : null;
+  if (dot) {
+    dot.className = "color-dot";
+    dot.style.backgroundColor = getSeriesColor(company);
+  }
 
   const text = document.createElement("span");
   text.textContent = getCompanyName(company);
@@ -3666,7 +3670,9 @@ function createToggle(company) {
     syncPresetButtons();
   });
 
-  label.append(checkbox, dot, text, ticker);
+  label.append(checkbox);
+  if (dot) label.append(dot);
+  label.append(text, ticker);
   return label;
 }
 

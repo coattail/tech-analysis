@@ -932,7 +932,7 @@ body:not([data-theme="deep"]) .control-group {
 }
 
 .toggle-item span:not(.color-dot) {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 1;
   color: var(--text-body);
   font-weight: 520;
@@ -945,7 +945,7 @@ body:not([data-theme="deep"]) .control-group {
 }
 
 .toggle-item small {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 2;
   min-width: 0;
   overflow: hidden;
@@ -954,6 +954,11 @@ body:not([data-theme="deep"]) .control-group {
   color: var(--text-soft);
   font: 600 clamp(0.5rem, 2.3cqi, 0.62rem) var(--font-terminal);
   line-height: 1.1;
+}
+
+.toggle-item.has-fixed-color span:not(.color-dot),
+.toggle-item.has-fixed-color small {
+  grid-column: 3;
 }
 
 .toggle-item:hover {

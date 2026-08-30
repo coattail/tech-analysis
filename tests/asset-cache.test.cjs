@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after adding operating income and dual bars", () => {
+test("cache-busts the stylesheet after limiting fixed color dots to MAG7", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260729-metric-label-nowrap/);
+  assert.match(html, /style\.css\?v=20260830-fixed-color-dots/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {
@@ -61,7 +61,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-growth-sanity"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20260830-hybrid-comparison-palette"],
+    ["script.js", "20260830-fixed-color-dots"],
   ]) {
     assert.match(
       html,
