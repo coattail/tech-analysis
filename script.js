@@ -248,7 +248,7 @@ const COMPANIES = [
   { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", logoColor: "#737373", preserveLightLogoColors: true, logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
   { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ffd166", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
   { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoColor: "#cc092f", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
-  { id: "meta", name: "Meta", ticker: "META", color: "#ff5f87", logoColor: "#0866ff", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
+  { id: "meta", name: "Meta", ticker: "META", color: "#0064e0", logoColor: "#0866ff", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
   { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoColor: "#e60012", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
   { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff5a3d", logoColor: "#e82127", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
   { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoColor: "#0071ce", preserveLightLogoColors: true, logoPath: "assets/logos/walmart.svg?v=20260717-brand-colors-v5" },
@@ -1333,10 +1333,31 @@ function tuneSeriesColorForLightTheme(hexColor) {
   return result;
 }
 
-function getSeriesColor(company) {
+function getBrandSeriesColor(company) {
   return getActiveTheme() === "light"
     ? tuneSeriesColorForLightTheme(company.color)
     : company.deepColor || company.color;
+}
+
+function getVisibleSeriesEncodings() {
+  const visibleCompanies = COMPANIES.filter((company) => state.visibleCompanies.has(company.id));
+  const colors = SeriesColorUtils.resolveSeriesColors(
+    visibleCompanies.map((company) => ({
+      id: company.id,
+      brandColor: getBrandSeriesColor(company),
+    })),
+  );
+
+  return new Map(visibleCompanies.map((company) => [
+    company.id,
+    {
+      color: colors[company.id] || getBrandSeriesColor(company),
+    },
+  ]));
+}
+
+function getSeriesColor(company) {
+  return getVisibleSeriesEncodings().get(company.id)?.color || getBrandSeriesColor(company);
 }
 
 function isFiniteNumber(value) {
@@ -2627,6 +2648,7 @@ function buildDatasetsForView() {
     visibleCompanyCount >= 1 &&
     visibleCompanyCount <= 2;
   const dualCompanyBars = useBarForFocusedCompanies && visibleCompanyCount === 2;
+  const visibleSeriesEncodings = getVisibleSeriesEncodings();
 
   const datasets = COMPANIES.map((company) => {
     const series = state.dataByFrequency[state.frequency][metricKey].get(company.id) ?? emptySeries(fullLabels);
@@ -2634,7 +2656,10 @@ function buildDatasetsForView() {
 
     const fullData = fullLabels.map((label) => series.get(label) ?? null);
     const useBarDataset = useBarForFocusedCompanies && state.visibleCompanies.has(company.id);
-    const seriesColor = getSeriesColor(company);
+    const seriesEncoding = visibleSeriesEncodings.get(company.id) || {
+      color: getBrandSeriesColor(company),
+    };
+    const seriesColor = seriesEncoding.color;
 
     return {
       type: useBarDataset ? "bar" : "line",

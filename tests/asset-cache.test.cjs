@@ -60,7 +60,8 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["price-comparison.js", "20260827-compact-profit-axis"],
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-growth-sanity"],
-    ["script.js", "20260827-latest-any-range"],
+    ["series-colors.js", "20260830-hybrid-comparison-palette"],
+    ["script.js", "20260830-hybrid-comparison-palette"],
   ]) {
     assert.match(
       html,
