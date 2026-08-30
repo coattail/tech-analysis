@@ -913,7 +913,7 @@ body:not([data-theme="deep"]) .control-group {
 
 .toggle-item {
   display: grid;
-  grid-template-columns: auto 28px minmax(0, 1fr);
+  grid-template-columns: auto 36px minmax(0, 1fr);
   align-items: center;
   width: 100%;
   min-width: 0;
@@ -979,8 +979,8 @@ body:not([data-theme="deep"]) .control-group {
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  width: 28px;
-  height: 20px;
+  width: 36px;
+  height: 24px;
   padding: 1px;
   overflow: hidden;
   border: 0;

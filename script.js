@@ -243,49 +243,49 @@ const FREQUENCY_META = {
 
 const COMPANIES = [
   { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoColor: "#76b900", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
-  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#fbbc04", logoColor: "#4285f4", preserveLightLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
+  { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#fbbc04", logoColor: "#4285f4", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
   { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", deepColor: "#7b8490", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
-  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#00b7c3", logoColor: "#737373", preserveLightLogoColors: true, logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
-  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#c45500", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
+  { id: "microsoft", name: "微软", ticker: "MSFT", color: "#00b7c3", logoColor: "#737373", preserveLightLogoColors: true, preserveOptionLogoColors: true, optionLogoPath: "assets/logos/options/microsoft.svg?v=20260830-compact-marks", logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
+  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#c45500", logoColor: "#ff9900", optionLogoPath: "assets/logos/options/amazon.svg?v=20260830-compact-marks", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
   { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoColor: "#cc092f", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
   { id: "meta", name: "Meta", ticker: "META", color: "#0064e0", logoColor: "#0866ff", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
-  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoColor: "#e60012", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
+  { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoColor: "#e60012", preserveOptionLogoColors: true, logoPath: "assets/logos/tsmc.svg?v=20260830-brand-colors-v6" },
   { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff3b5c", logoColor: "#e82127", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
-  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoColor: "#0071ce", preserveLightLogoColors: true, logoPath: "assets/logos/walmart.svg?v=20260717-brand-colors-v5" },
+  { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoColor: "#0071ce", optionLogoColor: "#ffc220", optionLogoPath: "assets/logos/options/walmart.svg?v=20260830-compact-marks", preserveLightLogoColors: true, logoPath: "assets/logos/walmart.svg?v=20260717-brand-colors-v5" },
   { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoColor: "#003f73", logoPath: "assets/logos/berkshire.svg?v=20260629-visible-area-v4" },
-  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoColor: "#005eb8", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
+  { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoColor: "#005eb8", optionLogoColor: "#117aca", optionLogoPath: "assets/logos/options/chase.svg?v=20260830-compact-marks", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
   { id: "lilly", name: "礼来", ticker: "LLY", color: "#ff6b6b", logoColor: "#d52b1e", logoPath: "assets/logos/lilly.svg?v=20260629-visible-area-v4" },
   { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoColor: "#ed1b2f", logoPath: "assets/logos/exxon.svg?v=20260629-visible-area-v4" },
   { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoColor: "#1434cb", logoPath: "assets/logos/visa.svg?v=20260629-visible-area-v4" },
   { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoColor: "#0074c8", logoPath: "assets/logos/asml.svg?v=20260629-visible-area-v4" },
-  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoColor: "#0057b8", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
+  { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoColor: "#0057b8", optionLogoPath: "assets/logos/options/micron.svg?v=20260830-compact-marks", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
   { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoColor: "#d71920", logoPath: "assets/logos/jnj.svg?v=20260629-visible-area-v4" },
-  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoColor: "#f80000", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
-  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoColor: "#000000", logoPath: "assets/logos/amd.svg?v=20260629-visible-area-v4" },
-  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoColor: "#eb001b", preserveLightLogoColors: true, logoPath: "assets/logos/mastercard.svg?v=20260717-brand-colors-v5" },
-  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoColor: "#e31837", preserveLightLogoColors: true, logoPath: "assets/logos/costco.svg?v=20260717-brand-colors-v5" },
+  { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoColor: "#f80000", optionLogoPath: "assets/logos/options/oracle.svg?v=20260830-compact-marks", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
+  { id: "amd", name: "AMD", ticker: "AMD", color: "#66d17a", logoColor: "#000000", optionLogoDeepColor: "#f5f7fa", optionLogoPath: "assets/logos/options/amd.svg?v=20260830-compact-marks", logoPath: "assets/logos/amd.svg?v=20260629-visible-area-v4" },
+  { id: "mastercard", name: "万事达", ticker: "MA", color: "#ff9d57", logoColor: "#eb001b", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/mastercard.svg?v=20260717-brand-colors-v5" },
+  { id: "costco", name: "好市多", ticker: "COST", color: "#e0709e", logoColor: "#e31837", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/costco.svg?v=20260717-brand-colors-v5" },
   { id: "netflix", name: "奈飞", ticker: "NFLX", color: "#e50914", logoColor: "#e50914", logoPath: "assets/logos/netflix.svg?v=20260629-visible-area-v4" },
-  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoColor: "#e31837", preserveLightLogoColors: true, logoPath: "assets/logos/bankofamerica.svg?v=20260717-brand-colors-v5" },
+  { id: "bankofamerica", name: "美国银行", ticker: "BAC", color: "#7aa6ff", logoColor: "#e31837", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/bankofamerica.svg?v=20260717-brand-colors-v5" },
   { id: "caterpillar", name: "卡特彼勒", ticker: "CAT", color: "#d8b04c", logoColor: "#1a1a1a", preserveLightLogoColors: true, logoPath: "assets/logos/caterpillar.svg?v=20260717-brand-colors-v5" },
-  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoColor: "#0054a6", preserveLightLogoColors: true, logoPath: "assets/logos/chevron.svg?v=20260717-brand-colors-v5" },
+  { id: "chevron", name: "雪佛龙", ticker: "CVX", color: "#5fb3d9", logoColor: "#0054a6", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/chevron.svg?v=20260717-brand-colors-v5" },
   { id: "palantir", name: "Palantir", ticker: "PLTR", color: "#b877ff", logoColor: "#101820", logoPath: "assets/logos/palantir.svg?v=20260629-visible-area-v4" },
-  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoColor: "#1ba0d7", logoPath: "assets/logos/cisco.svg?v=20260629-visible-area-v4" },
+  { id: "cisco", name: "思科", ticker: "CSCO", color: "#4fb6c2", logoColor: "#1ba0d7", optionLogoPath: "assets/logos/options/cisco.svg?v=20260830-compact-marks", logoPath: "assets/logos/cisco.svg?v=20260629-visible-area-v4" },
   { id: "abbvie", name: "艾伯维", ticker: "ABBV", color: "#7f78d2", logoColor: "#071d49", logoPath: "assets/logos/abbvie.svg?v=20260629-visible-area-v4" },
   { id: "homedepot", name: "家得宝", ticker: "HD", color: "#f97316", logoColor: "#f96302", logoPath: "assets/logos/homedepot.svg?v=20260629-visible-area-v4" },
   { id: "ibm", name: "IBM", ticker: "IBM", color: "#648fff", logoColor: "#0f62fe", logoPath: "assets/logos/ibm.svg?v=20260629-visible-area-v4" },
   { id: "sap", name: "SAP", ticker: "SAP", color: "#00b8f1", logoColor: "#008fd3", logoPath: "assets/logos/sap.svg?v=20260629-visible-area-v4" },
-  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoColor: "#fc0000", logoPath: "assets/logos/crowdstrike.svg?v=20260629-visible-area-v4" },
-  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoColor: "#00a1e0", logoPath: "assets/logos/salesforce.svg?v=20260629-visible-area-v4" },
-  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoColor: "#3a7d44", logoPath: "assets/logos/servicenow.svg?v=20260629-visible-area-v4" },
+  { id: "crowdstrike", name: "CrowdStrike", ticker: "CRWD", color: "#ff5a67", logoColor: "#fc0000", optionLogoPath: "assets/logos/options/crowdstrike.svg?v=20260830-compact-marks", logoPath: "assets/logos/crowdstrike.svg?v=20260629-visible-area-v4" },
+  { id: "salesforce", name: "Salesforce", ticker: "CRM", color: "#1fb6ff", logoColor: "#00a1e0", optionLogoPath: "assets/logos/options/salesforce.svg?v=20260830-compact-marks", logoPath: "assets/logos/salesforce.svg?v=20260629-visible-area-v4" },
+  { id: "servicenow", name: "ServiceNow", ticker: "NOW", color: "#7ee787", logoColor: "#3a7d44", optionLogoColor: "#62d84e", optionLogoPath: "assets/logos/options/servicenow.svg?v=20260830-compact-marks", logoPath: "assets/logos/servicenow.svg?v=20260629-visible-area-v4" },
   { id: "datadog", name: "Datadog", ticker: "DDOG", color: "#9b87f5", logoColor: "#632ca6", logoPath: "assets/logos/datadog.svg?v=20260629-visible-area-v4" },
   { id: "snowflake", name: "Snowflake", ticker: "SNOW", color: "#29b5e8", logoColor: "#29b5e8", logoPath: "assets/logos/snowflake.svg?v=20260629-visible-area-v4" },
-  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoColor: "#f48120", preserveLightLogoColors: true, logoPath: "assets/logos/cloudflare.svg?v=20260717-brand-colors-v5" },
-  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoColor: "#eb1000", preserveLightLogoColors: true, logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
-  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoColor: "#2d8cff", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
-  { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoColor: "#000000", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
-  { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoColor: "#000000", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
-  { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoColor: "#4f46e5", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
-  { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoColor: "#d97706", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
+  { id: "cloudflare", name: "Cloudflare", ticker: "NET", color: "#f48120", logoColor: "#f48120", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/cloudflare.svg?v=20260717-brand-colors-v5" },
+  { id: "adobe", name: "Adobe", ticker: "ADBE", color: "#ff3366", logoColor: "#eb1000", optionLogoPath: "assets/logos/options/adobe.svg?v=20260830-compact-marks", preserveLightLogoColors: true, logoPath: "assets/logos/adobe.svg?v=20260629-visible-area-v4" },
+  { id: "zoom", name: "Zoom", ticker: "ZM", color: "#6b8cff", logoColor: "#2d8cff", optionLogoPath: "assets/logos/options/zoom.svg?v=20260830-compact-marks", logoPath: "assets/logos/zoom.svg?v=20260629-visible-area-v4" },
+  { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoColor: "#000000", optionLogoDeepColor: "#f5f7fa", optionLogoPath: "assets/logos/options/coreweave.svg?v=20260830-compact-marks", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
+  { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoColor: "#000000", optionLogoColor: "#b9ff38", optionLogoPath: "assets/logos/options/nebius.svg?v=20260830-compact-marks", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
+  { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoColor: "#4f46e5", optionLogoPath: "assets/logos/options/chronoscale.svg?v=20260830-compact-marks", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
+  { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoColor: "#d97706", optionLogoPath: "assets/logos/options/sharonai.svg?v=20260830-compact-marks", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_ENGLISH_NAMES = {
   nvidia: "NVIDIA",
@@ -3656,23 +3656,32 @@ function createToggle(company) {
   logo.className = "company-option-logo";
   logo.setAttribute("aria-hidden", "true");
 
+  const optionLogoPath = company.optionLogoPath || company.logoPath;
+  const optionLogoColor = company.optionLogoColor || company.logoColor;
+  const preserveOptionLogoColors = Boolean(
+    company.preserveOptionLogoColors || company.preserveLogoColors,
+  );
+  const preserveOptionLightLogoColors = Boolean(
+    !preserveOptionLogoColors
+      && (company.preserveOptionLightLogoColors || company.preserveLightLogoColors),
+  );
+
   const mark = document.createElement("span");
   mark.className = "company-option-logo-mark";
-  mark.style.setProperty("--company-logo-mask", `url("${company.logoPath}")`);
-  mark.style.setProperty("--company-logo-color", company.logoColor);
+  mark.style.setProperty("--company-logo-mask", `url("${optionLogoPath}")`);
+  mark.style.setProperty("--company-logo-color", optionLogoColor);
   mark.style.setProperty(
     "--company-logo-color-deep",
-    getHexRelativeLuminance(company.logoColor) < 0.13
-      ? company.deepColor || company.color
-      : company.logoColor,
+    company.optionLogoDeepColor
+      || (getHexRelativeLuminance(optionLogoColor) < 0.13 ? "#f5f7fa" : optionLogoColor),
   );
   logo.append(mark);
 
-  if (company.preserveLogoColors || company.preserveLightLogoColors) {
-    logo.classList.toggle("preserve-logo-colors", Boolean(company.preserveLogoColors));
-    logo.classList.toggle("preserve-light-logo-colors", Boolean(company.preserveLightLogoColors));
+  if (preserveOptionLogoColors || preserveOptionLightLogoColors) {
+    logo.classList.toggle("preserve-logo-colors", preserveOptionLogoColors);
+    logo.classList.toggle("preserve-light-logo-colors", preserveOptionLightLogoColors);
     const image = document.createElement("img");
-    image.src = company.logoPath;
+    image.src = optionLogoPath;
     image.alt = "";
     image.loading = "lazy";
     image.decoding = "async";

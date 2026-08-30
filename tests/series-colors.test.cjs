@@ -70,10 +70,13 @@ test("renders a company logo instead of a color dot for every company option", (
   const stylesheet = fs.readFileSync(path.join(__dirname, "../style.css"), "utf8");
 
   assert.match(createToggleBody, /logo\.className = "company-option-logo"/);
-  assert.match(createToggleBody, /image\.src = company\.logoPath/);
+  assert.match(createToggleBody, /image\.src = optionLogoPath/);
   assert.match(createToggleBody, /--company-logo-mask/);
   assert.match(createToggleBody, /--company-logo-color/);
   assert.match(createToggleBody, /--company-logo-color-deep/);
+  assert.match(createToggleBody, /company\.optionLogoPath \|\| company\.logoPath/);
+  assert.match(createToggleBody, /company\.optionLogoDeepColor/);
+  assert.match(createToggleBody, /"#f5f7fa"/);
   assert.doesNotMatch(createToggleBody, /color-dot|FIXED_COMPANY_IDS/);
   assert.match(stylesheet, /\.company-option-logo-mark/);
   assert.match(stylesheet, /\.company-option-logo\s*\{[^}]*background:\s*transparent/);

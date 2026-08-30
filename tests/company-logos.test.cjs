@@ -13,10 +13,52 @@ function getCompanyEntries() {
       ticker: match[3],
       extra: match[5],
       logoPath: match[5].match(/logoPath: "([^"]+)"/)?.[1] ?? null,
+      optionLogoPath: match[5].match(/optionLogoPath: "([^"]+)"/)?.[1] ?? null,
+      optionLogoColor: match[5].match(/optionLogoColor: "([^"]+)"/)?.[1] ?? null,
       logoColor: match[5].match(/logoColor: "([^"]+)"/)?.[1] ?? null,
       preserveLightLogoColors: /preserveLightLogoColors: true/.test(match[5]),
+      preserveOptionLogoColors: /preserveOptionLogoColors: true/.test(match[5]),
     }));
 }
+
+test("compact option-logo assets are local transparent SVG symbols", () => {
+  const companies = getCompanyEntries().filter((company) => company.optionLogoPath);
+  assert.ok(companies.length >= 14, "the small company picker should use compact marks where available");
+
+  companies.forEach((company) => {
+    const relativePath = company.optionLogoPath.split("?")[0];
+    assert.match(relativePath, /^assets\/logos\/options\/[^/]+\.svg$/);
+    const svg = fs.readFileSync(path.join(__dirname, "..", relativePath), "utf8");
+    assert.match(svg, /<svg\b/);
+    assert.doesNotMatch(svg, /<rect\b[^>]*(?:width="100%"|height="100%")/i);
+  });
+});
+
+test("picker retains audited multicolor brand marks and the Chase symbol", () => {
+  const companies = getCompanyEntries();
+  const byId = new Map(companies.map((company) => [company.id, company]));
+  const expectedPalettes = {
+    alphabet: ["#34a853", "#4285f4", "#ea4335", "#fbbc05"],
+    microsoft: ["#00a4ef", "#7fba00", "#f25022", "#ffb900"],
+    tsmc: ["#7c848c", "#e60012"],
+    mastercard: ["#eb001b", "#f79e1b", "#ff5f00"],
+  };
+
+  for (const [companyId, expectedPalette] of Object.entries(expectedPalettes)) {
+    const company = byId.get(companyId);
+    assert.equal(company.preserveOptionLogoColors, true, `${companyId} should keep its full-color picker mark`);
+    const assetPath = (company.optionLogoPath || company.logoPath).split("?")[0];
+    const svg = fs.readFileSync(path.join(__dirname, "..", assetPath), "utf8");
+    const actualPalette = [...new Set(
+      [...svg.matchAll(/#[0-9a-f]{6}/gi)].map((match) => match[0].toLowerCase()),
+    )].sort();
+    assert.deepEqual(actualPalette, expectedPalette.sort(), `${companyId} picker palette should stay brand-accurate`);
+  }
+
+  const jpmorgan = byId.get("jpmorgan");
+  assert.match(jpmorgan.optionLogoPath, /^assets\/logos\/options\/chase\.svg\?/);
+  assert.equal(jpmorgan.optionLogoColor, "#117aca");
+});
 
 function parseViewBox(svg, companyId) {
   const [, rawViewBox = ""] = svg.match(/<svg\b[^>]*\bviewBox="([^"]+)"/i) ?? [];
@@ -109,7 +151,7 @@ test("every company uses a local SVG logo asset with a transparent canvas", asyn
     await t.test(company.id, () => {
       assert.ok(company.logoPath, `${company.id} should declare logoPath`);
       assert.match(company.logoPath, /^assets\/logos\/[a-z0-9-]+\.svg(?:\?v=[a-z0-9-]+)?$/);
-      assert.match(company.logoPath, /\?v=(?:20260629-visible-area-v4|20260717-brand-colors-v5)$/);
+      assert.match(company.logoPath, /\?v=(?:20260629-visible-area-v4|20260717-brand-colors-v5|20260830-brand-colors-v6)$/);
       assert.match(company.logoColor, /^#[0-9a-f]{6}$/i, `${company.id} should declare an audited light-theme brand color`);
 
       const assetPath = company.logoPath.split("?")[0];

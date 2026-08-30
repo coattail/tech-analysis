@@ -2,10 +2,10 @@
 	<title>Tsmc-svg</title>
 	<style>
 		tspan { white-space:pre }
-		.shp0 { fill: none;stroke: #221815;stroke-width: 5.745 }
-		.shp1 { fill: none;stroke: #000000;stroke-width: 5.745 }
-		.shp2 { fill: #211714;stroke: #211714;stroke-linecap:round;stroke-linejoin:round;stroke-width: 5.745 }
-		.shp3 { fill: #000000 }
+		.shp0 { fill: none;stroke: #7c848c;stroke-width: 5.745 }
+		.shp1 { fill: none;stroke: #7c848c;stroke-width: 5.745 }
+		.shp2 { fill: #7c848c;stroke: #7c848c;stroke-linecap:round;stroke-linejoin:round;stroke-width: 5.745 }
+		.shp3 { fill: #e60012 }
 	</style>
 	<g id="Layer">
 		<path id="Layer" class="shp0" d="M564.75 1095.55L797.19 1097.31L1036.85 1097.31C1235.4 1007.64 1374.68 806.94 1374.68 575.2C1374.68 260.04 1117.49 2.78 803.09 2.78C487.93 2.78 230.58 260.03 230.58 575.2C230.57 805.68 367.67 1005.41 564.75 1095.55L564.75 1095.55Z" />
