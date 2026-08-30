@@ -33,9 +33,9 @@ test("keeps every MAG7 fixed color pair above the stricter separation floor", ()
     alphabet: "#fbbc04",
     apple: "#7b8490",
     microsoft: "#00b7c3",
-    amazon: "#ff7a00",
+    amazon: "#c45500",
     meta: "#0064e0",
-    tsla: "#e82127",
+    tsla: "#ff3b5c",
   };
   assert.deepEqual(Object.fromEntries(fixedCompanies.map((company) => [company.id, company.brandColor])), expectedColors);
 
@@ -64,15 +64,18 @@ test("uses the color-vision-friendly blue-orange pair for two non-MAG7 companies
   });
 });
 
-test("renders fixed color dots only for MAG7 company options", () => {
+test("renders a company logo instead of a color dot for every company option", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   const createToggleBody = script.match(/function createToggle\(company\) \{[\s\S]*?\n\}/)?.[0] ?? "";
   const stylesheet = fs.readFileSync(path.join(__dirname, "../style.css"), "utf8");
 
-  assert.match(createToggleBody, /FIXED_COMPANY_IDS\.has\(company\.id\)/);
-  assert.match(createToggleBody, /hasFixedSeriesColor \? document\.createElement\("span"\) : null/);
-  assert.match(createToggleBody, /if \(dot\) label\.append\(dot\)/);
-  assert.match(stylesheet, /\.toggle-item\.has-fixed-color span:not\(\.color-dot\)/);
+  assert.match(createToggleBody, /logo\.className = "company-option-logo"/);
+  assert.match(createToggleBody, /image\.src = company\.logoPath/);
+  assert.match(createToggleBody, /--company-logo-mask/);
+  assert.match(createToggleBody, /--company-logo-color/);
+  assert.doesNotMatch(createToggleBody, /color-dot|FIXED_COMPANY_IDS/);
+  assert.match(stylesheet, /\.company-option-logo-mark/);
+  assert.doesNotMatch(stylesheet, /\.color-dot/);
 });
 
 test("keeps every possible two-company selection visually distinct", () => {

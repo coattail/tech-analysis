@@ -246,11 +246,11 @@ const COMPANIES = [
   { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#fbbc04", logoColor: "#4285f4", preserveLightLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
   { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", deepColor: "#7b8490", logoColor: "#000000", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
   { id: "microsoft", name: "微软", ticker: "MSFT", color: "#00b7c3", logoColor: "#737373", preserveLightLogoColors: true, logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },
-  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#ff7a00", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
+  { id: "amazon", name: "亚马逊", ticker: "AMZN", color: "#c45500", logoColor: "#ff9900", preserveLightLogoColors: true, logoPath: "assets/logos/amazon.svg?v=20260629-visible-area-v4" },
   { id: "avgo", name: "博通", ticker: "AVGO", color: "#b8a1ff", logoColor: "#cc092f", logoPath: "assets/logos/avgo.svg?v=20260629-visible-area-v4" },
   { id: "meta", name: "Meta", ticker: "META", color: "#0064e0", logoColor: "#0866ff", logoPath: "assets/logos/meta.svg?v=20260629-visible-area-v4" },
   { id: "tsmc", name: "台积电", ticker: "TSM", color: "#35d0ff", logoColor: "#e60012", logoPath: "assets/logos/tsmc.svg?v=20260629-visible-area-v4" },
-  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#e82127", logoColor: "#e82127", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
+  { id: "tsla", name: "特斯拉", ticker: "TSLA", color: "#ff3b5c", logoColor: "#e82127", logoPath: "assets/logos/tsla.svg?v=20260629-visible-area-v4" },
   { id: "walmart", name: "沃尔玛", ticker: "WMT", color: "#86d63b", logoColor: "#0071ce", preserveLightLogoColors: true, logoPath: "assets/logos/walmart.svg?v=20260717-brand-colors-v5" },
   { id: "berkshire", name: "伯克希尔", ticker: "BRK.B", color: "#caa96b", logoColor: "#003f73", logoPath: "assets/logos/berkshire.svg?v=20260629-visible-area-v4" },
   { id: "jpmorgan", name: "摩根大通", ticker: "JPM", color: "#2aa6a4", logoColor: "#005eb8", logoPath: "assets/logos/jpmorgan.svg?v=20260629-visible-area-v4" },
@@ -3640,21 +3640,33 @@ function rebuildChartForCurrentView() {
 function createToggle(company) {
   const label = document.createElement("label");
   label.className = "toggle-item";
-  const hasFixedSeriesColor = SeriesColorUtils.FIXED_COMPANY_IDS.has(company.id);
-  label.classList.toggle("has-fixed-color", hasFixedSeriesColor);
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.checked = state.pendingCompanies.has(company.id);
   checkbox.dataset.companyId = company.id;
 
-  const dot = hasFixedSeriesColor ? document.createElement("span") : null;
-  if (dot) {
-    dot.className = "color-dot";
-    dot.style.backgroundColor = getSeriesColor(company);
+  const logo = document.createElement("span");
+  logo.className = "company-option-logo";
+  logo.setAttribute("aria-hidden", "true");
+
+  if (company.preserveLogoColors || company.preserveLightLogoColors) {
+    const image = document.createElement("img");
+    image.src = company.logoPath;
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    logo.append(image);
+  } else {
+    const mark = document.createElement("span");
+    mark.className = "company-option-logo-mark";
+    mark.style.setProperty("--company-logo-mask", `url("${company.logoPath}")`);
+    mark.style.setProperty("--company-logo-color", company.logoColor);
+    logo.append(mark);
   }
 
   const text = document.createElement("span");
+  text.className = "company-option-name";
   text.textContent = getCompanyName(company);
 
   const ticker = document.createElement("small");
@@ -3671,8 +3683,7 @@ function createToggle(company) {
   });
 
   label.append(checkbox);
-  if (dot) label.append(dot);
-  label.append(text, ticker);
+  label.append(logo, text, ticker);
   return label;
 }
 
