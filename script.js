@@ -112,7 +112,7 @@ const UI_TRANSLATIONS = {
     generate: "Generate",
     showAll: "Show All",
     hideAll: "Hide All",
-    hint: "Tip: The initial view shows the full history. Switch among quarterly, annual, and rolling-annual views, or use the dual range slider below to focus the timeline.",
+    hint: "Tip: Full history is shown initially. Switch periods or use the range slider to focus the timeline.",
     dataSourceLink: "Data source links",
     chartKicker: "Comparative Lens",
     financialTrendComparison: "Financial Trend Comparison",

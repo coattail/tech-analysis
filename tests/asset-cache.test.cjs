@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after aligning the sidebar height", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260830-english-height/);
+  assert.match(html, /style\.css\?v=20260830-sidebar-box-heights/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {
@@ -61,7 +61,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20260717-growth-sanity"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20260830-english-height"],
+    ["script.js", "20260830-sidebar-box-heights"],
   ]) {
     assert.match(
       html,

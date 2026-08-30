@@ -68,6 +68,13 @@ test('keeps the English status summary compact enough for the aligned desktop co
   assert.doesNotMatch(script, /Data updated \{stamp\}\. Loaded \{count\} companies/);
 });
 
+test('keeps the English sidebar hint compact enough to match the Chinese box layout', () => {
+  const script = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+
+  assert.match(script, /hint: "Tip: Full history is shown initially\. Switch periods or use the range slider to focus the timeline\."/);
+  assert.doesNotMatch(script, /Switch among quarterly, annual, and rolling-annual views/);
+});
+
 test('removes the oversized header module and relocates its utility controls', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 

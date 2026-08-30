@@ -29,6 +29,15 @@ test("stretches the desktop company sidebar to the chart panel bottom", () => {
   assert.match(desktopRule, /\.range-panel\s*\{[^}]*min-height:\s*72px/);
 });
 
+test("uses language-neutral line boxes throughout the company sidebar", () => {
+  const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
+
+  assert.match(css, /\.control-header h2\s*\{[^}]*line-height:\s*25px/);
+  assert.match(css, /\.control-group h3\s*\{[^}]*line-height:\s*19\.5px/);
+  assert.match(css, /\.company-category-card h4\s*\{[^}]*line-height:\s*19\.5px/);
+  assert.match(css, /\.sources\s*\{[^}]*line-height:\s*20\.5px/);
+});
+
 test("narrows the sidebar and uses two company columns in every category", () => {
   const css = fs.readFileSync(path.join(__dirname, "..", "style.css"), "utf8");
   const contentRule = css.match(/\.content-panel\s*\{[^}]+\}/)?.[0] ?? "";
