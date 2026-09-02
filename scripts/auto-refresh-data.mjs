@@ -538,6 +538,16 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2007Q4": { revenue: 911_211_000, earnings: 222_208_000, grossMargin: (812_615 / 911_211) * 100 },
   },
   avgo: {
+    // Broadcom FY2026 Q3 earnings release, published on 2026-09-02.
+    "2026Q3": {
+      revenue: 29_591_000_000,
+      earnings: 13_088_000_000,
+      operatingIncome: 15_955_000_000,
+      grossMargin: (20_456 / 29_591) * 100,
+      netAssets: 99_690_000_000,
+      periodEndDate: "2026-08-02",
+      reportDate: "2026-09-02",
+    },
     // Avago FY2009 Q4 official results: GAAP net income was $72 million for
     // the quarter ended Nov. 1, 2009 (reported Dec. 3, 2009).
     "2009Q4": {

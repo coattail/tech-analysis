@@ -475,14 +475,15 @@ test("keeps Broadcom report dates while bars use uniform quarter slots", () => {
   const visiblePoints = result.filter((point) => point?.y != null);
   const gaps = visiblePoints.slice(1).map((point, index) => point.x - visiblePoints[index].x);
 
-  assert.equal(latest.periodLabel, "2026Q2");
-  assert.equal(latest.reportDate, "2026-06-09");
-  assert.equal(latest.periodEndDate, "2026-05-03");
+  assert.equal(latest.periodLabel, "2026Q3");
+  assert.equal(latest.reportDate, "2026-09-02");
+  assert.equal(latest.periodEndDate, "2026-08-02");
   assert.equal(latest.x, visibleLabels.length - 1);
   assert.equal(byLabel.get("2025Q3").reportDate, "2025-09-10");
   assert.equal(byLabel.get("2025Q4").reportDate, "2025-12-18");
   assert.equal(byLabel.get("2026Q1").reportDate, "2026-03-11");
   assert.equal(byLabel.get("2026Q2").reportDate, "2026-06-09");
+  assert.equal(byLabel.get("2026Q3").reportDate, "2026-09-02");
   assert.ok(gaps.every((gap) => gap === 1));
 });
 
