@@ -592,6 +592,19 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2009Q3": { earnings: -88_000_000 },
   },
   oracle: {
+    // FY2027 Q1 earnings release, published 2026-09-10; calendar 2026Q3.
+    // https://investor.oracle.com/investor-news/news-details/2026/Oracle-Announces-Q1-Results-Driven-by-Triple-Digit-Growth-in-Cloud-Infrastructure-Revenues/default.aspx
+    // GAAP net income before $81m preferred dividends (common-shareholder income: $4.679bn).
+    // Gross profit deducts cloud/software, hardware and services costs of $7.733bn.
+    "2026Q3": {
+      revenue: 19_345_000_000,
+      earnings: 4_760_000_000,
+      operatingIncome: 6_728_000_000,
+      grossMargin: (11_612 / 19_345) * 100,
+      netAssets: 67_196_000_000,
+      periodEndDate: "2026-08-31",
+      reportDate: "2026-09-10",
+    },
     // FY2026 Q4 earnings release, three months ended May 31, 2026.
     "2026Q2": {
       revenue: 19_184_000_000,
