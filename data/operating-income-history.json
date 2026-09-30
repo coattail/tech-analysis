@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T20:05:59.745Z",
+  "generatedAt": "2026-09-30T21:30:30.942Z",
   "source": "Macrotrends quarterly Operating Income and quarterly TTM Operating Income",
   "methodology": "Direct quarterly USD values are used when available. Earlier quarters are reconstructed from Q[t-4] = Q[t] - (TTM[t] - TTM[t-1]). TTM values are published in USD billions and rounded to two decimals. Existing SEC, supplemental, or curated quarterly values are retained when the historical snapshot does not yet include the newest reported quarter.",
   "earliestRequiredPeriod": "2005Q1",
@@ -1476,7 +1476,7 @@
     "micron": {
       "ticker": "MU",
       "listingPeriod": "2005Q1",
-      "latestFinancialPeriod": "2026Q2",
+      "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
         "2012Q2",
         "2012Q3",
@@ -1534,7 +1534,8 @@
         "2025Q3",
         "2025Q4",
         "2026Q1",
-        "2026Q2"
+        "2026Q2",
+        "2026Q3"
       ],
       "reconstructedPeriods": [
         "2005Q1",
