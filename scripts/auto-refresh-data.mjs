@@ -583,6 +583,18 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   // "Selected/Supplementary/Quarterly Financial Data" tables. Values are reported
   // in millions unless Costco reports in thousands; all values here are USD.
   micron: {
+    // FY2026 Q4 official earnings release, published 2026-09-30; calendar 2026Q3.
+    // https://investors.micron.com/news/press-release/2026/Micron-Technology-Inc--Reports-Record-Fiscal-Fourth-Quarter-and-Full-Year-2026-Results/default.aspx
+    // GAAP amounts in USD; gross margin uses reported gross profit, not rounded 86.8%.
+    "2026Q3": {
+      revenue: 54_229_000_000,
+      earnings: 37_701_000_000,
+      operatingIncome: 43_751_000_000,
+      grossMargin: (47_047 / 54_229) * 100,
+      netAssets: 138_378_000_000,
+      periodEndDate: "2026-09-03",
+      reportDate: "2026-09-30",
+    },
     // FY2005/FY2007-FY2009 Form 10-K quarterly financial information.
     "2004Q3": { revenue: 1_189_200_000, earnings: 93_500_000, grossMargin: (392.6 / 1_189.2) * 100 },
     "2005Q3": { earnings: 43_100_000 },
