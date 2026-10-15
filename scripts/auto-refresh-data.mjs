@@ -174,6 +174,7 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2025Q3": { revenueUsdBillions: 33.1, revenueTwdBillions: 989.92, netIncomeTwdBillions: 452.3, grossMarginPct: 59.5 },
   "2025Q4": { revenueUsdBillions: 33.73, revenueTwdBillions: 1046.09, netIncomeTwdBillions: 505.74, grossMarginPct: 62.3 },
   "2026Q2": { revenueUsdBillions: 40.201, revenueTwdBillions: 1270.381, netIncomeTwdBillions: 706.562, grossMarginPct: 67.7 },
+  "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   nvidia: {
@@ -435,6 +436,18 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   tsmc: {
+    // TSMC 3Q26 statements, released 2026-10-15. USD income uses the quarterly
+    // average rate; equity uses the closing rate. Net income is attributable to the parent.
+    // https://investor.tsmc.com/english/encrypt/files/encrypt_file/qr/phase4_reports/2026-10/e18db1d00f041c8d37a90dedbcb150518d8277d9/FS.pdf
+    "2026Q3": {
+      revenue: 46_720_000_000,
+      earnings: 23_858_000_000,
+      operatingIncome: 27_403_000_000,
+      grossMargin: 66.4,
+      netAssets: 219_507_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-15",
+    },
     // TSMC 2004Q4 Form 6-K; TWD values converted at the FRED quarter-average rate.
     "2004Q4": {
       revenue: Math.round((63.87 / 31.378) * 1e9),
