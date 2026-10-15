@@ -177,6 +177,20 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  asml: {
+    // ASML Q3 2026 US GAAP statements, pages 2 and 4, released 2026-10-14.
+    // https://investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0
+    // Income uses FRED DEXUSEU Q3 average 1.1505734375; equity uses 9/25 close 1.1400.
+    "2026Q3": {
+      revenue: 13_417_987_428,
+      earnings: 5_707_304_479,
+      operatingIncome: 5_951_686_278,
+      grossMargin: (6_699.8 / 11_662) * 100,
+      netAssets: 25_152_846_000,
+      periodEndDate: "2026-09-27",
+      reportDate: "2026-10-14",
+    },
+  },
   nvidia: {
     // NVIDIA FY2006-FY2009 Forms 10-K quarterly summaries. Values are GAAP
     // Revenue and Net income, replacing annual averages and an incorrect FY2009 Q1 plug.
@@ -863,6 +877,26 @@ async function loadCuratedQuarterlyDataset() {
 
   curatedQuarterlyDatasetCache = byTicker;
   return byTicker;
+}
+
+async function loadPublishedAsmlQuarters(companyData) {
+  try {
+    const payload = await fetchJsonWithCurl(
+      "https://raw.githubusercontent.com/coattail/Earnings-Image-Studio/main/data/cache/asml.json",
+    );
+    if (payload?.id !== "asml" || !payload.financials || !Array.isArray(payload.quarters)) return null;
+    const quarters = payload.quarters.filter((period) => {
+      const financial = payload.financials[period];
+      const missing = !["revenue", "earnings", "operatingIncome", "grossMargin"]
+        .every((key) => Number.isFinite(companyData[key]?.[period]));
+      return missing && ["revenueBn", "grossProfitBn", "operatingIncomeBn", "netIncomeBn"]
+        .every((key) => Number.isFinite(financial?.[key]));
+    });
+    return { ...payload, quarters };
+  } catch (error) {
+    console.warn(`  ASML 官方财报跨平台回退失败：${error.message}`);
+    return null;
+  }
 }
 
 async function loadHistoricalSecBackfill() {
@@ -2785,7 +2819,7 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
       }
     }
 
-    const netIncome = Number(financial.netIncomeBn) * usdScaleFactor * 1e9;
+    const netIncome = Number.isFinite(financial.netIncomeBn) ? financial.netIncomeBn * usdScaleFactor * 1e9 : NaN;
     if (Number.isFinite(netIncome)) {
       netIncomePeriods.add(period);
       if (setSeriesValue(companyData.earnings, period, Math.round(netIncome))) {
@@ -2806,7 +2840,11 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
       }
     }
 
-    const grossMargin = Number(financial.grossMarginPct);
+    const grossMargin = Number.isFinite(financial.grossMarginPct)
+      ? financial.grossMarginPct
+      : Number.isFinite(financial.grossProfitBn) && financial.revenueBn > 0
+        ? (financial.grossProfitBn / financial.revenueBn) * 100
+        : NaN;
     if (revenueLooksReliable && Number.isFinite(grossMargin)) {
       grossMarginPeriods.add(period);
       if (setSeriesValue(companyData.grossMargin, period, grossMargin)) {
@@ -3549,8 +3587,9 @@ async function run() {
       }
     });
 
-    const curatedCompany = curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
-    if (curatedCompany && !officialOnly) {
+    const publishedAsml = companySource.id === "asml" ? await loadPublishedAsmlQuarters(companyData) : null;
+    const curatedCompany = publishedAsml || curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
+    if (curatedCompany && (!officialOnly || companySource.id === "asml")) {
       const curatedResult = applyCuratedQuarterlyOverrides(companyData, curatedCompany);
 
       curatedResult.changedPeriods.forEach((period) => {

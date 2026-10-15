@@ -1,7 +1,7 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC Company Facts + StockAnalysis + Macrotrends historical Operating Income/TTM reconstruction",
-    "generatedAt": "2026-10-15T13:25:39.350Z",
+    "generatedAt": "2026-10-15T16:09:24.876Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q3",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
@@ -13372,7 +13372,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 8781633787,
         "2025Q4": 11313279092,
         "2026Q1": 10264984900,
-        "2026Q2": 10854853431
+        "2026Q2": 10854853431,
+        "2026Q3": 13417987428
       },
       "earnings": {
         "2004Q2": 78733923,
@@ -13463,7 +13464,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 2482248667,
         "2025Q4": 3305706600,
         "2026Q1": 3227763962,
-        "2026Q2": 3395713330
+        "2026Q2": 3395713330,
+        "2026Q3": 5707304479
       },
       "pe": {
         "2004Q2": 8640.682362237329,
@@ -13644,7 +13646,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 22207200200,
         "2025Q4": 23016877920,
         "2026Q1": 23995584000,
-        "2026Q2": 29677920650
+        "2026Q2": 29677920650,
+        "2026Q3": 25152846000
       },
       "roe": {
         "2004Q2": 5.2243574758627265,
@@ -13735,7 +13738,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 11.177675009207148,
         "2025Q4": 14.36209815896699,
         "2026Q1": 13.451491582784566,
-        "2026Q2": 11.441884254785215
+        "2026Q2": 11.441884254785215,
+        "2026Q3": 22.690491879129702
       },
       "grossMargin": {
         "2004Q2": 35.625014198598635,
@@ -13825,7 +13829,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 51.627199999999995,
         "2025Q4": 52.1563,
         "2026Q1": 52.9834,
-        "2026Q2": 53.9902
+        "2026Q2": 53.9902,
+        "2026Q3": 57.449837077688215
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -13917,7 +13922,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 14.491103989460433,
         "2026Q1": 25.962606319021575,
         "2026Q2": 24.506802451608173,
-        "2026Q3": null
+        "2026Q3": 52.796025813140645
       },
       "forecastFlags": {
         "revenue": [],
@@ -14017,7 +14022,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": "2025-09-28",
         "2025Q4": "2025-12-31",
         "2026Q1": "2026-03-29",
-        "2026Q2": "2026-06-28"
+        "2026Q2": "2026-06-28",
+        "2026Q3": "2026-09-27"
       },
       "reportDates": {
         "2008Q4": "2012-02-14",
@@ -14063,7 +14069,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": "2025-10-15",
         "2025Q4": "2026-02-25",
         "2026Q1": "2026-04-15",
-        "2026Q2": "2026-07-15"
+        "2026Q2": "2026-07-15",
+        "2026Q3": "2026-10-14"
       },
       "operatingIncome": {
         "2005Q1": 161000000,
@@ -14151,7 +14158,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 2884058654,
         "2025Q4": 3994065634,
         "2026Q1": 3697403794,
-        "2026Q2": 4022458472
+        "2026Q2": 4022458472,
+        "2026Q3": 5951686278
       }
     },
     "micron": {

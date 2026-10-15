@@ -1380,7 +1380,7 @@
     "asml": {
       "ticker": "ASML",
       "listingPeriod": "2005Q1",
-      "latestFinancialPeriod": "2026Q2",
+      "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
         "2012Q2",
         "2012Q3",
@@ -1438,7 +1438,8 @@
         "2025Q3",
         "2025Q4",
         "2026Q1",
-        "2026Q2"
+        "2026Q2",
+        "2026Q3"
       ],
       "reconstructedPeriods": [
         "2005Q1",
