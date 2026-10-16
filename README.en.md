@@ -67,7 +67,7 @@ Operating income is continuously covered from each company's listing quarter, wi
 - `data.js`: browser-loaded data source
 - `price-data.js`: browser-loaded daily adjusted-close stock-price data source
 - `assets/logos/`: transparent company logos used in single-company views
-- `Chart.js 4.4.1`: charting engine
+- `assets/vendor/chartjs-4.4.1/`: self-hosted Chart.js 4.4.1 charting engine (with its MIT license), avoiding chart failures when mobile in-app browsers cannot reach an external CDN
 
 This is a no-build static site. No frontend dependency installation is required for local preview.
 
