@@ -177,6 +177,19 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  meta: {
+    // Meta Q3 2026 official results, released on 2026-10-21.
+    // https://www.prnewswire.com/news-releases/meta-reports-third-quarter-2026-results-302915964.html
+    "2026Q3": {
+      revenue: 64_601_000_000,
+      earnings: 9_860_000_000,
+      operatingIncome: 12_988_000_000,
+      grossMargin: (51_232 / 64_601) * 100,
+      netAssets: 272_386_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-21",
+    },
+  },
   asml: {
     // ASML Q3 2026 US GAAP statements, pages 2 and 4, released 2026-10-14.
     // https://investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0
@@ -261,6 +274,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   tsla: {
+    // Tesla Q3 2026 official results, released on 2026-10-21.
+    // https://assets-ir.tesla.com/tesla-contents/IR/TSLA-Q3-2026-Update.pdf
+    "2026Q3": {
+      revenue: 28_046_000_000,
+      earnings: 787_000_000,
+      operatingIncome: 718_000_000,
+      grossMargin: (5_494 / 28_046) * 100,
+      netAssets: 89_835_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-21",
+    },
     // Tesla Q2 2026 shareholder update, released 2026-07-22.
     "2026Q2": {
       revenue: 28_236_000_000,

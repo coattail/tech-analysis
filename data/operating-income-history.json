@@ -570,7 +570,7 @@
     "meta": {
       "ticker": "META",
       "listingPeriod": "2012Q2",
-      "latestFinancialPeriod": "2026Q1",
+      "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
         "2012Q2",
         "2012Q3",
@@ -627,7 +627,8 @@
         "2025Q2",
         "2025Q3",
         "2025Q4",
-        "2026Q1"
+        "2026Q1",
+        "2026Q3"
       ],
       "reconstructedPeriods": [],
       "preservedPeriods": [],
@@ -735,7 +736,7 @@
     "tsla": {
       "ticker": "TSLA",
       "listingPeriod": "2010Q2",
-      "latestFinancialPeriod": "2026Q2",
+      "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
         "2012Q2",
         "2012Q3",
@@ -792,7 +793,8 @@
         "2025Q2",
         "2025Q3",
         "2025Q4",
-        "2026Q1"
+        "2026Q1",
+        "2026Q3"
       ],
       "reconstructedPeriods": [
         "2010Q2",
