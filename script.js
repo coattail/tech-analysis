@@ -343,7 +343,9 @@ function getCompanyName(company) {
 
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
 const COMPANY_CATEGORIES = [
-  { id: "mag7", label: "MAG7", companyIds: ["nvidia", "alphabet", "apple", "microsoft", "amazon", "meta", "tsla"] },
+  // Descending market cap, verified 2026-10-27 (2026-10-26 US session):
+  // https://wallstreetnumbers.com/watchlists/magnificent7
+  { id: "mag7", label: "MAG7", companyIds: ["nvidia", "apple", "microsoft", "alphabet", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"], labelEn: "Software" },
   { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"], labelEn: "Cloud" },
   { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"], labelEn: "Semiconductors" },
