@@ -43,7 +43,7 @@ test("keeps MAG7 colors distinct with Microsoft's reference blue", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   assert.match(script, /id: "nvidia"[^\n]*color: "#9be000"/);
   assert.match(script, /id: "apple"[^\n]*color: "#4b5563", deepColor: "#7b8490"/);
-  assert.match(script, /id: "microsoft"[^\n]*color: "#0047ab", deepColor: "#57a0ff"/);
+  assert.match(script, /id: "microsoft"[^\n]*color: "#57a0ff", preserveSeriesColor: true/);
 
   for (let leftIndex = 0; leftIndex < fixedCompanies.length; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < fixedCompanies.length; rightIndex += 1) {
