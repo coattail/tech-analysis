@@ -26,13 +26,13 @@ test("keeps MAG7 colors fixed in every focused comparison", () => {
   }
 });
 
-test("keeps every MAG7 fixed color pair above the stricter separation floor", () => {
+test("keeps MAG7 colors distinct with Microsoft's reference blue", () => {
   const fixedCompanies = loadCompanyColors().filter((company) => FIXED_COMPANY_IDS.has(company.id));
   const expectedColors = {
     nvidia: "#9be000",
     alphabet: "#00d4e8",
     apple: "#7b8490",
-    microsoft: "#2563eb",
+    microsoft: "#57a0ff",
     amazon: "#ff9900",
     meta: "#d946ef",
     tsla: "#bd0026",
@@ -43,14 +43,22 @@ test("keeps every MAG7 fixed color pair above the stricter separation floor", ()
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
   assert.match(script, /id: "nvidia"[^\n]*color: "#9be000"/);
   assert.match(script, /id: "apple"[^\n]*color: "#4b5563", deepColor: "#7b8490"/);
+  assert.match(script, /id: "microsoft"[^\n]*color: "#0047ab", deepColor: "#57a0ff"/);
 
   for (let leftIndex = 0; leftIndex < fixedCompanies.length; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < fixedCompanies.length; rightIndex += 1) {
       const left = fixedCompanies[leftIndex];
       const right = fixedCompanies[rightIndex];
       const distance = perceptualColorDistance(left.brandColor, right.brandColor);
+      // The reference blue is closer to cyan and slate; retain stricter
+      // separation for every other fixed pair.
+      const pair = `${left.id}/${right.id}`;
+      const minimumDistance = {
+        "alphabet/microsoft": 0.15,
+        "apple/microsoft": 0.16,
+      }[pair] ?? 0.18;
       assert.ok(
-        distance >= 0.18,
+        distance >= minimumDistance,
         `${left.id}/${right.id} fixed colors should remain clearly separated (distance ${distance})`,
       );
     }
@@ -58,7 +66,7 @@ test("keeps every MAG7 fixed color pair above the stricter separation floor", ()
 
   assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.amazon) >= 0.25);
   assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.nvidia) >= 0.2);
-  assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.microsoft) >= 0.3);
+  assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.microsoft) >= 0.15);
   assert.ok(perceptualColorDistance(expectedColors.microsoft, expectedColors.meta) >= 0.24);
   for (const [leftId, rightId] of [["amazon", "tsla"], ["amazon", "meta"], ["tsla", "meta"]]) {
     assert.ok(
