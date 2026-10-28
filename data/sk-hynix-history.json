@@ -1,0 +1,711 @@
+{
+  "companyId": "skhynix",
+  "ticker": "SKHY",
+  "primaryTicker": "000660.KS",
+  "displayCurrency": "USD",
+  "note": "2018Q1–2026Q2: archived reported quarterly statements; 2026Q3: official preliminary consolidated K-IFRS earnings release. Flow amounts use FRED DEXKOUS quarter-average rates. Gaps in equity, margins and valuation remain null; no pre-IPO ADR prices are synthesized. Provider historical net income may use parent-attributable earnings; official consolidated figures take precedence for 2025Q4 onward.",
+  "quarters": [
+    {
+      "period": "2018Q1",
+      "periodEnd": "2018-03-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/d51f3-2023-12-13-09-08-18.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1071.1,
+      "fxObservationCount": 62,
+      "revenue": 8720000000000,
+      "operatingIncome": 4367000000000,
+      "netIncome": 3121000000000,
+      "grossMargin": 61.193,
+      "usd": {
+        "revenue": 8141163290,
+        "earnings": 2913826907,
+        "operatingIncome": 4077116983,
+        "periodEnd": "2018-03-31",
+        "grossMargin": 61.193
+      }
+    },
+    {
+      "period": "2018Q2",
+      "periodEnd": "2018-06-30",
+      "sourceUrl": "https://files.quartr.com/conference-calls/33957-2023-12-13-09-20-16.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1079.639375,
+      "fxObservationCount": 64,
+      "revenue": 10371000000000,
+      "operatingIncome": 5574000000000,
+      "netIncome": 4329000000000,
+      "grossMargin": 63.716,
+      "usd": {
+        "revenue": 9605985332,
+        "earnings": 4009672211,
+        "operatingIncome": 5162835044,
+        "periodEnd": "2018-06-30",
+        "grossMargin": 63.716
+      }
+    },
+    {
+      "period": "2018Q3",
+      "periodEnd": "2018-09-30",
+      "sourceUrl": "https://files.quartr.com/conference-calls/84658-2023-12-13-09-26-13.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1120.8358730158732,
+      "fxObservationCount": 63,
+      "revenue": 11417000000000,
+      "operatingIncome": 6472000000000,
+      "netIncome": 4692000000000,
+      "grossMargin": 66.086,
+      "usd": {
+        "revenue": 10186147923,
+        "earnings": 4186161518,
+        "operatingIncome": 5774262009,
+        "periodEnd": "2018-09-30",
+        "grossMargin": 66.086
+      }
+    },
+    {
+      "period": "2018Q4",
+      "periodEnd": "2018-12-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/c5e81-2023-12-13-09-55-12.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1126.7678333333336,
+      "fxObservationCount": 60,
+      "revenue": 9938000000000,
+      "operatingIncome": 4430000000000,
+      "netIncome": 3398000000000,
+      "grossMargin": 58.1,
+      "usd": {
+        "revenue": 8819918093,
+        "earnings": 3015705542,
+        "operatingIncome": 3931599633,
+        "periodEnd": "2018-12-31",
+        "grossMargin": 58.1
+      }
+    },
+    {
+      "period": "2019Q1",
+      "periodEnd": "2019-03-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/af33e-2023-12-13-09-10-12.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1124.8001694915256,
+      "fxObservationCount": 59,
+      "revenue": 6773000000000,
+      "operatingIncome": 1366000000000,
+      "netIncome": 1102000000000,
+      "grossMargin": 39.569,
+      "usd": {
+        "revenue": 6021514029,
+        "earnings": 979729582,
+        "operatingIncome": 1214437939,
+        "periodEnd": "2019-03-31",
+        "grossMargin": 39.569
+      }
+    },
+    {
+      "period": "2019Q2",
+      "periodEnd": "2019-06-30",
+      "sourceUrl": "https://files.quartr.com/conference-calls/448ea-2023-12-13-09-32-11.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1166.066875,
+      "fxObservationCount": 64,
+      "revenue": 6452000000000,
+      "operatingIncome": 638000000000,
+      "netIncome": 537000000000,
+      "grossMargin": 31.262,
+      "usd": {
+        "revenue": 5533130336,
+        "earnings": 460522472,
+        "operatingIncome": 547138431,
+        "periodEnd": "2019-06-30",
+        "grossMargin": 31.262
+      }
+    },
+    {
+      "period": "2019Q3",
+      "periodEnd": "2019-09-30",
+      "sourceUrl": "https://files.quartr.com/conference-calls/eb14a-2023-12-13-09-14-07.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1193.90265625,
+      "fxObservationCount": 64,
+      "revenue": 6839000000000,
+      "operatingIncome": 473000000000,
+      "netIncome": 495000000000,
+      "grossMargin": 26.554,
+      "usd": {
+        "revenue": 5728272706,
+        "earnings": 414606666,
+        "operatingIncome": 396179703,
+        "periodEnd": "2019-09-30",
+        "grossMargin": 26.554
+      }
+    },
+    {
+      "period": "2019Q4",
+      "periodEnd": "2019-12-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/a47df-2023-12-13-09-27-06.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1175.5375806451614,
+      "fxObservationCount": 62,
+      "revenue": 6927000000000,
+      "operatingIncome": 236000000000,
+      "netIncome": -118000000000,
+      "grossMargin": 23.863,
+      "usd": {
+        "revenue": 5892623183,
+        "earnings": -100379607,
+        "operatingIncome": 200759213,
+        "periodEnd": "2019-12-31",
+        "grossMargin": 23.863
+      }
+    },
+    {
+      "period": "2020Q1",
+      "periodEnd": "2020-03-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/ddfcb-2023-12-13-09-28-05.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1194.0059677419354,
+      "fxObservationCount": 62,
+      "revenue": 7199000000000,
+      "operatingIncome": 800000000000,
+      "netIncome": 649000000000,
+      "grossMargin": 30.449,
+      "usd": {
+        "revenue": 6029283098,
+        "earnings": 543548372,
+        "operatingIncome": 670013402,
+        "periodEnd": "2020-03-31",
+        "grossMargin": 30.449
+      }
+    },
+    {
+      "period": "2020Q2",
+      "periodEnd": "2020-06-30",
+      "sourceUrl": "https://files.quartr.com/conference-calls/b0485-2023-12-13-09-46-04.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1219.13078125,
+      "fxObservationCount": 64,
+      "revenue": 8607000000000,
+      "operatingIncome": 1947000000000,
+      "netIncome": 1264000000000,
+      "grossMargin": 38.852,
+      "usd": {
+        "revenue": 7059948065,
+        "earnings": 1036804270,
+        "operatingIncome": 1597039489,
+        "periodEnd": "2020-06-30",
+        "grossMargin": 38.852
+      }
+    },
+    {
+      "period": "2020Q3",
+      "periodEnd": "2020-09-30",
+      "sourceUrl": "https://files.quartr.com/conference-calls/01b41-2023-12-13-09-37-02.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1187.62015625,
+      "fxObservationCount": 64,
+      "revenue": 8129000000000,
+      "operatingIncome": 1300000000000,
+      "netIncome": 1078000000000,
+      "grossMargin": 34.974,
+      "usd": {
+        "revenue": 6844781100,
+        "earnings": 907697629,
+        "operatingIncome": 1094626083,
+        "periodEnd": "2020-09-30",
+        "grossMargin": 34.974
+      }
+    },
+    {
+      "period": "2020Q4",
+      "periodEnd": "2020-12-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/29c0e-2023-12-13-08-35-57.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1117.9738333333332,
+      "fxObservationCount": 60,
+      "revenue": 7966000000000,
+      "operatingIncome": 966000000000,
+      "netIncome": 1768000000000,
+      "grossMargin": 30.517,
+      "usd": {
+        "revenue": 7125390383,
+        "earnings": 1581432362,
+        "operatingIncome": 864063157,
+        "periodEnd": "2020-12-31",
+        "grossMargin": 30.517
+      }
+    },
+    {
+      "period": "2021Q1",
+      "periodEnd": "2021-03-31",
+      "sourceUrl": "https://files.quartr.com/conference-calls/31372-2023-10-10-06-01-50.pdf?ref=U3RvY2tBbmFseXNpcw==",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1114.8095,
+      "fxObservationCount": 60,
+      "revenue": 8494000000000,
+      "operatingIncome": 1324000000000,
+      "netIncome": 993000000000,
+      "grossMargin": 32.129,
+      "usd": {
+        "revenue": 7619238982,
+        "earnings": 890735144,
+        "operatingIncome": 1187646858,
+        "periodEnd": "2021-03-31",
+        "grossMargin": 32.129
+      }
+    },
+    {
+      "period": "2021Q2",
+      "periodEnd": "2021-06-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1121.30171875,
+      "fxObservationCount": 64,
+      "revenue": 10321671000000,
+      "operatingIncome": 2694574000000,
+      "netIncome": 1984514000000,
+      "grossMargin": 42.04,
+      "usd": {
+        "revenue": 9205079086,
+        "earnings": 1769830516,
+        "operatingIncome": 2403076670,
+        "periodEnd": "2021-06-30",
+        "grossMargin": 42.04
+      }
+    },
+    {
+      "period": "2021Q3",
+      "periodEnd": "2021-09-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1160.08390625,
+      "fxObservationCount": 64,
+      "revenue": 11805324000000,
+      "operatingIncome": 4171821000000,
+      "netIncome": 3310823000000,
+      "grossMargin": 49.39,
+      "usd": {
+        "revenue": 10176267369,
+        "earnings": 2853951324,
+        "operatingIncome": 3596137294,
+        "periodEnd": "2021-09-30",
+        "grossMargin": 49.39
+      }
+    },
+    {
+      "period": "2021Q4",
+      "periodEnd": "2021-12-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1183.2890163934428,
+      "fxObservationCount": 61,
+      "revenue": 12376609000000,
+      "operatingIncome": 4219524000000,
+      "netIncome": 3316532000000,
+      "grossMargin": 48.908,
+      "usd": {
+        "revenue": 10459497915,
+        "earnings": 2802808066,
+        "operatingIncome": 3565928477,
+        "periodEnd": "2021-12-31",
+        "grossMargin": 48.908
+      }
+    },
+    {
+      "period": "2022Q1",
+      "periodEnd": "2022-03-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1206.1832258064517,
+      "fxObservationCount": 62,
+      "revenue": 12155653000000,
+      "operatingIncome": 2863897000000,
+      "netIncome": 1983125000000,
+      "grossMargin": 44.43,
+      "usd": {
+        "revenue": 10077783159,
+        "earnings": 1644132465,
+        "operatingIncome": 2374346566,
+        "periodEnd": "2022-03-31",
+        "grossMargin": 44.43
+      }
+    },
+    {
+      "period": "2022Q2",
+      "periodEnd": "2022-06-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1260.4557142857143,
+      "fxObservationCount": 63,
+      "revenue": 13811001000000,
+      "operatingIncome": 4197226000000,
+      "netIncome": 2876148000000,
+      "grossMargin": 45.89,
+      "usd": {
+        "revenue": 10957148945,
+        "earnings": 2281831854,
+        "operatingIncome": 3329927385,
+        "periodEnd": "2022-06-30",
+        "grossMargin": 45.89
+      }
+    },
+    {
+      "period": "2022Q3",
+      "periodEnd": "2022-09-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1341.1078125,
+      "fxObservationCount": 64,
+      "revenue": 10982883000000,
+      "operatingIncome": 1660523000000,
+      "netIncome": 1111705000000,
+      "grossMargin": 35.2,
+      "usd": {
+        "revenue": 8189410946,
+        "earnings": 828945287,
+        "operatingIncome": 1238172639,
+        "periodEnd": "2022-09-30",
+        "grossMargin": 35.2
+      }
+    },
+    {
+      "period": "2022Q4",
+      "periodEnd": "2022-12-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1359.375737704918,
+      "fxObservationCount": 61,
+      "revenue": 7672031000000,
+      "operatingIncome": -1912229000000,
+      "netIncome": -3741418000000,
+      "grossMargin": 0.305,
+      "usd": {
+        "revenue": 5643789857,
+        "earnings": -2752306001,
+        "operatingIncome": -1406696432,
+        "periodEnd": "2022-12-31",
+        "grossMargin": 0.305
+      }
+    },
+    {
+      "period": "2023Q1",
+      "periodEnd": "2023-03-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1276.335,
+      "fxObservationCount": 62,
+      "revenue": 5088111000000,
+      "operatingIncome": -3402302000000,
+      "netIncome": -2580409000000,
+      "grossMargin": -32.34,
+      "usd": {
+        "revenue": 3986501193,
+        "earnings": -2021733322,
+        "operatingIncome": -2665681032,
+        "periodEnd": "2023-03-31",
+        "grossMargin": -32.34
+      }
+    },
+    {
+      "period": "2023Q2",
+      "periodEnd": "2023-06-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1315.6822222222222,
+      "fxObservationCount": 63,
+      "revenue": 7305932000000,
+      "operatingIncome": -2882084000000,
+      "netIncome": -2991181000000,
+      "grossMargin": -16.12,
+      "usd": {
+        "revenue": 5552960948,
+        "earnings": -2273482874,
+        "operatingIncome": -2190562395,
+        "periodEnd": "2023-06-30",
+        "grossMargin": -16.12
+      }
+    },
+    {
+      "period": "2023Q3",
+      "periodEnd": "2023-09-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1313.1873015873016,
+      "fxObservationCount": 63,
+      "revenue": 9066171000000,
+      "operatingIncome": -1791961000000,
+      "netIncome": -2183733000000,
+      "grossMargin": 0.71,
+      "usd": {
+        "revenue": 6903943549,
+        "earnings": -1662925766,
+        "operatingIncome": -1364589041,
+        "periodEnd": "2023-09-30",
+        "grossMargin": 0.71
+      }
+    },
+    {
+      "period": "2023Q4",
+      "periodEnd": "2023-12-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1321.8462295081968,
+      "fxObservationCount": 61,
+      "revenue": 11305505000000,
+      "operatingIncome": 346034000000,
+      "netIncome": -1357105000000,
+      "grossMargin": 19.686,
+      "usd": {
+        "revenue": 8552814047,
+        "earnings": -1026673882,
+        "operatingIncome": 261780828,
+        "periodEnd": "2023-12-31",
+        "grossMargin": 19.686
+      }
+    },
+    {
+      "period": "2024Q1",
+      "periodEnd": "2024-03-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1329.6132258064517,
+      "fxObservationCount": 62,
+      "revenue": 12429598000000,
+      "operatingIncome": 2886029000000,
+      "netIncome": 1919251000000,
+      "grossMargin": 38.57,
+      "usd": {
+        "revenue": 9348280958,
+        "earnings": 1443465636,
+        "operatingIncome": 2170577837,
+        "periodEnd": "2024-03-31",
+        "grossMargin": 38.57
+      }
+    },
+    {
+      "period": "2024Q2",
+      "periodEnd": "2024-06-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1370.138888888889,
+      "fxObservationCount": 63,
+      "revenue": 16423258000000,
+      "operatingIncome": 5468536000000,
+      "netIncome": 4120279000000,
+      "grossMargin": 45.65,
+      "usd": {
+        "revenue": 11986564379,
+        "earnings": 3007198054,
+        "operatingIncome": 3991227491,
+        "periodEnd": "2024-06-30",
+        "grossMargin": 45.65
+      }
+    },
+    {
+      "period": "2024Q3",
+      "periodEnd": "2024-09-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1355.48078125,
+      "fxObservationCount": 64,
+      "revenue": 17573069000000,
+      "operatingIncome": 7029958000000,
+      "netIncome": 5748676000000,
+      "grossMargin": 52.19,
+      "usd": {
+        "revenue": 12964454563,
+        "earnings": 4241060500,
+        "operatingIncome": 5186320675,
+        "periodEnd": "2024-09-30",
+        "grossMargin": 52.19
+      }
+    },
+    {
+      "period": "2024Q4",
+      "periodEnd": "2024-12-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1398.6682258064516,
+      "fxObservationCount": 62,
+      "revenue": 19767035000000,
+      "operatingIncome": 8082796000000,
+      "netIncome": 8000475000000,
+      "grossMargin": 52.44,
+      "usd": {
+        "revenue": 14132754741,
+        "earnings": 5720066312,
+        "operatingIncome": 5778923015,
+        "periodEnd": "2024-12-31",
+        "grossMargin": 52.44
+      }
+    },
+    {
+      "period": "2025Q1",
+      "periodEnd": "2025-03-31",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1452.0057377049181,
+      "fxObservationCount": 61,
+      "revenue": 17639141000000,
+      "operatingIncome": 7440504000000,
+      "netIncome": 8107081000000,
+      "grossMargin": 57.27,
+      "usd": {
+        "revenue": 12148120728,
+        "earnings": 5583367055,
+        "operatingIncome": 5124293800,
+        "periodEnd": "2025-03-31",
+        "grossMargin": 57.27
+      }
+    },
+    {
+      "period": "2025Q2",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1399.823015873016,
+      "fxObservationCount": 63,
+      "revenue": 22231952000000,
+      "operatingIncome": 9212851000000,
+      "netIncome": 6997228000000,
+      "grossMargin": 53.9,
+      "usd": {
+        "revenue": 15881973469,
+        "earnings": 4998651916,
+        "operatingIncome": 6581439865,
+        "periodEnd": "2025-06-30",
+        "grossMargin": 53.9
+      }
+    },
+    {
+      "period": "2025Q3",
+      "periodEnd": "2025-09-30",
+      "sourceUrl": "https://stockanalysis.com/quote/krx/000660/financials/?p=quarterly",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1386.9453125,
+      "fxObservationCount": 64,
+      "revenue": 24448929000000,
+      "operatingIncome": 11383390000000,
+      "netIncome": 12595195000000,
+      "grossMargin": 57.38,
+      "usd": {
+        "revenue": 17627896918,
+        "earnings": 9081248472,
+        "operatingIncome": 8207526207,
+        "periodEnd": "2025-09-30",
+        "grossMargin": 57.38
+      }
+    },
+    {
+      "period": "2025Q4",
+      "periodEnd": "2025-12-31",
+      "sourceUrl": "https://news.skhynix.com/en/q1-2026-business-results/",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1448.764193548387,
+      "fxObservationCount": 62,
+      "revenue": 32826653000000,
+      "operatingIncome": 19169574000000,
+      "netIncome": 15246000000000.0,
+      "grossMargin": 68.77,
+      "usd": {
+        "revenue": 22658382328,
+        "earnings": 10523451689,
+        "operatingIncome": 13231672956,
+        "periodEnd": "2025-12-31",
+        "grossMargin": 68.77
+      }
+    },
+    {
+      "period": "2026Q1",
+      "periodEnd": "2026-03-31",
+      "sourceUrl": "https://news.skhynix.com/en/q1-2026-business-results/",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1465.5695081967215,
+      "fxObservationCount": 61,
+      "revenue": 52576287000000,
+      "operatingIncome": 37610283000000,
+      "netIncome": 40345900000000.0,
+      "grossMargin": 79.27,
+      "usd": {
+        "revenue": 35874304634,
+        "earnings": 27529161718,
+        "operatingIncome": 25662571983,
+        "periodEnd": "2026-03-31",
+        "grossMargin": 79.27,
+        "reportDate": "2026-04-22"
+      }
+    },
+    {
+      "period": "2026Q2",
+      "periodEnd": "2026-06-30",
+      "sourceUrl": "https://news.skhynix.com/en/q2-2026-business-results/",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1500.4788888888888,
+      "fxObservationCount": 63,
+      "revenue": 79318700000000,
+      "operatingIncome": 60542600000000,
+      "netIncome": 93922600000000.0,
+      "grossMargin": 83.197,
+      "usd": {
+        "revenue": 52862256568,
+        "earnings": 62595082607,
+        "operatingIncome": 40348851589,
+        "periodEnd": "2026-06-30",
+        "grossMargin": 83.197,
+        "reportDate": "2026-07-29"
+      }
+    },
+    {
+      "period": "2026Q3",
+      "periodEnd": "2026-09-30",
+      "reportDate": "2026-10-28",
+      "sourceUrl": "https://news.skhynix.com/en/q3-2026-business-results/",
+      "statementCurrency": "KRW",
+      "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
+      "krwPerUsdQuarterAverage": 1417.23859375,
+      "fxObservationCount": 64,
+      "revenue": 104615500000000,
+      "operatingIncome": 83333800000000,
+      "netIncome": 39775600000000,
+      "usd": {
+        "revenue": 73816434622,
+        "earnings": 28065563678,
+        "operatingIncome": 58800120437,
+        "periodEnd": "2026-09-30",
+        "reportDate": "2026-10-28"
+      }
+    }
+  ]
+}

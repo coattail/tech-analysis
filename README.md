@@ -35,15 +35,17 @@
 
 ## 覆盖公司
 
-截至 2026-06-29，样本覆盖 44 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
+截至 2026-10-28，样本覆盖 45 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
 
 - NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
 - Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
 - Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
 - IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
-- CoreWeave、Nebius、ChronoScale、SharonAI
+- CoreWeave、Nebius、ChronoScale、SharonAI、SK 海力士（SKHY）
 
 Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及之后数据，股价仅保留 2024-04-01 及之后数据。
+
+SK 海力士归入半导体，财务历史覆盖 2018Q1–2026Q3；韩元流量按 FRED DEXKOUS 季度平均汇率换算为美元，原始金额、汇率与来源保存在 `data/sk-hynix-history.json`。美股 ADR 股价从 2026-07-13 上市开始（1 ADR 对应 0.1 股韩股普通股），不拼接韩股价格；Yahoo 暂不可用时使用 StockAnalysis 复权价格。2026Q3 官方初步公告未披露的毛利率、净资产与 ROE 保持为空。
 
 ## 指标说明
 

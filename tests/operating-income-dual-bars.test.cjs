@@ -83,7 +83,7 @@ test("keeps the reproducible source snapshot and TTM reconstruction formula", ()
     fs.readFileSync(path.join(root, "data", "operating-income-source.json"), "utf8"),
   );
 
-  assert.equal(Object.keys(sourceSnapshot.companies).length, 44);
+  assert.equal(Object.keys(sourceSnapshot.companies).length, 45);
   assert.match(historyBackfiller, /const EARLIEST_PERIOD = "2005Q1"/);
   assert.match(
     historyBackfiller,

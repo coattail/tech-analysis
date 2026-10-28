@@ -43,6 +43,7 @@ const COMPANY_SOURCES = [
   { id: "exxon", ticker: "XOM", slug: "xom", name: "埃克森美孚" },
   { id: "visa", ticker: "V", slug: "v", name: "Visa" },
   { id: "asml", ticker: "ASML", slug: "asml", name: "阿斯麦" },
+  { id: "skhynix", ticker: "SKHY", slug: "skhy", name: "SK海力士" },
   { id: "micron", ticker: "MU", slug: "mu", name: "美光" },
   { id: "jnj", ticker: "JNJ", slug: "jnj", name: "强生" },
   { id: "oracle", ticker: "ORCL", slug: "orcl", name: "甲骨文" },
@@ -90,6 +91,7 @@ const COMPANIES_MARKET_CAP_SLUGS = {
   lilly: "eli-lilly",
   exxon: "exxon-mobil",
   micron: "micron-technology",
+  skhynix: "sk-hynix",
   jnj: "johnson-and-johnson",
   bankofamerica: "bank-of-america",
   homedepot: "home-depot",
@@ -147,6 +149,7 @@ const SEC_FIELD_CONCEPTS = {
   ],
 };
 const FX_SERIES_CONFIG = {
+  KRW: { seriesId: "DEXKOUS", quoteMode: "local_per_usd", label: "FRED DEXKOUS (KRW per USD)" },
   EUR: {
     seriesId: "DEXUSEU",
     quoteMode: "usd_per_local",
@@ -177,6 +180,256 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  // Reported KRW statements and quarter-average FRED FX: data/sk-hynix-history.json.
+  skhynix: {
+  "2018Q1": {
+    "revenue": 8141163290,
+    "earnings": 2913826907,
+    "operatingIncome": 4077116983,
+    "periodEndDate": "2018-03-31",
+    "grossMargin": 61.193
+  },
+  "2018Q2": {
+    "revenue": 9605985332,
+    "earnings": 4009672211,
+    "operatingIncome": 5162835044,
+    "periodEndDate": "2018-06-30",
+    "grossMargin": 63.716
+  },
+  "2018Q3": {
+    "revenue": 10186147923,
+    "earnings": 4186161518,
+    "operatingIncome": 5774262009,
+    "periodEndDate": "2018-09-30",
+    "grossMargin": 66.086
+  },
+  "2018Q4": {
+    "revenue": 8819918093,
+    "earnings": 3015705542,
+    "operatingIncome": 3931599633,
+    "periodEndDate": "2018-12-31",
+    "grossMargin": 58.1
+  },
+  "2019Q1": {
+    "revenue": 6021514029,
+    "earnings": 979729582,
+    "operatingIncome": 1214437939,
+    "periodEndDate": "2019-03-31",
+    "grossMargin": 39.569
+  },
+  "2019Q2": {
+    "revenue": 5533130336,
+    "earnings": 460522472,
+    "operatingIncome": 547138431,
+    "periodEndDate": "2019-06-30",
+    "grossMargin": 31.262
+  },
+  "2019Q3": {
+    "revenue": 5728272706,
+    "earnings": 414606666,
+    "operatingIncome": 396179703,
+    "periodEndDate": "2019-09-30",
+    "grossMargin": 26.554
+  },
+  "2019Q4": {
+    "revenue": 5892623183,
+    "earnings": -100379607,
+    "operatingIncome": 200759213,
+    "periodEndDate": "2019-12-31",
+    "grossMargin": 23.863
+  },
+  "2020Q1": {
+    "revenue": 6029283098,
+    "earnings": 543548372,
+    "operatingIncome": 670013402,
+    "periodEndDate": "2020-03-31",
+    "grossMargin": 30.449
+  },
+  "2020Q2": {
+    "revenue": 7059948065,
+    "earnings": 1036804270,
+    "operatingIncome": 1597039489,
+    "periodEndDate": "2020-06-30",
+    "grossMargin": 38.852
+  },
+  "2020Q3": {
+    "revenue": 6844781100,
+    "earnings": 907697629,
+    "operatingIncome": 1094626083,
+    "periodEndDate": "2020-09-30",
+    "grossMargin": 34.974
+  },
+  "2020Q4": {
+    "revenue": 7125390383,
+    "earnings": 1581432362,
+    "operatingIncome": 864063157,
+    "periodEndDate": "2020-12-31",
+    "grossMargin": 30.517
+  },
+  "2021Q1": {
+    "revenue": 7619238982,
+    "earnings": 890735144,
+    "operatingIncome": 1187646858,
+    "periodEndDate": "2021-03-31",
+    "grossMargin": 32.129
+  },
+  "2021Q2": {
+    "revenue": 9205079086,
+    "earnings": 1769830516,
+    "operatingIncome": 2403076670,
+    "periodEndDate": "2021-06-30",
+    "grossMargin": 42.04
+  },
+  "2021Q3": {
+    "revenue": 10176267369,
+    "earnings": 2853951324,
+    "operatingIncome": 3596137294,
+    "periodEndDate": "2021-09-30",
+    "grossMargin": 49.39
+  },
+  "2021Q4": {
+    "revenue": 10459497915,
+    "earnings": 2802808066,
+    "operatingIncome": 3565928477,
+    "periodEndDate": "2021-12-31",
+    "grossMargin": 48.908
+  },
+  "2022Q1": {
+    "revenue": 10077783159,
+    "earnings": 1644132465,
+    "operatingIncome": 2374346566,
+    "periodEndDate": "2022-03-31",
+    "grossMargin": 44.43
+  },
+  "2022Q2": {
+    "revenue": 10957148945,
+    "earnings": 2281831854,
+    "operatingIncome": 3329927385,
+    "periodEndDate": "2022-06-30",
+    "grossMargin": 45.89
+  },
+  "2022Q3": {
+    "revenue": 8189410946,
+    "earnings": 828945287,
+    "operatingIncome": 1238172639,
+    "periodEndDate": "2022-09-30",
+    "grossMargin": 35.2
+  },
+  "2022Q4": {
+    "revenue": 5643789857,
+    "earnings": -2752306001,
+    "operatingIncome": -1406696432,
+    "periodEndDate": "2022-12-31",
+    "grossMargin": 0.305
+  },
+  "2023Q1": {
+    "revenue": 3986501193,
+    "earnings": -2021733322,
+    "operatingIncome": -2665681032,
+    "periodEndDate": "2023-03-31",
+    "grossMargin": -32.34
+  },
+  "2023Q2": {
+    "revenue": 5552960948,
+    "earnings": -2273482874,
+    "operatingIncome": -2190562395,
+    "periodEndDate": "2023-06-30",
+    "grossMargin": -16.12
+  },
+  "2023Q3": {
+    "revenue": 6903943549,
+    "earnings": -1662925766,
+    "operatingIncome": -1364589041,
+    "periodEndDate": "2023-09-30",
+    "grossMargin": 0.71
+  },
+  "2023Q4": {
+    "revenue": 8552814047,
+    "earnings": -1026673882,
+    "operatingIncome": 261780828,
+    "periodEndDate": "2023-12-31",
+    "grossMargin": 19.686
+  },
+  "2024Q1": {
+    "revenue": 9348280958,
+    "earnings": 1443465636,
+    "operatingIncome": 2170577837,
+    "periodEndDate": "2024-03-31",
+    "grossMargin": 38.57
+  },
+  "2024Q2": {
+    "revenue": 11986564379,
+    "earnings": 3007198054,
+    "operatingIncome": 3991227491,
+    "periodEndDate": "2024-06-30",
+    "grossMargin": 45.65
+  },
+  "2024Q3": {
+    "revenue": 12964454563,
+    "earnings": 4241060500,
+    "operatingIncome": 5186320675,
+    "periodEndDate": "2024-09-30",
+    "grossMargin": 52.19
+  },
+  "2024Q4": {
+    "revenue": 14132754741,
+    "earnings": 5720066312,
+    "operatingIncome": 5778923015,
+    "periodEndDate": "2024-12-31",
+    "grossMargin": 52.44
+  },
+  "2025Q1": {
+    "revenue": 12148120728,
+    "earnings": 5583367055,
+    "operatingIncome": 5124293800,
+    "periodEndDate": "2025-03-31",
+    "grossMargin": 57.27
+  },
+  "2025Q2": {
+    "revenue": 15881973469,
+    "earnings": 4998651916,
+    "operatingIncome": 6581439865,
+    "periodEndDate": "2025-06-30",
+    "grossMargin": 53.9
+  },
+  "2025Q3": {
+    "revenue": 17627896918,
+    "earnings": 9081248472,
+    "operatingIncome": 8207526207,
+    "periodEndDate": "2025-09-30",
+    "grossMargin": 57.38
+  },
+  "2025Q4": {
+    "revenue": 22658382328,
+    "earnings": 10523451689,
+    "operatingIncome": 13231672956,
+    "periodEndDate": "2025-12-31",
+    "grossMargin": 68.77
+  },
+  "2026Q1": {
+    "revenue": 35874304634,
+    "earnings": 27529161718,
+    "operatingIncome": 25662571983,
+    "periodEndDate": "2026-03-31",
+    "grossMargin": 79.27,
+    "reportDate": "2026-04-22"
+  },
+  "2026Q2": {
+    "revenue": 52862256568,
+    "earnings": 62595082607,
+    "operatingIncome": 40348851589,
+    "periodEndDate": "2026-06-30",
+    "grossMargin": 83.197,
+    "reportDate": "2026-07-29"
+  },
+  "2026Q3": {
+    "revenue": 73816434622,
+    "earnings": 28065563678,
+    "operatingIncome": 58800120437,
+    "periodEndDate": "2026-09-30",
+    "reportDate": "2026-10-28"
+  }
+},
   meta: {
     // Meta Q3 2026 official results, released on 2026-10-21.
     // https://www.prnewswire.com/news-releases/meta-reports-third-quarter-2026-results-302915964.html
@@ -2065,7 +2318,7 @@ function sleep(ms) {
 }
 
 async function fetchCompanyRows(slug) {
-  const url = `${STOCK_ANALYSIS_BASE}/${slug}/financials/?p=quarterly`;
+  const url = `${STOCK_ANALYSIS_BASE}/${slug}/financials/${slug === "skhy" ? "income-statement/" : ""}?p=quarterly`;
   const args = [
     "-L",
     "-sS",
