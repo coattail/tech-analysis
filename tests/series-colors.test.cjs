@@ -30,7 +30,7 @@ test("keeps MAG7 colors distinct with Microsoft's reference blue", () => {
   const fixedCompanies = loadCompanyColors().filter((company) => FIXED_COMPANY_IDS.has(company.id));
   const expectedColors = {
     nvidia: "#9be000",
-    alphabet: "#00d4e8",
+    alphabet: "#b8ffe5",
     apple: "#7b8490",
     microsoft: "#57a0ff",
     amazon: "#ff9900",
@@ -50,11 +50,10 @@ test("keeps MAG7 colors distinct with Microsoft's reference blue", () => {
       const left = fixedCompanies[leftIndex];
       const right = fixedCompanies[rightIndex];
       const distance = perceptualColorDistance(left.brandColor, right.brandColor);
-      // The reference blue is closer to cyan and slate; retain stricter
+      // The reference blue is closer to slate; retain stricter
       // separation for every other fixed pair.
       const pair = `${left.id}/${right.id}`;
       const minimumDistance = {
-        "alphabet/microsoft": 0.15,
         "apple/microsoft": 0.16,
       }[pair] ?? 0.18;
       assert.ok(
@@ -66,7 +65,7 @@ test("keeps MAG7 colors distinct with Microsoft's reference blue", () => {
 
   assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.amazon) >= 0.25);
   assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.nvidia) >= 0.2);
-  assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.microsoft) >= 0.15);
+  assert.ok(perceptualColorDistance(expectedColors.alphabet, expectedColors.microsoft) >= 0.25);
   assert.ok(perceptualColorDistance(expectedColors.microsoft, expectedColors.meta) >= 0.24);
   for (const [leftId, rightId] of [["amazon", "tsla"], ["amazon", "meta"], ["tsla", "meta"]]) {
     assert.ok(
