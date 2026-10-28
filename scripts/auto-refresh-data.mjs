@@ -180,6 +180,18 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  microsoft: {
+    // Official FY2027 Q1 release: https://www.microsoft.com/en-us/Investor/earnings/FY-2027-Q1/press-release-webcast
+    "2026Q3": {
+      revenue: 92279000000,
+      earnings: 36629000000,
+      operatingIncome: 45915000000,
+      grossMargin: (62559 / 92279) * 100,
+      netAssets: 470509000000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-28",
+    },
+  },
   // Reported KRW statements and quarter-average FRED FX: data/sk-hynix-history.json.
   skhynix: {
   "2018Q1": {
@@ -475,6 +487,16 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2008Q1": { revenue: 1_153_388_000, earnings: 176_805_000, periodEndDate: "2008-04-27" },
   },
   alphabet: {
+    // Official FY2026 Q3 release: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm
+    "2026Q3": {
+      revenue: 127577000000,
+      earnings: 26468000000,
+      operatingIncome: 40576000000,
+      grossMargin: (76158 / 127577) * 100,
+      netAssets: 677549000000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-28",
+    },
     // Google 2005-2014 Forms 10-Q/10-K and quarterly earnings tables.
     // These are reported quarterly values, replacing the former annual-total / 4 placeholders.
     "2005Q1": { revenue: 1_256_516_000, earnings: 369_193_000 },
