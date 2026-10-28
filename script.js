@@ -258,6 +258,7 @@ const COMPANIES = [
   { id: "exxon", name: "埃克森美孚", ticker: "XOM", color: "#ff7058", logoColor: "#ed1b2f", logoPath: "assets/logos/exxon.svg?v=20260629-visible-area-v4" },
   { id: "visa", name: "Visa", ticker: "V", color: "#4d6bff", logoColor: "#1434cb", logoPath: "assets/logos/visa.svg?v=20260629-visible-area-v4" },
   { id: "asml", name: "阿斯麦", ticker: "ASML", color: "#58c4dd", logoColor: "#0074c8", logoPath: "assets/logos/asml.svg?v=20260629-visible-area-v4" },
+  { id: "skhynix", name: "SK海力士", ticker: "SKHY", color: "#e0002a", logoColor: "#e0002a", optionLogoFit: "wide-symbol", logoPath: "assets/logos/skhynix.svg?v=20261028-sk-hynix" },
   { id: "micron", name: "美光", ticker: "MU", color: "#8b7dff", logoColor: "#0057b8", optionLogoFit: "wide-symbol", optionLogoPath: "assets/logos/options/micron.svg?v=20260830-compact-marks", logoPath: "assets/logos/micron.svg?v=20260629-visible-area-v4" },
   { id: "jnj", name: "强生", ticker: "JNJ", color: "#ff4d6d", logoColor: "#d71920", logoPath: "assets/logos/jnj.svg?v=20260629-visible-area-v4" },
   { id: "oracle", name: "甲骨文", ticker: "ORCL", color: "#f45d48", logoColor: "#f80000", optionLogoFit: "wide-symbol", optionLogoPath: "assets/logos/options/oracle.svg?v=20260830-compact-marks", logoPath: "assets/logos/oracle.svg?v=20260629-visible-area-v4" },
@@ -305,6 +306,7 @@ const COMPANY_ENGLISH_NAMES = {
   visa: "Visa",
   asml: "ASML",
   micron: "Micron",
+  skhynix: "SK hynix",
   jnj: "Johnson & Johnson",
   oracle: "Oracle",
   amd: "AMD",
@@ -348,7 +350,7 @@ const COMPANY_CATEGORIES = [
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "apple", "microsoft", "alphabet", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"], labelEn: "Software" },
   { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"], labelEn: "Cloud" },
-  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "amd"], labelEn: "Semiconductors" },
+  { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "skhynix", "amd"], labelEn: "Semiconductors" },
   { id: "other", label: "其他", companyIds: [], labelEn: "Other" },
 ];
 

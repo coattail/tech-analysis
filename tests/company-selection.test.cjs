@@ -38,7 +38,7 @@ test('index html marks the same initial view controls as checked', () => {
   assert.doesNotMatch(html, /name="chartMode" value="line" checked/);
   assert.match(html, /id="priceComparisonToggle" type="checkbox" checked/);
   assert.match(html, /<strong id="activeMetricLabel">净利润<\/strong>/);
-  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 44<\/strong>/);
+  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 45<\/strong>/);
 });
 
 test('provides a persistent bilingual switch for page copy and chart annotations', () => {
@@ -151,7 +151,7 @@ test('renders searchable company categories with semiconductor before other', ()
   assert.match(script, /label: "MAG7"/);
   assert.match(script, /label: "软件"/);
   assert.match(script, /label: "云服务"/);
-  assert.match(script, /id: "semiconductor", label: "半导体", companyIds: \["avgo", "tsmc", "asml", "micron", "amd"\]/);
+  assert.match(script, /id: "semiconductor", label: "半导体", companyIds: \["avgo", "tsmc", "asml", "micron", "skhynix", "amd"\]/);
   assert.ok(script.indexOf('label: "半导体"') < script.indexOf('label: "其他"'));
   assert.match(script, /label: "其他"/);
   assert.match(script, /companySearchEl\?\.addEventListener\("input"/);

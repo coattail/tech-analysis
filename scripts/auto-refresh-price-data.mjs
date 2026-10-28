@@ -2,13 +2,18 @@
 
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 const require = createRequire(import.meta.url);
+const execFileAsync = promisify(execFile);
 const {
   assessYahooChartFreshness,
   getLatestPriceDate,
   normalizeYahooChartPayload,
 } = require("../price-refresh-helpers.cjs");
+
+const { parseStockAnalysisPrices } = require("../stockanalysis-price-helpers.cjs");
 
 const PRICE_DATA_JS_PATH = new URL("../price-data.js", import.meta.url);
 const YAHOO_CHART_BASE = "https://query2.finance.yahoo.com/v8/finance/chart";
@@ -33,6 +38,7 @@ const COMPANY_SOURCES = [
   { id: "exxon", ticker: "XOM" },
   { id: "visa", ticker: "V" },
   { id: "asml", ticker: "ASML" },
+  { id: "skhynix", ticker: "SKHY", minDate: "2026-07-13" },
   { id: "micron", ticker: "MU" },
   { id: "jnj", ticker: "JNJ" },
   { id: "oracle", ticker: "ORCL" },
@@ -140,6 +146,7 @@ async function fetchDailyAdjustedSeries(company) {
         );
       }
 
+      company.priceSource = "Yahoo Finance chart API";
       return daily;
     } catch (error) {
       lastError = error;
@@ -150,6 +157,12 @@ async function fetchDailyAdjustedSeries(company) {
     }
   }
 
+  if (company.id === "skhynix") {
+    const url = "https://stockanalysis.com/stocks/skhy/history/?range=max";
+    const { stdout } = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", url], { maxBuffer: 5 * 1024 * 1024 });
+    company.priceSource = url;
+    return parseStockAnalysisPrices(stdout);
+  }
   throw lastError;
 }
 
@@ -165,7 +178,10 @@ async function main() {
   for (const company of selectedCompanies) {
     try {
       companies[company.id] = {
+        ...(companies[company.id] || {}),
+        ...(company.id === "skhynix" ? { ticker: "SKHY", currency: "USD" } : {}),
         daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company), company.minDate),
+        source: company.priceSource,
       };
       updatedCompanies.push(company.id);
       console.log(`已刷新 ${company.ticker}`);
@@ -198,7 +214,7 @@ async function main() {
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
-      source: "Yahoo Finance chart API",
+      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY",
       priceType: "adjusted-close",
       latestDateRange: {
         earliest: latestDates[0] || null,

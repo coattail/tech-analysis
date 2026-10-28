@@ -34,6 +34,7 @@ const COMPANY_SOURCES = [
   ["visa", "V"],
   ["asml", "ASML"],
   ["micron", "MU"],
+  ["skhynix", "SKHY"],
   ["jnj", "JNJ"],
   ["oracle", "ORCL"],
   ["amd", "AMD"],

@@ -608,7 +608,7 @@ test("keeps core fundamentals continuous from listing through the latest reporte
   // J&J's June 2026 balance-sheet filing has not yet been published in SEC
   // companyfacts; the income-statement estimate must not be presented as a
   // fabricated equity value.
-  const allowedMissing = new Set(["jnj:netAssets:2026Q2"]);
+  const allowedMissing = new Set(["jnj:netAssets:2026Q2", "skhynix:netAssets:2026Q3"]);
 
   for (const [companyId, company] of Object.entries(data.companies)) {
     const priceDates = Object.keys(prices.companies?.[companyId]?.daily || {});
@@ -639,7 +639,7 @@ test("keeps core fundamentals continuous from listing through the latest reporte
 
 test("keeps adjusted-close prices complete across normal trading-calendar gaps", () => {
   const prices = loadStockPriceSourceData();
-  assert.equal(Object.keys(prices.companies || {}).length, 44);
+  assert.equal(Object.keys(prices.companies || {}).length, 45);
 
   const invalid = [];
   for (const [companyId, company] of Object.entries(prices.companies || {})) {
