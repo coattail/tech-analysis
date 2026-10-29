@@ -819,6 +819,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2021Q4": { revenue: 16_695_000_000, grossMargin: 56.9 },
   },
   servicenow: {
+    // ServiceNow Q3 2026 GAAP earnings release, released 2026-10-28.
+    // https://investor.servicenow.com/news/news-details/2026/ServiceNow-Reports-Third-Quarter-2026-Financial-Results/default.aspx
+    "2026Q3": {
+      revenue: 4_106_000_000,
+      earnings: 277_000_000,
+      operatingIncome: 385_000_000,
+      grossMargin: (2_895 / 4_106) * 100,
+      netAssets: 13_096_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-28",
+    },
     // ServiceNow FY2012 Form 10-K quarterly results table (USD thousands).
     "2011Q1": { revenue: 25_212_000, earnings: 2_991_000, grossMargin: (15_998 / 25_212) * 100 },
     "2011Q4": { revenue: 39_178_000, earnings: -6_805_000, grossMargin: (23_187 / 39_178) * 100 },
