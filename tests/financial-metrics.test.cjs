@@ -210,7 +210,7 @@ test("fills every remaining 2004 comparison period behind the early 2005 YoY gap
   const expected = {
     microsoft: {
       quarters: { "2004Q2": [9_292_000_000, 2_690_000_000] },
-      growth: { "2005Q2": 11.275828669823508 },
+      growth: { "2005Q2": (10_161 / 9_292 - 1) * 100 },
     },
     alphabet: {
       quarters: {
@@ -226,14 +226,14 @@ test("fills every remaining 2004 comparison period behind the early 2005 YoY gap
     },
     nvidia: {
       quarters: {
-        "2004Q2": [471_905_000, 21_349_000],
-        "2004Q3": [456_061_000, 5_119_000],
-        "2004Q4": [515_591_000, 25_879_000],
+        "2004Q2": [471_905_000, 18_554_000],
+        "2004Q3": [456_061_000, 1_670_000],
+        "2004Q4": [515_591_000, 23_501_000],
       },
       growth: {
-        "2005Q2": 21.806719572795362,
-        "2005Q3": 27.92477322112612,
-        "2005Q4": 22.89081849760759,
+        "2005Q2": (583_846 / 471_905 - 1) * 100,
+        "2005Q3": (574_812 / 456_061 - 1) * 100,
+        "2005Q4": (583_415 / 515_591 - 1) * 100,
       },
     },
     exxon: {
@@ -297,24 +297,25 @@ test("uses NVIDIA reported quarters instead of annual averages and operating-inc
   const revenueGrowth = computeYearOverYearGrowth(labels, revenue, 4);
   const earningsGrowth = computeYearOverYearGrowth(labels, earnings, 4);
 
-  assert.equal(nvidia.revenue["2005Q1"], 583_846_000);
-  assert.equal(nvidia.revenue["2007Q4"], 1_202_730_000);
-  assert.equal(nvidia.revenue["2008Q1"], 1_153_388_000);
-  assert.equal(nvidia.earnings["2005Q1"], 65_522_000);
-  assert.equal(nvidia.earnings["2007Q4"], 256_993_000);
-  assert.equal(nvidia.earnings["2008Q1"], 176_805_000);
-  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-04-30");
-  assert.equal(nvidia.periodEndDates["2008Q1"], "2008-04-27");
+  assert.equal(nvidia.revenue["2005Q1"], 566_476_000);
+  assert.equal(nvidia.revenue["2007Q4"], 1_115_597_000);
+  assert.equal(nvidia.revenue["2008Q1"], 1_202_730_000);
+  assert.equal(nvidia.earnings["2005Q1"], 44_890_000);
+  assert.equal(nvidia.earnings["2007Q4"], 235_661_000);
+  assert.equal(nvidia.earnings["2008Q1"], 256_993_000);
+  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-01-30");
+  assert.equal(nvidia.periodEndDates["2008Q1"], "2008-01-27");
   assert.equal(new Set(labels.slice(0, 4).map((period) => nvidia.revenue[period])).size, 4);
   assert.equal(new Set(labels.slice(0, 4).map((period) => nvidia.earnings[period])).size, 4);
-  assert.ok(Math.abs(revenueGrowth.get("2006Q1") - 16.7785683211) < 1e-9);
-  assert.ok(Math.abs(revenueGrowth.get("2006Q2") - 19.6076282332) < 1e-9);
-  assert.ok(Math.abs(earningsGrowth.get("2006Q1") - 40.5085314856) < 1e-9);
-  assert.ok(Math.abs(earningsGrowth.get("2006Q2") - 17.4989503339) < 1e-9);
+  assert.ok(Math.abs(revenueGrowth.get("2006Q1") - ((633_614 / 566_476 - 1) * 100)) < 1e-9);
+  assert.ok(Math.abs(revenueGrowth.get("2006Q2") - ((681_807 / 583_846 - 1) * 100)) < 1e-9);
+  assert.ok(Math.abs(earningsGrowth.get("2006Q1") - ((97_374 / 44_890 - 1) * 100)) < 1e-9);
+  assert.ok(Math.abs(earningsGrowth.get("2006Q2") - ((92_064 / 65_522 - 1) * 100)) < 1e-9);
   assert.ok(Math.abs(nvidia.revenueGrowth["2008Q1"] - revenueGrowth.get("2008Q1")) < 1e-9);
 
-  const updater = fs.readFileSync(path.join(__dirname, "..", "scripts", "auto-refresh-data.mjs"), "utf8");
-  assert.match(updater, /nvidia:\s*\{[\s\S]*"2005Q1": \{ revenue: 583_846_000/);
+  const audit = require("../data/quarterly-data-audit.json");
+  assert.equal(audit.companies.nvidia["2005Q1"].periodEndDate, "2005-01-30");
+  assert.equal(audit.companies.nvidia["2005Q2"].periodEndDate, "2005-05-01");
 });
 
 test("wires bilingual profit growth into all dashboard frequencies", () => {

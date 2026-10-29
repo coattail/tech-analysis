@@ -391,7 +391,7 @@ test("stores Nvidia fiscal period ends for every available quarter", () => {
   const availablePeriods = data.periods.filter((period) => nvidia.revenue[period] != null);
 
   assert.equal(availablePeriods.filter((period) => !nvidia.periodEndDates[period]).length, 0);
-  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-04-30");
+  assert.equal(nvidia.periodEndDates["2005Q1"], "2005-01-30");
   assert.equal(nvidia.periodEndDates["2025Q4"], "2025-10-26");
   assert.equal(nvidia.periodEndDates["2026Q1"], "2026-01-25");
   assert.equal(nvidia.periodEndDates["2026Q2"], "2026-04-26");

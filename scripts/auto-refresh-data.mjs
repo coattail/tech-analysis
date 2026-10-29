@@ -4,6 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import quarterlyDataQuality from "../quarterly-data-quality.cjs";
 
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const CURATED_EARNINGS_DATASET_PATH = new URL("../../earnings-image-studio/data/earnings-dataset.json", import.meta.url);
@@ -468,23 +469,6 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       periodEndDate: "2026-09-27",
       reportDate: "2026-10-14",
     },
-  },
-  nvidia: {
-    // NVIDIA FY2006-FY2009 Forms 10-K quarterly summaries. Values are GAAP
-    // Revenue and Net income, replacing annual averages and an incorrect FY2009 Q1 plug.
-    "2005Q1": { revenue: 583_846_000, earnings: 65_522_000, periodEndDate: "2005-04-30" },
-    "2005Q2": { revenue: 574_812_000, earnings: 73_833_000, periodEndDate: "2005-07-30" },
-    "2005Q3": { revenue: 583_415_000, earnings: 64_447_000, periodEndDate: "2005-10-29" },
-    "2005Q4": { revenue: 633_614_000, earnings: 97_374_000, periodEndDate: "2006-01-29" },
-    "2006Q1": { revenue: 681_807_000, earnings: 92_064_000, periodEndDate: "2006-04-30" },
-    "2006Q2": { revenue: 687_519_000, earnings: 86_753_000, periodEndDate: "2006-07-30" },
-    "2006Q3": { revenue: 820_572_000, earnings: 106_511_000, periodEndDate: "2006-10-29" },
-    "2006Q4": { revenue: 878_873_000, earnings: 163_506_000, periodEndDate: "2007-01-28" },
-    "2007Q1": { revenue: 844_280_000, earnings: 132_259_000, periodEndDate: "2007-04-29" },
-    "2007Q2": { revenue: 935_253_000, earnings: 172_732_000, periodEndDate: "2007-07-29" },
-    "2007Q3": { revenue: 1_115_597_000, earnings: 235_661_000, periodEndDate: "2007-10-28" },
-    "2007Q4": { revenue: 1_202_730_000, earnings: 256_993_000, periodEndDate: "2008-01-27" },
-    "2008Q1": { revenue: 1_153_388_000, earnings: 176_805_000, periodEndDate: "2008-04-27" },
   },
   alphabet: {
     // Official FY2026 Q3 release: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm
@@ -3947,6 +3931,17 @@ async function run() {
         `  已应用官方季度修正：${officialOverrideResult.changedPoints} 个修正点，涉及 ${officialOverrideResult.changedPeriods.size} 个季度`,
       );
     }
+
+    // Apply audited historical facts after every provider and curated override.
+    // Earlier annual averages and fiscal-quarter copies must not survive refresh.
+    const auditedChanges = quarterlyDataQuality.applyAuditedQuarterlyCorrections(
+      companySource.id, companyData, [...periodSet].sort(comparePeriods),
+    );
+    auditedChanges.forEach(({ period }) => {
+      periodSet.add(period);
+      companyStats.changedPeriods.add(period);
+    });
+    companyStats.qualityFixChanges += auditedChanges.length;
 
     const derivedPeResult = deriveMissingPeFromMarketCap(
       companyData,

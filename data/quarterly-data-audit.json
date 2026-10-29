@@ -1,0 +1,1113 @@
+{
+  "version": 1,
+  "auditedOn": "2026-10-29",
+  "scope": "All 45 companies: screen contiguous repeated nonzero quarterly revenue, net income and operating income; verify each candidate against issuer filings. Related gross margins, ROE, YoY and quarter dates are recalculated when corrected inputs change.",
+  "periodConvention": "Calendar quarter containing the fiscal period end; endings within first 7 days of Jan/Apr/Jul/Oct belong to the preceding quarter, consistent with the dashboard SEC updater.",
+  "sources": {
+    "msft-fy2007": {
+      "url": "https://microsoft.gcs-web.com/static-files/c183d7a3-a7b8-4145-9b06-3f61efbff1ee",
+      "title": "Microsoft FY2007 Form 10-K, Quarterly Information, p.69 (USD millions; mapped by period end)"
+    },
+    "aapl-fy2006": {
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm",
+      "title": "Apple FY2006 Form 10-K, Note 13, restated FY2005 and FY2006 quarterly statements"
+    },
+    "aapl-recast2010": {
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312510012096/dex993.htm",
+      "title": "Apple January 2010 revised quarterly schedules; retrospective revenue recognition, New Accounting columns"
+    },
+    "amzn-fy2006": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000119312507034081/d10k.htm",
+      "title": "Amazon 2006 Form 10-K, Note 15, quarterly results (net income includes change in accounting principle)"
+    },
+    "amzn-fy2007": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000119312508024707/d10k.htm",
+      "title": "Amazon 2007 Form 10-K, Note 15, quarterly results"
+    },
+    "meta-s1": {
+      "url": "https://d18rn0p25nwr6d.cloudfront.net/CIK-0001326801/b60c5b79-00da-4359-a06f-568b42cf2438.html",
+      "title": "Facebook May 2012 S-1/A, quarterly results of operations (USD millions)"
+    },
+    "crm-fy2009": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312509048665/d10k.htm",
+      "title": "Salesforce FY2009 Form 10-K, Note 12, selected quarterly data (USD thousands)"
+    },
+    "crwd-s1": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1535527/000104746919003095/a2238800zs-1.htm",
+      "title": "CrowdStrike 2019 S-1, quarterly results of operations"
+    },
+    "snow-s1": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1640147/000162828020013381/snowflakes-1a1.htm",
+      "title": "Snowflake 2020 S-1/A, quarterly results of operations, July 2019 vs October 2019"
+    },
+    "zoom-s1": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1585521/000119312519083351/d642624ds1.htm",
+      "title": "Zoom 2019 S-1, quarterly results of operations, January 2018 vs April 2018"
+    },
+    "hd-q12008": {
+      "url": "https://ir.homedepot.com/news-releases/2008/05-20-2008",
+      "title": "Home Depot fiscal Q1 2008 release, consolidated GAAP net earnings"
+    },
+    "wmt-q12008": {
+      "url": "https://corporate.walmart.com/news/2008/05/13/wal-mart-reports-record-first-quarter-sales-and-earnings",
+      "title": "Walmart fiscal Q1 2009 release, total revenues including membership/other income"
+    },
+    "mu-fy2006": {
+      "url": "https://www.sec.gov/Archives/edgar/data/723125/000110465906072331/a06-20825_210k.htm",
+      "title": "Micron FY2006 Form 10-K, FY2005 quarterly table (USD millions); revenue FY2005 Q4 1258"
+    },
+    "nvda-fy2006-restated": {
+      "url": "https://www.annualreports.com/HostedData/AnnualReportArchive/n/NASDAQ_NVDA_2006.pdf",
+      "title": "NVIDIA FY2006 Form 10-K/A, Note 17, as-restated quarterly table, p.123; USD thousands"
+    },
+    "nvda-fy2007": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581007000008/fy2007annualreportonform10-k.htm",
+      "title": "NVIDIA FY2007 Form 10-K, quarterly summary; mapped by actual period end"
+    },
+    "nvda-fy2009": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581009000013/fy2009form10k.htm",
+      "title": "NVIDIA FY2009 Form 10-K, Note 18, quarterly summary (USD thousands)"
+    },
+    "csco-fy2008q4": {
+      "url": "https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2008/m08/cisco-systems-reports-q4-and-fiscal-year-2008-earnings.html",
+      "title": "Cisco FY2008 Q4 earnings release (USD millions)"
+    },
+    "xom-fy2007": {
+      "url": "https://investor.exxonmobil.com/sec-filings/annual-reports/content/0001193125-08-041781/0001193125-08-041781.pdf",
+      "title": "ExxonMobil FY2007 Form 10-K, Quarterly Information, p.34 (USD millions; Sales and other operating revenue)"
+    },
+    "xom-quarterly-income2006": {
+      "url": "https://ir.exxonmobil.com/static-files/9154b636-9d29-4d84-b84c-b7c73a48b323",
+      "title": "ExxonMobil FY2006 results, Attachment VI, quarterly net income (USD millions)"
+    },
+    "xom-fy2010": {
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000119312511047394/d10k.htm",
+      "title": "ExxonMobil FY2010 Form 10-K, Quarterly Information, 2009 and 2010 (USD millions)"
+    },
+    "xom-fy2008": {
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000119312509040966/d10k.htm",
+      "title": "ExxonMobil FY2008 Form 10-K, Quarterly Information, 2008 Q4 operating sales 80495 and net income 7820 USD millions"
+    },
+    "amd-q42006": {
+      "url": "https://ir.amd.com/news-events/press-releases/detail/259/amd-reports-fourth-quarter-and-annual-results",
+      "title": "AMD 2006 Q4 release, consolidated GAAP, Q4 vs Q3 (USD millions); cost of sales is not revenue"
+    },
+    "goog-q42008": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1288776/000119312509009929/dex991.htm",
+      "title": "Google Q4 2008 release, GAAP income from operations (USD thousands)"
+    },
+    "goog-q12009": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1288776/000119312509080681/dex991.htm",
+      "title": "Google Q1 2009 release, GAAP income from operations (USD thousands)"
+    },
+    "adbe-q42005": {
+      "url": "https://www.sec.gov/Archives/edgar/data/796343/000110465905061048/a05-21840_1ex99d1.htm",
+      "title": "Adobe fiscal Q4 2005 release, GAAP operating income; Q4 USD thousands, Q3 comparative reported to one decimal million"
+    },
+    "xom-q42024": {
+      "url": "https://investor.exxonmobil.com/sec-filings/all-sec-filings/content/0000034088-25-000006/0000034088-25-000006.pdf",
+      "title": "ExxonMobil 2024 Q4 release, operating sales 81058 USD millions"
+    },
+    "xom-q12025": {
+      "url": "https://corporate.exxonmobil.com/news/news-releases/2025/0502_exxonmobil-announces-first-quarter-2025-results",
+      "title": "ExxonMobil 2025 Q1 release, operating sales 81058 USD millions; genuine equality"
+    },
+    "visa-fy2019q2": {
+      "url": "https://s1.q4cdn.com/050606653/files/doc_downloads/2019/sec/2QFY19-Form-8-K-with-Exhibits-AS-FILED.pdf",
+      "title": "Visa FY2019 Q2 quarterly results schedule, GAAP net income 2977 in both FY2019 Q1 and Q2"
+    },
+    "now-q12023": {
+      "url": "https://newsroom.servicenow.com/press-releases/details/2023/ServiceNow-Reports-First-Quarter-2023-Financial-Results-04-26-2023-traffic/default.aspx",
+      "title": "ServiceNow Q1 2023 earnings release, GAAP net income 150 USD millions"
+    },
+    "now-q42022": {
+      "url": "https://newsroom.servicenow.com/press-releases/details/2023/ServiceNow-Reports-Fourth-Quarter-and-Full-Year-2022-Financial-Results-01-25-2023-12-00-AM/default.aspx",
+      "title": "ServiceNow Q4 2022 earnings release; GAAP net income 150 USD millions"
+    },
+    "amd-q22014": {
+      "url": "https://ir.amd.com/sec-filings/content/0001193125-14-271677/0001193125-14-271677.pdf",
+      "title": "AMD Q2 2014 earnings release, GAAP operating income 63 USD millions"
+    },
+    "amd-q32014": {
+      "url": "https://d1io3yog0oux5.cloudfront.net/_ee24874d4888cc56b59891df4ac06e6f/amd/news/2014-10-16_AMD_Reports_2014_Third_Quarter_571.pdf",
+      "title": "AMD Q3 2014 earnings release, GAAP operating income 63 USD millions"
+    },
+    "amd-q22015": {
+      "url": "https://ir.amd.com/news-events/press-releases/detail/626/amd-reports-2015-second-quarter-results",
+      "title": "AMD Q2 2015 release, Q2 and comparative Q1 GAAP operating loss 137 USD millions"
+    },
+    "xom-fy2005": {
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000119312506040951/d10k.htm",
+      "title": "ExxonMobil FY2005 Form 10-K, quarterly sales, gross profit and net income (USD millions)"
+    }
+  },
+  "companies": {
+    "microsoft": {
+      "2005Q1": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 9620000000,
+        "earnings": 2563000000,
+        "grossProfit": 8257000000,
+        "periodEndDate": "2005-03-31"
+      },
+      "2005Q2": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 10161000000,
+        "earnings": 3700000000,
+        "grossProfit": 8773000000,
+        "periodEndDate": "2005-06-30"
+      },
+      "2005Q3": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 9741000000,
+        "earnings": 3141000000,
+        "grossProfit": 8488000000,
+        "periodEndDate": "2005-09-30"
+      },
+      "2005Q4": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 11837000000,
+        "earnings": 3653000000,
+        "grossProfit": 9598000000,
+        "periodEndDate": "2005-12-31"
+      },
+      "2006Q1": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 10900000000,
+        "earnings": 2977000000,
+        "grossProfit": 8872000000,
+        "periodEndDate": "2006-03-31"
+      },
+      "2006Q2": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 11804000000,
+        "earnings": 2828000000,
+        "grossProfit": 9674000000,
+        "periodEndDate": "2006-06-30"
+      },
+      "2006Q3": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 10811000000,
+        "earnings": 3478000000,
+        "grossProfit": 9115000000,
+        "periodEndDate": "2006-09-30"
+      },
+      "2006Q4": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 12542000000,
+        "earnings": 2626000000,
+        "grossProfit": 8922000000,
+        "periodEndDate": "2006-12-31"
+      },
+      "2007Q1": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 14398000000,
+        "earnings": 4926000000,
+        "grossProfit": 12258000000,
+        "periodEndDate": "2007-03-31"
+      },
+      "2007Q2": {
+        "sources": [
+          "msft-fy2007"
+        ],
+        "revenue": 13371000000,
+        "earnings": 3035000000,
+        "grossProfit": 10134000000,
+        "periodEndDate": "2007-06-30"
+      }
+    },
+    "apple": {
+      "2005Q1": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 3243000000,
+        "earnings": 288000000,
+        "grossProfit": 968000000,
+        "operatingIncome": 400000000,
+        "periodEndDate": "2005-03-26"
+      },
+      "2005Q2": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 3520000000,
+        "earnings": 319000000,
+        "grossProfit": 1044000000,
+        "operatingIncome": 426000000,
+        "periodEndDate": "2005-06-25"
+      },
+      "2005Q3": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 3678000000,
+        "earnings": 428000000,
+        "grossProfit": 1035000000,
+        "operatingIncome": 417000000,
+        "periodEndDate": "2005-09-24"
+      },
+      "2005Q4": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 5749000000,
+        "earnings": 565000000,
+        "grossProfit": 1564000000,
+        "operatingIncome": 750000000,
+        "periodEndDate": "2005-12-31"
+      },
+      "2006Q1": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 4359000000,
+        "earnings": 410000000,
+        "grossProfit": 1297000000,
+        "operatingIncome": 529000000,
+        "periodEndDate": "2006-04-01"
+      },
+      "2006Q2": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 4370000000,
+        "earnings": 472000000,
+        "grossProfit": 1325000000,
+        "operatingIncome": 566000000,
+        "periodEndDate": "2006-07-01"
+      },
+      "2006Q3": {
+        "sources": [
+          "aapl-fy2006"
+        ],
+        "revenue": 4837000000,
+        "earnings": 542000000,
+        "grossProfit": 1412000000,
+        "operatingIncome": 608000000,
+        "periodEndDate": "2006-09-30"
+      },
+      "2006Q4": {
+        "sources": [
+          "aapl-recast2010"
+        ],
+        "revenue": 7123000000,
+        "earnings": 1011000000,
+        "grossProfit": 2223000000,
+        "operatingIncome": 1325000000,
+        "periodEndDate": "2006-12-30"
+      },
+      "2007Q1": {
+        "sources": [
+          "aapl-recast2010"
+        ],
+        "revenue": 5286000000,
+        "earnings": 774000000,
+        "grossProfit": 1851000000,
+        "operatingIncome": 988000000,
+        "periodEndDate": "2007-03-31"
+      },
+      "2007Q2": {
+        "sources": [
+          "aapl-recast2010"
+        ],
+        "revenue": 5563000000,
+        "earnings": 840000000,
+        "grossProfit": 2033000000,
+        "operatingIncome": 1079000000,
+        "periodEndDate": "2007-06-30"
+      },
+      "2007Q3": {
+        "sources": [
+          "aapl-recast2010"
+        ],
+        "revenue": 6606000000,
+        "earnings": 870000000,
+        "grossProfit": 2045000000,
+        "operatingIncome": 1015000000,
+        "periodEndDate": "2007-09-29"
+      },
+      "2007Q4": {
+        "sources": [
+          "aapl-recast2010"
+        ],
+        "revenue": 10430000000,
+        "earnings": 1640000000,
+        "grossProfit": 3404000000,
+        "operatingIncome": 2198000000,
+        "periodEndDate": "2007-12-29"
+      }
+    },
+    "amazon": {
+      "2005Q1": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 1902000000,
+        "earnings": 78000000,
+        "grossProfit": 458000000,
+        "periodEndDate": "2005-03-31"
+      },
+      "2005Q2": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 1753000000,
+        "earnings": 52000000,
+        "grossProfit": 450000000,
+        "periodEndDate": "2005-06-30"
+      },
+      "2005Q3": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 1858000000,
+        "earnings": 30000000,
+        "grossProfit": 463000000,
+        "periodEndDate": "2005-09-30"
+      },
+      "2005Q4": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 2977000000,
+        "earnings": 199000000,
+        "grossProfit": 667000000,
+        "periodEndDate": "2005-12-31"
+      },
+      "2006Q1": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 2279000000,
+        "earnings": 51000000,
+        "grossProfit": 547000000,
+        "periodEndDate": "2006-03-31"
+      },
+      "2006Q2": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 2139000000,
+        "earnings": 22000000,
+        "grossProfit": 509000000,
+        "periodEndDate": "2006-06-30"
+      },
+      "2006Q3": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 2307000000,
+        "earnings": 19000000,
+        "grossProfit": 549000000,
+        "periodEndDate": "2006-09-30"
+      },
+      "2006Q4": {
+        "sources": [
+          "amzn-fy2006"
+        ],
+        "revenue": 3986000000,
+        "earnings": 98000000,
+        "grossProfit": 850000000,
+        "periodEndDate": "2006-12-31"
+      },
+      "2007Q1": {
+        "sources": [
+          "amzn-fy2007"
+        ],
+        "revenue": 3015000000,
+        "earnings": 111000000,
+        "grossProfit": 719000000,
+        "periodEndDate": "2007-03-31"
+      },
+      "2007Q2": {
+        "sources": [
+          "amzn-fy2007"
+        ],
+        "revenue": 2886000000,
+        "earnings": 78000000,
+        "grossProfit": 701000000,
+        "periodEndDate": "2007-06-30"
+      },
+      "2007Q3": {
+        "sources": [
+          "amzn-fy2007"
+        ],
+        "revenue": 3262000000,
+        "earnings": 80000000,
+        "grossProfit": 762000000,
+        "periodEndDate": "2007-09-30"
+      },
+      "2007Q4": {
+        "sources": [
+          "amzn-fy2007"
+        ],
+        "revenue": 5673000000,
+        "earnings": 207000000,
+        "grossProfit": 1170000000,
+        "periodEndDate": "2007-12-31"
+      }
+    },
+    "meta": {
+      "2010Q1": {
+        "sources": [
+          "meta-s1"
+        ],
+        "revenue": 345000000,
+        "earnings": 95000000,
+        "grossProfit": 245000000,
+        "operatingIncome": 162000000,
+        "periodEndDate": "2010-03-31"
+      },
+      "2010Q2": {
+        "sources": [
+          "meta-s1"
+        ],
+        "revenue": 431000000,
+        "earnings": 129000000,
+        "grossProfit": 320000000,
+        "operatingIncome": 218000000,
+        "periodEndDate": "2010-06-30"
+      },
+      "2010Q3": {
+        "sources": [
+          "meta-s1"
+        ],
+        "revenue": 467000000,
+        "earnings": 131000000,
+        "grossProfit": 336000000,
+        "operatingIncome": 216000000,
+        "periodEndDate": "2010-09-30"
+      },
+      "2010Q4": {
+        "sources": [
+          "meta-s1"
+        ],
+        "revenue": 731000000,
+        "earnings": 251000000,
+        "grossProfit": 581000000,
+        "operatingIncome": 437000000,
+        "periodEndDate": "2010-12-31"
+      }
+    },
+    "salesforce": {
+      "2008Q2": {
+        "sources": [
+          "crm-fy2009"
+        ],
+        "revenue": 247622000,
+        "earnings": 9555000,
+        "grossProfit": 196324000,
+        "operatingIncome": 15421000,
+        "periodEndDate": "2008-04-30"
+      }
+    },
+    "crowdstrike": {
+      "2018Q1": {
+        "sources": [
+          "crwd-s1"
+        ],
+        "revenue": 38717000,
+        "earnings": -37493000,
+        "grossProfit": 19547000,
+        "operatingIncome": -36767000,
+        "periodEndDate": "2018-01-31"
+      }
+    },
+    "snowflake": {
+      "2019Q3": {
+        "sources": [
+          "snow-s1"
+        ],
+        "revenue": 60339000,
+        "earnings": -93415000,
+        "grossProfit": 31831000,
+        "operatingIncome": -95569000,
+        "periodEndDate": "2019-07-31"
+      }
+    },
+    "zoom": {
+      "2018Q1": {
+        "sources": [
+          "zoom-s1"
+        ],
+        "revenue": 50914000,
+        "earnings": 64000,
+        "grossProfit": 40165000,
+        "operatingIncome": -276000,
+        "periodEndDate": "2018-01-31"
+      }
+    },
+    "homedepot": {
+      "2008Q2": {
+        "sources": [
+          "hd-q12008"
+        ],
+        "revenue": 17907000000,
+        "earnings": 356000000,
+        "grossProfit": 6072000000,
+        "operatingIncome": 728000000,
+        "netAssets": 17706000000,
+        "periodEndDate": "2008-05-04",
+        "reportDate": "2008-05-20"
+      }
+    },
+    "walmart": {
+      "2008Q2": {
+        "sources": [
+          "wmt-q12008"
+        ],
+        "revenue": 95303000000,
+        "earnings": 3022000000,
+        "grossProfit": 23417000000,
+        "operatingIncome": 5310000000,
+        "periodEndDate": "2008-04-30",
+        "reportDate": "2008-05-13"
+      }
+    },
+    "micron": {
+      "2005Q3": {
+        "sources": [
+          "mu-fy2006"
+        ],
+        "revenue": 1258000000,
+        "grossProfit": 283000000,
+        "periodEndDate": "2005-09-01"
+      }
+    },
+    "nvidia": {
+      "2004Q2": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 471905000,
+        "earnings": 18554000,
+        "grossProfit": 147987000,
+        "periodEndDate": "2004-04-25"
+      },
+      "2004Q3": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 456061000,
+        "earnings": 1670000,
+        "grossProfit": 139585000,
+        "periodEndDate": "2004-07-25"
+      },
+      "2004Q4": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 515591000,
+        "earnings": 23501000,
+        "grossProfit": 166560000,
+        "periodEndDate": "2004-10-24"
+      },
+      "2005Q1": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 566476000,
+        "earnings": 44890000,
+        "grossProfit": 193423000,
+        "periodEndDate": "2005-01-30"
+      },
+      "2005Q2": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 583846000,
+        "earnings": 65522000,
+        "grossProfit": 209861000,
+        "periodEndDate": "2005-05-01"
+      },
+      "2005Q3": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 574812000,
+        "earnings": 73833000,
+        "grossProfit": 217375000,
+        "periodEndDate": "2005-07-31"
+      },
+      "2005Q4": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 583415000,
+        "earnings": 64447000,
+        "grossProfit": 227995000,
+        "periodEndDate": "2005-10-30"
+      },
+      "2006Q1": {
+        "sources": [
+          "nvda-fy2006-restated"
+        ],
+        "revenue": 633614000,
+        "earnings": 97374000,
+        "grossProfit": 254802000,
+        "periodEndDate": "2006-01-29"
+      },
+      "2006Q2": {
+        "sources": [
+          "nvda-fy2007"
+        ],
+        "revenue": 681807000,
+        "earnings": 92064000,
+        "grossProfit": 288673000,
+        "periodEndDate": "2006-04-30"
+      },
+      "2006Q3": {
+        "sources": [
+          "nvda-fy2007"
+        ],
+        "revenue": 687519000,
+        "earnings": 86753000,
+        "grossProfit": 292128000,
+        "periodEndDate": "2006-07-30"
+      },
+      "2006Q4": {
+        "sources": [
+          "nvda-fy2007"
+        ],
+        "revenue": 820572000,
+        "earnings": 106511000,
+        "grossProfit": 333942000,
+        "periodEndDate": "2006-10-29"
+      },
+      "2007Q1": {
+        "sources": [
+          "nvda-fy2007"
+        ],
+        "revenue": 878873000,
+        "earnings": 163506000,
+        "grossProfit": 385706000,
+        "periodEndDate": "2007-01-28"
+      },
+      "2007Q2": {
+        "sources": [
+          "nvda-fy2009"
+        ],
+        "revenue": 844280000,
+        "earnings": 132259000,
+        "grossProfit": 380138000,
+        "periodEndDate": "2007-04-29"
+      },
+      "2007Q3": {
+        "sources": [
+          "nvda-fy2009"
+        ],
+        "revenue": 935253000,
+        "earnings": 172732000,
+        "grossProfit": 423992000,
+        "periodEndDate": "2007-07-29"
+      },
+      "2007Q4": {
+        "sources": [
+          "nvda-fy2009"
+        ],
+        "revenue": 1115597000,
+        "earnings": 235661000,
+        "grossProfit": 515553000,
+        "periodEndDate": "2007-10-28"
+      },
+      "2008Q1": {
+        "sources": [
+          "nvda-fy2009"
+        ],
+        "revenue": 1202730000,
+        "earnings": 256993000,
+        "grossProfit": 549597000,
+        "periodEndDate": "2008-01-27"
+      },
+      "2008Q2": {
+        "sources": [
+          "nvda-fy2009"
+        ],
+        "revenue": 1153388000,
+        "earnings": 176805000,
+        "grossProfit": 514843000,
+        "periodEndDate": "2008-04-27"
+      },
+      "2008Q3": {
+        "sources": [
+          "nvda-fy2009"
+        ],
+        "revenue": 892676000,
+        "earnings": -120929000,
+        "grossProfit": 149917000,
+        "periodEndDate": "2008-07-27"
+      }
+    },
+    "cisco": {
+      "2008Q3": {
+        "sources": [
+          "csco-fy2008q4"
+        ],
+        "revenue": 10364000000,
+        "earnings": 2014000000,
+        "grossProfit": 6666000000,
+        "operatingIncome": 2529000000,
+        "periodEndDate": "2008-07-26",
+        "reportDate": "2008-08-05"
+      }
+    },
+    "exxon": {
+      "2005Q1": {
+        "sources": [
+          "xom-fy2005"
+        ],
+        "revenue": 79475000000,
+        "earnings": 7860000000,
+        "grossProfit": 31525000000,
+        "periodEndDate": "2005-03-31"
+      },
+      "2005Q2": {
+        "sources": [
+          "xom-fy2005"
+        ],
+        "revenue": 86622000000,
+        "earnings": 7640000000,
+        "grossProfit": 32962000000,
+        "periodEndDate": "2005-06-30"
+      },
+      "2005Q3": {
+        "sources": [
+          "xom-fy2005"
+        ],
+        "revenue": 96731000000,
+        "earnings": 9920000000,
+        "grossProfit": 35336000000,
+        "periodEndDate": "2005-09-30"
+      },
+      "2005Q4": {
+        "sources": [
+          "xom-fy2005"
+        ],
+        "revenue": 96127000000,
+        "earnings": 10710000000,
+        "grossProfit": 36841000000,
+        "periodEndDate": "2005-12-31"
+      },
+      "2006Q1": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 86317000000,
+        "earnings": 8400000000,
+        "grossProfit": 33428000000,
+        "periodEndDate": "2006-03-31"
+      },
+      "2006Q2": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 96024000000,
+        "earnings": 10360000000,
+        "grossProfit": 37668000000,
+        "periodEndDate": "2006-06-30"
+      },
+      "2006Q3": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 96268000000,
+        "earnings": 10490000000,
+        "grossProfit": 37117000000,
+        "periodEndDate": "2006-09-30"
+      },
+      "2006Q4": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 86858000000,
+        "earnings": 10250000000,
+        "grossProfit": 33764000000,
+        "periodEndDate": "2006-12-31"
+      },
+      "2007Q1": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 84174000000,
+        "earnings": 9280000000,
+        "grossProfit": 33907000000,
+        "periodEndDate": "2007-03-31"
+      },
+      "2007Q2": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 95059000000,
+        "earnings": 10260000000,
+        "grossProfit": 36760000000,
+        "periodEndDate": "2007-06-30"
+      },
+      "2007Q3": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 99130000000,
+        "earnings": 9410000000,
+        "grossProfit": 36114000000,
+        "periodEndDate": "2007-09-30"
+      },
+      "2007Q4": {
+        "sources": [
+          "xom-fy2007"
+        ],
+        "revenue": 111965000000,
+        "earnings": 11660000000,
+        "grossProfit": 39914000000,
+        "periodEndDate": "2007-12-31"
+      },
+      "2008Q1": {
+        "sources": [
+          "xom-fy2008"
+        ],
+        "revenue": 113223000000,
+        "earnings": 10890000000,
+        "grossProfit": 40255000000,
+        "periodEndDate": "2008-03-31"
+      },
+      "2008Q2": {
+        "sources": [
+          "xom-fy2008"
+        ],
+        "revenue": 133776000000,
+        "earnings": 11680000000,
+        "grossProfit": 43925000000,
+        "periodEndDate": "2008-06-30"
+      },
+      "2008Q3": {
+        "sources": [
+          "xom-fy2008"
+        ],
+        "revenue": 132085000000,
+        "earnings": 14830000000,
+        "grossProfit": 45901000000,
+        "periodEndDate": "2008-09-30"
+      },
+      "2008Q4": {
+        "sources": [
+          "xom-fy2008"
+        ],
+        "revenue": 80495000000,
+        "earnings": 7820000000,
+        "grossProfit": 29760000000,
+        "periodEndDate": "2008-12-31"
+      },
+      "2009Q1": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 62128000000,
+        "earnings": 4550000000,
+        "grossProfit": 23562000000,
+        "periodEndDate": "2009-03-31"
+      },
+      "2009Q2": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 72167000000,
+        "earnings": 3950000000,
+        "grossProfit": 24231000000,
+        "periodEndDate": "2009-06-30"
+      },
+      "2009Q3": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 80090000000,
+        "earnings": 4730000000,
+        "grossProfit": 27377000000,
+        "periodEndDate": "2009-09-30"
+      },
+      "2009Q4": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 87115000000,
+        "earnings": 6050000000,
+        "grossProfit": 28580000000,
+        "periodEndDate": "2009-12-31"
+      },
+      "2010Q1": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 87037000000,
+        "earnings": 6300000000,
+        "grossProfit": 28537000000,
+        "periodEndDate": "2010-03-31"
+      },
+      "2010Q2": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 89693000000,
+        "earnings": 7560000000,
+        "grossProfit": 29482000000,
+        "periodEndDate": "2010-06-30"
+      },
+      "2010Q3": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 92353000000,
+        "earnings": 7350000000,
+        "grossProfit": 30652000000,
+        "periodEndDate": "2010-09-30"
+      },
+      "2010Q4": {
+        "sources": [
+          "xom-fy2010"
+        ],
+        "revenue": 101042000000,
+        "earnings": 9250000000,
+        "grossProfit": 32943000000,
+        "periodEndDate": "2010-12-31"
+      }
+    },
+    "amd": {
+      "2006Q3": {
+        "sources": [
+          "amd-q42006"
+        ],
+        "revenue": 1328000000,
+        "earnings": 134000000,
+        "grossProfit": 682000000,
+        "operatingIncome": 119000000,
+        "periodEndDate": "2006-10-01"
+      },
+      "2006Q4": {
+        "sources": [
+          "amd-q42006"
+        ],
+        "revenue": 1773000000,
+        "earnings": -574000000,
+        "grossProfit": 641000000,
+        "operatingIncome": -527000000,
+        "periodEndDate": "2006-12-31",
+        "reportDate": "2007-01-23"
+      }
+    },
+    "alphabet": {
+      "2008Q4": {
+        "sources": [
+          "goog-q42008"
+        ],
+        "operatingIncome": 1860204000
+      },
+      "2009Q1": {
+        "sources": [
+          "goog-q12009"
+        ],
+        "operatingIncome": 1883591000
+      }
+    },
+    "adobe": {
+      "2005Q3": {
+        "sources": [
+          "adbe-q42005"
+        ],
+        "operatingIncome": 183600000
+      },
+      "2005Q4": {
+        "sources": [
+          "adbe-q42005"
+        ],
+        "operatingIncome": 191930000
+      }
+    }
+  },
+  "verifiedRepeats": [
+    {
+      "companyId": "exxon",
+      "metric": "revenue",
+      "periods": [
+        "2024Q4",
+        "2025Q1"
+      ],
+      "value": 81058000000,
+      "sources": [
+        "xom-q42024",
+        "xom-q12025"
+      ],
+      "reason": "Independently reported equal values at the stated reporting precision; preserve, do not fabricate variation."
+    },
+    {
+      "companyId": "visa",
+      "metric": "earnings",
+      "periods": [
+        "2018Q4",
+        "2019Q1"
+      ],
+      "value": 2977000000,
+      "sources": [
+        "visa-fy2019q2"
+      ],
+      "reason": "Independently reported equal values at the stated reporting precision; preserve, do not fabricate variation."
+    },
+    {
+      "companyId": "servicenow",
+      "metric": "earnings",
+      "periods": [
+        "2022Q4",
+        "2023Q1"
+      ],
+      "value": 150000000,
+      "sources": [
+        "now-q42022",
+        "now-q12023"
+      ],
+      "reason": "Independently reported equal values at the stated reporting precision; preserve, do not fabricate variation."
+    },
+    {
+      "companyId": "amd",
+      "metric": "operatingIncome",
+      "periods": [
+        "2014Q2",
+        "2014Q3"
+      ],
+      "value": 63000000,
+      "sources": [
+        "amd-q22014",
+        "amd-q32014"
+      ],
+      "reason": "Independently reported equal values at the stated reporting precision; preserve, do not fabricate variation."
+    },
+    {
+      "companyId": "amd",
+      "metric": "operatingIncome",
+      "periods": [
+        "2015Q1",
+        "2015Q2"
+      ],
+      "value": -137000000,
+      "sources": [
+        "amd-q22015"
+      ],
+      "reason": "Independently reported equal values at the stated reporting precision; preserve, do not fabricate variation."
+    }
+  ]
+}

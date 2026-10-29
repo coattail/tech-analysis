@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-10-28T20:10:53.519Z",
   "source": "Macrotrends quarterly Operating Income and quarterly TTM Operating Income",
-  "methodology": "Direct quarterly USD values are used when available. Earlier quarters are reconstructed from Q[t-4] = Q[t] - (TTM[t] - TTM[t-1]). TTM values are published in USD billions and rounded to two decimals. Existing SEC, supplemental, or curated quarterly values are retained when the historical snapshot does not yet include the newest reported quarter.",
+  "methodology": "Direct quarterly USD values are used when available. Earlier quarters are reconstructed from Q[t-4] = Q[t] - (TTM[t] - TTM[t-1]). TTM values are published in USD billions and rounded to two decimals. Existing SEC, supplemental, or curated quarterly values are retained when the historical snapshot does not yet include the newest reported quarter. Explicitly audited issuer quarterly observations take precedence over reconstructed historical values; see officialQuarterlySources and data/quarterly-data-audit.json.",
   "earliestRequiredPeriod": "2005Q1",
   "companies": {
     "nvidia": {
@@ -106,6 +106,8 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
+        "2008Q4",
+        "2009Q1",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -180,8 +182,6 @@
         "2008Q1",
         "2008Q2",
         "2008Q3",
-        "2008Q4",
-        "2009Q1",
         "2009Q2",
         "2009Q3",
         "2009Q4",
@@ -204,6 +204,18 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm",
           "reportDate": "2026-10-28",
           "operatingIncome": 40576000000
+        },
+        "2008Q4": {
+          "operatingIncome": 1860204000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/1288776/000119312509009929/dex991.htm"
+          ]
+        },
+        "2009Q1": {
+          "operatingIncome": 1883591000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/1288776/000119312509080681/dex991.htm"
+          ]
         }
       }
     },
@@ -212,6 +224,18 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q1",
       "directPeriods": [
+        "2005Q1",
+        "2005Q2",
+        "2005Q3",
+        "2005Q4",
+        "2006Q1",
+        "2006Q2",
+        "2006Q3",
+        "2006Q4",
+        "2007Q1",
+        "2007Q2",
+        "2007Q3",
+        "2007Q4",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -270,18 +294,6 @@
         "2026Q1"
       ],
       "reconstructedPeriods": [
-        "2005Q1",
-        "2005Q2",
-        "2005Q3",
-        "2005Q4",
-        "2006Q1",
-        "2006Q2",
-        "2006Q3",
-        "2006Q4",
-        "2007Q1",
-        "2007Q2",
-        "2007Q3",
-        "2007Q4",
         "2008Q1",
         "2008Q2",
         "2008Q3",
@@ -301,7 +313,81 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2005Q1": {
+          "operatingIncome": 400000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2005Q2": {
+          "operatingIncome": 426000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2005Q3": {
+          "operatingIncome": 417000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2005Q4": {
+          "operatingIncome": 750000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2006Q1": {
+          "operatingIncome": 529000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2006Q2": {
+          "operatingIncome": 566000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2006Q3": {
+          "operatingIncome": 608000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000110465906084288/a06-25759_210k.htm"
+          ]
+        },
+        "2006Q4": {
+          "operatingIncome": 1325000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000119312510012096/dex993.htm"
+          ]
+        },
+        "2007Q1": {
+          "operatingIncome": 988000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000119312510012096/dex993.htm"
+          ]
+        },
+        "2007Q2": {
+          "operatingIncome": 1079000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000119312510012096/dex993.htm"
+          ]
+        },
+        "2007Q3": {
+          "operatingIncome": 1015000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000119312510012096/dex993.htm"
+          ]
+        },
+        "2007Q4": {
+          "operatingIncome": 2198000000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/320193/000119312510012096/dex993.htm"
+          ]
+        }
+      }
     },
     "microsoft": {
       "ticker": "MSFT",
@@ -832,6 +918,7 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q2",
       "directPeriods": [
+        "2008Q2",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -904,7 +991,6 @@
         "2007Q3",
         "2007Q4",
         "2008Q1",
-        "2008Q2",
         "2008Q3",
         "2008Q4",
         "2009Q1",
@@ -922,7 +1008,15 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2008Q2": {
+          "operatingIncome": 5310000000,
+          "sourceUrls": [
+            "https://corporate.walmart.com/news/2008/05/13/wal-mart-reports-record-first-quarter-sales-and-earnings"
+          ]
+        }
+      }
     },
     "berkshire": {
       "ticker": "BRK.B",
@@ -1791,6 +1885,8 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q1",
       "directPeriods": [
+        "2006Q3",
+        "2006Q4",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -1855,8 +1951,6 @@
         "2005Q4",
         "2006Q1",
         "2006Q2",
-        "2006Q3",
-        "2006Q4",
         "2007Q1",
         "2007Q2",
         "2007Q3",
@@ -1880,7 +1974,21 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2006Q3": {
+          "operatingIncome": 119000000,
+          "sourceUrls": [
+            "https://ir.amd.com/news-events/press-releases/detail/259/amd-reports-fourth-quarter-and-annual-results"
+          ]
+        },
+        "2006Q4": {
+          "operatingIncome": -527000000,
+          "sourceUrls": [
+            "https://ir.amd.com/news-events/press-releases/detail/259/amd-reports-fourth-quarter-and-annual-results"
+          ]
+        }
+      }
     },
     "mastercard": {
       "ticker": "MA",
@@ -2494,6 +2602,7 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q2",
       "directPeriods": [
+        "2008Q3",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -2567,7 +2676,6 @@
         "2007Q4",
         "2008Q1",
         "2008Q2",
-        "2008Q3",
         "2008Q4",
         "2009Q1",
         "2009Q2",
@@ -2584,7 +2692,15 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2008Q3": {
+          "operatingIncome": 2529000000,
+          "sourceUrls": [
+            "https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2008/m08/cisco-systems-reports-q4-and-fiscal-year-2008-earnings.html"
+          ]
+        }
+      }
     },
     "abbvie": {
       "ticker": "ABBV",
@@ -2655,6 +2771,7 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q2",
       "directPeriods": [
+        "2008Q2",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -2727,7 +2844,6 @@
         "2007Q3",
         "2007Q4",
         "2008Q1",
-        "2008Q2",
         "2008Q3",
         "2008Q4",
         "2009Q1",
@@ -2745,7 +2861,15 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2008Q2": {
+          "operatingIncome": 728000000,
+          "sourceUrls": [
+            "https://ir.homedepot.com/news-releases/2008/05-20-2008"
+          ]
+        }
+      }
     },
     "ibm": {
       "ticker": "IBM",
@@ -2987,6 +3111,7 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q2",
       "directPeriods": [
+        "2008Q2",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -3059,7 +3184,6 @@
         "2007Q3",
         "2007Q4",
         "2008Q1",
-        "2008Q2",
         "2008Q3",
         "2008Q4",
         "2009Q1",
@@ -3077,7 +3201,15 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2008Q2": {
+          "operatingIncome": 15421000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/1108524/000119312509048665/d10k.htm"
+          ]
+        }
+      }
     },
     "servicenow": {
       "ticker": "NOW",
@@ -3259,6 +3391,8 @@
       "listingPeriod": "2005Q1",
       "latestFinancialPeriod": "2026Q2",
       "directPeriods": [
+        "2005Q3",
+        "2005Q4",
         "2012Q2",
         "2012Q3",
         "2012Q4",
@@ -3320,8 +3454,6 @@
       "reconstructedPeriods": [
         "2005Q1",
         "2005Q2",
-        "2005Q3",
-        "2005Q4",
         "2006Q1",
         "2006Q2",
         "2006Q3",
@@ -3349,7 +3481,21 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2005Q3": {
+          "operatingIncome": 183600000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/796343/000110465905061048/a05-21840_1ex99d1.htm"
+          ]
+        },
+        "2005Q4": {
+          "operatingIncome": 191930000,
+          "sourceUrls": [
+            "https://www.sec.gov/Archives/edgar/data/796343/000110465905061048/a05-21840_1ex99d1.htm"
+          ]
+        }
+      }
     },
     "zoom": {
       "ticker": "ZM",
