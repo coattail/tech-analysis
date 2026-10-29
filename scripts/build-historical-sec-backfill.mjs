@@ -2,6 +2,7 @@
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
+import quarterlyDataQuality from "../quarterly-data-quality.cjs";
 
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const OUTPUT_PATH = new URL("../data/historical-sec-backfill.json", import.meta.url);
@@ -1643,7 +1644,7 @@ function normalizeCompanyBackfillRows(companyId, rows) {
     return value;
   };
 
-  return rows.map((row) => {
+  return quarterlyDataQuality.applyAuditedBackfillRows(companyId, rows.map((row) => {
     const shouldNormalizeScale = ["salesforce", "adobe"].includes(companyId);
     const officialOverride = COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companyId]?.[row.period];
     const revenue = officialOverride?.revenue ?? (shouldNormalizeScale ? normalizeValue(row.revenue) : row.revenue);
@@ -1667,7 +1668,7 @@ function normalizeCompanyBackfillRows(companyId, rows) {
           ? (grossProfit / revenue) * 100
           : null,
     };
-  });
+  }));
 }
 
 function collectAnnualEntriesFromDocument(documentText, filingDate, sourceUrl, companyId = null) {

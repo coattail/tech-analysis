@@ -2,6 +2,7 @@
 
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
+import quarterlyDataQuality from "../quarterly-data-quality.cjs";
 
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const PRICE_DATA_JS_PATH = new URL("../price-data.js", import.meta.url);
@@ -370,7 +371,7 @@ async function run() {
     generatedAt: new Date().toISOString(),
     source: "Macrotrends quarterly Operating Income and quarterly TTM Operating Income",
     methodology:
-      "Direct quarterly USD values are used when available. Earlier quarters are reconstructed from Q[t-4] = Q[t] - (TTM[t] - TTM[t-1]). TTM values are published in USD billions and rounded to two decimals. Existing SEC, supplemental, or curated quarterly values are retained when the historical snapshot does not yet include the newest reported quarter.",
+      "Direct quarterly USD values are used when available. Earlier quarters are reconstructed from Q[t-4] = Q[t] - (TTM[t] - TTM[t-1]). TTM values are published in USD billions and rounded to two decimals. Existing SEC, supplemental, or curated quarterly values are retained when the historical snapshot does not yet include the newest reported quarter. Explicitly audited issuer quarterly observations take precedence over reconstructed historical values; see officialQuarterlySources and data/quarterly-data-audit.json.",
     earliestRequiredPeriod: EARLIEST_PERIOD,
     companies: {},
   };
@@ -404,8 +405,17 @@ async function run() {
     const directPeriods = [];
     const reconstructedPeriods = [];
     const preservedPeriods = [];
+    const officialQuarterlySources = {};
     requiredPeriods.forEach((period) => {
-      const value = history.quarterly.get(period);
+      const auditedRow = quarterlyDataQuality.audit.companies[company.id]?.[period];
+      const isAudited = Number.isFinite(auditedRow?.operatingIncome);
+      const value = isAudited ? auditedRow.operatingIncome : history.quarterly.get(period);
+      if (isAudited) {
+        officialQuarterlySources[period] = {
+          operatingIncome: value,
+          sourceUrls: auditedRow.sources.map((id) => quarterlyDataQuality.audit.sources[id].url),
+        };
+      }
       if (!Number.isFinite(value)) {
         if (Number.isFinite(companyData.operatingIncome[period])) {
           preservedPeriods.push(period);
@@ -414,7 +424,7 @@ async function run() {
       }
       if (companyData.operatingIncome[period] !== value) changedPoints += 1;
       companyData.operatingIncome[period] = value;
-      if (history.directQuarterly.has(period)) {
+      if (isAudited || history.directQuarterly.has(period)) {
         directPeriods.push(period);
       } else if (history.derivedPeriods.has(period)) {
         reconstructedPeriods.push(period);
@@ -441,6 +451,7 @@ async function run() {
       reconstructedPeriods,
       preservedPeriods,
       missingPeriods,
+      officialQuarterlySources,
     };
     console.log(
       `  要求 ${requiredPeriods.length} 季度；直接 ${directPeriods.length}，反推 ${reconstructedPeriods.length}，剩余缺口 ${missingPeriods.length}`,

@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20261028-sk-hynix"],
+    ["data.js", "20261029-audited-quarterly"],
     ["price-data.js", "20261028-sk-hynix"],
   ]) {
     assert.match(

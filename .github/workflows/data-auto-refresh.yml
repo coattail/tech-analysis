@@ -33,6 +33,9 @@ jobs:
       - name: Refresh data.js
         run: node scripts/auto-refresh-data.mjs
 
+      - name: Check audited quarters and review new repeated flows
+        run: node scripts/audit-quarterly-data.cjs --check
+
       - name: Refresh price-data.js
         run: node scripts/auto-refresh-price-data.mjs
 
