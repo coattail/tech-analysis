@@ -22,6 +22,33 @@ function loadFinancialSourceData() {
   return context.window.FINANCIAL_SOURCE_DATA;
 }
 
+test("ServiceNow Q3 2026 uses reported GAAP results and reconciles to nine-month totals", () => {
+  const company = loadFinancialSourceData().companies.servicenow;
+  const period = "2026Q3";
+  assert.equal(company.revenue[period], 4_106_000_000);
+  assert.equal(company.earnings[period], 277_000_000);
+  assert.equal(company.operatingIncome[period], 385_000_000);
+  assert.equal(company.netAssets[period], 13_096_000_000);
+  assert.equal(company.periodEndDates[period], "2026-09-30");
+  assert.equal(company.reportDates[period], "2026-10-28");
+  assert.ok(Math.abs(company.grossMargin[period] - 2_895 / 4_106 * 100) < 1e-12);
+  assert.ok(Math.abs(company.roe[period] - 277 / 13_096 * 100) < 1e-12);
+  assert.ok(Math.abs(company.revenueGrowth[period] - (4_106 - 3_407) / 3_407 * 100) < 1e-12);
+  for (const [metric, total] of [["revenue", 11_863_000_000], ["earnings", 1_044_000_000], ["operatingIncome", 1_050_000_000]]) {
+    assert.equal(["2026Q1", "2026Q2", period].reduce((sum, p) => sum + company[metric][p], 0), total);
+  }
+  for (const flags of Object.values(company.forecastFlags)) assert.ok(!flags.includes(period));
+
+  // The daily refresher must retain the same official observation.
+  const updater = fs.readFileSync(path.join(__dirname, "..", "scripts/auto-refresh-data.mjs"), "utf8");
+  const start = updater.indexOf("  servicenow: {", updater.indexOf("const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES"));
+  const end = updater.indexOf("  salesforce: {", start);
+  const official = vm.runInNewContext("({" + updater.slice(start, end) + "})").servicenow[period];
+  for (const metric of ["revenue", "earnings", "operatingIncome", "netAssets", "grossMargin"]) {
+    assert.equal(company[metric][period], official[metric], metric);
+  }
+});
+
 test("computes quarterly profit growth against the same quarter one year earlier", () => {
   const labels = ["2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1"];
   const earnings = new Map([
