@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T20:10:53.519Z",
+  "generatedAt": "2026-10-30T02:34:55.498Z",
   "source": "Macrotrends quarterly Operating Income and quarterly TTM Operating Income",
   "methodology": "Direct quarterly USD values are used when available. Earlier quarters are reconstructed from Q[t-4] = Q[t] - (TTM[t] - TTM[t-1]). TTM values are published in USD billions and rounded to two decimals. Existing SEC, supplemental, or curated quarterly values are retained when the historical snapshot does not yet include the newest reported quarter.",
   "earliestRequiredPeriod": "2005Q1",
@@ -410,7 +410,7 @@
     "amazon": {
       "ticker": "AMZN",
       "listingPeriod": "2005Q1",
-      "latestFinancialPeriod": "2026Q1",
+      "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
         "2012Q2",
         "2012Q3",
@@ -467,7 +467,9 @@
         "2025Q2",
         "2025Q3",
         "2025Q4",
-        "2026Q1"
+        "2026Q1",
+        "2026Q2",
+        "2026Q3"
       ],
       "reconstructedPeriods": [
         "2005Q1",
@@ -501,7 +503,29 @@
         "2012Q1"
       ],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2026Q2": {
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm",
+          "reportDate": "2026-07-30",
+          "operatingIncome": 27461000000
+        },
+        "2026Q3": {
+          "sourceUrl": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+          "reportDate": "2026-10-29",
+          "operatingIncome": 28076000000
+        },
+        "2025Q3": {
+          "sourceUrl": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+          "reportDate": "2026-10-29",
+          "operatingIncome": 17422000000
+        },
+        "2025Q4": {
+          "sourceUrl": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx",
+          "reportDate": "2026-10-29",
+          "operatingIncome": 24977000000
+        }
+      }
     },
     "avgo": {
       "ticker": "AVGO",

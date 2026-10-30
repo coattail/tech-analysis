@@ -737,6 +737,10 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       earnings: 346_688_000,
       grossMargin: (544_466 / 2_540_959) * 100,
     },
+    // Reported comparative operating income in the Q3 2026 release.
+    // https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx
+    "2025Q3": { operatingIncome: 17_422_000_000 },
+    "2025Q4": { operatingIncome: 24_977_000_000 },
     // Amazon Q2 2026 earnings release, furnished on Form 8-K on 2026-07-30.
     "2026Q2": {
       revenue: 200_606_000_000,
@@ -746,6 +750,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       netAssets: 551_620_000_000,
       periodEndDate: "2026-06-30",
       reportDate: "2026-07-30",
+    },
+    // Amazon Q3 2026 official earnings release, published on 2026-10-29.
+    // https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Third-Quarter-Results/default.aspx
+    "2026Q3": {
+      revenue: 201_944_000_000,
+      earnings: 20_685_000_000,
+      operatingIncome: 28_076_000_000,
+      grossMargin: ((201_944 - 94_573) / 201_944) * 100,
+      netAssets: 613_601_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-10-29",
     },
   },
   tsmc: {
