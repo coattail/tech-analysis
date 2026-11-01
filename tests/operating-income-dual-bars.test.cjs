@@ -92,24 +92,14 @@ test("keeps the reproducible source snapshot and TTM reconstruction formula", ()
   assert.match(historyBackfiller, /Math\.abs\(knownQuarterValue\)/);
 });
 
-test("allows a focused two-company grouped bar view with readable bars", () => {
-  assert.match(html, /data-i18n="focusedCompanyView">单\/双公司视图/);
-  assert.match(
-    script,
-    /state\.visibleCompanies\.size >= 1 && state\.visibleCompanies\.size <= 2\s*\? state\.chartMode/,
-  );
-  assert.match(script, /const dualCompanyBars = useBarForFocusedCompanies && visibleCompanyCount === 2/);
-  assert.match(script, /grouped: useBarDataset \? dualCompanyBars : undefined/);
-  assert.match(script, /computeDualCompanyBarThickness\(rangeLabels\.length\)/);
-  assert.match(script, /const DUAL_COMPANY_BAR_MIN_THICKNESS = 5/);
-  assert.match(script, /const DUAL_COMPANY_BAR_MAX_THICKNESS = 18/);
-  assert.match(script, /const DUAL_COMPANY_BAR_WIDTH_RATIO = 0\.36/);
-  assert.match(script, /const DUAL_COMPANY_BAR_MIN_GROUP_GAP = 2/);
-  assert.match(
-    script,
-    /\(slotWidth - DUAL_COMPANY_BAR_MIN_GROUP_GAP\) \/ 2/,
-  );
-  assert.match(script, /return Math\.min\(desiredThickness, maxThicknessWithGroupGap\)/);
-  assert.match(script, /dualCompanyBars \? 0\.78 : 0\.72/);
-  assert.match(script, /dualCompanyBars \? 0\.84 : 0\.82/);
+test("allows one to three companies and sizes grouped bars from responsive category slots", () => {
+  assert.match(html, /data-i18n="focusedCompanyView">1–3 公司视图/);
+  assert.match(script, /state\.visibleCompanies\.size >= 1 && state\.visibleCompanies\.size <= 3\s*\? state\.chartMode/);
+  assert.match(script, /const groupedCompanyBars = useBarForFocusedCompanies && visibleCompanyCount > 1/);
+  assert.match(script, /visibleCompanyCount <= 3/);
+  assert.match(script, /grouped: useBarDataset \? groupedCompanyBars : undefined/);
+  assert.match(script, /barThickness: useBarDataset && !groupedCompanyBars/);
+  assert.doesNotMatch(script, /computeDualCompanyBarThickness|DUAL_COMPANY_BAR_MIN_THICKNESS/);
+  assert.match(script, /groupedCompanyBars \? 0\.82 : 0\.72/);
+  assert.match(script, /groupedCompanyBars \? 0\.84 : 0\.82/);
 });

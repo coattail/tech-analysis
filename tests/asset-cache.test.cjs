@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after tightening the chart header", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20261101-metric-hover-edges/);
+  assert.match(html, /style\.css\?v=20261101-company-sum/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {
@@ -59,9 +59,9 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20261101-cash-flow-price-overlay"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["financial-metrics.js", "20261101-cash-flow"],
+    ["financial-metrics.js", "20261101-company-sum"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261101-capex-label"],
+    ["script.js", "20261101-company-sum"],
   ]) {
     assert.match(
       html,

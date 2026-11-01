@@ -23,13 +23,23 @@ const UI_TRANSLATIONS = {
     searchPlaceholder: "搜索企业名称或股票代码",
     companySwitches: "公司显示开关",
     generate: "生成",
+    sumCompanies: "求和",
+    sumOn: "求和 · 已开启",
+    sumNeedCompanies: "选中至少两家公司后可求和",
+    sumUnsupported: "比率和增速不直接求和，请选择金额指标",
+    sumReady: "合计所选公司的金额指标；再次点击退出",
+    sumTotal: "合计",
+    sumNetTotal: "净合计",
+    sumView: "求和视图",
+    sumStatus: "求和：仅显示所选公司数据齐全的期间，缺失不按零处理。柱状图正负分别堆叠，提示显示净合计。",
+    sumNoData: "当前区间没有所有所选公司均具备数据的期间。",
     showAll: "全部显示",
     hideAll: "全部隐藏",
     hint: "提示：首屏默认展示完整历史，可切换季度/年度/滚动年化，并通过底部双端滑块聚焦时间区间。",
     dataSourceLink: "数据来源链接",
     chartKicker: "对比视角",
     financialTrendComparison: "财务趋势对比",
-    focusedCompanyView: "单/双公司视图",
+    focusedCompanyView: "1–3 公司视图",
     chartTypeSwitch: "图表类型切换",
     line: "折线",
     bar: "柱状",
@@ -113,13 +123,23 @@ const UI_TRANSLATIONS = {
     searchPlaceholder: "Search by company name or ticker",
     companySwitches: "Company visibility toggles",
     generate: "Generate",
+    sumCompanies: "Sum",
+    sumOn: "Sum · On",
+    sumNeedCompanies: "Select at least two companies to sum",
+    sumUnsupported: "Ratios and growth rates cannot be added; select a monetary metric",
+    sumReady: "Sum the selected companies; click again to exit",
+    sumTotal: "Total",
+    sumNetTotal: "Net total",
+    sumView: "Combined View",
+    sumStatus: "Sum: only periods with data for every selected company are shown. Missing values stay empty. Bars stack positive and negative contributions separately; tooltips show the net total.",
+    sumNoData: "No period in this range has data for all selected companies.",
     showAll: "Show All",
     hideAll: "Hide All",
     hint: "Tip: Full history is shown initially. Switch periods or use the range slider to focus the timeline.",
     dataSourceLink: "Data source links",
     chartKicker: "Comparative Lens",
     financialTrendComparison: "Financial Trend Comparison",
-    focusedCompanyView: "One/Two-Company View",
+    focusedCompanyView: "1–3 Company View",
     chartTypeSwitch: "Chart type switch",
     line: "Line",
     bar: "Bar",
@@ -965,6 +985,7 @@ const statusEl = document.getElementById("statusText");
 const togglesEl = document.getElementById("companyToggles");
 const companySearchEl = document.getElementById("companySearch");
 const generateBtn = document.getElementById("generateBtn");
+const sumCompaniesBtn = document.getElementById("sumCompaniesBtn");
 const showAllBtn = document.getElementById("showAllBtn");
 const hideAllBtn = document.getElementById("hideAllBtn");
 const downloadBtn = document.getElementById("downloadBtn");
@@ -1019,10 +1040,7 @@ const SINGLE_COMPANY_BAR_MAX_THICKNESS = 28;
 const SINGLE_COMPANY_BAR_WIDTH_RATIO = 0.56;
 const SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE = 220;
 const SINGLE_COMPANY_BAR_FALLBACK_WIDTH = 1200;
-const DUAL_COMPANY_BAR_MIN_THICKNESS = 5;
-const DUAL_COMPANY_BAR_MAX_THICKNESS = 18;
-const DUAL_COMPANY_BAR_WIDTH_RATIO = 0.36;
-const DUAL_COMPANY_BAR_MIN_GROUP_GAP = 2;
+const GROUPED_COMPANY_BAR_MAX_THICKNESS = 18;
 const DATE_AXIS_DAY_MS = 24 * 60 * 60 * 1000;
 const BAR_TOOLTIP_VERTICAL_OFFSET = 18;
 const BAR_TOOLTIP_SIDE_OFFSET = 10;
@@ -1038,6 +1056,7 @@ const state = {
   chartMode: DEFAULT_INITIAL_VIEW.chartMode,
   priceComparisonEnabled: DEFAULT_INITIAL_VIEW.priceComparisonEnabled,
   growthOverlayEnabled: false,
+  companySumEnabled: false,
   growthChartExtraHeight: 0,
   baseChartPlotHeight: null,
   chartWrapperVerticalInset: null,
@@ -1157,27 +1176,6 @@ function computeSingleCompanyBarThickness(visibleLabelCount) {
   );
 }
 
-function computeDualCompanyBarThickness(visibleLabelCount) {
-  const count = Math.max(1, Number(visibleLabelCount) || 1);
-  const containerWidth =
-    chartEl?.parentElement?.clientWidth ||
-    chartEl?.clientWidth ||
-    SINGLE_COMPANY_BAR_FALLBACK_WIDTH;
-  const usableWidth = Math.max(320, containerWidth - SINGLE_COMPANY_BAR_WIDTH_RESERVED_SPACE);
-  const slotWidth = usableWidth / count;
-  const nextThickness = slotWidth * DUAL_COMPANY_BAR_WIDTH_RATIO;
-  const desiredThickness = Math.max(
-    DUAL_COMPANY_BAR_MIN_THICKNESS,
-    Math.min(DUAL_COMPANY_BAR_MAX_THICKNESS, nextThickness),
-  );
-  const maxThicknessWithGroupGap = Math.max(
-    1,
-    (slotWidth - DUAL_COMPANY_BAR_MIN_GROUP_GAP) / 2,
-  );
-
-  return Math.min(desiredThickness, maxThicknessWithGroupGap);
-}
-
 function getChartContainerWidth() {
   return chartEl?.parentElement?.clientWidth || chartEl?.clientWidth || window.innerWidth || 0;
 }
@@ -1262,8 +1260,12 @@ function getSingleVisibleCompanyId() {
   return state.visibleCompanies.values().next().value ?? null;
 }
 
+function isCompanySumEnabled() {
+  return state.companySumEnabled && FinancialMetricsUtils.canSumCompanies(state.metric, state.visibleCompanies.size);
+}
+
 function getEffectiveChartMode() {
-  return state.visibleCompanies.size >= 1 && state.visibleCompanies.size <= 2
+  return isCompanySumEnabled() || state.visibleCompanies.size >= 1 && state.visibleCompanies.size <= 3
     ? state.chartMode
     : "line";
 }
@@ -2017,6 +2019,7 @@ function setsMatch(currentSet, expectedItems) {
 }
 
 function syncPresetButtons() {
+  syncCompanySumControl();
   presetButtons.forEach((button) => {
     const presetKey = button.dataset.companyPreset;
     const presetItems = COMPANY_PRESETS[presetKey] ?? [];
@@ -2024,8 +2027,17 @@ function syncPresetButtons() {
   });
 }
 
+function syncCompanySumControl() {
+  if (!sumCompaniesBtn) return;
+  sumCompaniesBtn.disabled = !FinancialMetricsUtils.canSumCompanies(state.metric, state.pendingCompanies.size);
+  sumCompaniesBtn.setAttribute("aria-pressed", String(isCompanySumEnabled()));
+  sumCompaniesBtn.textContent = t(isCompanySumEnabled() ? "sumOn" : "sumCompanies");
+  sumCompaniesBtn.title = t(state.pendingCompanies.size < 2 ? "sumNeedCompanies"
+    : !FinancialMetricsUtils.canSumCompanies(state.metric, 2) ? "sumUnsupported" : "sumReady");
+}
+
 function syncChartModeControl() {
-  const shouldShow = state.visibleCompanies.size >= 1 && state.visibleCompanies.size <= 2;
+  const shouldShow = isCompanySumEnabled() || state.visibleCompanies.size >= 1 && state.visibleCompanies.size <= 3;
 
   if (!shouldShow) {
     state.chartMode = "line";
@@ -2035,6 +2047,8 @@ function syncChartModeControl() {
     chartModeControlEl.hidden = !shouldShow;
   }
 
+  const caption = document.querySelector('[data-i18n="focusedCompanyView"]');
+  if (caption) caption.textContent = t(isCompanySumEnabled() ? "sumView" : "focusedCompanyView");
   chartModeInputs.forEach((input) => {
     input.checked = input.value === state.chartMode;
     input.disabled = !shouldShow;
@@ -2116,8 +2130,8 @@ function shouldReservePriceComparisonLayout(hasPriceOverlay = false) {
 }
 
 function shouldReserveSingleCompanyLegendLayout(hasPriceOverlay = false) {
-  return Boolean(getSingleVisibleCompanyId())
-    || (state.visibleCompanies.size === 2 && getEffectiveChartMode() === "bar")
+  return isCompanySumEnabled() || Boolean(getSingleVisibleCompanyId())
+    || (state.visibleCompanies.size >= 2 && state.visibleCompanies.size <= 3 && getEffectiveChartMode() === "bar")
     || shouldReservePriceComparisonLayout(hasPriceOverlay);
 }
 
@@ -2158,7 +2172,7 @@ function setGrowthOverlayEnabled(enabled) {
 
 function updateViewSummary() {
   if (activeMetricLabelEl) {
-    activeMetricLabelEl.textContent = getMetricLabel(state.metric);
+    activeMetricLabelEl.textContent = getMetricLabel(state.metric) + (isCompanySumEnabled() ? ` · ${t("sumTotal")}` : "");
   }
 
   if (activeFrequencyLabelEl) {
@@ -2691,7 +2705,40 @@ function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, use
   });
 }
 
+function buildCompanySumDatasets() {
+  const allLabels = getLabelsForFrequency(state.frequency);
+  const rangeLabels = allLabels.slice(state.rangeStart, state.rangeEnd + 1);
+  const companies = COMPANIES.filter(company => state.visibleCompanies.has(company.id));
+  const series = companies.map(company => state.dataByFrequency[state.frequency][state.metric].get(company.id));
+  const totals = FinancialMetricsUtils.sumCompanySeries(rangeLabels, series);
+  const last = rangeLabels.findLastIndex(label => isFiniteNumber(totals.get(label)));
+  const labels = rangeLabels.slice(0, Math.max(1, last + 1));
+  const encodings = getVisibleSeriesEncodings();
+  const forecasts = companies.map(company => state.forecastFlagsByFrequency[state.frequency][state.metric].get(company.id) ?? new Set());
+  if (getEffectiveChartMode() === "line") {
+    return { labels, datasets: [{
+      companyId: "__company_sum__", companySum: true, label: t("sumTotal"), type: "line",
+      data: labels.map(label => totals.get(label)), hidden: false, spanGaps: false,
+      borderColor: getActiveTheme() === "light" ? "#334155" : "#e5edf7",
+      backgroundColor: getActiveTheme() === "light" ? "#334155" : "#e5edf7",
+      borderWidth: 2.5, pointRadius: 1.4, pointHoverRadius: 4.2, tension: 0.18,
+      forecastedLabels: labels.filter(label => forecasts.some(flags => flags.has(label))),
+    }] };
+  }
+  return { labels, datasets: companies.map((company, index) => ({
+    companyId: company.id, companySum: true, label: getCompanyName(company), type: "bar",
+    data: labels.map((label, x) => ({ x, y: isFiniteNumber(totals.get(label)) ? series[index]?.get(label) : null,
+      periodLabel: label, sumTotal: totals.get(label) })), parsing: false,
+    hidden: false, stack: "company-sum", grouped: false,
+    barPercentage: 0.78, categoryPercentage: 0.82, maxBarThickness: 28,
+    borderRadius: 2, borderSkipped: false, borderWidth: 0,
+    borderColor: encodings.get(company.id).color, backgroundColor: encodings.get(company.id).color,
+    forecastedLabels: [...forecasts[index]],
+  })) };
+}
+
 function buildDatasetsForView() {
+  if (isCompanySumEnabled()) return buildCompanySumDatasets();
   const fullLabels = getLabelsForFrequency(state.frequency);
   const rangeLabels = fullLabels.slice(state.rangeStart, state.rangeEnd + 1);
   const metricKey = state.metric;
@@ -2700,8 +2747,8 @@ function buildDatasetsForView() {
   const useBarForFocusedCompanies =
     getEffectiveChartMode() === "bar" &&
     visibleCompanyCount >= 1 &&
-    visibleCompanyCount <= 2;
-  const dualCompanyBars = useBarForFocusedCompanies && visibleCompanyCount === 2;
+    visibleCompanyCount <= 3;
+  const groupedCompanyBars = useBarForFocusedCompanies && visibleCompanyCount > 1;
   const visibleSeriesEncodings = getVisibleSeriesEncodings();
 
   const datasets = COMPANIES.map((company) => {
@@ -2730,15 +2777,15 @@ function buildDatasetsForView() {
       borderWidth: useBarDataset ? 0 : 2,
       borderRadius: useBarDataset ? 6 : 0,
       borderSkipped: false,
-      grouped: useBarDataset ? dualCompanyBars : undefined,
-      barPercentage: useBarDataset ? (dualCompanyBars ? 0.78 : 0.72) : 0.9,
-      categoryPercentage: useBarDataset ? (dualCompanyBars ? 0.84 : 0.82) : 0.9,
-      barThickness: useBarDataset
-        ? (dualCompanyBars
-          ? computeDualCompanyBarThickness(rangeLabels.length)
-          : computeSingleCompanyBarThickness(rangeLabels.length))
+      grouped: useBarDataset ? groupedCompanyBars : undefined,
+      barPercentage: useBarDataset ? (groupedCompanyBars ? 0.82 : 0.72) : 0.9,
+      categoryPercentage: useBarDataset ? (groupedCompanyBars ? 0.84 : 0.82) : 0.9,
+      // Grouped bars use the actual category slot on every layout/resize.
+      // Fixed pixel widths ignore percentage gaps and can overlap adjacent groups.
+      barThickness: useBarDataset && !groupedCompanyBars
+        ? computeSingleCompanyBarThickness(rangeLabels.length)
         : undefined,
-      maxBarThickness: useBarDataset ? (dualCompanyBars ? DUAL_COMPANY_BAR_MAX_THICKNESS : 28) : undefined,
+      maxBarThickness: useBarDataset ? (groupedCompanyBars ? GROUPED_COMPANY_BAR_MAX_THICKNESS : 28) : undefined,
       pointRadius: useBarDataset ? 0 : 1.4,
       pointHoverRadius: 4.2,
       pointHitRadius: 10,
@@ -2980,6 +3027,7 @@ function buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets, label
 }
 
 function buildInteractionOptions(effectiveChartMode) {
+  if (isCompanySumEnabled()) return { mode: "index", intersect: false };
   return {
     mode: usesDateXAxis(effectiveChartMode) ? "nearest" : "barPriority",
     intersect: false,
@@ -3024,6 +3072,12 @@ function collectDatasetValues(datasets, includeHidden = false) {
     });
   });
 
+  const stacked = datasets.filter(dataset => dataset.companySum && dataset.type === "bar" && !dataset.hidden);
+  for (let index = 0; index < (stacked[0]?.data.length ?? 0); index += 1) {
+    const points = stacked.map(dataset => dataset.data[index]?.y).filter(isFiniteNumber);
+    if (points.length) values.push(points.filter(value => value > 0).reduce((sum, value) => sum + value, 0),
+      points.filter(value => value < 0).reduce((sum, value) => sum + value, 0));
+  }
   return values;
 }
 
@@ -3525,6 +3579,8 @@ function syncChartDatasets(nextDatasets) {
 
     currentDataset.label = nextDataset.label;
     currentDataset.companyId = nextDataset.companyId;
+    currentDataset.companySum = nextDataset.companySum;
+    currentDataset.stack = nextDataset.stack;
     currentDataset.priceOverlay = nextDataset.priceOverlay;
     currentDataset.growthOverlay = nextDataset.growthOverlay;
     currentDataset.growthMetric = nextDataset.growthMetric;
@@ -3629,10 +3685,11 @@ function refreshChart(updateMode = undefined) {
   state.chart.data.datasets.forEach((dataset, index) => {
     state.chart.setDatasetVisibility(
       index,
-      dataset.priceOverlay || dataset.growthOverlay || state.visibleCompanies.has(dataset.companyId),
+      dataset.priceOverlay || dataset.growthOverlay || dataset.companySum || state.visibleCompanies.has(dataset.companyId),
     );
   });
   state.chart.options.scales.y.title.text = buildYAxisTitle(state.metric, state.frequency);
+  state.chart.options.scales.y.stacked = isCompanySumEnabled() && effectiveChartMode === "bar";
   state.chart.options.scales.y.min = yBounds.min;
   state.chart.options.scales.y.max = yBounds.max;
   state.chart.options.scales.y.reservedWidth = axisReservations.primaryWidth;
@@ -3657,7 +3714,10 @@ function refreshChart(updateMode = undefined) {
 }
 
 function updateChartStatus(hasPriceOverlay = false, _hasGrowthOverlay = false) {
-  if (state.priceComparisonEnabled && hasPriceOverlay && state.loadedStatusText) {
+  if (isCompanySumEnabled()) {
+    const hasData = collectDatasetValues(state.chart?.data.datasets ?? []).length > 0;
+    setStatus(hasData ? `${state.loadedStatusText} ${t("sumStatus")}` : t("sumNoData"), !hasData);
+  } else if (state.priceComparisonEnabled && hasPriceOverlay && state.loadedStatusText) {
     setStatus(`${state.loadedStatusText} ${t("priceOverlayEnabled", { count: state.lastPriceOverlayPointCount })}`, state.loadedStatusIsError);
   } else if (state.priceComparisonEnabled && !hasPriceOverlay) {
     setStatus(getPriceComparisonUnavailableReason(), true);
@@ -3831,6 +3891,7 @@ function generateSelectedCompanies() {
   });
 
   state.visibleCompanies = applyPendingCompanies(state.pendingCompanies);
+  if (!FinancialMetricsUtils.canSumCompanies(state.metric, state.visibleCompanies.size)) state.companySumEnabled = false;
 
   if (shouldResetRange) {
     setRangeToVisibleDataBounds(state.frequency, state.metric);
@@ -3883,6 +3944,7 @@ function buildChart() {
       scales: {
         x: buildXAxisScaleOptions(effectiveChartMode, themeTokens, datasets, labels),
         y: {
+          stacked: isCompanySumEnabled() && effectiveChartMode === "bar",
           afterFit(scale) {
             const reservedWidth = scale.options.reservedWidth ?? scale.width;
             scale.width = Math.max(0, reservedWidth - CHART_PLOT_LEFT_NUDGE);
@@ -3951,6 +4013,9 @@ function buildChart() {
       plugins: {
         legend: {
           display: reserveLegendLayout,
+          onClick(event, item, legend) {
+            if (!isCompanySumEnabled()) Chart.defaults.plugins.legend.onClick.call(this, event, item, legend);
+          },
           labels: {
             color: themeTokens.axisColor,
             font: { family: themeTokens.chartFontFamily, size: isCompactChartLayout() ? 9 : 11, weight: "600" },
@@ -3963,7 +4028,7 @@ function buildChart() {
               return defaults
                 .filter((item) => {
                   const dataset = chart.data.datasets[item.datasetIndex];
-                  return dataset?.priceOverlay || dataset?.growthOverlay || state.visibleCompanies.has(dataset?.companyId);
+                  return dataset?.priceOverlay || dataset?.growthOverlay || dataset?.companySum || state.visibleCompanies.has(dataset?.companyId);
                 })
                 .map((item) => ({ ...item, pointStyle: "circle" }))
                 .sort((left, right) => {
@@ -3988,8 +4053,14 @@ function buildChart() {
           titleFont: { family: themeTokens.terminalFontFamily, size: 11, weight: "600" },
           bodyFont: { family: themeTokens.chartFontFamily, size: 11, weight: "500" },
           callbacks: {
+            footer(context) {
+              if (!isCompanySumEnabled() || getEffectiveChartMode() !== "bar") return "";
+              const total = context.find(item => isFiniteNumber(item.raw?.sumTotal))?.raw.sumTotal;
+              return isFiniteNumber(total) ? `${t("sumNetTotal")}${getLabelSeparator()}${formatMetricValue(state.metric, total)}` : "";
+            },
             title(context) {
               const separator = getLabelSeparator();
+              if (isCompanySumEnabled()) return `${(FREQUENCY_META[state.frequency] ?? FREQUENCY_META.quarterly).tooltipPrefix}${separator}${context[0].raw?.periodLabel ?? context[0].label}`;
               const reportDateContext = context.find((item) => item.raw?.reportDate);
               const periodEndContext = context.find((item) => item.raw?.periodEndDate);
               const reportDate = reportDateContext?.raw?.reportDate;
@@ -4040,6 +4111,11 @@ function buildChart() {
 
 function bindEvents() {
   generateBtn.addEventListener("click", generateSelectedCompanies);
+  sumCompaniesBtn?.addEventListener("click", () => {
+    if (!FinancialMetricsUtils.canSumCompanies(state.metric, state.pendingCompanies.size)) return;
+    state.companySumEnabled = !isCompanySumEnabled();
+    generateSelectedCompanies();
+  });
   showAllBtn.addEventListener("click", () => setAllVisibility(true));
   hideAllBtn.addEventListener("click", () => setAllVisibility(false));
   companySearchEl?.addEventListener("input", () => setupTogglePanel(companySearchEl.value));
@@ -4058,6 +4134,7 @@ function bindEvents() {
         nextMetric: input.value,
       });
       state.metric = input.value;
+      if (!FinancialMetricsUtils.canSumCompanies(state.metric, state.visibleCompanies.size)) state.companySumEnabled = false;
       setRangeToVisibleDataBounds();
       syncRangeControls();
       rebuildChartForCurrentView();
@@ -4079,7 +4156,7 @@ function bindEvents() {
       if (
         !input.checked ||
         state.visibleCompanies.size < 1 ||
-        state.visibleCompanies.size > 2
+        (!isCompanySumEnabled() && state.visibleCompanies.size > 3)
       ) return;
       state.chartMode = input.value;
       refreshChart("none");

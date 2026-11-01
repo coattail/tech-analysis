@@ -25,7 +25,8 @@ The project focuses on three things:
 - Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
 - Hybrid comparison colors: MAG7 keeps representative fixed colors while focused peers dynamically avoid the active comparison colors
-- Enhanced one/two-company mode: switch between line and bar charts; two-company bars are grouped side by side by quarter
+- Enhanced one-to-three-company mode: switch between line and bar charts; grouped bars have equal widths and adapt to the actual plot width, avoiding overlaps after resizing
+- Company totals: select at least two companies and click Sum for monetary metrics. Bars stack each company’s contribution with positive/negative stacks; lines show the net total. Periods missing any selected company stay empty; ratios and growth rates cannot be summed
 - Single-company stock-price comparison for revenue, operating income, net income, operating cash flow, and free cash flow bar charts
 - Single-company growth overlay: add a white year-over-year growth line with a right-side percentage axis to revenue/net-income bars; mutually exclusive with the price overlay
 - Time-range filtering via dual-handle slider
