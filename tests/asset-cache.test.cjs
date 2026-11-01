@@ -61,7 +61,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20261101-company-sum"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261101-company-sum"],
+    ["script.js", "20261101-rounded-sum-stacks"],
   ]) {
     assert.match(
       html,
