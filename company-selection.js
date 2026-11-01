@@ -12,6 +12,17 @@
     annual: "2005",
   };
 
+  function sortCompaniesByMarketCap(companies, marketCaps = {}) {
+    return companies.map((company, index) => ({ company, index }))
+      .sort((a, b) => {
+        const cap = item => {
+          const value = marketCaps[item.company.id]?.value;
+          return Number.isFinite(value) && value > 0 ? value : -1;
+        };
+        return cap(b) - cap(a) || a.index - b.index;
+      }).map(item => item.company);
+  }
+
   function cloneCompanySet(companyIds) {
     return new Set(companyIds ?? []);
   }
@@ -134,6 +145,7 @@
   }
 
   const api = {
+    sortCompaniesByMarketCap,
     DEFAULT_INITIAL_COMPANIES,
     DEFAULT_INITIAL_VIEW,
     cloneCompanySet,

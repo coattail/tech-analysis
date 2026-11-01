@@ -1,0 +1,1659 @@
+{
+  "definition": "Expected reported quarters from first actual revenue (no earlier than 2005Q1) through latest actual revenue; cash flow is never interpolated or filled from annual averages.",
+  "companies": {
+    "apple": {
+      "first": "2005Q1",
+      "last": "2026Q2",
+      "expected": 86,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 86,
+          "missing": [],
+          "filled": 23
+        },
+        "capex": {
+          "present": 86,
+          "missing": [],
+          "filled": 14
+        },
+        "freeCashFlow": {
+          "present": 86,
+          "missing": [],
+          "filled": 23
+        }
+      }
+    },
+    "microsoft": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 27
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 27
+        }
+      }
+    },
+    "alphabet": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 39
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 39
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 39
+        }
+      }
+    },
+    "amazon": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 13
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        }
+      }
+    },
+    "meta": {
+      "first": "2010Q1",
+      "last": "2026Q3",
+      "expected": 67,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 62,
+          "missing": [
+            "2010Q1",
+            "2010Q2",
+            "2010Q3",
+            "2010Q4",
+            "2011Q2"
+          ],
+          "filled": 1,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 62,
+          "missing": [
+            "2010Q1",
+            "2010Q2",
+            "2010Q3",
+            "2010Q4",
+            "2011Q2"
+          ],
+          "filled": 1,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 62,
+          "missing": [
+            "2010Q1",
+            "2010Q2",
+            "2010Q3",
+            "2010Q4",
+            "2011Q2"
+          ],
+          "filled": 1,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "nvidia": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 18
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 34
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 34
+        }
+      }
+    },
+    "tsmc": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 67
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 67
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 67
+        }
+      }
+    },
+    "avgo": {
+      "first": "2009Q4",
+      "last": "2026Q3",
+      "expected": 68,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 68,
+          "missing": [],
+          "filled": 31
+        },
+        "capex": {
+          "present": 68,
+          "missing": [],
+          "filled": 31
+        },
+        "freeCashFlow": {
+          "present": 68,
+          "missing": [],
+          "filled": 31
+        }
+      }
+    },
+    "tsla": {
+      "first": "2010Q1",
+      "last": "2026Q3",
+      "expected": 67,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 67,
+          "missing": [],
+          "filled": 15
+        },
+        "capex": {
+          "present": 67,
+          "missing": [],
+          "filled": 2
+        },
+        "freeCashFlow": {
+          "present": 67,
+          "missing": [],
+          "filled": 15
+        }
+      }
+    },
+    "walmart": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        }
+      }
+    },
+    "berkshire": {
+      "first": "2005Q1",
+      "last": "2026Q2",
+      "expected": 86,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 86,
+          "missing": [],
+          "filled": 37
+        },
+        "capex": {
+          "present": 86,
+          "missing": [],
+          "filled": 15
+        },
+        "freeCashFlow": {
+          "present": 86,
+          "missing": [],
+          "filled": 37
+        }
+      }
+    },
+    "jpmorgan": {
+      "first": "2005Q1",
+      "last": "2026Q2",
+      "expected": 86,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 72,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 0,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2",
+            "2008Q3",
+            "2008Q4",
+            "2009Q1",
+            "2009Q2",
+            "2009Q3",
+            "2009Q4",
+            "2010Q1",
+            "2010Q2",
+            "2010Q3",
+            "2010Q4",
+            "2011Q1",
+            "2011Q2",
+            "2011Q3",
+            "2011Q4",
+            "2012Q1",
+            "2012Q2",
+            "2012Q3",
+            "2012Q4",
+            "2013Q1",
+            "2013Q2",
+            "2013Q3",
+            "2013Q4",
+            "2014Q1",
+            "2014Q2",
+            "2014Q3",
+            "2014Q4",
+            "2015Q1",
+            "2015Q2",
+            "2015Q3",
+            "2015Q4",
+            "2016Q1",
+            "2016Q2",
+            "2016Q3",
+            "2016Q4",
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q1",
+            "2018Q2",
+            "2018Q3",
+            "2018Q4",
+            "2019Q1",
+            "2019Q2",
+            "2019Q3",
+            "2019Q4",
+            "2020Q1",
+            "2020Q2",
+            "2020Q3",
+            "2020Q4",
+            "2021Q1",
+            "2021Q2",
+            "2021Q3",
+            "2021Q4",
+            "2022Q1",
+            "2022Q2",
+            "2022Q3",
+            "2022Q4",
+            "2023Q1",
+            "2023Q2",
+            "2023Q3",
+            "2023Q4",
+            "2024Q1",
+            "2024Q2",
+            "2024Q3",
+            "2024Q4",
+            "2025Q1",
+            "2025Q2",
+            "2025Q3",
+            "2025Q4",
+            "2026Q1",
+            "2026Q2"
+          ],
+          "filled": 0,
+          "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
+        },
+        "freeCashFlow": {
+          "present": 0,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2",
+            "2008Q3",
+            "2008Q4",
+            "2009Q1",
+            "2009Q2",
+            "2009Q3",
+            "2009Q4",
+            "2010Q1",
+            "2010Q2",
+            "2010Q3",
+            "2010Q4",
+            "2011Q1",
+            "2011Q2",
+            "2011Q3",
+            "2011Q4",
+            "2012Q1",
+            "2012Q2",
+            "2012Q3",
+            "2012Q4",
+            "2013Q1",
+            "2013Q2",
+            "2013Q3",
+            "2013Q4",
+            "2014Q1",
+            "2014Q2",
+            "2014Q3",
+            "2014Q4",
+            "2015Q1",
+            "2015Q2",
+            "2015Q3",
+            "2015Q4",
+            "2016Q1",
+            "2016Q2",
+            "2016Q3",
+            "2016Q4",
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q1",
+            "2018Q2",
+            "2018Q3",
+            "2018Q4",
+            "2019Q1",
+            "2019Q2",
+            "2019Q3",
+            "2019Q4",
+            "2020Q1",
+            "2020Q2",
+            "2020Q3",
+            "2020Q4",
+            "2021Q1",
+            "2021Q2",
+            "2021Q3",
+            "2021Q4",
+            "2022Q1",
+            "2022Q2",
+            "2022Q3",
+            "2022Q4",
+            "2023Q1",
+            "2023Q2",
+            "2023Q3",
+            "2023Q4",
+            "2024Q1",
+            "2024Q2",
+            "2024Q3",
+            "2024Q4",
+            "2025Q1",
+            "2025Q2",
+            "2025Q3",
+            "2025Q4",
+            "2026Q1",
+            "2026Q2"
+          ],
+          "filled": 0,
+          "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
+        }
+      }
+    },
+    "lilly": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "capex": {
+          "present": 73,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2"
+          ],
+          "filled": 44,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 73,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2"
+          ],
+          "filled": 44,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "exxon": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 67
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 67
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 67
+        }
+      }
+    },
+    "visa": {
+      "first": "2006Q4",
+      "last": "2026Q3",
+      "expected": 80,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 80,
+          "missing": [],
+          "filled": 7
+        },
+        "capex": {
+          "present": 80,
+          "missing": [],
+          "filled": 7
+        },
+        "freeCashFlow": {
+          "present": 80,
+          "missing": [],
+          "filled": 7
+        }
+      }
+    },
+    "asml": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 85,
+          "missing": [
+            "2015Q2",
+            "2015Q3"
+          ],
+          "filled": 65,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 85,
+          "missing": [
+            "2015Q2",
+            "2015Q3"
+          ],
+          "filled": 65,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 85,
+          "missing": [
+            "2015Q2",
+            "2015Q3"
+          ],
+          "filled": 65,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "micron": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 31
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 18
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 31
+        }
+      }
+    },
+    "jnj": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        }
+      }
+    },
+    "oracle": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 30
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 22
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 38
+        }
+      }
+    },
+    "amd": {
+      "first": "2005Q1",
+      "last": "2026Q2",
+      "expected": 86,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 86,
+          "missing": [],
+          "filled": 18
+        },
+        "capex": {
+          "present": 86,
+          "missing": [],
+          "filled": 18
+        },
+        "freeCashFlow": {
+          "present": 86,
+          "missing": [],
+          "filled": 18
+        }
+      }
+    },
+    "mastercard": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 17
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 17
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 17
+        }
+      }
+    },
+    "costco": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 31
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 18
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 31
+        }
+      }
+    },
+    "netflix": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 13
+        },
+        "capex": {
+          "present": 74,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 74,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "bankofamerica": {
+      "first": "2005Q1",
+      "last": "2026Q2",
+      "expected": 86,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 72,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2"
+          ],
+          "filled": 11,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 43,
+          "missing": [
+            "2015Q4",
+            "2016Q1",
+            "2016Q2",
+            "2016Q3",
+            "2016Q4",
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q1",
+            "2018Q2",
+            "2018Q3",
+            "2018Q4",
+            "2019Q1",
+            "2019Q2",
+            "2019Q3",
+            "2019Q4",
+            "2020Q1",
+            "2020Q2",
+            "2020Q3",
+            "2020Q4",
+            "2021Q1",
+            "2021Q2",
+            "2021Q3",
+            "2021Q4",
+            "2022Q1",
+            "2022Q2",
+            "2022Q3",
+            "2022Q4",
+            "2023Q1",
+            "2023Q2",
+            "2023Q3",
+            "2023Q4",
+            "2024Q1",
+            "2024Q2",
+            "2024Q3",
+            "2024Q4",
+            "2025Q1",
+            "2025Q2",
+            "2025Q3",
+            "2025Q4",
+            "2026Q1",
+            "2026Q2"
+          ],
+          "filled": 43,
+          "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
+        },
+        "freeCashFlow": {
+          "present": 29,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2",
+            "2015Q4",
+            "2016Q1",
+            "2016Q2",
+            "2016Q3",
+            "2016Q4",
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q1",
+            "2018Q2",
+            "2018Q3",
+            "2018Q4",
+            "2019Q1",
+            "2019Q2",
+            "2019Q3",
+            "2019Q4",
+            "2020Q1",
+            "2020Q2",
+            "2020Q3",
+            "2020Q4",
+            "2021Q1",
+            "2021Q2",
+            "2021Q3",
+            "2021Q4",
+            "2022Q1",
+            "2022Q2",
+            "2022Q3",
+            "2022Q4",
+            "2023Q1",
+            "2023Q2",
+            "2023Q3",
+            "2023Q4",
+            "2024Q1",
+            "2024Q2",
+            "2024Q3",
+            "2024Q4",
+            "2025Q1",
+            "2025Q2",
+            "2025Q3",
+            "2025Q4",
+            "2026Q1",
+            "2026Q2"
+          ],
+          "filled": 29,
+          "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
+        }
+      }
+    },
+    "caterpillar": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 47
+        },
+        "capex": {
+          "present": 73,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2"
+          ],
+          "filled": 4,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 73,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2"
+          ],
+          "filled": 33,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "chevron": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 12
+        },
+        "capex": {
+          "present": 75,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 75,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "palantir": {
+      "first": "2019Q1",
+      "last": "2026Q2",
+      "expected": 30,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 27,
+          "missing": [
+            "2019Q1",
+            "2019Q2",
+            "2019Q3"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 27,
+          "missing": [
+            "2019Q1",
+            "2019Q2",
+            "2019Q3"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 27,
+          "missing": [
+            "2019Q1",
+            "2019Q2",
+            "2019Q3"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "cisco": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 25
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 25
+        }
+      }
+    },
+    "abbvie": {
+      "first": "2012Q1",
+      "last": "2026Q3",
+      "expected": 59,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 58,
+          "missing": [
+            "2026Q3"
+          ],
+          "filled": 17,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 58,
+          "missing": [
+            "2026Q3"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 58,
+          "missing": [
+            "2026Q3"
+          ],
+          "filled": 17,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "homedepot": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 15
+        }
+      }
+    },
+    "ibm": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 34
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 22
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 37
+        }
+      }
+    },
+    "sap": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 85,
+          "missing": [
+            "2009Q1",
+            "2009Q2"
+          ],
+          "filled": 65,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 85,
+          "missing": [
+            "2009Q1",
+            "2009Q2"
+          ],
+          "filled": 65,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 85,
+          "missing": [
+            "2009Q1",
+            "2009Q2"
+          ],
+          "filled": 65,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "crowdstrike": {
+      "first": "2018Q1",
+      "last": "2026Q3",
+      "expected": 35,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 35,
+          "missing": [],
+          "filled": 1
+        },
+        "capex": {
+          "present": 35,
+          "missing": [],
+          "filled": 1
+        },
+        "freeCashFlow": {
+          "present": 35,
+          "missing": [],
+          "filled": 1
+        }
+      }
+    },
+    "salesforce": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "capex": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        },
+        "freeCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 14
+        }
+      }
+    },
+    "servicenow": {
+      "first": "2011Q1",
+      "last": "2026Q3",
+      "expected": 63,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 60,
+          "missing": [
+            "2011Q1",
+            "2011Q2",
+            "2011Q4"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 60,
+          "missing": [
+            "2011Q1",
+            "2011Q2",
+            "2011Q4"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 60,
+          "missing": [
+            "2011Q1",
+            "2011Q2",
+            "2011Q4"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "datadog": {
+      "first": "2017Q1",
+      "last": "2026Q2",
+      "expected": 38,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 33,
+          "missing": [
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q3"
+          ],
+          "filled": 2,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 33,
+          "missing": [
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q3"
+          ],
+          "filled": 2,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 33,
+          "missing": [
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4",
+            "2018Q3"
+          ],
+          "filled": 2,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "snowflake": {
+      "first": "2018Q4",
+      "last": "2026Q3",
+      "expected": 32,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 28,
+          "missing": [
+            "2018Q4",
+            "2019Q1",
+            "2019Q3",
+            "2019Q4"
+          ],
+          "filled": 1,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 28,
+          "missing": [
+            "2018Q4",
+            "2019Q1",
+            "2019Q3",
+            "2019Q4"
+          ],
+          "filled": 1,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 28,
+          "missing": [
+            "2018Q4",
+            "2019Q1",
+            "2019Q3",
+            "2019Q4"
+          ],
+          "filled": 1,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "cloudflare": {
+      "first": "2017Q1",
+      "last": "2026Q2",
+      "expected": 38,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 34,
+          "missing": [
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4"
+          ],
+          "filled": 3,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 34,
+          "missing": [
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4"
+          ],
+          "filled": 3,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 34,
+          "missing": [
+            "2017Q1",
+            "2017Q2",
+            "2017Q3",
+            "2017Q4"
+          ],
+          "filled": 3,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "adobe": {
+      "first": "2005Q1",
+      "last": "2026Q3",
+      "expected": 87,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 87,
+          "missing": [],
+          "filled": 17
+        },
+        "capex": {
+          "present": 72,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2",
+            "2008Q3"
+          ],
+          "filled": 2,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 72,
+          "missing": [
+            "2005Q1",
+            "2005Q2",
+            "2005Q3",
+            "2005Q4",
+            "2006Q1",
+            "2006Q2",
+            "2006Q3",
+            "2006Q4",
+            "2007Q1",
+            "2007Q2",
+            "2007Q3",
+            "2007Q4",
+            "2008Q1",
+            "2008Q2",
+            "2008Q3"
+          ],
+          "filled": 2,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "zoom": {
+      "first": "2018Q1",
+      "last": "2026Q3",
+      "expected": 35,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 34,
+          "missing": [
+            "2018Q1"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 34,
+          "missing": [
+            "2018Q1"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 34,
+          "missing": [
+            "2018Q1"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "coreweave": {
+      "first": "2023Q4",
+      "last": "2026Q2",
+      "expected": 11,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 11,
+          "missing": [],
+          "filled": 0
+        },
+        "capex": {
+          "present": 11,
+          "missing": [],
+          "filled": 0
+        },
+        "freeCashFlow": {
+          "present": 11,
+          "missing": [],
+          "filled": 0
+        }
+      }
+    },
+    "nebius": {
+      "first": "2024Q2",
+      "last": "2026Q2",
+      "expected": 9,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 8,
+          "missing": [
+            "2024Q2"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 8,
+          "missing": [
+            "2024Q2"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 8,
+          "missing": [
+            "2024Q2"
+          ],
+          "filled": 0,
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
+    },
+    "chronoscale": {
+      "first": "2024Q3",
+      "last": "2026Q3",
+      "expected": 9,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 6,
+          "missing": [
+            "2024Q3",
+            "2024Q4",
+            "2025Q1"
+          ],
+          "filled": 1,
+          "reason": "Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded."
+        },
+        "capex": {
+          "present": 6,
+          "missing": [
+            "2024Q3",
+            "2024Q4",
+            "2025Q1"
+          ],
+          "filled": 1,
+          "reason": "Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded."
+        },
+        "freeCashFlow": {
+          "present": 6,
+          "missing": [
+            "2024Q3",
+            "2024Q4",
+            "2025Q1"
+          ],
+          "filled": 1,
+          "reason": "Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded."
+        }
+      }
+    },
+    "sharonai": {
+      "first": "2024Q2",
+      "last": "2026Q2",
+      "expected": 9,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 9,
+          "missing": [],
+          "filled": 0
+        },
+        "capex": {
+          "present": 9,
+          "missing": [],
+          "filled": 1
+        },
+        "freeCashFlow": {
+          "present": 9,
+          "missing": [],
+          "filled": 1
+        }
+      }
+    },
+    "skhynix": {
+      "first": "2018Q1",
+      "last": "2026Q3",
+      "expected": 35,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 35,
+          "missing": [],
+          "filled": 18
+        },
+        "capex": {
+          "present": 35,
+          "missing": [],
+          "filled": 18
+        },
+        "freeCashFlow": {
+          "present": 35,
+          "missing": [],
+          "filled": 18
+        }
+      }
+    },
+    "spacex": {
+      "first": "2025Q1",
+      "last": "2026Q3",
+      "expected": 7,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 7,
+          "missing": [],
+          "filled": 0
+        },
+        "capex": {
+          "present": 7,
+          "missing": [],
+          "filled": 0
+        },
+        "freeCashFlow": {
+          "present": 7,
+          "missing": [],
+          "filled": 0
+        }
+      }
+    }
+  }
+}

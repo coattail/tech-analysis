@@ -20,6 +20,7 @@
 
 ## 功能特性
 
+- 指标按钮保持单行，窄屏支持横向滚动；各分类公司按最新美元市值降序排列，市值随每日任务更新
 - 多指标切换：营收、营业利润、净利润、经营现金流、CapEx、自由现金流、毛利率、P/E、ROE、营收同比增速、利润同比增速
 - 多时间粒度：季度、年度、滚动年度（TTM）
 - 多公司对比：支持单独显隐、全部显示、全部隐藏
@@ -66,7 +67,9 @@ SK 海力士归入半导体，财务历史覆盖 2018Q1–2026Q3；韩元流量�
 营业利润自公司上市季度开始连续覆盖，最早追溯至 2005Q1。2012 年前后缺少直接单季值的区间，使用相邻 TTM 营业利润与已知单季值按
 `Q[t-4] = Q[t] - (TTM[t] - TTM[t-1])` 反推；由于历史 TTM 来源以十亿美元、两位小数发布，早期反推值精确到百万美元。银行采用数据源统一展示的营业利润口径，以保证 JPMorgan Chase 与 Bank of America 也能连续比较。
 
-现金流历史优先采用 SEC CompanyFacts，年内累计值按同一财年相邻累计期差分为单季，StockAnalysis 季度现金流量表补充缺口；非美元金额按季度平均汇率换算。逐点来源与覆盖区间保存在 `data/cash-flow-history.json`。CapEx 不包含企业收购和非现金融资租赁，数据商与 SEC 对部分项目的分类可能存在差异。未单独披露可比 CapEx 的银行保留空值，其自由现金流也为空；缺失数据不按零处理。
+现金流历史优先采用 SEC CompanyFacts 与公司财报，年内累计值按同一财年相邻累计期差分为单季，StockAnalysis 季度表与经重叠季度校验的 WallStreetNumbers 历史表补充缺口。主要来源的非美元金额按季度平均汇率换算；补充历史保留数据商的美元换算与公布精度。CapEx 包含现金购建固定资产及单独披露的资本化软件、无形资产支出，不包含企业收购和非现金融资租赁；来源分类仍可能存在差异。
+
+逐点来源保存在 `data/cash-flow-history.json`，经验证的补充历史在 `data/cash-flow-supplemental.json`，每家公司的逐季度缺口和原因在 `data/cash-flow-coverage.json`。本次历史回补新增 2,518 个季度指标值（经营现金流 876、CapEx 743、自由现金流 899）。未披露可比 CapEx 的银行、无法核实的早期季度及尚未披露的最新季度继续保留空值，不以零或年均值填充。ChronoScale 仅采用云业务拆分财报，排除同一 CIK 下旧 Ekso 业务的数据。
 
 SpaceX 使用合并口径，包含 Space、Connectivity 和 AI/SI 业务，官方 SEC 披露优先于数据商的调整值。
 
@@ -154,6 +157,12 @@ node scripts/auto-refresh-data.mjs
 # 更新所有公司的现金流（自动工作流也会执行）
 node scripts/auto-refresh-cash-flow.mjs
 node scripts/auto-refresh-cash-flow.mjs --dry-run --company spcx
+
+# 更新各公司美元市值，用于分类内排序
+node scripts/auto-refresh-market-caps.mjs
+
+# 重新应用已验证的补充历史与官方修正，并输出覆盖检查
+node scripts/backfill-cash-flow-history.mjs
 
 # 仅预览，不写回文件
 node scripts/auto-refresh-data.mjs --dry-run

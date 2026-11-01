@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
+import { HISTORICAL_CIKS, buildCoverage } from "./cash-flow-history.mjs";
 import {
   COMPANY_SOURCES, parseDataJs, formatDataJs, fetchSecQuarterlyHistory,
   convertSecHistoryRowsToUsd, extractFinancialCurrency, parseStringArray,
@@ -36,19 +37,31 @@ export function extractCashFlowRows(html) {
   });
 }
 
-export function applyCashFlowRows(company, rows, { source, minPeriod, periods, provenance = {} }) {
+export function applyCashFlowRows(company, rows, { source, minPeriod, periods, provenance = {}, fillMissing = false }) {
   for (const metric of METRICS) company[metric] ??= {};
   company.forecastFlags ??= {};
   for (const row of rows) {
+    if (row.exclude) {
+      for (const metric of METRICS) company[metric][row.period] = null;
+      delete provenance[row.period];
+      continue;
+    }
     if (!periods.has(row.period) || (minPeriod && row.period < minPeriod)) continue;
     // SEC fields must describe the same reporting period before deriving FCF.
-    if (row.cashFlowEndDate && row.capexEndDate && row.cashFlowEndDate !== row.capexEndDate) continue;
     for (const metric of ["operatingCashFlow", "capex"]) {
       const value = row[metric];
-      if (!Number.isFinite(value)) continue;
+      if (!Number.isFinite(value) || (fillMissing && Number.isFinite(company[metric][row.period]))) continue;
       company[metric][row.period] = value;
       provenance[row.period] ??= {};
-      provenance[row.period][metric] = { source, periodEnd: row.dateKey, method: row.method ?? "reported-quarter" };
+      const detail = row.cashFlowDetails?.[metric];
+      provenance[row.period][metric] = { source, periodEnd: detail?.endDate ?? row.dateKey,
+        method: detail?.method ?? row.method ?? "reported-quarter",
+        ...(detail ? { concept: detail.concept, startDate: detail.startDate, filed: detail.filed,
+          accession: detail.accession, nativeCurrency: detail.currency, nativeValue: detail.value, basis: detail.basis } : {}),
+        ...(row.precision != null ? { precision: row.precision, periodEndPrecision: 'month' } : {}),
+        ...(row.basis ? { basis: row.basis } : {}),
+        ...(row.supportingSources ? { supportingSources: row.supportingSources } : {}),
+      };
     }
   }
   for (const period of periods) {
@@ -56,7 +69,9 @@ export function applyCashFlowRows(company, rows, { source, minPeriod, periods, p
     const capex = company.capex[period];
     const dates = provenance[period];
     const samePeriod = !dates?.operatingCashFlow || !dates?.capex
-      || dates.operatingCashFlow.periodEnd === dates.capex.periodEnd;
+      || dates.operatingCashFlow.periodEnd === dates.capex.periodEnd
+      || ((dates.operatingCashFlow.periodEndPrecision === 'month' || dates.capex.periodEndPrecision === 'month')
+        && Math.abs(Date.parse(dates.operatingCashFlow.periodEnd) - Date.parse(dates.capex.periodEnd)) <= 7 * 86400000);
     company.freeCashFlow[period] = Number.isFinite(ocf) && Number.isFinite(capex) && samePeriod ? ocf - capex : null;
     for (const metric of METRICS) company[metric][period] ??= null;
   }
@@ -86,6 +101,9 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
   let history;
   try { history = JSON.parse(await readFile(HISTORY_PATH, "utf8")); }
   catch (error) { if (error.code !== "ENOENT") throw error; history = { companies: {} }; }
+  let supplemental;
+  try { supplemental = JSON.parse(await readFile(new URL("../data/cash-flow-supplemental.json", import.meta.url), "utf8")); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; supplemental = { companies: {} }; }
   const overrides = JSON.parse(await readFile(new URL("../data/cash-flow-overrides.json", import.meta.url), "utf8"));
   const periods = new Set(data.periods);
   const selected = COMPANY_SOURCES.filter(c => !companyIds || companyIds.has(c.id));
@@ -93,6 +111,9 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
   for (const company of selected) {
     const target = data.companies[company.id] ??= {};
     const record = history.companies[company.id] ??= { points: {} };
+    for (const row of supplemental.companies[company.id]?.rows ?? []) {
+      applyCashFlowRows(target, [row], { source: row.source, periods, minPeriod: company.minPeriod, provenance: record.points, fillMissing: true });
+    }
     const errors = [];
     let fetched = 0;
     // Provider backfills recent quarters; SEC replaces them with primary facts where available.
@@ -104,12 +125,14 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
     } catch (error) { errors.push(`StockAnalysis: ${error.message}`); }
     if (!stockAnalysisOnly) {
       try {
-        const sec = await fetchSecQuarterlyHistory(company);
+        for (const cik of [...(HISTORICAL_CIKS[company.id] ?? []), null]) {
+        const sec = await fetchSecQuarterlyHistory({ ...company, ...(cik ? { cik } : {}), ...(company.id === "chronoscale" ? { cashFlowPeriodEndDates: target.periodEndDates } : {}) });
         if (sec?.rows?.length) {
           let rows = sec.rows;
           if (sec.reportingCurrency !== "USD") rows = (await convertSecHistoryRowsToUsd(rows, sec.reportingCurrency))?.rows ?? [];
           applyCashFlowRows(target, rows, { source: `https://data.sec.gov/api/xbrl/companyfacts/CIK${String(sec.cik).padStart(10, "0")}.json`, periods, minPeriod: company.minPeriod, provenance: record.points });
           fetched += rows.filter(r => Number.isFinite(r.operatingCashFlow)).length;
+        }
         }
       } catch (error) { errors.push(`SEC: ${error.message}`); }
     }
@@ -124,7 +147,7 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
     if (!fetched && (!secOnly || !Object.values(record.coverage).some(c => c.count > 0))) failures.push(company.id);
     console.log(`${company.ticker}: OCF ${record.coverage.operatingCashFlow.count}, CapEx ${record.coverage.capex.count}, FCF ${record.coverage.freeCashFlow.count}${errors.length ? ` (${errors.join("; ")})` : ""}`);
   }
-  history.definition = { secQuarterMethod: "Direct quarterly facts or differences of cumulative facts with the same fiscal start; zero differences retained", fxMethod: "Non-USD cash flows converted at the reporting quarter average FX rate", currency: "USD", periodicity: "quarterly", capex: "Cash payments for property, plant and equipment / provider capital expenditure, positive spending; excludes acquisitions and financing leases", freeCashFlow: "operatingCashFlow - capex", missing: "null; annual and TTM require four complete quarters" };
+  history.definition = { secQuarterMethod: "Direct quarterly facts or differences of cumulative facts with the same fiscal start; zero differences retained", fxMethod: "Primary non-USD facts use quarterly average FX; published historical supplements retain source USD conversion", currency: "USD", periodicity: "quarterly", capex: "Cash capital spending on property, plant, equipment and disclosed capitalized software/intangibles; positive spending; excludes business acquisitions and noncash financing leases; provider classifications may differ", freeCashFlow: "operatingCashFlow - capex", missing: "null; annual and TTM require four complete quarters" };
   return { history, failures };
 }
 
@@ -145,7 +168,9 @@ async function run() {
     data.meta.generatedAt = new Date().toISOString();
     await writeFile(DATA_PATH, formatDataJs(data));
   }
+  const coverage = buildCoverage(data, result.history);
   await writeFile(HISTORY_PATH, `${JSON.stringify(result.history, null, 2)}\n`);
+  await writeFile(new URL("../data/cash-flow-coverage.json", import.meta.url), `${JSON.stringify(coverage, null, 2)}\n`);
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) run().catch(error => {
   console.error(error.message); process.exitCode = 1;

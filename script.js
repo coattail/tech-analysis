@@ -353,8 +353,7 @@ function getCompanyName(company) {
 
 const COMPANY_META = new Map(COMPANIES.map((company) => [company.id, company]));
 const COMPANY_CATEGORIES = [
-  // Descending market cap, verified 2026-10-27 (2026-10-26 US session):
-  // https://wallstreetnumbers.com/watchlists/magnificent7
+  // Display order inside every group is computed from refreshed USD market caps.
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "apple", "microsoft", "alphabet", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"], labelEn: "Software" },
   { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai", "spacex"], labelEn: "Cloud" },
@@ -3767,9 +3766,10 @@ function setupTogglePanel(query = "") {
   const normalizedQuery = query.trim().toLocaleLowerCase(currentLanguage === "en" ? "en-US" : "zh-CN");
 
   COMPANY_CATEGORIES.forEach((category) => {
-    const companies = category.companyIds
-      .map((companyId) => COMPANY_META.get(companyId))
-      .filter(Boolean)
+    const companies = window.CompanySelectionUtils.sortCompaniesByMarketCap(
+      category.companyIds.map((companyId) => COMPANY_META.get(companyId)).filter(Boolean),
+      sourceData.meta?.marketCaps,
+    )
       .filter((company) => !normalizedQuery || [
         company.id,
         company.name,

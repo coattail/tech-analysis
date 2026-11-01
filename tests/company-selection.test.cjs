@@ -304,3 +304,11 @@ test('falls back to the full available span when selected companies have no shar
     { hasData: true, start: 2, end: 4 },
   );
 });
+
+test('sorts each company group by market cap while keeping unknown values last and ties stable', () => {
+  const {sortCompaniesByMarketCap}=require('../company-selection.js');
+  const companies=[{id:'small'},{id:'unknown'},{id:'large'},{id:'tie'}];
+  const caps={small:{value:10},large:{value:100},tie:{value:10}};
+  assert.deepEqual(sortCompaniesByMarketCap(companies,caps).map(c=>c.id),['large','small','tie','unknown']);
+  assert.deepEqual(companies.map(c=>c.id),['small','unknown','large','tie']);
+});

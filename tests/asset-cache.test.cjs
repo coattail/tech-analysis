@@ -6,12 +6,12 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after tightening the chart header", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20260830-chart-header-gap/);
+  assert.match(html, /style\.css\?v=20261101-single-row-cash-history/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const expectedVersion = "20260827-latest-any-range";
+  const expectedVersion = "20261101-single-row-cash-history";
 
   for (const asset of ["company-selection.js"]) {
     assert.match(
@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20261101-cash-flow"],
+    ["data.js", "20261101-single-row-cash-history"],
     ["price-data.js", "20261101-cash-flow"],
   ]) {
     assert.match(
@@ -61,7 +61,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20261101-cash-flow"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261101-cash-flow"],
+    ["script.js", "20261101-single-row-cash-history"],
   ]) {
     assert.match(
       html,
@@ -75,7 +75,7 @@ test("publishes every local script referenced by the page", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const workflow = fs.readFileSync(path.join(__dirname, "..", ".github/workflows/pages.yml"), "utf8");
   const localScripts = [...html.matchAll(/<script defer src="([^":]+?\.js)\?v=/g)]
-    .map((match) => match[1])
+    .map((match) => match[1].replace(/^\.\//, ""))
     .filter((asset) => !asset.startsWith("http"));
 
   for (const script of localScripts) {

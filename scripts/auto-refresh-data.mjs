@@ -3,6 +3,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
+import { buildCashFlowFacts } from "./cash-flow-history.mjs";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -1905,7 +1906,7 @@ function selectSecReportingCurrency(companyfacts) {
   })[0][0];
 }
 
-function collectSecFieldSeries(companyfacts, reportingCurrency) {
+function collectSecFieldSeries(companyfacts, reportingCurrency, cashFlowOptions = {}) {
   const factsPayload = companyfacts?.facts;
   if (!factsPayload || typeof factsPayload !== "object") return {};
 
@@ -1968,12 +1969,14 @@ function collectSecFieldSeries(companyfacts, reportingCurrency) {
     }
   });
 
+  const cashFlows = buildCashFlowFacts(companyfacts, reportingCurrency, { allowNetCapex: [70858, 59478].includes(Number(companyfacts.cik)), normalizeNetCapexSign: Number(companyfacts.cik) === 59478, ...cashFlowOptions });
+  Object.assign(fieldSeries, cashFlows);
   return fieldSeries;
 }
 
 async function fetchSecQuarterlyHistory(companySource) {
-  const secTickerMap = await getSecTickerMap();
-  const cik = secTickerMap.get(normalizeTickerForSec(companySource.ticker));
+  const secTickerMap = companySource.cik ? null : await getSecTickerMap();
+  const cik = companySource.cik ?? secTickerMap.get(normalizeTickerForSec(companySource.ticker));
   if (!Number.isFinite(cik)) {
     return null;
   }
@@ -1988,7 +1991,7 @@ async function fetchSecQuarterlyHistory(companySource) {
     return null;
   }
 
-  const fieldSeries = collectSecFieldSeries(companyfacts, reportingCurrency);
+  const fieldSeries = collectSecFieldSeries(companyfacts, reportingCurrency, { periodEndDates: companySource.cashFlowPeriodEndDates ?? {} });
   const quarterSet = new Set();
   Object.values(fieldSeries).forEach((series) => {
     if (!(series instanceof Map)) return;
@@ -2038,6 +2041,7 @@ async function fetchSecQuarterlyHistory(companySource) {
         operatingCashFlow: fieldSeries.operatingCashFlow?.get(period)?.value ?? null,
         capex: fieldSeries.capex?.get(period)?.value ?? null,
         cashFlowEndDate: fieldSeries.operatingCashFlow?.get(period)?.endDate ?? null,
+        cashFlowDetails: { operatingCashFlow: fieldSeries.operatingCashFlow?.get(period), capex: fieldSeries.capex?.get(period) },
         capexEndDate: fieldSeries.capex?.get(period)?.endDate ?? null,
         grossProfit: grossProfitValue,
         netAssets: netAssetsFact?.value ?? null,

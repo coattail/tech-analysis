@@ -29,7 +29,7 @@ test("uses compact mobile controls and a bounded chart canvas", () => {
   assert.match(mobileCss, /\.chart-side-tools\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(mobileCss, /\.chart-summary\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /#generatedAtLabel\s*\{[^}]*font-size:\s*clamp\(0\.64rem, 1\.05vw, 0\.78rem\)[^}]*white-space:\s*nowrap/);
-  assert.match(mobileCss, /\.metric-toolbar\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.metric-toolbar\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*nowrap[^}]*overflow-x:\s*auto/);
   assert.match(css, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*660px/);
   assert.match(stackedCss, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*560px/);
   assert.match(mobileCss, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*clamp\(390px, 118vw, 510px\)/);
@@ -41,7 +41,7 @@ test("keeps metric labels on one responsive line", () => {
   assert.match(css, /\.metric-toolbar\s*\{[^}]*container-type:\s*inline-size/);
   assert.match(
     css,
-    /\.metric-pill span\s*\{[^}]*font-size:\s*clamp\(0\.68rem, 1\.5cqi, 0\.88rem\)[^}]*white-space:\s*nowrap[^}]*overflow-wrap:\s*normal[^}]*word-break:\s*normal/,
+    /\.metric-pill span\s*\{[^}]*font-size:\s*clamp\(0\.68rem, 1\.25cqi, 0\.88rem\)[^}]*white-space:\s*nowrap[^}]*overflow-wrap:\s*normal[^}]*word-break:\s*normal/,
   );
   assert.match(
     css,
@@ -60,7 +60,7 @@ test("keeps metric labels on one responsive line", () => {
 test("keeps landscape tablet columns inside the available width", () => {
   assert.match(landscapeTabletCss, /\.content-panel\s*\{[^}]*grid-template-columns:\s*minmax\(286px, 310px\) minmax\(0, 1fr\)/);
   assert.match(landscapeTabletCss, /\.chart-head\s*\{[^}]*flex-direction:\s*column/);
-  assert.match(landscapeTabletCss, /\.metric-toolbar\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
+  assert.doesNotMatch(css, /\.metric-toolbar\s*\{[^}]*grid-template-columns/);
 });
 
 test("uses the tablet width to place settings beside the company picker", () => {
