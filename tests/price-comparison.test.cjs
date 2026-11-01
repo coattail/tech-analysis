@@ -123,6 +123,24 @@ test("shows price comparison only for one visible company in financial bar mode"
 });
 
 
+test("cash-flow price overlays require one company, bars and available daily prices", () => {
+  for (const metric of ["operatingCashFlow", "freeCashFlow"]) {
+    const context = { visibleCompanyCount: 1, chartMode: "bar", metric };
+    assert.equal(canShowPriceComparison(context), true);
+    assert.equal(normalizePriceComparisonEnabled({ ...context, enabled: true, hasDailyPrices: true }), true);
+    assert.equal(shouldResetPriceComparison({ ...context, enabled: true }), false);
+    assert.equal(normalizePriceComparisonEnabled({ ...context, enabled: true, hasDailyPrices: false }), false);
+    assert.equal(normalizePriceComparisonEnabled({ ...context, enabled: false, hasDailyPrices: true }), false);
+    for (const invalid of [{ visibleCompanyCount: 0 }, { visibleCompanyCount: 2 }, { chartMode: "line" }]) {
+      const view = { ...context, ...invalid };
+      assert.equal(canShowPriceComparison(view), false);
+      assert.equal(normalizePriceComparisonEnabled({ ...view, enabled: true, hasDailyPrices: true }), false);
+      assert.equal(shouldResetPriceComparison({ ...view, enabled: true }), true);
+    }
+  }
+  assert.equal(canShowPriceComparison({ visibleCompanyCount: 1, chartMode: "bar", metric: "capex" }), false);
+});
+
 test("normalizes price comparison before chart data is rebuilt", () => {
   assert.equal(
     normalizePriceComparisonEnabled({

@@ -26,7 +26,7 @@ The project focuses on three things:
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
 - Hybrid comparison colors: MAG7 keeps representative fixed colors while focused peers dynamically avoid the active comparison colors
 - Enhanced one/two-company mode: switch between line and bar charts; two-company bars are grouped side by side by quarter
-- Single-company stock-price comparison for revenue, operating-income, and net-income bar charts
+- Single-company stock-price comparison for revenue, operating income, net income, operating cash flow, and free cash flow bar charts
 - Single-company growth overlay: add a white year-over-year growth line with a right-side percentage axis to revenue/net-income bars; mutually exclusive with the price overlay
 - Time-range filtering via dual-handle slider
 - Adaptive y-axis bounds based on the currently visible data
