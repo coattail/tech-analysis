@@ -8,18 +8,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -30,18 +27,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -52,18 +46,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -74,18 +65,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -102,7 +90,6 @@
             "2010Q3",
             "2010Q4"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
@@ -113,7 +100,6 @@
             "2010Q3",
             "2010Q4"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
@@ -124,7 +110,6 @@
             "2010Q3",
             "2010Q4"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
       }
@@ -136,18 +121,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -158,18 +140,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -180,18 +159,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 68,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 68,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 68,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -202,18 +178,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 67,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 67,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 67,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -224,18 +197,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -246,18 +216,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -268,8 +235,7 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 14
+          "missing": []
         },
         "capex": {
           "present": 0,
@@ -361,7 +327,6 @@
             "2026Q1",
             "2026Q2"
           ],
-          "filled": 0,
           "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
         },
         "freeCashFlow": {
@@ -454,7 +419,6 @@
             "2026Q1",
             "2026Q2"
           ],
-          "filled": 0,
           "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
         }
       }
@@ -466,18 +430,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 14
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 14
+          "missing": []
         }
       }
     },
@@ -488,18 +449,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -510,18 +468,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 80,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 80,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 80,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -532,18 +487,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 2
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 2
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 2
+          "missing": []
         }
       }
     },
@@ -554,18 +506,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -576,18 +525,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -598,18 +544,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -620,18 +563,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -642,18 +582,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -664,18 +601,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -686,18 +620,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 13
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 13
+          "missing": []
         }
       }
     },
@@ -708,8 +639,7 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 86,
-          "missing": [],
-          "filled": 14
+          "missing": []
         },
         "capex": {
           "present": 43,
@@ -758,7 +688,6 @@
             "2026Q1",
             "2026Q2"
           ],
-          "filled": 0,
           "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
         },
         "freeCashFlow": {
@@ -808,7 +737,6 @@
             "2026Q1",
             "2026Q2"
           ],
-          "filled": 14,
           "reason": "Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected."
         }
       }
@@ -820,18 +748,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 14
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 14
+          "missing": []
         }
       }
     },
@@ -842,18 +767,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 12
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 12
+          "missing": []
         }
       }
     },
@@ -868,7 +790,6 @@
             "2019Q1",
             "2019Q2"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
@@ -877,7 +798,6 @@
             "2019Q1",
             "2019Q2"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
@@ -886,7 +806,6 @@
             "2019Q1",
             "2019Q2"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
       }
@@ -898,18 +817,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -923,7 +839,6 @@
           "missing": [
             "2026Q3"
           ],
-          "filled": 0,
           "reason": "Latest earnings release does not include these cash-flow figures; the corresponding quarterly cash-flow filing is not yet available."
         },
         "capex": {
@@ -931,7 +846,6 @@
           "missing": [
             "2026Q3"
           ],
-          "filled": 0,
           "reason": "Latest earnings release does not include these cash-flow figures; the corresponding quarterly cash-flow filing is not yet available."
         },
         "freeCashFlow": {
@@ -939,7 +853,6 @@
           "missing": [
             "2026Q3"
           ],
-          "filled": 0,
           "reason": "Latest earnings release does not include these cash-flow figures; the corresponding quarterly cash-flow filing is not yet available."
         }
       }
@@ -951,18 +864,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -973,18 +883,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -995,18 +902,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 2
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 2
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 2
+          "missing": []
         }
       }
     },
@@ -1017,18 +921,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 35,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 35,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 35,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -1039,18 +940,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -1061,18 +959,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 63,
-          "missing": [],
-          "filled": 3
+          "missing": []
         },
         "capex": {
           "present": 63,
-          "missing": [],
-          "filled": 3
+          "missing": []
         },
         "freeCashFlow": {
           "present": 63,
-          "missing": [],
-          "filled": 3
+          "missing": []
         }
       }
     },
@@ -1089,7 +984,6 @@
             "2017Q3",
             "2017Q4"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
@@ -1100,7 +994,6 @@
             "2017Q3",
             "2017Q4"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
@@ -1111,7 +1004,6 @@
             "2017Q3",
             "2017Q4"
           ],
-          "filled": 1,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
       }
@@ -1127,7 +1019,6 @@
             "2018Q4",
             "2019Q1"
           ],
-          "filled": 2,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
@@ -1136,7 +1027,6 @@
             "2018Q4",
             "2019Q1"
           ],
-          "filled": 2,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
@@ -1145,7 +1035,6 @@
             "2018Q4",
             "2019Q1"
           ],
-          "filled": 2,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
       }
@@ -1163,7 +1052,6 @@
             "2017Q3",
             "2017Q4"
           ],
-          "filled": 0,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
@@ -1174,7 +1062,6 @@
             "2017Q3",
             "2017Q4"
           ],
-          "filled": 0,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
@@ -1185,7 +1072,6 @@
             "2017Q3",
             "2017Q4"
           ],
-          "filled": 0,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
       }
@@ -1197,18 +1083,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 87,
-          "missing": [],
-          "filled": 15
+          "missing": []
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": [],
-          "filled": 15
+          "missing": []
         }
       }
     },
@@ -1222,7 +1105,6 @@
           "missing": [
             "2018Q1"
           ],
-          "filled": 0,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
@@ -1230,7 +1112,6 @@
           "missing": [
             "2018Q1"
           ],
-          "filled": 0,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
@@ -1238,7 +1119,6 @@
           "missing": [
             "2018Q1"
           ],
-          "filled": 0,
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
       }
@@ -1250,18 +1130,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 11,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 11,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 11,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -1275,7 +1152,6 @@
           "missing": [
             "2024Q2"
           ],
-          "filled": 0,
           "reason": "Standalone continuing-business cash flows for the first post-Yandex carve-out quarter are not separately disclosed."
         },
         "capex": {
@@ -1283,7 +1159,6 @@
           "missing": [
             "2024Q2"
           ],
-          "filled": 0,
           "reason": "Standalone continuing-business cash flows for the first post-Yandex carve-out quarter are not separately disclosed."
         },
         "freeCashFlow": {
@@ -1291,7 +1166,6 @@
           "missing": [
             "2024Q2"
           ],
-          "filled": 0,
           "reason": "Standalone continuing-business cash flows for the first post-Yandex carve-out quarter are not separately disclosed."
         }
       }
@@ -1308,7 +1182,6 @@
             "2024Q4",
             "2025Q1"
           ],
-          "filled": 0,
           "reason": "Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded."
         },
         "capex": {
@@ -1318,7 +1191,6 @@
             "2024Q4",
             "2025Q1"
           ],
-          "filled": 0,
           "reason": "Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded."
         },
         "freeCashFlow": {
@@ -1328,7 +1200,6 @@
             "2024Q4",
             "2025Q1"
           ],
-          "filled": 0,
           "reason": "Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded."
         }
       }
@@ -1340,18 +1211,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 9,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 9,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 9,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -1362,18 +1230,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 35,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 35,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 35,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     },
@@ -1384,18 +1249,15 @@
       "metrics": {
         "operatingCashFlow": {
           "present": 7,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "capex": {
           "present": 7,
-          "missing": [],
-          "filled": 0
+          "missing": []
         },
         "freeCashFlow": {
           "present": 7,
-          "missing": [],
-          "filled": 0
+          "missing": []
         }
       }
     }

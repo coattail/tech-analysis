@@ -513,7 +513,8 @@
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nvda/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-10-30"
+            "periodEnd": "2022-10-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q3": {
@@ -531,7 +532,8 @@
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nvda/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-07-31"
+            "periodEnd": "2022-07-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q2": {
@@ -549,7 +551,8 @@
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nvda/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-05-01"
+            "periodEnd": "2022-05-01",
+            "method": "reported-quarter"
           }
         },
         "2022Q1": {
@@ -14555,201 +14558,241 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-09-30"
+            "periodEnd": "2023-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-09-30"
+            "periodEnd": "2023-09-30",
+            "method": "reported-quarter"
           }
         },
         "2023Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-06-30"
+            "periodEnd": "2023-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-06-30"
+            "periodEnd": "2023-06-30",
+            "method": "reported-quarter"
           }
         },
         "2023Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-03-31"
+            "periodEnd": "2023-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-03-31"
+            "periodEnd": "2023-03-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-12-31"
+            "periodEnd": "2022-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-12-31"
+            "periodEnd": "2022-12-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-09-30"
+            "periodEnd": "2022-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-09-30"
+            "periodEnd": "2022-09-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-06-30"
+            "periodEnd": "2022-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-06-30"
+            "periodEnd": "2022-06-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-03-31"
+            "periodEnd": "2022-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-03-31"
+            "periodEnd": "2022-03-31",
+            "method": "reported-quarter"
           }
         },
         "2021Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2021-12-31"
+            "periodEnd": "2021-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/tsm/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2021-12-31"
+            "periodEnd": "2021-12-31",
+            "method": "reported-quarter"
           }
         },
         "2021Q3": {
@@ -23308,7 +23351,8 @@
           "first": null,
           "last": null
         }
-      }
+      },
+      "reportingCurrency": "USD"
     },
     "lilly": {
       "points": {
@@ -25580,21 +25624,25 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/xom/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/xom/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/xom/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/xom/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
@@ -27740,21 +27788,25 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
@@ -29740,201 +29792,241 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-27"
+            "periodEnd": "2026-09-27",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-27"
+            "periodEnd": "2026-09-27",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-28"
+            "periodEnd": "2026-06-28",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-28"
+            "periodEnd": "2026-06-28",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-29"
+            "periodEnd": "2026-03-29",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-29"
+            "periodEnd": "2026-03-29",
+            "method": "reported-quarter"
           }
         },
         "2025Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-28"
+            "periodEnd": "2025-09-28",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-28"
+            "periodEnd": "2025-09-28",
+            "method": "reported-quarter"
           }
         },
         "2025Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-29"
+            "periodEnd": "2025-06-29",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-29"
+            "periodEnd": "2025-06-29",
+            "method": "reported-quarter"
           }
         },
         "2025Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-30"
+            "periodEnd": "2025-03-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-30"
+            "periodEnd": "2025-03-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-29"
+            "periodEnd": "2024-09-29",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-29"
+            "periodEnd": "2024-09-29",
+            "method": "reported-quarter"
           }
         },
         "2024Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-10-01"
+            "periodEnd": "2023-10-01",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-10-01"
+            "periodEnd": "2023-10-01",
+            "method": "reported-quarter"
           }
         },
         "2023Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-07-02"
+            "periodEnd": "2023-07-02",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-07-02"
+            "periodEnd": "2023-07-02",
+            "method": "reported-quarter"
           }
         },
         "2023Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-04-02"
+            "periodEnd": "2023-04-02",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-04-02"
+            "periodEnd": "2023-04-02",
+            "method": "reported-quarter"
           }
         },
         "2022Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-12-31"
+            "periodEnd": "2022-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-12-31"
+            "periodEnd": "2022-12-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-10-02"
+            "periodEnd": "2022-10-02",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-10-02"
+            "periodEnd": "2022-10-02",
+            "method": "reported-quarter"
           }
         },
         "2022Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-07-03"
+            "periodEnd": "2022-07-03",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-07-03"
+            "periodEnd": "2022-07-03",
+            "method": "reported-quarter"
           }
         },
         "2022Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-04-03"
+            "periodEnd": "2022-04-03",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-04-03"
+            "periodEnd": "2022-04-03",
+            "method": "reported-quarter"
           }
         },
         "2021Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2021-12-31"
+            "periodEnd": "2021-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/asml/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2021-12-31"
+            "periodEnd": "2021-12-31",
+            "method": "reported-quarter"
           }
         },
         "2021Q3": {
@@ -31154,171 +31246,205 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-09-30"
+            "periodEnd": "2023-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-09-30"
+            "periodEnd": "2023-09-30",
+            "method": "reported-quarter"
           }
         },
         "2023Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-06-30"
+            "periodEnd": "2023-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-06-30"
+            "periodEnd": "2023-06-30",
+            "method": "reported-quarter"
           }
         },
         "2023Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-03-31"
+            "periodEnd": "2023-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-03-31"
+            "periodEnd": "2023-03-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-09-30"
+            "periodEnd": "2022-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-09-30"
+            "periodEnd": "2022-09-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-06-30"
+            "periodEnd": "2022-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-06-30"
+            "periodEnd": "2022-06-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-03-31"
+            "periodEnd": "2022-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/skhy/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-03-31"
+            "periodEnd": "2022-03-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q4": {
@@ -49251,18 +49377,21 @@
           "first": "2005Q1",
           "last": "2015Q3"
         }
-      }
+      },
+      "reportingCurrency": "USD"
     },
     "caterpillar": {
       "points": {
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/cat/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/cat/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
@@ -51507,11 +51636,13 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/cvx/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/cvx/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
@@ -62641,201 +62772,241 @@
         "2026Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-09-30"
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           }
         },
         "2023Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-09-30"
+            "periodEnd": "2023-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-09-30"
+            "periodEnd": "2023-09-30",
+            "method": "reported-quarter"
           }
         },
         "2023Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-06-30"
+            "periodEnd": "2023-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-06-30"
+            "periodEnd": "2023-06-30",
+            "method": "reported-quarter"
           }
         },
         "2023Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-03-31"
+            "periodEnd": "2023-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-03-31"
+            "periodEnd": "2023-03-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-12-31"
+            "periodEnd": "2022-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-12-31"
+            "periodEnd": "2022-12-31",
+            "method": "reported-quarter"
           }
         },
         "2022Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-09-30"
+            "periodEnd": "2022-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-09-30"
+            "periodEnd": "2022-09-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-06-30"
+            "periodEnd": "2022-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-06-30"
+            "periodEnd": "2022-06-30",
+            "method": "reported-quarter"
           }
         },
         "2022Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-03-31"
+            "periodEnd": "2022-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2022-03-31"
+            "periodEnd": "2022-03-31",
+            "method": "reported-quarter"
           }
         },
         "2021Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2021-12-31"
+            "periodEnd": "2021-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/sap/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2021-12-31"
+            "periodEnd": "2021-12-31",
+            "method": "reported-quarter"
           }
         },
         "2021Q3": {
@@ -74725,11 +74896,13 @@
         "2023Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/crwv/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/crwv/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2023-12-31"
+            "periodEnd": "2023-12-31",
+            "method": "reported-quarter"
           }
         }
       },
@@ -74757,81 +74930,97 @@
         "2026Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-06-30"
+            "periodEnd": "2026-06-30",
+            "method": "reported-quarter"
           }
         },
         "2026Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2026-03-31"
+            "periodEnd": "2026-03-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-06-30"
+            "periodEnd": "2025-06-30",
+            "method": "reported-quarter"
           }
         },
         "2025Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-03-31"
+            "periodEnd": "2025-03-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/nbis/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           }
         }
       },
@@ -75005,17 +75194,20 @@
         "2025Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-12-31"
+            "periodEnd": "2025-12-31",
+            "method": "reported-quarter"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2025-09-30"
+            "periodEnd": "2025-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://www.sec.gov/Archives/edgar/data/2068385/000182912625010236/sharonaiholdings_ex99-1.htm",
@@ -75078,41 +75270,49 @@
         "2024Q4": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-12-31"
+            "periodEnd": "2024-12-31",
+            "method": "reported-quarter"
           }
         },
         "2024Q3": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-09-30"
+            "periodEnd": "2024-09-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q2": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-06-30"
+            "periodEnd": "2024-06-30",
+            "method": "reported-quarter"
           }
         },
         "2024Q1": {
           "operatingCashFlow": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           },
           "capex": {
             "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
-            "periodEnd": "2024-03-31"
+            "periodEnd": "2024-03-31",
+            "method": "reported-quarter"
           }
         }
       },
@@ -75137,13 +75337,12 @@
     }
   },
   "definition": {
-    "currency": "USD",
-    "periodicity": "quarterly",
-    "capex": "Cash property/equipment spending plus separately disclosed capitalized software/intangibles; positive spending; excludes acquisitions and noncash leases; provider classifications may differ",
-    "freeCashFlow": "operatingCashFlow - capex",
-    "missing": "null; annual and TTM require four complete quarters",
     "secQuarterMethod": "Direct quarterly facts or differences of cumulative facts with the same fiscal start; zero differences retained",
     "fxMethod": "Primary non-USD facts use quarterly average FX; published historical supplements retain source USD conversion",
-    "supplemental": "Historical supplemental quarters retain published precision, with SEC facts preferred and no annual-average interpolation."
+    "currency": "USD",
+    "periodicity": "quarterly",
+    "capex": "Cash capital spending on property, plant, equipment and disclosed capitalized software/intangibles; positive spending; excludes business acquisitions and noncash financing leases; provider classifications may differ",
+    "freeCashFlow": "operatingCashFlow - capex",
+    "missing": "null; annual and TTM require four complete quarters"
   }
 }
