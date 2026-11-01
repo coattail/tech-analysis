@@ -2705,6 +2705,49 @@ function buildFinancialDatasetValuesForVisibleLabels(dataset, visibleLabels, use
   });
 }
 
+function restoreSumStackClip(chart) {
+  if (!chart.$sumStackClipActive) return;
+  chart.ctx.restore();
+  chart.$sumStackClipActive = false;
+}
+
+const roundedSumStacksPlugin = {
+  id: "roundedSumStacks",
+  beforeDatasetsDraw(chart) {
+    if (!isCompanySumEnabled() || getEffectiveChartMode() !== "bar") return;
+    const columns = new Map();
+    chart.getSortedVisibleDatasetMetas().forEach(meta => {
+      if (meta.type !== "bar" || !chart.data.datasets[meta.index].companySum) return;
+      meta.data.forEach((bar, index) => {
+        if (!isFiniteNumber(meta._parsed[index]?.y) || meta._parsed[index].y === 0) return;
+        const { x, y, base, width } = bar.getProps(["x", "y", "base", "width"]);
+        if (![x, y, base, width].every(Number.isFinite) || width <= 0) return;
+        const left = x - width / 2, right = x + width / 2;
+        const top = Math.min(y, base), bottom = Math.max(y, base);
+        const column = columns.get(index);
+        columns.set(index, column ? {
+          left: Math.min(column.left, left), right: Math.max(column.right, right),
+          top: Math.min(column.top, top), bottom: Math.max(column.bottom, bottom),
+        } : { left, right, top, bottom });
+      });
+    });
+    if (!columns.size) return;
+    // Round the complete column, including very thin end segments. Individual
+    // segments remain rectangular so their shared edges have no corner notches.
+    const { ctx } = chart;
+    ctx.save();
+    ctx.beginPath();
+    columns.forEach(({ left, right, top, bottom }) => {
+      const radius = Math.min(6, (right - left) / 2, (bottom - top) / 2);
+      ctx.roundRect(left, top, right - left, bottom - top, radius);
+    });
+    ctx.clip();
+    chart.$sumStackClipActive = true;
+  },
+  afterDatasetsDraw: restoreSumStackClip,
+  afterDraw: restoreSumStackClip,
+};
+
 function buildCompanySumDatasets() {
   const allLabels = getLabelsForFrequency(state.frequency);
   const rangeLabels = allLabels.slice(state.rangeStart, state.rangeEnd + 1);
@@ -2730,8 +2773,8 @@ function buildCompanySumDatasets() {
     data: labels.map((label, x) => ({ x, y: isFiniteNumber(totals.get(label)) ? series[index]?.get(label) : null,
       periodLabel: label, sumTotal: totals.get(label) })), parsing: false,
     hidden: false, stack: "company-sum", grouped: false,
-    barPercentage: 0.78, categoryPercentage: 0.82, maxBarThickness: 28,
-    borderRadius: 2, borderSkipped: false, borderWidth: 0,
+    barPercentage: 0.72, categoryPercentage: 0.82, maxBarThickness: 28,
+    borderRadius: 0, borderSkipped: false, borderWidth: 0, inflateAmount: 0.33,
     borderColor: encodings.get(company.id).color, backgroundColor: encodings.get(company.id).color,
     forecastedLabels: [...forecasts[index]],
   })) };
@@ -3593,6 +3636,7 @@ function syncChartDatasets(nextDatasets) {
     currentDataset.backgroundColor = nextDataset.backgroundColor;
     currentDataset.borderWidth = nextDataset.borderWidth;
     currentDataset.borderRadius = nextDataset.borderRadius;
+    currentDataset.inflateAmount = nextDataset.inflateAmount;
     currentDataset.borderSkipped = nextDataset.borderSkipped;
     currentDataset.grouped = nextDataset.grouped;
     currentDataset.barPercentage = nextDataset.barPercentage;
@@ -4103,7 +4147,7 @@ function buildChart() {
         },
       },
     },
-    plugins: [singleCompanyTickerWatermarkPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
+    plugins: [roundedSumStacksPlugin, singleCompanyTickerWatermarkPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
   });
   state.pendingGrowthOverlayLayout = null;
   rememberChartGeometry();
