@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 test("cache-busts the stylesheet after tightening the chart header", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20261101-single-row-cash-history/);
+  assert.match(html, /style\.css\?v=20261101-metric-hover-edges/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {
