@@ -2,6 +2,7 @@
 
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -26,7 +27,8 @@ const SEC_REQUEST_HEADERS = {
   "cache-control": "no-cache",
 };
 
-const COMPANY_SOURCES = [
+export const COMPANY_SOURCES = [
+  { id: "spacex", ticker: "SPCX", slug: "spcx", name: "SpaceX" },
   { id: "nvidia", ticker: "NVDA", slug: "nvda", name: "英伟达" },
   { id: "alphabet", ticker: "GOOGL", slug: "googl", name: "谷歌" },
   { id: "apple", ticker: "AAPL", slug: "aapl", name: "苹果" },
@@ -100,6 +102,8 @@ const COMPANIES_MARKET_CAP_SLUGS = {
 const FORECAST_KEYS = ["revenue", "netIncome", "operatingIncome", "grossMargin", "pe", "roe", "revenueGrowth"];
 const SEC_ALLOWED_FORMS = new Set(["10-Q", "10-K", "20-F", "6-K"]);
 const SEC_FIELD_CONCEPTS = {
+  operatingCashFlow: ["NetCashProvidedByUsedInOperatingActivities", "CashFlowsFromUsedInOperatingActivities"],
+  capex: ["PaymentsToAcquirePropertyPlantAndEquipment", "PurchaseOfPropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
   revenue: [
     "RevenueFromContractWithCustomerExcludingAssessedTax",
     "RevenueFromContractWithCustomerIncludingAssessedTax",
@@ -180,6 +184,20 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  spacex: {
+    // Prospectus quarterly facts; Q4 2025 = audited FY 2025 less nine-month 10-Q.
+    // https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm
+    "2025Q1": {"revenue": 4067000000, "earnings": -528000000, "operatingIncome": 27000000, "grossMargin": 51.75805261863782},
+    "2025Q4": {"revenue": 4960000000, "earnings": -2347000000, "operatingIncome": -1373000000, "grossMargin": 49.556451612903224, "periodEndDate": "2025-12-31", "reportDate": "2026-06-12"},
+    "2026Q1": {"revenue": 4694000000, "earnings": -4276000000, "operatingIncome": -1943000000, "grossMargin": 49.126544524925436},
+    // Official SEC 10-Q facts, latest comparative periods as filed 2026-10-22.
+    // https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm
+    "2025Q2": {"revenue": 4071000000, "operatingIncome": -970000000, "earnings": -1008000000},
+    "2025Q3": {"revenue": 5576000000, "operatingIncome": -273000000, "earnings": -1054000000},
+    "2026Q2": {"revenue": 7814000000, "operatingIncome": -143000000, "earnings": -541000000},
+    "2026Q3": {"revenue": 14575000000, "operatingIncome": 2791000000, "earnings": 4404000000},
+  },
+
   microsoft: {
     // Official FY2027 Q1 release: https://www.microsoft.com/en-us/Investor/earnings/FY-2027-Q1/press-release-webcast
     "2026Q3": {
@@ -1550,7 +1568,6 @@ function buildSecFieldQuarterSeries(facts) {
         const derivedValue = fact.value - coveredValue;
         if (!Number.isFinite(derivedValue)) return;
 
-        if (coveredValue === fact.value) return;
         if (!lastEndDate) return;
 
         const derivedFact = cloneSecFact(fact, {
@@ -1993,6 +2010,8 @@ async function fetchSecQuarterlyHistory(companySource) {
         operatingIncomeFact?.endDate ||
         grossProfitFact?.endDate ||
         netAssetsFact?.endDate ||
+        fieldSeries.operatingCashFlow?.get(period)?.endDate ||
+        fieldSeries.capex?.get(period)?.endDate ||
         null;
       const reportDate =
         revenueFact?.filed ||
@@ -2000,6 +2019,8 @@ async function fetchSecQuarterlyHistory(companySource) {
         operatingIncomeFact?.filed ||
         grossProfitFact?.filed ||
         netAssetsFact?.filed ||
+        fieldSeries.operatingCashFlow?.get(period)?.filed ||
+        fieldSeries.capex?.get(period)?.filed ||
         null;
       const grossProfitValue = grossProfitFact?.value ?? (
         Number.isFinite(revenueFact?.value) && Number.isFinite(costOfRevenueFact?.value)
@@ -2014,6 +2035,10 @@ async function fetchSecQuarterlyHistory(companySource) {
         revenue: revenueFact?.value ?? null,
         netIncome: netIncomeFact?.value ?? null,
         operatingIncome: operatingIncomeFact?.value ?? null,
+        operatingCashFlow: fieldSeries.operatingCashFlow?.get(period)?.value ?? null,
+        capex: fieldSeries.capex?.get(period)?.value ?? null,
+        cashFlowEndDate: fieldSeries.operatingCashFlow?.get(period)?.endDate ?? null,
+        capexEndDate: fieldSeries.capex?.get(period)?.endDate ?? null,
         grossProfit: grossProfitValue,
         netAssets: netAssetsFact?.value ?? null,
         grossMarginPct:
@@ -2201,6 +2226,8 @@ async function convertSecHistoryRowsToUsd(rows, currencyCode) {
       revenue: Number.isFinite(row.revenue) ? convertAmountToUsd(row.revenue, avgRate, series.quoteMode) : row.revenue,
       netIncome: Number.isFinite(row.netIncome) ? convertAmountToUsd(row.netIncome, avgRate, series.quoteMode) : row.netIncome,
       operatingIncome: Number.isFinite(row.operatingIncome) ? convertAmountToUsd(row.operatingIncome, avgRate, series.quoteMode) : row.operatingIncome,
+      operatingCashFlow: Number.isFinite(row.operatingCashFlow) ? convertAmountToUsd(row.operatingCashFlow, avgRate, series.quoteMode) : row.operatingCashFlow,
+      capex: Number.isFinite(row.capex) ? convertAmountToUsd(row.capex, avgRate, series.quoteMode) : row.capex,
       grossProfit: Number.isFinite(row.grossProfit) ? convertAmountToUsd(row.grossProfit, avgRate, series.quoteMode) : row.grossProfit,
       netAssets: Number.isFinite(row.netAssets) ? convertAmountToUsd(row.netAssets, spotRate, series.quoteMode) : row.netAssets,
       grossMarginPct:
@@ -4101,7 +4128,11 @@ async function run() {
   );
 }
 
-run().catch((error) => {
+export { parseDataJs, formatDataJs, fetchSecQuarterlyHistory, convertSecHistoryRowsToUsd,
+  extractFinancialCurrency, parseStringArray, parseNumberArray, extractArrayRaw, toQuarterLabel,
+  buildSecFieldQuarterSeries };
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) run().catch((error) => {
   console.error(`自动更新失败：${error.message}`);
   process.exit(1);
 });

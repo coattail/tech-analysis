@@ -447,6 +447,8 @@ test("keeps public-company filing dates inside their own fiscal period window", 
       .sort((left, right) => left[1].localeCompare(right[1]));
 
     entries.forEach(([period, periodEndDate], index) => {
+      // Pre-IPO comparative periods were first disclosed after the period ended.
+      if (companyId === "spacex" && period < "2026Q2") return;
       const reportDate = company.reportDates?.[period];
       if (!/^\d{4}-\d{2}-\d{2}$/.test(reportDate || "")) return;
       const nextPeriodEndDate = entries[index + 1]?.[1];
@@ -639,7 +641,7 @@ test("keeps core fundamentals continuous from listing through the latest reporte
 
 test("keeps adjusted-close prices complete across normal trading-calendar gaps", () => {
   const prices = loadStockPriceSourceData();
-  assert.equal(Object.keys(prices.companies || {}).length, 45);
+  assert.equal(Object.keys(prices.companies || {}).length, 46);
 
   const invalid = [];
   for (const [companyId, company] of Object.entries(prices.companies || {})) {

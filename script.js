@@ -6,12 +6,12 @@ const UI_TRANSLATIONS = {
     pageTitle: "美股科技与头部市值公司财务数据可视化",
     pageInfo: "页面信息",
     coverageLabel: "覆盖范围",
-    coverageValue: "44 家科技与头部市值公司",
+    coverageValue: "46 家科技与头部市值公司",
     rangeLabel: "区间",
     modeLabel: "模式",
     modeValue: "季度 / 年度 / 滚动年化",
     sourceSummary: "查看数据口径与来源",
-    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis、Macrotrends。营业利润自公司上市后（不早于 2005Q1）逐季覆盖；较早季度由已发布的单季值与相邻 TTM 值反推。营收、营业利润与净利润统一为美元；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算。支持季度、年度与滚动年化浏览。",
+    sourceNote: "数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis、Macrotrends。营业利润自公司上市后（不早于 2005Q1）逐季覆盖；较早季度由已发布的单季值与相邻 TTM 值反推。营收、营业利润与净利润统一为美元；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算。经营现金流、CapEx 与自由现金流统一为美元单季值；CapEx 以正数表示现金支出，自由现金流＝经营现金流－CapEx。年度与滚动年化需四个完整季度；未披露数据为空。支持季度、年度与滚动年化浏览。",
     viewSettings: "视图设置",
     timeGranularity: "时间粒度",
     frequencySwitch: "时间粒度切换",
@@ -48,6 +48,9 @@ const UI_TRANSLATIONS = {
     metricSwitch: "指标切换",
     revenue: "营收",
     operatingIncome: "营业利润",
+    freeCashFlow: "自由现金流",
+    capex: "资本开支",
+    operatingCashFlow: "经营现金流",
     netIncome: "净利润",
     grossMargin: "毛利率",
     revenueGrowth: "营收增速",
@@ -93,12 +96,12 @@ const UI_TRANSLATIONS = {
     pageTitle: "Financial Data Visualization for Leading U.S.-Listed Companies",
     pageInfo: "Page information",
     coverageLabel: "Coverage",
-    coverageValue: "44 technology and large-cap companies",
+    coverageValue: "46 technology and large-cap companies",
     rangeLabel: "Range",
     modeLabel: "Mode",
     modeValue: "Quarterly / Annual / Rolling Annual",
     sourceSummary: "View methodology and sources",
-    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and Macrotrends. Operating income is covered quarter by quarter from listing, no earlier than 2005Q1; older quarters are reconstructed from published quarterly values and adjacent TTM values. Revenue, operating income, and net income are normalized to USD; gross margin is gross profit divided by revenue; P/E is the reporting-period valuation metric; and ROE is net income divided by net assets. Quarterly, annual, and rolling-annual views are supported.",
+    sourceNote: "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and Macrotrends. Operating income is covered quarter by quarter from listing, no earlier than 2005Q1; older quarters are reconstructed from published quarterly values and adjacent TTM values. Revenue, operating income, and net income are normalized to USD; gross margin is gross profit divided by revenue; P/E is the reporting-period valuation metric; and ROE is net income divided by net assets. Cash flows are quarterly USD values; CapEx is positive cash spending and free cash flow equals operating cash flow minus CapEx. Annual and TTM values require four complete quarters; undisclosed values stay empty. Quarterly, annual, and rolling-annual views are supported.",
     viewSettings: "View Settings",
     timeGranularity: "Time Granularity",
     frequencySwitch: "Time granularity switch",
@@ -135,6 +138,9 @@ const UI_TRANSLATIONS = {
     metricSwitch: "Metric switch",
     revenue: "Revenue",
     operatingIncome: "Operating Income",
+    freeCashFlow: "Free Cash Flow",
+    capex: "CapEx",
+    operatingCashFlow: "Operating Cash Flow",
     netIncome: "Net Income",
     grossMargin: "Gross Margin",
     revenueGrowth: "Revenue Growth",
@@ -286,6 +292,7 @@ const COMPANIES = [
   { id: "coreweave", name: "CoreWeave", ticker: "CRWV", color: "#01d1ff", logoColor: "#000000", optionLogoDeepColor: "#f5f7fa", optionLogoFit: "symbol", optionLogoPath: "assets/logos/options/coreweave.svg?v=20260830-compact-marks", logoPath: "assets/logos/coreweave.svg?v=20260629-visible-area-v4" },
   { id: "nebius", name: "Nebius", ticker: "NBIS", color: "#b9ff38", logoColor: "#000000", optionLogoColor: "#b9ff38", optionLogoFit: "symbol", optionLogoPath: "assets/logos/options/nebius.svg?v=20260830-compact-marks", logoPath: "assets/logos/nebius.svg?v=20260629-visible-area-v4" },
   { id: "chronoscale", name: "ChronoScale", ticker: "CHRN", color: "#768cff", logoColor: "#4f46e5", optionLogoFit: "symbol", optionLogoPath: "assets/logos/options/chronoscale.svg?v=20260830-compact-marks", logoPath: "assets/logos/chronoscale.svg?v=20260629-visible-area-v4" },
+  { id: "spacex", name: "SpaceX", ticker: "SPCX", color: "#a8b5c8", logoColor: "#005288", optionLogoFit: "wide-symbol", logoPath: "assets/logos/spacex.svg?v=20261101-cash-flow" },
   { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoColor: "#d97706", optionLogoFit: "symbol", optionLogoPath: "assets/logos/options/sharonai.svg?v=20260830-compact-marks", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_ENGLISH_NAMES = {
@@ -334,6 +341,7 @@ const COMPANY_ENGLISH_NAMES = {
   nebius: "Nebius",
   chronoscale: "ChronoScale",
   sharonai: "SharonAI",
+  spacex: "SpaceX",
 };
 
 function getCompanyName(company) {
@@ -349,7 +357,7 @@ const COMPANY_CATEGORIES = [
   // https://wallstreetnumbers.com/watchlists/magnificent7
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "apple", "microsoft", "alphabet", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"], labelEn: "Software" },
-  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai"], labelEn: "Cloud" },
+  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai", "spacex"], labelEn: "Cloud" },
   { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "skhynix", "amd"], labelEn: "Semiconductors" },
   { id: "other", label: "其他", companyIds: [], labelEn: "Other" },
 ];
@@ -839,6 +847,9 @@ const customYAxisTitlePlugin = {
 };
 
 const METRICS = {
+  freeCashFlow: { label: "自由现金流（美元）", axisLabel: "自由现金流（美元，USD）", sourceKey: "freeCashFlow", annualMode: "sum" },
+  capex: { label: "资本开支（美元）", axisLabel: "资本开支（美元，USD）", sourceKey: "capex", annualMode: "sum" },
+  operatingCashFlow: { label: "经营现金流（美元）", axisLabel: "经营现金流（美元，USD）", sourceKey: "operatingCashFlow", annualMode: "sum" },
   revenue: {
     label: "营收（美元）",
     axisLabel: "营收（美元，USD）",
@@ -890,6 +901,18 @@ const METRICS = {
 };
 
 const METRIC_TRANSLATIONS = {
+  freeCashFlow: {
+    zh: { label: "自由现金流（美元）", name: "自由现金流", unit: "（美元，USD）" },
+    en: { label: "Free Cash Flow (USD)", name: "Free Cash Flow", unit: " (USD)" },
+  },
+  capex: {
+    zh: { label: "资本开支（美元）", name: "资本开支", unit: "（美元，USD）" },
+    en: { label: "CapEx (USD)", name: "CapEx", unit: " (USD)" },
+  },
+  operatingCashFlow: {
+    zh: { label: "经营现金流（美元）", name: "经营现金流", unit: "（美元，USD）" },
+    en: { label: "Operating Cash Flow (USD)", name: "Operating Cash Flow", unit: " (USD)" },
+  },
   revenue: {
     zh: { label: "营收（美元）", name: "营收", unit: "（美元，USD）" },
     en: { label: "Revenue (USD)", name: "Revenue", unit: " (USD)" },
@@ -1038,6 +1061,9 @@ const state = {
       revenue: new Map(),
       netIncome: new Map(),
       operatingIncome: new Map(),
+      freeCashFlow: new Map(),
+      capex: new Map(),
+      operatingCashFlow: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1048,6 +1074,9 @@ const state = {
       revenue: new Map(),
       netIncome: new Map(),
       operatingIncome: new Map(),
+      freeCashFlow: new Map(),
+      capex: new Map(),
+      operatingCashFlow: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1058,6 +1087,9 @@ const state = {
       revenue: new Map(),
       netIncome: new Map(),
       operatingIncome: new Map(),
+      freeCashFlow: new Map(),
+      capex: new Map(),
+      operatingCashFlow: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1072,6 +1104,9 @@ const state = {
       revenue: new Map(),
       netIncome: new Map(),
       operatingIncome: new Map(),
+      freeCashFlow: new Map(),
+      capex: new Map(),
+      operatingCashFlow: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1082,6 +1117,9 @@ const state = {
       revenue: new Map(),
       netIncome: new Map(),
       operatingIncome: new Map(),
+      freeCashFlow: new Map(),
+      capex: new Map(),
+      operatingCashFlow: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -1092,6 +1130,9 @@ const state = {
       revenue: new Map(),
       netIncome: new Map(),
       operatingIncome: new Map(),
+      freeCashFlow: new Map(),
+      capex: new Map(),
+      operatingCashFlow: new Map(),
       grossMargin: new Map(),
       pe: new Map(),
       roe: new Map(),
@@ -2294,7 +2335,7 @@ function rollingForecastFlags(quarterFlagsSet) {
 function formatYAxisTick(metricKey, value) {
   if (!isFiniteNumber(value)) return "";
 
-  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
+  if (METRICS[metricKey]?.annualMode === "sum") {
     return formatUsdValue(value);
   }
 
@@ -2332,7 +2373,7 @@ function formatPrimaryYAxisTick(
 function formatMetricValue(metricKey, value) {
   if (!isFiniteNumber(value)) return t("noData");
 
-  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
+  if (METRICS[metricKey]?.annualMode === "sum") {
     return formatUsdValue(value);
   }
 
@@ -2376,6 +2417,9 @@ function toMetricFileToken(metricKey) {
     revenue: "revenue",
     netIncome: "net-income",
     operatingIncome: "operating-income",
+    freeCashFlow: "freeCashFlow",
+    capex: "capex",
+    operatingCashFlow: "operatingCashFlow",
     grossMargin: "gross-margin",
     pe: "pe-ratio",
     roe: "roe",
@@ -3009,7 +3053,7 @@ function collectGrowthOverlayValues(datasets) {
 
 function toAxisDisplayValue(metricKey, value) {
   if (!isFiniteNumber(value)) return value;
-  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
+  if (METRICS[metricKey]?.annualMode === "sum") {
     return value / 1e9;
   }
   return value;
@@ -3017,7 +3061,7 @@ function toAxisDisplayValue(metricKey, value) {
 
 function fromAxisDisplayValue(metricKey, value) {
   if (!isFiniteNumber(value)) return value;
-  if (metricKey === "revenue" || metricKey === "netIncome" || metricKey === "operatingIncome") {
+  if (METRICS[metricKey]?.annualMode === "sum") {
     return value * 1e9;
   }
   return value;
@@ -4129,6 +4173,13 @@ function loadFromLocalData() {
     loadedCount += 1;
     state.periodEndDatesByCompany.set(company.id, rawCompany.periodEndDates ?? {});
     state.reportDatesByCompany.set(company.id, rawCompany.reportDates ?? {});
+
+    for (const metricKey of ["operatingCashFlow", "capex", "freeCashFlow"]) {
+      const quarterly = objectToSeries(QUARTER_LABELS, rawCompany[metricKey]);
+      state.dataByFrequency.quarterly[metricKey].set(company.id, quarterly);
+      state.dataByFrequency.annual[metricKey].set(company.id, aggregateFlowAnnual(quarterly));
+      state.dataByFrequency.rollingAnnual[metricKey].set(company.id, aggregateFlowRollingAnnual(quarterly));
+    }
 
     const quarterRevenue = objectToSeries(QUARTER_LABELS, rawCompany.revenue);
     const quarterNetIncome = objectToSeries(QUARTER_LABELS, rawCompany.earnings);

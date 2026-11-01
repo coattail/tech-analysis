@@ -3517,6 +3517,18 @@
       "reconstructedPeriods": [],
       "preservedPeriods": [],
       "missingPeriods": []
+    },
+    "spacex": {
+      "ticker": "SPCX",
+      "listingPeriod": "2026Q2",
+      "latestFinancialPeriod": "2026Q3",
+      "directPeriods": [
+        "2026Q2",
+        "2026Q3"
+      ],
+      "reconstructedPeriods": [],
+      "missingPeriods": [],
+      "source": "SEC 10-Q / prospectus (historical comparative periods also retained)"
     }
   }
 }

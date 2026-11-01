@@ -20,7 +20,7 @@
 
 ## 功能特性
 
-- 多指标切换：营收、营业利润、净利润、毛利率、P/E、ROE、营收同比增速、利润同比增速
+- 多指标切换：营收、营业利润、净利润、经营现金流、CapEx、自由现金流、毛利率、P/E、ROE、营收同比增速、利润同比增速
 - 多时间粒度：季度、年度、滚动年度（TTM）
 - 多公司对比：支持单独显隐、全部显示、全部隐藏
 - 混合对比配色：MAG7 保留固定代表色，其他公司在聚焦对比时动态避让当前颜色
@@ -35,13 +35,13 @@
 
 ## 覆盖公司
 
-截至 2026-10-28，样本覆盖 45 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
+截至 2026-11-01，样本覆盖 46 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
 
 - NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
 - Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
 - Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
 - IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
-- CoreWeave、Nebius、ChronoScale、SharonAI、SK 海力士（SKHY）
+- CoreWeave、Nebius、ChronoScale、SharonAI、SK 海力士（SKHY）、SpaceX（SPCX，归入云服务）
 
 Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及之后数据，股价仅保留 2024-04-01 及之后数据。
 
@@ -54,6 +54,9 @@ SK 海力士归入半导体，财务历史覆盖 2018Q1–2026Q3；韩元流量�
 | 营收 | `revenue` | 原始季度值 | 四季度求和 | 完整近四季度求和，不足四季度则为空 |
 | 营业利润 | `operatingIncome` | 原始季度值 | 四季度求和 | 完整近四季度求和，不足四季度则为空 |
 | 净利润 | `earnings` | 原始季度值 | 四季度求和 | 完整近四季度求和，不足四季度则为空 |
+| 经营现金流 | `operatingCashFlow` | 单季经营活动现金净额 | 四个完整季度求和 | 完整近四季度求和 |
+| CapEx | `capex` | 单季资本开支，正数表示现金支出 | 四个完整季度求和 | 完整近四季度求和 |
+| 自由现金流 | `freeCashFlow` | 经营现金流减 CapEx | 四个完整季度求和 | 完整近四季度求和 |
 | 毛利率 | `grossMargin` | 原始季度值 | 以营收加权重算 | 完整近四季度营收加权重算，不足四季度则为空 |
 | 市盈率 | `pe` | 原始季度值 | 取 Q4 | 完整近四季度均值，不足四季度则为空 |
 | ROE | `roe` | 原始季度值 | 取 Q4 | 完整近四季度均值，不足四季度则为空 |
@@ -62,6 +65,10 @@ SK 海力士归入半导体，财务历史覆盖 2018Q1–2026Q3；韩元流量�
 
 营业利润自公司上市季度开始连续覆盖，最早追溯至 2005Q1。2012 年前后缺少直接单季值的区间，使用相邻 TTM 营业利润与已知单季值按
 `Q[t-4] = Q[t] - (TTM[t] - TTM[t-1])` 反推；由于历史 TTM 来源以十亿美元、两位小数发布，早期反推值精确到百万美元。银行采用数据源统一展示的营业利润口径，以保证 JPMorgan Chase 与 Bank of America 也能连续比较。
+
+现金流历史优先采用 SEC CompanyFacts，年内累计值按同一财年相邻累计期差分为单季，StockAnalysis 季度现金流量表补充缺口；非美元金额按季度平均汇率换算。逐点来源与覆盖区间保存在 `data/cash-flow-history.json`。CapEx 不包含企业收购和非现金融资租赁，数据商与 SEC 对部分项目的分类可能存在差异。未单独披露可比 CapEx 的银行保留空值，其自由现金流也为空；缺失数据不按零处理。
+
+SpaceX 使用合并口径，包含 Space、Connectivity 和 AI/SI 业务，官方 SEC 披露优先于数据商的调整值。
 
 ## 技术栈
 
@@ -143,6 +150,10 @@ window.FINANCIAL_SOURCE_DATA = {
 ```bash
 # 正式更新 data.js
 node scripts/auto-refresh-data.mjs
+
+# 更新所有公司的现金流（自动工作流也会执行）
+node scripts/auto-refresh-cash-flow.mjs
+node scripts/auto-refresh-cash-flow.mjs --dry-run --company spcx
 
 # 仅预览，不写回文件
 node scripts/auto-refresh-data.mjs --dry-run

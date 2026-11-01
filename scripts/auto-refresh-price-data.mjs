@@ -22,6 +22,7 @@ const FETCH_ATTEMPTS = 3;
 const RETRY_DELAYS_MS = [2_000, 5_000];
 
 const COMPANY_SOURCES = [
+  { id: "spacex", ticker: "SPCX" },
   { id: "nvidia", ticker: "NVDA" },
   { id: "alphabet", ticker: "GOOGL" },
   { id: "apple", ticker: "AAPL" },
@@ -157,8 +158,9 @@ async function fetchDailyAdjustedSeries(company) {
     }
   }
 
-  if (company.id === "skhynix") {
-    const url = "https://stockanalysis.com/stocks/skhy/history/?range=max";
+  if (company.id === "skhynix" || company.id === "spacex") {
+    const slug = company.id === "spacex" ? "spcx" : "skhy";
+    const url = `https://stockanalysis.com/stocks/${slug}/history/?range=max`;
     const { stdout } = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", url], { maxBuffer: 5 * 1024 * 1024 });
     company.priceSource = url;
     return parseStockAnalysisPrices(stdout);
@@ -179,7 +181,7 @@ async function main() {
     try {
       companies[company.id] = {
         ...(companies[company.id] || {}),
-        ...(company.id === "skhynix" ? { ticker: "SKHY", currency: "USD" } : {}),
+        ...(["skhynix", "spacex"].includes(company.id) ? { ticker: company.ticker, currency: "USD" } : {}),
         daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company), company.minDate),
         source: company.priceSource,
       };
@@ -214,7 +216,7 @@ async function main() {
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
-      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY",
+      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY and SPCX",
       priceType: "adjusted-close",
       latestDateRange: {
         earliest: latestDates[0] || null,
