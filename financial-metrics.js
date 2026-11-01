@@ -81,6 +81,22 @@
     return magnitude * 10;
   }
 
+  function computeAdaptiveAxisBounds(values, { includeZero = false } = {}) {
+    const valid = values.filter(isFiniteNumber);
+    if (!valid.length) return { min: 0, max: 1 };
+    let min = Math.min(...valid), max = Math.max(...valid);
+    if (min === 0 && max === 0) return { min: includeZero ? 0 : -1, max: 1 };
+    if (includeZero) { min = Math.min(0, min); max = Math.max(0, max); }
+    const range = Math.max(max - min, Math.max(Math.abs(min), Math.abs(max)) * 0.05, Number.EPSILON);
+    // Fine outward boundaries avoid a full extra tick band of empty space.
+    // Chart.js independently chooses readable tick intervals inside these limits.
+    const quantum = getNiceAxisStep(range, 8) / 5;
+    const padding = range * 0.025;
+    const low = includeZero && min === 0 ? 0 : Math.floor((min - padding) / quantum) * quantum;
+    const high = includeZero && max === 0 ? 0 : Math.ceil((max + padding) / quantum) * quantum;
+    return { min: Number(low.toPrecision(12)), max: Number(high.toPrecision(12)) };
+  }
+
   function computeTightMixedAxisBounds({ min, max, targetMaxTicks = 10 } = {}) {
     const numericMin = Number(min);
     const numericMax = Number(max);
@@ -242,6 +258,7 @@
   }
 
   const api = {
+    computeAdaptiveAxisBounds,
     canSumCompanies,
     sumCompanySeries,
     computeYearOverYearGrowth,

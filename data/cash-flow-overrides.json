@@ -1,5 +1,5 @@
 {
-  "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals. ChronoScale uses Cloud carve-out cash flows, excluding unrelated legacy Ekso. Berkshire early periods use official annual/quarterly PDFs and comparative restatements.",
+  "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals. ChronoScale uses Cloud carve-out cash flows, excluding unrelated legacy Ekso. Berkshire early periods use official annual/quarterly PDFs and comparative restatements. Additional historical quarters reconcile to official SEC cumulative cash-flow statements; issuer-specific cash CapEx classifications are preserved in bases.",
   "companies": {
     "spacex": [
       {
@@ -312,6 +312,2151 @@
         "capex": 3063000,
         "source": "https://www.sec.gov/Archives/edgar/data/1549084/000162828026065876/chrn-20260831.htm",
         "method": "reported-quarter"
+      }
+    ],
+    "meta": [
+      {
+        "period": "2011Q1",
+        "dateKey": "2011-03-31",
+        "operatingCashFlow": 345000000,
+        "capex": 153000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1326801/000119312512175673/d287954ds1a.htm",
+        "method": "official-IPO-reported-quarter"
+      },
+      {
+        "period": "2011Q2",
+        "dateKey": "2011-06-30",
+        "operatingCashFlow": 129000000,
+        "capex": 132000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1326801/000119312512325997/d371464d10q.htm",
+        "method": "official-six-month-minus-Q1",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1326801/000119312512325997/d371464d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/1326801/000119312512175673/d287954ds1a.htm"
+        ]
+      }
+    ],
+    "datadog": [
+      {
+        "period": "2018Q1",
+        "dateKey": "2018-03-31",
+        "operatingCashFlow": 5362000,
+        "capex": 3195000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1561550/000095012319005985/filename1.htm",
+        "method": "official-published-IPO-draft-quarter"
+      },
+      {
+        "period": "2018Q2",
+        "dateKey": "2018-06-30",
+        "operatingCashFlow": 5273000,
+        "capex": 5940000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1561550/000119312519240411/d745413ds1a.htm",
+        "method": "official-half-year-minus-IPO-draft-quarter",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1561550/000095012319005985/filename1.htm",
+          "https://www.sec.gov/Archives/edgar/data/1561550/000119312519240411/d745413ds1a.htm"
+        ]
+      },
+      {
+        "period": "2018Q3",
+        "dateKey": "2018-09-30",
+        "operatingCashFlow": 4749000,
+        "capex": 3610000,
+        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001561550.json",
+        "method": "official-nine-month-minus-IPO-half-year-comparative",
+        "basis": "cash-PP&E-plus-capitalized-software",
+        "supportingSources": [
+          "https://data.sec.gov/api/xbrl/companyfacts/CIK0001561550.json",
+          "https://www.sec.gov/Archives/edgar/data/1561550/000119312519240411/d745413ds1a.htm"
+        ]
+      }
+    ],
+    "lilly": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013706005239/c04851e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706005239/c04851e10vq.htm"
+        ],
+        "capex": 242200000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 242200000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013706008651/c07379e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706008651/c07379e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706005239/c04851e10vq.htm"
+        ],
+        "capex": 377700000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 619900000,
+            "previousCumulative": 242200000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013706011789/c09620e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706011789/c09620e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706008651/c07379e10vq.htm"
+        ],
+        "capex": 258600000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 878500000,
+            "previousCumulative": 619900000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708012864/c46966ae10vkza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012864/c46966ae10vkza.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706011789/c09620e10vq.htm"
+        ],
+        "capex": 419600000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1298100000,
+            "previousCumulative": 878500000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013706005239/c04851e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706005239/c04851e10vq.htm"
+        ],
+        "capex": 160700000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 160700000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013706008651/c07379e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706008651/c07379e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706005239/c04851e10vq.htm"
+        ],
+        "capex": 231400000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 392100000,
+            "previousCumulative": 160700000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013706011789/c09620e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706011789/c09620e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706008651/c07379e10vq.htm"
+        ],
+        "capex": 275700000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 667800000,
+            "previousCumulative": 392100000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708012864/c46966ae10vkza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012864/c46966ae10vkza.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013706011789/c09620e10vq.htm"
+        ],
+        "capex": 410000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1077800000,
+            "previousCumulative": 667800000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708012865/c46971ae10vqza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012865/c46971ae10vqza.htm"
+        ],
+        "capex": 239400000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 239400000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708010281/c33792e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708010281/c33792e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012865/c46971ae10vqza.htm"
+        ],
+        "capex": 246200000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 485600000,
+            "previousCumulative": 239400000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708013382/c47344e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708013382/c47344e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708010281/c33792e10vq.htm"
+        ],
+        "capex": 230100000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 715700000,
+            "previousCumulative": 485600000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708012864/c46966ae10vkza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012864/c46966ae10vkza.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708013382/c47344e10vq.htm"
+        ],
+        "capex": 366700000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1082400000,
+            "previousCumulative": 715700000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2008Q1",
+        "dateKey": "2008-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708012865/c46971ae10vqza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012865/c46971ae10vqza.htm"
+        ],
+        "capex": 184200000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 184200000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2008Q2",
+        "dateKey": "2008-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/59478/000095013708010281/c33792e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708010281/c33792e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/59478/000095013708012865/c46971ae10vqza.htm"
+        ],
+        "capex": 266400000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 450600000,
+            "previousCumulative": 184200000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      }
+    ],
+    "caterpillar": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823006000237/form10q_1q06.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000237/form10q_1q06.htm"
+        ],
+        "capex": 165000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 165000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823006000382/form10q_2q06.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000382/form10q_2q06.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000237/form10q_1q06.htm"
+        ],
+        "capex": 237000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 402000000,
+            "previousCumulative": 165000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823006000458/form10q_3q06.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000458/form10q_3q06.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000382/form10q_2q06.htm"
+        ],
+        "capex": 307000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 709000000,
+            "previousCumulative": 402000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000052/ex_13.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000052/ex_13.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000458/form10q_3q06.htm"
+        ],
+        "capex": 492000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1201000000,
+            "previousCumulative": 709000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823006000237/form10q_1q06.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000237/form10q_1q06.htm"
+        ],
+        "capex": 233000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 233000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823006000382/form10q_2q06.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000382/form10q_2q06.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000237/form10q_1q06.htm"
+        ],
+        "capex": 319000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 552000000,
+            "previousCumulative": 233000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823006000458/form10q_3q06.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000458/form10q_3q06.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000382/form10q_2q06.htm"
+        ],
+        "capex": 353000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 905000000,
+            "previousCumulative": 552000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000052/ex_13.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000052/ex_13.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823006000458/form10q_3q06.htm"
+        ],
+        "capex": 688000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1593000000,
+            "previousCumulative": 905000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000187/form10q_1q08.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000187/form10q_1q08.htm"
+        ],
+        "capex": 252000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 252000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000275/form10q_2q08.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000275/form10q_2q08.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000187/form10q_1q08.htm"
+        ],
+        "capex": 330000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 582000000,
+            "previousCumulative": 252000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000375/form10q_3q08.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000375/form10q_3q08.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000275/form10q_2q08.htm"
+        ],
+        "capex": 387000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 969000000,
+            "previousCumulative": 582000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000052/ex_13.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000052/ex_13.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000375/form10q_3q08.htm"
+        ],
+        "capex": 731000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1700000000,
+            "previousCumulative": 969000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2008Q1",
+        "dateKey": "2008-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000187/form10q_1q08.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000187/form10q_1q08.htm"
+        ],
+        "capex": 343000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 343000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      },
+      {
+        "period": "2008Q2",
+        "dateKey": "2008-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/18230/000001823008000275/form10q_2q08.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000275/form10q_2q08.htm",
+          "https://www.sec.gov/Archives/edgar/data/18230/000001823008000187/form10q_1q08.htm"
+        ],
+        "capex": 471000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 814000000,
+            "previousCumulative": 343000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-CapEx-excluding-equipment-leased-to-others"
+        }
+      }
+    ],
+    "chevron": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013406008713/f18554e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406008713/f18554e10vq.htm"
+        ],
+        "capex": 1304000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 1304000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013406014650/f21349e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406014650/f21349e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406008713/f18554e10vq.htm"
+        ],
+        "capex": 1828000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 3132000000,
+            "previousCumulative": 1304000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013406020382/f24501e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406020382/f24501e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406014650/f21349e10vq.htm"
+        ],
+        "capex": 2344000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 5476000000,
+            "previousCumulative": 3132000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013408005470/f37829a1e10vkza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408005470/f37829a1e10vkza.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406020382/f24501e10vq.htm"
+        ],
+        "capex": 3225000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 8701000000,
+            "previousCumulative": 5476000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013406008713/f18554e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406008713/f18554e10vq.htm"
+        ],
+        "capex": 2567000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 2567000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013406014650/f21349e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406014650/f21349e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406008713/f18554e10vq.htm"
+        ],
+        "capex": 3659000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 6226000000,
+            "previousCumulative": 2567000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013406020382/f24501e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406020382/f24501e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406014650/f21349e10vq.htm"
+        ],
+        "capex": 3441000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 9667000000,
+            "previousCumulative": 6226000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013408005470/f37829a1e10vkza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408005470/f37829a1e10vkza.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013406020382/f24501e10vq.htm"
+        ],
+        "capex": 4146000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 13813000000,
+            "previousCumulative": 9667000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013408008862/f40423e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408008862/f40423e10vq.htm"
+        ],
+        "capex": 3260000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 3260000000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013408014499/f42584e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408014499/f42584e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408008862/f40423e10vq.htm"
+        ],
+        "capex": 3697000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 6957000000,
+            "previousCumulative": 3260000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013408019596/f50197e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408019596/f50197e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408014499/f42584e10vq.htm"
+        ],
+        "capex": 4424000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 11381000000,
+            "previousCumulative": 6957000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/93410/000095013408005470/f37829a1e10vkza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408005470/f37829a1e10vkza.htm",
+          "https://www.sec.gov/Archives/edgar/data/93410/000095013408019596/f50197e10vq.htm"
+        ],
+        "capex": 5297000000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 16678000000,
+            "previousCumulative": 11381000000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-capital-expenditures"
+        }
+      }
+    ],
+    "adobe": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-04",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000110465906024558/a06-8704_110q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906024558/a06-8704_110q.htm"
+        ],
+        "capex": 11512000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 11512000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-03",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000110465906046450/a06-15114_110q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906046450/a06-15114_110q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906024558/a06-8704_110q.htm"
+        ],
+        "capex": 9124000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 20636000,
+            "previousCumulative": 11512000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-02",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000110465906066129/a06-20717_110q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906066129/a06-20717_110q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906046450/a06-15114_110q.htm"
+        ],
+        "capex": 17470000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 38106000,
+            "previousCumulative": 20636000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-02",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000104746908000497/a2181848z10-k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908000497/a2181848z10-k.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906066129/a06-20717_110q.htm"
+        ],
+        "capex": 10769000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 48875000,
+            "previousCumulative": 38106000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-03",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000110465906024558/a06-8704_110q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906024558/a06-8704_110q.htm"
+        ],
+        "capex": 11634000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 11634000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-02",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000110465906046450/a06-15114_110q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906046450/a06-15114_110q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906024558/a06-8704_110q.htm"
+        ],
+        "capex": 19683000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 31317000,
+            "previousCumulative": 11634000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-01",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000110465906066129/a06-20717_110q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906066129/a06-20717_110q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906046450/a06-15114_110q.htm"
+        ],
+        "capex": 18852000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 50169000,
+            "previousCumulative": 31317000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-01",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000104746908000497/a2181848z10-k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908000497/a2181848z10-k.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000110465906066129/a06-20717_110q.htm"
+        ],
+        "capex": 33081000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 83250000,
+            "previousCumulative": 50169000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-02",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000104746908004108/a2183845z10-q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908004108/a2183845z10-q.htm"
+        ],
+        "capex": 48300000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 48300000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-01",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000079634308000005/form10-q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000005/form10-q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908004108/a2183845z10-q.htm"
+        ],
+        "capex": 23484000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 71784000,
+            "previousCumulative": 48300000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-08-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000079634308000007/form_10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000007/form_10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000005/form10-q.htm"
+        ],
+        "capex": 32160000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 103944000,
+            "previousCumulative": 71784000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-11-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000104746908000497/a2181848z10-k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908000497/a2181848z10-k.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000007/form_10q.htm"
+        ],
+        "capex": 28131000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 132075000,
+            "previousCumulative": 103944000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2008Q1",
+        "dateKey": "2008-02-29",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000104746908004108/a2183845z10-q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908004108/a2183845z10-q.htm"
+        ],
+        "capex": 26268000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 26268000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2008Q2",
+        "dateKey": "2008-05-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000079634308000005/form10-q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000005/form10-q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000104746908004108/a2183845z10-q.htm"
+        ],
+        "capex": 22403000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 48671000,
+            "previousCumulative": 26268000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      },
+      {
+        "period": "2008Q3",
+        "dateKey": "2008-08-29",
+        "source": "https://www.sec.gov/Archives/edgar/data/796343/000079634308000007/form_10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000007/form_10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/796343/000079634308000005/form10-q.htm"
+        ],
+        "capex": 39810000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 88481000,
+            "previousCumulative": 48671000
+          }
+        },
+        "bases": {
+          "capex": "issuer-reported-cash-PP&E"
+        }
+      }
+    ],
+    "jpmorgan": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012306009855/y23738e10vqza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306009855/y23738e10vqza.htm"
+        ],
+        "operatingCashFlow": -11586000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -11586000000,
+            "previousCumulative": 0
+          }
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012306010232/y23982e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306010232/y23982e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306009855/y23738e10vqza.htm"
+        ],
+        "operatingCashFlow": -26557000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -38143000000,
+            "previousCumulative": -11586000000
+          }
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012306013738/y26732e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306013738/y26732e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306010232/y23982e10vq.htm"
+        ],
+        "operatingCashFlow": -2814000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -40957000000,
+            "previousCumulative": -38143000000
+          }
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000119312508043536/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000119312508043536/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306013738/y26732e10vq.htm"
+        ],
+        "operatingCashFlow": 10721000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -30236000000,
+            "previousCumulative": -40957000000
+          }
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012306009855/y23738e10vqza.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306009855/y23738e10vqza.htm"
+        ],
+        "operatingCashFlow": -19141000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -19141000000,
+            "previousCumulative": 0
+          }
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012306010232/y23982e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306010232/y23982e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306009855/y23738e10vqza.htm"
+        ],
+        "operatingCashFlow": -34599000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -53740000000,
+            "previousCumulative": -19141000000
+          }
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012306013738/y26732e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306013738/y26732e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306010232/y23982e10vq.htm"
+        ],
+        "operatingCashFlow": 18677000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -35063000000,
+            "previousCumulative": -53740000000
+          }
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000119312508043536/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000119312508043536/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012306013738/y26732e10vq.htm"
+        ],
+        "operatingCashFlow": -14516000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -49579000000,
+            "previousCumulative": -35063000000
+          }
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm"
+        ],
+        "operatingCashFlow": -51518000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -51518000000,
+            "previousCumulative": 0
+          }
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012308009300/y63389e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308009300/y63389e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm"
+        ],
+        "operatingCashFlow": -14838000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -66356000000,
+            "previousCumulative": -51518000000
+          }
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012308014621/y72204e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308014621/y72204e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308009300/y63389e10vq.htm"
+        ],
+        "operatingCashFlow": -14957000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -81313000000,
+            "previousCumulative": -66356000000
+          }
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000119312508043536/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000119312508043536/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308014621/y72204e10vq.htm"
+        ],
+        "operatingCashFlow": -29247000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -110560000000,
+            "previousCumulative": -81313000000
+          }
+        }
+      },
+      {
+        "period": "2008Q1",
+        "dateKey": "2008-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm"
+        ],
+        "operatingCashFlow": -2423000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -2423000000,
+            "previousCumulative": 0
+          }
+        }
+      },
+      {
+        "period": "2008Q2",
+        "dateKey": "2008-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/19617/000095012308009300/y63389e10vq.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308009300/y63389e10vq.htm",
+          "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm"
+        ],
+        "operatingCashFlow": 26396000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 23973000000,
+            "previousCumulative": -2423000000
+          }
+        }
+      }
+    ],
+    "bankofamerica": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312506105418/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506105418/d10q.htm"
+        ],
+        "operatingCashFlow": -11884000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -11884000000,
+            "previousCumulative": 0
+          },
+          "capex": {
+            "cumulative": 254000000,
+            "previousCumulative": 0
+          }
+        },
+        "capex": 254000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312506165337/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506165337/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506105418/d10q.htm"
+        ],
+        "operatingCashFlow": 4501000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -7383000000,
+            "previousCumulative": -11884000000
+          },
+          "capex": {
+            "cumulative": 563000000,
+            "previousCumulative": 254000000
+          }
+        },
+        "capex": 309000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312506228580/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506228580/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506165337/d10q.htm"
+        ],
+        "operatingCashFlow": -3091000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -10474000000,
+            "previousCumulative": -7383000000
+          },
+          "capex": {
+            "cumulative": 858000000,
+            "previousCumulative": 563000000
+          }
+        },
+        "capex": 295000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508041665/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508041665/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506228580/d10q.htm"
+        ],
+        "operatingCashFlow": -1749000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -12223000000,
+            "previousCumulative": -10474000000
+          },
+          "capex": {
+            "cumulative": 1228000000,
+            "previousCumulative": 858000000
+          }
+        },
+        "capex": 370000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312506105418/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506105418/d10q.htm"
+        ],
+        "operatingCashFlow": 8498000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 8498000000,
+            "previousCumulative": 0
+          },
+          "capex": {
+            "cumulative": -140000000,
+            "previousCumulative": 0
+          }
+        },
+        "capex": -140000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312506165337/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506165337/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506105418/d10q.htm"
+        ],
+        "operatingCashFlow": 1532000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 10030000000,
+            "previousCumulative": 8498000000
+          },
+          "capex": {
+            "cumulative": 206000000,
+            "previousCumulative": -140000000
+          }
+        },
+        "capex": 346000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312506228580/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506228580/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506165337/d10q.htm"
+        ],
+        "operatingCashFlow": -7188000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 2842000000,
+            "previousCumulative": 10030000000
+          },
+          "capex": {
+            "cumulative": 398000000,
+            "previousCumulative": 206000000
+          }
+        },
+        "capex": 192000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508041665/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508041665/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312506228580/d10q.htm"
+        ],
+        "operatingCashFlow": 11667000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 14509000000,
+            "previousCumulative": 2842000000
+          },
+          "capex": {
+            "cumulative": 748000000,
+            "previousCumulative": 398000000
+          }
+        },
+        "capex": 350000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508107941/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508107941/d10q.htm"
+        ],
+        "operatingCashFlow": -19631000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -19631000000,
+            "previousCumulative": 0
+          },
+          "capex": {
+            "cumulative": 358000000,
+            "previousCumulative": 0
+          }
+        },
+        "capex": 358000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508170071/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508170071/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508107941/d10q.htm"
+        ],
+        "operatingCashFlow": 16910000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -2721000000,
+            "previousCumulative": -19631000000
+          },
+          "capex": {
+            "cumulative": 849000000,
+            "previousCumulative": 358000000
+          }
+        },
+        "capex": 491000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508228086/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508228086/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508170071/d10q.htm"
+        ],
+        "operatingCashFlow": 1529000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -1192000000,
+            "previousCumulative": -2721000000
+          },
+          "capex": {
+            "cumulative": 1318000000,
+            "previousCumulative": 849000000
+          }
+        },
+        "capex": 469000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508041665/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508041665/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508228086/d10q.htm"
+        ],
+        "operatingCashFlow": 12228000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 11036000000,
+            "previousCumulative": -1192000000
+          },
+          "capex": {
+            "cumulative": 2143000000,
+            "previousCumulative": 1318000000
+          }
+        },
+        "capex": 825000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2008Q1",
+        "dateKey": "2008-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508107941/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508107941/d10q.htm"
+        ],
+        "operatingCashFlow": -3832000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": -3832000000,
+            "previousCumulative": 0
+          },
+          "capex": {
+            "cumulative": 431000000,
+            "previousCumulative": 0
+          }
+        },
+        "capex": 431000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      },
+      {
+        "period": "2008Q2",
+        "dateKey": "2008-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/70858/000119312508170071/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508170071/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/70858/000119312508107941/d10q.htm"
+        ],
+        "operatingCashFlow": 15030000000,
+        "reconciliation": {
+          "operatingCashFlow": {
+            "cumulative": 11198000000,
+            "previousCumulative": -3832000000
+          },
+          "capex": {
+            "cumulative": 1109000000,
+            "previousCumulative": 431000000
+          }
+        },
+        "capex": 678000000,
+        "bases": {
+          "capex": "issuer-reported-net-premises-and-equipment-spending"
+        }
+      }
+    ],
+    "netflix": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm"
+        ],
+        "capex": 7073000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 7073000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm"
+        ],
+        "capex": 4686000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 11759000,
+            "previousCumulative": 7073000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm"
+        ],
+        "capex": 5941000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 17700000,
+            "previousCumulative": 11759000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312508040378/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312508040378/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312506230314/d10q.htm"
+        ],
+        "capex": 10434000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 28134000,
+            "previousCumulative": 17700000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312507103250/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507103250/d10q.htm"
+        ],
+        "capex": 6686000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 6686000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312507171865/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507171865/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507103250/d10q.htm"
+        ],
+        "capex": 4477000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 11163000,
+            "previousCumulative": 6686000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312507233664/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507233664/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507171865/d10q.htm"
+        ],
+        "capex": 5231000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 16394000,
+            "previousCumulative": 11163000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312508040378/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312508040378/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507233664/d10q.htm"
+        ],
+        "capex": 11524000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 27918000,
+            "previousCumulative": 16394000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312507103250/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507103250/d10q.htm"
+        ],
+        "capex": 18013000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 18013000,
+            "previousCumulative": 0
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312507171865/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507171865/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507103250/d10q.htm"
+        ],
+        "capex": 8968000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 26981000,
+            "previousCumulative": 18013000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312507233664/d10q.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507233664/d10q.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507171865/d10q.htm"
+        ],
+        "capex": 7412000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 34393000,
+            "previousCumulative": 26981000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "source": "https://www.sec.gov/Archives/edgar/data/1065280/000119312508040378/d10k.htm",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312508040378/d10k.htm",
+          "https://www.sec.gov/Archives/edgar/data/1065280/000119312507233664/d10q.htm"
+        ],
+        "capex": 10413000,
+        "reconciliation": {
+          "capex": {
+            "cumulative": 44806000,
+            "previousCumulative": 34393000
+          }
+        },
+        "bases": {
+          "capex": "cash-PP&E-plus-intangibles-after-reclassification"
+        }
+      }
+    ],
+    "palantir": [
+      {
+        "period": "2019Q3",
+        "dateKey": "2019-09-30",
+        "operatingCashFlow": -159726000,
+        "capex": 3665000,
+        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001321655.json",
+        "method": "official-nine-month-minus-IPO-half-year-comparative",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1321655/000119312520249544/d904406ds1a.htm",
+          "https://data.sec.gov/api/xbrl/companyfacts/CIK0001321655.json"
+        ]
+      }
+    ],
+    "snowflake": [
+      {
+        "period": "2019Q2",
+        "dateKey": "2019-04-30",
+        "operatingCashFlow": -36663000,
+        "capex": 2197000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1640147/000162827920000112/filename1.htm",
+        "method": "official-published-IPO-draft-quarter"
+      },
+      {
+        "period": "2019Q3",
+        "dateKey": "2019-07-31",
+        "operatingCashFlow": -73353000,
+        "capex": 10771000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1640147/000162828020013667/snowflake424b4.htm",
+        "method": "official-half-year-minus-IPO-draft-quarter",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1640147/000162827920000112/filename1.htm",
+          "https://www.sec.gov/Archives/edgar/data/1640147/000162828020013667/snowflake424b4.htm"
+        ]
+      },
+      {
+        "period": "2019Q4",
+        "dateKey": "2019-10-31",
+        "operatingCashFlow": -23750000,
+        "capex": 4476000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1640147/000164014720000023/snow-20201031.htm",
+        "method": "official-nine-month-minus-half-year",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1640147/000162828020013667/snowflake424b4.htm",
+          "https://www.sec.gov/Archives/edgar/data/1640147/000164014720000023/snow-20201031.htm"
+        ]
+      }
+    ],
+    "asml": [
+      {
+        "period": "2015Q2",
+        "dateKey": "2015-06-28",
+        "operatingCashFlow": 314038890,
+        "capex": 87638760,
+        "source": "https://www.sec.gov/Archives/edgar/data/937966/000093796615000005/usgaapfinancialstatementsq.htm",
+        "method": "official-reported-quarter-quarter-average-FX",
+        "cashFlowDetails": {
+          "operatingCashFlow": {
+            "value": 283800000,
+            "currency": "EUR",
+            "endDate": "2015-06-28",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "consolidated-operating-cash-flow"
+          },
+          "capex": {
+            "value": 79200000,
+            "currency": "EUR",
+            "endDate": "2015-06-28",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "US-GAAP-cash-PP&E-plus-intangibles"
+          }
+        }
+      },
+      {
+        "period": "2015Q3",
+        "dateKey": "2015-09-27",
+        "operatingCashFlow": 466567785,
+        "capex": 96136525,
+        "source": "https://www.sec.gov/Archives/edgar/data/937966/000093796615000008/financialstatementsusgaapq.htm",
+        "method": "official-reported-quarter-quarter-average-FX",
+        "cashFlowDetails": {
+          "operatingCashFlow": {
+            "value": 419800000,
+            "currency": "EUR",
+            "endDate": "2015-09-27",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "consolidated-operating-cash-flow"
+          },
+          "capex": {
+            "value": 86500000,
+            "currency": "EUR",
+            "endDate": "2015-09-27",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "US-GAAP-cash-PP&E-plus-intangibles"
+          }
+        }
+      }
+    ],
+    "sap": [
+      {
+        "period": "2009Q1",
+        "dateKey": "2009-03-31",
+        "operatingCashFlow": 1805349770,
+        "capex": 65175082,
+        "source": "https://www.sec.gov/Archives/edgar/data/1000184/000132693209000100/f03080exv99w1.htm",
+        "method": "official-total-CFO-including-discontinued-operations-quarter-average-FX",
+        "cashFlowDetails": {
+          "operatingCashFlow": {
+            "value": 1385000000,
+            "currency": "EUR",
+            "endDate": "2009-03-31",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "consolidated-operating-cash-flow"
+          },
+          "capex": {
+            "value": 50000000,
+            "currency": "EUR",
+            "endDate": "2009-03-31",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "cash-PP&E-plus-intangibles"
+          }
+        }
+      },
+      {
+        "period": "2009Q2",
+        "dateKey": "2009-06-30",
+        "operatingCashFlow": 596508778,
+        "capex": 76265963,
+        "source": "https://www.sec.gov/Archives/edgar/data/1000184/000095012309027568/f03140exv99w1.htm",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1000184/000095012309027568/f03140exv99w1.htm",
+          "https://www.sec.gov/Archives/edgar/data/1000184/000132693209000100/f03080exv99w1.htm"
+        ],
+        "method": "official-total-CFO-including-discontinued-operations-quarter-average-FX",
+        "cashFlowDetails": {
+          "operatingCashFlow": {
+            "value": 438000000,
+            "currency": "EUR",
+            "endDate": "2009-06-30",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "consolidated-operating-cash-flow"
+          },
+          "capex": {
+            "value": 56000000,
+            "currency": "EUR",
+            "endDate": "2009-06-30",
+            "method": "official-quarter-quarter-average-FX",
+            "basis": "cash-PP&E-plus-intangibles"
+          }
+        }
+      }
+    ],
+    "servicenow": [
+      {
+        "period": "2011Q1",
+        "dateKey": "2011-03-31",
+        "operatingCashFlow": 14086000,
+        "capex": 3826000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1373715/000119312512212288/d301887ds1a.htm",
+        "method": "official-IPO-reported-quarter"
+      },
+      {
+        "period": "2011Q2",
+        "dateKey": "2011-06-30",
+        "operatingCashFlow": 12671000,
+        "capex": 2850000,
+        "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001373715.json",
+        "method": "official-half-year-minus-IPO-Q1",
+        "supportingSources": [
+          "https://www.sec.gov/Archives/edgar/data/1373715/000119312512212288/d301887ds1a.htm",
+          "https://data.sec.gov/api/xbrl/companyfacts/CIK0001373715.json"
+        ]
       }
     ]
   }

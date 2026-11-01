@@ -991,10 +991,11 @@ test("places the company badge at the bottom when bar values are mostly negative
   );
 });
 
-test("chart rendering applies unified zero bounds, adaptive badge placement, and bounded tick hiding", () => {
+test("chart rendering applies adaptive bounds, adaptive badge placement, and bounded tick hiding", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
-  assert.match(script, /const boundsMode = PriceComparisonUtils\.resolveYAxisBoundsMode/);
+  assert.match(script, /FinancialMetricsUtils\.computeAdaptiveAxisBounds/);
+  assert.match(script, /includeZero: chartMode === "bar"/);
   assert.match(script, /function shouldReserveSingleCompanyLegendLayout/);
   assert.match(script, /plugins\.legend\.display = reserveLegendLayout/);
   assert.match(script, /display: reserveLegendLayout/);

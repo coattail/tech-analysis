@@ -140,3 +140,74 @@ test('ChronoScale cash flows reconcile to official Cloud carve-out totals and ex
   assert.equal(fy.reduce((n,p)=>n+c.capex[p],0),26876000);
   assert.equal(data().companies.sharonai.capex['2025Q3'],0);
 });
+
+test('exact interval differences recover first and last quarters without annual-average estimates', async () => {
+  const { buildCashFlowFacts } = await import('../scripts/cash-flow-history.mjs');
+  const fact = (start, end, val) => ({start, end, val, form:'10-K', fp:'FY', filed:'2027-02-01'});
+  const payload = {facts:{'us-gaap':{
+    NetCashProvidedByUsedInOperatingActivities:{units:{USD:[
+      fact('2026-01-01','2026-06-30',30),
+      fact('2026-04-01','2026-06-30',30),
+      fact('2026-01-01','2026-09-30',20),
+      fact('2026-07-01','2026-12-31',50),
+      fact('2025-01-01','2025-12-31',400),
+    ]}},
+  }}};
+  const series = buildCashFlowFacts(payload,'USD').operatingCashFlow;
+  assert.equal(series.get('2026Q1').value,0);
+  assert.equal(series.get('2026Q1').method,'exact-interval-difference');
+  assert.equal(series.get('2026Q3').value,-10);
+  assert.equal(series.get('2026Q4').value,60);
+  assert.equal(series.get('2026Q4').startDate,'2026-10-01');
+  assert.equal(series.get('2026Q4').method,'exact-interval-difference');
+  for (const p of ['2025Q1','2025Q2','2025Q3','2025Q4']) assert.equal(series.has(p),false);
+});
+
+test('recovered IPO comparative quarters reconcile to original cash-flow statements', () => {
+  const d=data();
+  const sum=(id,metric,periods)=>periods.reduce((n,p)=>n+d.companies[id][metric][p],0);
+  const meta=d.companies.meta;
+  assert.equal(meta.operatingCashFlow['2011Q2'],129_000_000);
+  assert.equal(meta.capex['2011Q2'],132_000_000);
+  assert.equal(meta.freeCashFlow['2011Q2'],-3_000_000);
+  assert.equal(sum('meta','operatingCashFlow',['2011Q1','2011Q2']),474_000_000);
+  assert.equal(sum('meta','capex',['2011Q1','2011Q2']),285_000_000);
+  const fy2018=['2018Q1','2018Q2','2018Q3','2018Q4'];
+  assert.equal(sum('datadog','operatingCashFlow',fy2018),10_829_000);
+  assert.equal(sum('datadog','capex',fy2018),15_838_000);
+  assert.equal(sum('datadog','freeCashFlow',fy2018),-5_009_000);
+  const snowFiscal2020=['2019Q2','2019Q3','2019Q4','2020Q1'];
+  assert.equal(sum('snowflake','operatingCashFlow',snowFiscal2020),-176_558_000);
+  assert.equal(sum('snowflake','capex',snowFiscal2020),22_848_000);
+  assert.equal(sum('servicenow','operatingCashFlow',['2011Q1','2011Q2']),26_757_000);
+  assert.equal(sum('servicenow','capex',['2011Q1','2011Q2']),6_676_000);
+  assert.equal(sum('servicenow','operatingCashFlow',['2011Q3','2011Q4']),13_220_000);
+  assert.equal(sum('servicenow','capex',['2011Q3','2011Q4']),7_959_000);
+  assert.equal(d.companies.palantir.freeCashFlow['2019Q3'],-163_391_000);
+});
+
+test('early cash histories match official annual totals and retain net disposal signs', () => {
+  const d=data();
+  const sum=(id,metric,y)=>[1,2,3,4].reduce((n,q)=>n+d.companies[id][metric][`${y}Q${q}`],0);
+  for (const [id,metric,y,expected] of [
+    ['lilly','capex',2005,1_298_100_000],
+    ['lilly','capex',2006,1_077_800_000],
+    ['lilly','capex',2007,1_082_400_000],
+    ['caterpillar','capex',2007,1_700_000_000],
+    ['chevron','capex',2005,8_701_000_000],
+    ['chevron','capex',2007,16_678_000_000],
+    ['adobe','capex',2007,132_075_000],
+    ['netflix','capex',2005,28_134_000],
+    ['netflix','capex',2006,27_918_000],
+    ['netflix','capex',2007,44_806_000],
+    ['jpmorgan','operatingCashFlow',2006,-49_579_000_000],
+    ['bankofamerica','operatingCashFlow',2005,-12_223_000_000],
+  ]) assert.equal(sum(id,metric,y),expected,`${id}:${metric}:${y}`);
+  assert.equal(d.companies.bankofamerica.capex['2006Q1'],-140_000_000);
+  assert.equal(d.companies.netflix.capex['2008Q1'],12_431_000);
+  const history=JSON.parse(fs.readFileSync(path.join(root,'data/cash-flow-history.json')));
+  const sap=history.companies.sap.points['2009Q1'];
+  assert.equal(sap.operatingCashFlow.nativeCurrency,'EUR');
+  assert.equal(sap.operatingCashFlow.nativeValue,1_385_000_000);
+  assert.equal(sap.capex.nativeValue,50_000_000);
+});

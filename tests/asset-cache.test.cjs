@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20261101-single-row-cash-history"],
+    ["data.js", "20261102-verified-history-adaptive-axis"],
     ["price-data.js", "20261101-cash-flow"],
   ]) {
     assert.match(
@@ -59,9 +59,9 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
   for (const [asset, expectedVersion] of [
     ["price-comparison.js", "20261101-cash-flow-price-overlay"],
     ["logo-layout.js", "20260629-visible-area"],
-    ["financial-metrics.js", "20261101-company-sum"],
+    ["financial-metrics.js", "20261102-verified-history-adaptive-axis"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261101-rounded-sum-stacks"],
+    ["script.js", "20261102-verified-history-adaptive-axis"],
   ]) {
     assert.match(
       html,
