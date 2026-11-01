@@ -1044,6 +1044,20 @@ body:not([data-theme="deep"]) .control-group {
   box-shadow: var(--btn-primary-shadow);
 }
 
+#sumCompaniesBtn { grid-column: 1 / -1; }
+#sumCompaniesBtn[aria-pressed="true"] {
+  border-color: var(--option-active-border);
+  background: var(--option-active-bg);
+  color: var(--option-active-text);
+  box-shadow: var(--option-active-shadow);
+}
+#sumCompaniesBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 #generateBtn:hover {
   border-color: rgba(255, 222, 167, 0.98);
   background: var(--btn-primary-bg-hover);

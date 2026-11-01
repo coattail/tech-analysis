@@ -1135,11 +1135,11 @@ test("single-company bars pin thickness when price overlay is dense", () => {
   assert.match(script, /currentDataset\.barThickness = nextDataset\.barThickness;/);
 });
 
-test("single-company bars stay centered while two-company bars are grouped", () => {
+test("single-company bars stay centered while two/three-company bars are grouped", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
 
-  assert.match(script, /const dualCompanyBars = useBarForFocusedCompanies && visibleCompanyCount === 2/);
-  assert.match(script, /grouped:\s*useBarDataset\s*\?\s*dualCompanyBars\s*:\s*undefined/);
+  assert.match(script, /const groupedCompanyBars = useBarForFocusedCompanies && visibleCompanyCount > 1/);
+  assert.match(script, /grouped:\s*useBarDataset\s*\?\s*groupedCompanyBars\s*:\s*undefined/);
   assert.match(script, /currentDataset\.grouped = nextDataset\.grouped;/);
 });
 

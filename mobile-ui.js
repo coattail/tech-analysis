@@ -18,12 +18,12 @@
   paint();
   media.addEventListener("change", paint);
   new MutationObserver(paint).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
-  const apply = panel.querySelector("#renderBtn, #run-backtest, #generateBtn");
-  if (apply) apply.addEventListener("click", () => {
+  const applyButtons = panel.querySelectorAll("#renderBtn, #run-backtest, #generateBtn, #sumCompaniesBtn");
+  applyButtons.forEach(apply => apply.addEventListener("click", () => {
     if (!media.matches) return;
     expanded = false;
     paint();
     window.dispatchEvent(new Event("resize"));
     button.scrollIntoView({ block: "start" });
-  });
+  }));
 })();

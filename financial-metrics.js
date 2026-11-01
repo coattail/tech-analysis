@@ -9,6 +9,20 @@
     return typeof value === "number" && Number.isFinite(value);
   }
 
+  const SUMMABLE_METRICS = new Set(["revenue", "operatingIncome", "netIncome", "operatingCashFlow", "capex", "freeCashFlow"]);
+
+  function canSumCompanies(metric, companyCount) {
+    return SUMMABLE_METRICS.has(metric) && companyCount >= 2;
+  }
+
+  function sumCompanySeries(labels, series) {
+    return new Map(labels.map(label => {
+      const values = series.map(item => item?.get(label));
+      const complete = values.length >= 2 && values.every(isFiniteNumber);
+      return [label, complete ? values.reduce((total, value) => total + value, 0) : null];
+    }));
+  }
+
   function computeYearOverYearGrowth(labels, valueSeries, lag) {
     const growth = new Map(labels.map((label) => [label, null]));
 
@@ -228,6 +242,8 @@
   }
 
   const api = {
+    canSumCompanies,
+    sumCompanySeries,
     computeYearOverYearGrowth,
     getGrowthOverlayMetric,
     canShowGrowthOverlay,
