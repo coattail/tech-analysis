@@ -59,7 +59,8 @@ export function applyCashFlowRows(company, rows, { source, minPeriod, periods, p
         ...(detail ? { concept: detail.concept, startDate: detail.startDate, filed: detail.filed,
           accession: detail.accession, nativeCurrency: detail.currency, nativeValue: detail.value, basis: detail.basis } : {}),
         ...(row.precision != null ? { precision: row.precision, periodEndPrecision: 'month' } : {}),
-        ...(row.basis ? { basis: row.basis } : {}),
+        ...(row.bases?.[metric] ? { basis: row.bases[metric] } : row.basis ? { basis: row.basis } : {}),
+        ...(row.reconciliation?.[metric] ? { reconciliation: row.reconciliation[metric] } : {}),
         ...(row.supportingSources ? { supportingSources: row.supportingSources } : {}),
       };
     }

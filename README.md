@@ -72,6 +72,8 @@ SK 海力士归入半导体，财务历史覆盖 2018Q1–2026Q3；韩元流量�
 
 逐点来源保存在 `data/cash-flow-history.json`，经验证的补充历史在 `data/cash-flow-supplemental.json`，每家公司的逐季度缺口和原因在 `data/cash-flow-coverage.json`。本次历史回补新增 2,518 个季度指标值（经营现金流 876、CapEx 743、自由现金流 899）。未披露可比 CapEx 的银行、无法核实的早期季度及尚未披露的最新季度继续保留空值，不以零或年均值填充。ChronoScale 仅采用云业务拆分财报，排除同一 CIK 下旧 Ekso 业务的数据。
 
+2026-11-02 进一步从原始财报、IPO 招股书与公开申报草稿补入 214 个缺失指标值，详见[补录对账及剩余缺口清单](data/cash-flow-audit.md)。折线纵轴按可见区间收紧，柱形保留零基线，求和柱形按正负堆叠总高度计算边界。
+
 SpaceX 使用合并口径，包含 Space、Connectivity 和 AI/SI 业务，官方 SEC 披露优先于数据商的调整值。
 
 ## 技术栈

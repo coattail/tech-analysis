@@ -534,7 +534,7 @@ test("wires the compact growth toggles, theme-aware line, and shared right axis 
   assert.match(script, /state\.growthOverlayEnabled = false/);
   assert.match(script, /formatSecondaryAxisTick\(secondaryOverlayType, value\)/);
   assert.match(script, /FinancialMetricsUtils\.alignYAxisZeroPositions\(\{[\s\S]*primaryBounds: basePrimaryBounds,[\s\S]*secondaryBounds,[\s\S]*\}\)/);
-  assert.match(script, /FinancialMetricsUtils\.computeTightMixedAxisBounds\(\{[\s\S]*min: toAxisDisplayValue\(state\.metric, min\),[\s\S]*max: toAxisDisplayValue\(state\.metric, includesPositive \? max : 0\)/);
+  assert.match(script, /FinancialMetricsUtils\.computeAdaptiveAxisBounds\([\s\S]*values\.map\(value => toAxisDisplayValue\(state\.metric, value\)\),[\s\S]*includeZero: chartMode === "bar"/);
   assert.match(script, /FinancialMetricsUtils\.computeGrowthChartExpansionRatio/);
   assert.match(script, /FinancialMetricsUtils\.resolveWatermarkReferencePlotHeight/);
   assert.match(script, /const canReuseBaseLayout = hasGrowthOverlay/);

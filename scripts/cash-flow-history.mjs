@@ -82,10 +82,34 @@ export function buildCashFlowFacts(payload, currency, { allowNetCapex = false, n
       const previous = facts.filter(p => p.startDate === fact.startDate && p.endDate < fact.endDate
         && span(nextDay(p.endDate), fact.endDate) >= 45 && span(nextDay(p.endDate), fact.endDate) <= 120)
         .sort((a, b) => b.endDate.localeCompare(a.endDate) || b.priority - a.priority)[0];
-      if (!previous) continue;
-      // Duration differencing is valid across a tag rename only for the same metric and fiscal start.
-      put({ ...fact, value: fact.value - previous.value, startDate: nextDay(previous.endDate),
+      if (previous) put({ ...fact, value: fact.value - previous.value, startDate: nextDay(previous.endDate),
         method: 'cumulative-difference', components: [previous, fact] });
+    }
+    // A filing may disclose H1 plus Q2 (allowing Q1), or H2 plus a Q3
+    // already recovered from YTD facts (allowing Q4). Solve exact intervals
+    // in both directions; never infer a quarter from annual averages.
+    for (let pass = 0; pass < 4; pass += 1) {
+      let added = false;
+      const known = [...facts, ...quarterly.values()];
+      for (const fact of [...facts].sort((a, b) => b.priority - a.priority || b.filed.localeCompare(a.filed))) {
+        if (fact.days <= 120) continue;
+        for (const part of known) {
+          let startDate, endDate;
+          if (part.startDate === fact.startDate && part.endDate < fact.endDate) {
+            startDate = nextDay(part.endDate); endDate = fact.endDate;
+          } else if (part.endDate === fact.endDate && part.startDate > fact.startDate) {
+            startDate = fact.startDate; endDate = new Date(Date.parse(part.startDate) - 86400000).toISOString().slice(0, 10);
+          } else continue;
+          const days = span(startDate, endDate);
+          if (days < 45 || days > 120) continue;
+          const period = cashFlowPeriod(endDate);
+          if (quarterly.has(period)) continue;
+          put({ ...fact, value: fact.value - part.value, startDate, endDate, days,
+            method: 'exact-interval-difference', components: [part, fact] });
+          added = true;
+        }
+      }
+      if (!added) break;
     }
     output[metric] = quarterly;
   }
@@ -142,6 +166,10 @@ export function buildCoverage(data, history, before = null) {
       if (missing.length) record.metrics[metric].reason = ['jpmorgan','bankofamerica'].includes(id) && metric !== 'operatingCashFlow'
         ? 'Comparable cash CapEx not separately disclosed; aggregator zero placeholders were rejected.'
         : id === 'chronoscale' ? 'Standalone cloud-business carve-out quarter not available; legacy Ekso business under the same CIK was excluded.'
+        : id === 'nebius' ? 'Standalone continuing-business cash flows for the first post-Yandex carve-out quarter are not separately disclosed.'
+        : id === 'abbvie' ? 'Latest earnings release does not include these cash-flow figures; the corresponding quarterly cash-flow filing is not yet available.'
+        : ['meta','palantir','datadog','snowflake','cloudflare','zoom'].includes(id)
+          ? 'Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately.'
         : 'No verified standalone quarter available in SEC facts, provider history, or published overrides.';
       const keys = Object.keys(company[metric] ?? {}).filter(p => Number.isFinite(company[metric][p])).sort();
       history.companies[id].coverage[metric] = { count: keys.length, first: keys[0] ?? null, last: keys.at(-1) ?? null };

@@ -30636,11 +30636,11 @@
       "validation": {
         "operatingCashFlow": {
           "overlap": 88,
-          "matches": 83,
+          "matches": 82,
           "accepted": true
         },
         "capex": {
-          "overlap": 9,
+          "overlap": 10,
           "matches": 0,
           "accepted": false
         }
