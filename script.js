@@ -49,7 +49,7 @@ const UI_TRANSLATIONS = {
     revenue: "营收",
     operatingIncome: "营业利润",
     freeCashFlow: "自由现金流",
-    capex: "资本开支",
+    capex: "CapEx",
     operatingCashFlow: "经营现金流",
     netIncome: "净利润",
     grossMargin: "毛利率",
@@ -847,7 +847,7 @@ const customYAxisTitlePlugin = {
 
 const METRICS = {
   freeCashFlow: { label: "自由现金流（美元）", axisLabel: "自由现金流（美元，USD）", sourceKey: "freeCashFlow", annualMode: "sum" },
-  capex: { label: "资本开支（美元）", axisLabel: "资本开支（美元，USD）", sourceKey: "capex", annualMode: "sum" },
+  capex: { label: "CapEx（美元）", axisLabel: "CapEx（美元，USD）", sourceKey: "capex", annualMode: "sum" },
   operatingCashFlow: { label: "经营现金流（美元）", axisLabel: "经营现金流（美元，USD）", sourceKey: "operatingCashFlow", annualMode: "sum" },
   revenue: {
     label: "营收（美元）",
@@ -905,7 +905,7 @@ const METRIC_TRANSLATIONS = {
     en: { label: "Free Cash Flow (USD)", name: "Free Cash Flow", unit: " (USD)" },
   },
   capex: {
-    zh: { label: "资本开支（美元）", name: "资本开支", unit: "（美元，USD）" },
+    zh: { label: "CapEx（美元）", name: "CapEx", unit: "（美元，USD）" },
     en: { label: "CapEx (USD)", name: "CapEx", unit: " (USD)" },
   },
   operatingCashFlow: {
