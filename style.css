@@ -1445,6 +1445,8 @@ body:not([data-theme="deep"]) .chart-panel {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
+  /* Keep hover lift, active shadows and keyboard focus inside the scrollport. */
+  padding: 6px;
   gap: 7px;
   margin: 10px 2px 0;
   position: relative;
