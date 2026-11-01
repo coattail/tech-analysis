@@ -20,7 +20,7 @@ The project focuses on three things:
 
 ## Features
 
-- Metric switching: Revenue, Operating Income, Net Income, Gross Margin, P/E, ROE, Revenue YoY Growth, Profit YoY Growth
+- Metric switching: Revenue, Operating Income, Net Income, Operating Cash Flow, CapEx, Free Cash Flow, Gross Margin, P/E, ROE, Revenue YoY Growth, Profit YoY Growth
 - Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
 - Hybrid comparison colors: MAG7 keeps representative fixed colors while focused peers dynamically avoid the active comparison colors
@@ -35,12 +35,13 @@ The project focuses on three things:
 
 ## Covered Companies
 
-As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across mega-cap, enterprise software, and cloud computing:
+As of November 1, 2026, the sample covers 46 leading U.S.-listed companies across mega-cap, enterprise software, and cloud computing:
 
 - NVIDIA, Alphabet, Apple, Microsoft, Amazon, Broadcom, Meta, TSMC, Tesla, Walmart
 - Berkshire Hathaway, JPMorgan Chase, Eli Lilly, Exxon Mobil, Visa, ASML, Micron, Johnson & Johnson, Oracle, AMD
 - Mastercard, Costco, Netflix, Bank of America, Caterpillar, Chevron, Palantir, Cisco, AbbVie, Home Depot
 - IBM, SAP, CrowdStrike, Salesforce, ServiceNow, Datadog, Snowflake, Cloudflare, Adobe, Zoom
+- CoreWeave, Nebius, ChronoScale, SharonAI, SK hynix, SpaceX (SPCX, Cloud)
 
 ## Metric Definitions
 
@@ -49,6 +50,9 @@ As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across m
 | Revenue | `revenue` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
 | Operating Income | `operatingIncome` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
 | Net Income | `earnings` | Raw quarterly value | Sum of four quarters | Sum of the latest complete four quarters; null until four quarters are present |
+| Operating Cash Flow | `operatingCashFlow` | Quarterly cash from operations | Four complete quarters | Latest four complete quarters |
+| CapEx | `capex` | Positive cash capital spending | Four complete quarters | Latest four complete quarters |
+| Free Cash Flow | `freeCashFlow` | Operating cash flow minus CapEx | Four complete quarters | Latest four complete quarters |
 | Gross Margin | `grossMargin` | Raw quarterly value | Revenue-weighted recomputation | Revenue-weighted recomputation over the latest complete four quarters; null until four quarters are present |
 | P/E | `pe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
 | ROE | `roe` | Raw quarterly value | Q4 snapshot | Complete four-quarter average; null until four quarters are present |
@@ -57,6 +61,12 @@ As of June 28, 2026, the sample covers 40 leading U.S.-listed companies across m
 
 Operating income is continuously covered from each company's listing quarter, with a floor of 2005Q1. Where direct quarterly values are unavailable around the pre-2012 period, quarters are reconstructed from adjacent TTM operating income and a known quarter using
 `Q[t-4] = Q[t] - (TTM[t] - TTM[t-1])`. Because the historical TTM source is published in USD billions to two decimal places, reconstructed early values have USD-million precision. Banks use the source's standardized operating-income presentation so JPMorgan Chase and Bank of America remain continuously comparable.
+
+## Cash-flow metrics and SpaceX
+
+SpaceX (SPCX) is included in Cloud. All 46 companies have `operatingCashFlow`, `capex`, and `freeCashFlow` series. Quarterly amounts are in USD; CapEx is positive cash spending, and free cash flow equals operating cash flow minus CapEx. Annual and TTM views require all four quarters. Missing values remain null, including bank CapEx that is not separately disclosed.
+
+Run `node scripts/auto-refresh-cash-flow.mjs` to refresh SEC CompanyFacts history and StockAnalysis quarterly supplements. Cumulative SEC flows are converted to individual quarters; non-USD flows use quarter-average FX. Point sources and coverage are saved in `data/cash-flow-history.json`. Cash CapEx excludes business acquisitions and noncash finance leases; provider classifications can differ. The scheduled workflow refreshes these metrics as well.
 
 ## Stack
 

@@ -1,0 +1,63 @@
+{
+  "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals.",
+  "companies": {
+    "spacex": [
+      {
+        "period": "2025Q1",
+        "dateKey": "2025-03-31",
+        "operatingCashFlow": 727000000,
+        "capex": 4140000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm",
+        "method": "reported-quarter"
+      },
+      {
+        "period": "2025Q2",
+        "dateKey": "2025-06-30",
+        "operatingCashFlow": -376000000,
+        "capex": 2825000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm",
+        "method": "six-month-minus-Q1"
+      },
+      {
+        "period": "2025Q3",
+        "dateKey": "2025-09-30",
+        "operatingCashFlow": 3769000000,
+        "capex": 6881000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm",
+        "method": "nine-month-minus-six-month"
+      },
+      {
+        "period": "2025Q4",
+        "dateKey": "2025-12-31",
+        "operatingCashFlow": 2665000000,
+        "capex": 6891000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm#annual-2025-minus-nine-month-2025",
+        "method": "annual-minus-nine-month"
+      },
+      {
+        "period": "2026Q1",
+        "dateKey": "2026-03-31",
+        "operatingCashFlow": 1047000000,
+        "capex": 10107000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm",
+        "method": "reported-quarter"
+      },
+      {
+        "period": "2026Q2",
+        "dateKey": "2026-06-30",
+        "operatingCashFlow": 2419000000,
+        "capex": 18369000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm",
+        "method": "six-month-minus-Q1"
+      },
+      {
+        "period": "2026Q3",
+        "dateKey": "2026-09-30",
+        "operatingCashFlow": 9631000000,
+        "capex": 19593000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm",
+        "method": "nine-month-minus-six-month"
+      }
+    ]
+  }
+}

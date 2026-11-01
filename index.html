@@ -13,14 +13,14 @@
     />
     <link rel="stylesheet" href="style.css?v=20261020-mobile" />
     <script defer src="assets/vendor/chartjs-4.4.1/chart.umd.js"></script>
-    <script defer src="data.js?v=20261030-amazon-q3"></script>
-    <script defer src="price-data.js?v=20261028-sk-hynix"></script>
+    <script defer src="data.js?v=20261101-cash-flow"></script>
+    <script defer src="price-data.js?v=20261101-cash-flow"></script>
     <script defer src="price-comparison.js?v=20260827-compact-profit-axis"></script>
     <script defer src="company-selection.js?v=20260827-latest-any-range"></script>
     <script defer src="series-colors.js?v=20260830-hybrid-comparison-palette"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
-    <script defer src="financial-metrics.js?v=20260717-growth-sanity"></script>
-    <script defer src="script.js?v=20261028-sk-hynix"></script>
+    <script defer src="financial-metrics.js?v=20261101-cash-flow"></script>
+    <script defer src="script.js?v=20261101-cash-flow"></script>
     <script defer src="./mobile-ui.js?v=20261020-mobile"></script>
   </head>
   <body data-theme="deep">
@@ -70,7 +70,7 @@
             <details class="source-details">
               <summary data-i18n="sourceSummary">查看数据口径与来源</summary>
               <p class="source-note" data-i18n="sourceNote">
-                数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis、Macrotrends。营业利润自公司上市后（不早于 2005Q1）逐季覆盖；较早季度由已发布的单季值与相邻 TTM 值反推。营收、营业利润与净利润统一为美元；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算。支持季度、年度与滚动年化浏览。
+                数据来源：SEC CompanyFacts、CompaniesMarketCap、StockAnalysis、Macrotrends。营业利润自公司上市后（不早于 2005Q1）逐季覆盖；较早季度由已发布的单季值与相邻 TTM 值反推。营收、营业利润与净利润统一为美元；毛利率按毛利润/营收计算；市盈率为报告期估值指标；ROE 按净利润/净资产计算。经营现金流、CapEx 与自由现金流统一为美元单季值；CapEx 以正数表示现金支出，自由现金流＝经营现金流－CapEx。年度与滚动年化需四个完整季度；未披露数据为空。支持季度、年度与滚动年化浏览。
               </p>
             </details>
 
@@ -146,7 +146,7 @@
             </div>
             <div class="summary-card">
               <span class="summary-label" data-i18n="currentCompanies">当前公司</span>
-              <strong id="visibleCompaniesLabel">1 / 45</strong>
+              <strong id="visibleCompaniesLabel">1 / 46</strong>
             </div>
             <div class="summary-card">
               <span class="summary-label" data-i18n="dataUpdated">数据更新</span>
@@ -185,6 +185,18 @@
             <label class="metric-pill">
               <input type="radio" name="metric" value="operatingIncome" />
               <span data-i18n="operatingIncome">营业利润</span>
+            </label>
+            <label class="metric-pill">
+              <input type="radio" name="metric" value="operatingCashFlow" />
+              <span data-i18n="operatingCashFlow">经营现金流</span>
+            </label>
+            <label class="metric-pill">
+              <input type="radio" name="metric" value="capex" />
+              <span data-i18n="capex">CapEx</span>
+            </label>
+            <label class="metric-pill">
+              <input type="radio" name="metric" value="freeCashFlow" />
+              <span data-i18n="freeCashFlow">自由现金流</span>
             </label>
             <label class="metric-pill">
               <input type="radio" name="metric" value="grossMargin" />
