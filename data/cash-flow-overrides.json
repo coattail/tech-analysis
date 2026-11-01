@@ -1,5 +1,5 @@
 {
-  "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals.",
+  "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals. ChronoScale uses Cloud carve-out cash flows, excluding unrelated legacy Ekso. Berkshire early periods use official annual/quarterly PDFs and comparative restatements.",
   "companies": {
     "spacex": [
       {
@@ -57,6 +57,261 @@
         "capex": 19593000000,
         "source": "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm",
         "method": "nine-month-minus-six-month"
+      }
+    ],
+    "berkshire": [
+      {
+        "period": "2005Q1",
+        "dateKey": "2005-03-31",
+        "operatingCashFlow": 1359000000,
+        "capex": 303000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/1stqtr06.pdf",
+        "method": "official-reported-quarter",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/1stqtr06.pdf"
+        ]
+      },
+      {
+        "period": "2005Q2",
+        "dateKey": "2005-06-30",
+        "operatingCashFlow": 1734000000,
+        "capex": 384000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/2ndqtr06.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr06.pdf",
+          "https://www.berkshirehathaway.com/qtrly/1stqtr06.pdf"
+        ]
+      },
+      {
+        "period": "2005Q3",
+        "dateKey": "2005-09-30",
+        "operatingCashFlow": 2560000000,
+        "capex": 365000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/3rdqtr06.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr06.pdf",
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr06.pdf"
+        ]
+      },
+      {
+        "period": "2005Q4",
+        "dateKey": "2005-12-31",
+        "operatingCashFlow": 3793000000,
+        "capex": 1143000000,
+        "source": "https://www.berkshirehathaway.com/2007ar/2007ar.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/2007ar/2007ar.pdf",
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr06.pdf"
+        ]
+      },
+      {
+        "period": "2006Q1",
+        "dateKey": "2006-03-31",
+        "operatingCashFlow": 2359000000,
+        "capex": 747000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/1stqtr07.pdf",
+        "method": "official-reported-quarter",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/1stqtr07.pdf"
+        ]
+      },
+      {
+        "period": "2006Q2",
+        "dateKey": "2006-06-30",
+        "operatingCashFlow": 1092000000,
+        "capex": 1083000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/2ndqtr07.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr07.pdf",
+          "https://www.berkshirehathaway.com/qtrly/1stqtr07.pdf"
+        ]
+      },
+      {
+        "period": "2006Q3",
+        "dateKey": "2006-09-30",
+        "operatingCashFlow": 4431000000,
+        "capex": 1311000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/3rdqtr07.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr07.pdf",
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr07.pdf"
+        ]
+      },
+      {
+        "period": "2006Q4",
+        "dateKey": "2006-12-31",
+        "operatingCashFlow": 2313000000,
+        "capex": 1430000000,
+        "source": "https://www.berkshirehathaway.com/2007ar/2007ar.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/2007ar/2007ar.pdf",
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr07.pdf"
+        ]
+      },
+      {
+        "period": "2007Q1",
+        "dateKey": "2007-03-31",
+        "operatingCashFlow": 4625000000,
+        "capex": 1228000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/1stqtr08.pdf",
+        "method": "official-reported-quarter",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/1stqtr08.pdf"
+        ]
+      },
+      {
+        "period": "2007Q2",
+        "dateKey": "2007-06-30",
+        "operatingCashFlow": 2807000000,
+        "capex": 1324000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/2ndqtr08.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr08.pdf",
+          "https://www.berkshirehathaway.com/qtrly/1stqtr08.pdf"
+        ]
+      },
+      {
+        "period": "2007Q3",
+        "dateKey": "2007-09-30",
+        "operatingCashFlow": 3919000000,
+        "capex": 1365000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/3rdqtr08.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr08.pdf",
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr08.pdf"
+        ]
+      },
+      {
+        "period": "2007Q4",
+        "dateKey": "2007-12-31",
+        "operatingCashFlow": 1199000000,
+        "capex": 1456000000,
+        "source": "https://www.berkshirehathaway.com/2007ar/2007ar.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/2007ar/2007ar.pdf",
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr08.pdf"
+        ]
+      },
+      {
+        "period": "2008Q1",
+        "dateKey": "2008-03-31",
+        "operatingCashFlow": 3353000000,
+        "capex": 1041000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/1stqtr08.pdf",
+        "method": "official-reported-quarter",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/1stqtr08.pdf"
+        ]
+      },
+      {
+        "period": "2008Q2",
+        "dateKey": "2008-06-30",
+        "operatingCashFlow": 1638000000,
+        "capex": 1497000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/2ndqtr08.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr08.pdf",
+          "https://www.berkshirehathaway.com/qtrly/1stqtr08.pdf"
+        ]
+      },
+      {
+        "period": "2008Q3",
+        "dateKey": "2008-09-30",
+        "operatingCashFlow": 3437000000,
+        "capex": 1663000000,
+        "source": "https://www.berkshirehathaway.com/qtrly/3rdqtr08.pdf",
+        "method": "official-YTD-difference",
+        "supportingSources": [
+          "https://www.berkshirehathaway.com/qtrly/3rdqtr08.pdf",
+          "https://www.berkshirehathaway.com/qtrly/2ndqtr08.pdf"
+        ]
+      }
+    ],
+    "sharonai": [
+      {
+        "period": "2025Q3",
+        "dateKey": "2025-09-30",
+        "capex": 0,
+        "source": "https://www.sec.gov/Archives/edgar/data/2068385/000182912625010236/sharonaiholdings_ex99-1.htm",
+        "method": "nine-month-minus-Q1-minus-Q2"
+      }
+    ],
+    "chronoscale": [
+      {
+        "period": "2024Q3",
+        "exclude": true,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000149315226031317/ex99-2.htm",
+        "reason": "Cloud carve-out has no separately disclosed standalone quarter here; legacy Ekso cash flows are excluded."
+      },
+      {
+        "period": "2024Q4",
+        "exclude": true,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000149315226031317/ex99-2.htm",
+        "reason": "Cloud carve-out has no separately disclosed standalone quarter here; legacy Ekso cash flows are excluded."
+      },
+      {
+        "period": "2025Q1",
+        "exclude": true,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000149315226031317/ex99-2.htm",
+        "reason": "Cloud carve-out has no separately disclosed standalone quarter here; legacy Ekso cash flows are excluded."
+      },
+      {
+        "period": "2025Q2",
+        "dateKey": "2025-05-31",
+        "operatingCashFlow": 198000,
+        "capex": 518000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000149315226031317/ex99-2.htm",
+        "method": "fiscal-year-minus-nine-month"
+      },
+      {
+        "period": "2025Q3",
+        "dateKey": "2025-08-31",
+        "operatingCashFlow": 95000,
+        "capex": 977000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000162828026065876/chrn-20260831.htm",
+        "method": "reported-comparative-quarter"
+      },
+      {
+        "period": "2025Q4",
+        "dateKey": "2025-11-30",
+        "operatingCashFlow": 14448000,
+        "capex": 4799000,
+        "source": "https://ir.chronoscale.com/financials-filings/all-sec-filings/content/0001437749-26-009267/ekso-20251231.htm",
+        "method": "six-month-minus-Q1"
+      },
+      {
+        "period": "2026Q1",
+        "dateKey": "2026-02-28",
+        "operatingCashFlow": 98563000,
+        "capex": 18495000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000149315226031317/ex99-2.htm",
+        "method": "nine-month-minus-six-month"
+      },
+      {
+        "period": "2026Q2",
+        "dateKey": "2026-05-31",
+        "operatingCashFlow": -74039000,
+        "capex": 2605000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000162828026058018/chrn-20260531.htm",
+        "method": "fiscal-year-minus-nine-month"
+      },
+      {
+        "period": "2026Q3",
+        "dateKey": "2026-08-31",
+        "operatingCashFlow": 14625000,
+        "capex": 3063000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1549084/000162828026065876/chrn-20260831.htm",
+        "method": "reported-quarter"
       }
     ]
   }

@@ -1440,13 +1440,21 @@ body:not([data-theme="deep"]) .chart-panel {
 }
 
 .metric-toolbar {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
   gap: 7px;
   margin: 10px 2px 0;
   position: relative;
   z-index: 1;
   container-type: inline-size;
+}
+
+.metric-toolbar > * {
+  flex: 1 0 max-content;
+  min-width: max-content;
 }
 
 .metric-pill {
@@ -1470,12 +1478,12 @@ body:not([data-theme="deep"]) .chart-panel {
   align-items: center;
   justify-content: center;
   min-width: 0;
-  padding: 0 clamp(4px, 0.65cqi, 10px);
+  padding: 0 clamp(5px, 0.65cqi, 10px);
   border-radius: 9px;
   border: 1px solid rgba(112, 128, 151, 0.14);
   background: linear-gradient(180deg, rgba(22, 30, 42, 0.92), rgba(17, 24, 34, 0.96));
   color: var(--text-body);
-  font-size: clamp(0.68rem, 1.5cqi, 0.88rem);
+  font-size: clamp(0.68rem, 1.25cqi, 0.88rem);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
@@ -1882,9 +1890,6 @@ body:not([data-theme="deep"]) .range-panel {
     justify-content: flex-start;
   }
 
-  .metric-toolbar {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 
 @media (min-width: 701px) and (max-width: 980px) {
@@ -1962,9 +1967,6 @@ body:not([data-theme="deep"]) .range-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .metric-toolbar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 
   .frequency-switch .segment-item span,
   .toggle-item,
@@ -2228,7 +2230,6 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .metric-toolbar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
     margin-top: 8px;
   }
@@ -2264,9 +2265,6 @@ body:not([data-theme="deep"]) .range-panel {
     grid-template-columns: 1fr;
   }
 
-  .metric-toolbar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .frequency-switch {
     grid-template-columns: repeat(2, minmax(0, 1fr));

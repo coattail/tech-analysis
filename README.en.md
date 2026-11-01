@@ -20,6 +20,7 @@ The project focuses on three things:
 
 ## Features
 
+- Single-row metric toolbar with horizontal scrolling on narrow screens; companies in each category sorted by latest USD market capitalization, refreshed daily
 - Metric switching: Revenue, Operating Income, Net Income, Operating Cash Flow, CapEx, Free Cash Flow, Gross Margin, P/E, ROE, Revenue YoY Growth, Profit YoY Growth
 - Multi-frequency views: Quarterly, Annual, Rolling Annual (TTM)
 - Multi-company comparison: per-company visibility toggles, Show All, Hide All
@@ -66,7 +67,9 @@ Operating income is continuously covered from each company's listing quarter, wi
 
 SpaceX (SPCX) is included in Cloud. All 46 companies have `operatingCashFlow`, `capex`, and `freeCashFlow` series. Quarterly amounts are in USD; CapEx is positive cash spending, and free cash flow equals operating cash flow minus CapEx. Annual and TTM views require all four quarters. Missing values remain null, including bank CapEx that is not separately disclosed.
 
-Run `node scripts/auto-refresh-cash-flow.mjs` to refresh SEC CompanyFacts history and StockAnalysis quarterly supplements. Cumulative SEC flows are converted to individual quarters; non-USD flows use quarter-average FX. Point sources and coverage are saved in `data/cash-flow-history.json`. Cash CapEx excludes business acquisitions and noncash finance leases; provider classifications can differ. The scheduled workflow refreshes these metrics as well.
+Run `node scripts/auto-refresh-cash-flow.mjs` to refresh SEC CompanyFacts history and StockAnalysis quarterly supplements. Cumulative flows with the same fiscal start are differenced into individual quarters. Primary non-USD facts use quarter-average FX; validated WallStreetNumbers historical supplements retain the vendor’s USD conversion and published precision. Cash CapEx includes property/equipment and separately disclosed capitalized software/intangibles, excludes business acquisitions and noncash finance leases, and may vary with source classifications.
+
+This backfill adds 2,518 quarterly metric values (876 operating cash flow, 743 CapEx, 899 free cash flow). Point sources are in `data/cash-flow-history.json`, validated supplements in `data/cash-flow-supplemental.json`, and all remaining quarter-level gaps with reasons in `data/cash-flow-coverage.json`. Undisclosed bank CapEx and unverifiable early or newly reported quarters remain null. ChronoScale uses the cloud-business carve-out statements and excludes legacy Ekso data under the same CIK. Reapply verified history with `node scripts/backfill-cash-flow-history.mjs`; refresh sorting inputs with `node scripts/auto-refresh-market-caps.mjs`. The scheduled workflow refreshes cash flows and market capitalizations daily.
 
 ## Stack
 

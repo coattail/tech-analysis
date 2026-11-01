@@ -94,3 +94,49 @@ test('annual and TTM cash flows require four quarters and preserve negative FCF'
   const rolling = new Map(aggregateFlowRollingAnnualEntries(Object.entries(c.freeCashFlow)));
   assert.equal(rolling.get('2026Q3'), ['2025Q4', '2026Q1', '2026Q2', '2026Q3'].reduce((n, p) => n + c.freeCashFlow[p], 0));
 });
+
+test('cash-flow duration extraction includes FY-labelled interim facts and tag renames', async () => {
+  const { buildCashFlowFacts } = await import('../scripts/cash-flow-history.mjs');
+  const fact = (start,end,val) => ({start,end,val,form:'10-K',fp:'FY',filed:'2027-02-01',accn:'test'});
+  const payload = { facts: { 'us-gaap': {
+    NetCashProvidedByUsedInOperatingActivities: { units: { USD: [fact('2026-01-01','2026-03-31',10), fact('2026-01-01','2026-06-30',10), fact('2026-01-01','2026-09-30',25)] } },
+  } } };
+  const result = buildCashFlowFacts(payload,'USD').operatingCashFlow;
+  assert.equal(result.get('2026Q2').value,0);
+  assert.equal(result.get('2026Q3').value,15);
+  assert.equal(result.get('2026Q3').method,'cumulative-difference');
+});
+
+test('capitalized software is included without double-counting acquired intangible assets', async () => {
+  const { buildCashFlowFacts } = await import('../scripts/cash-flow-history.mjs');
+  const field = val => ({units:{USD:[{start:'2026-01-01',end:'2026-03-31',val,fp:'Q1',form:'10-Q',filed:'2026-05-01'}]}});
+  const payload = {facts:{'us-gaap':{
+    PaymentsToAcquirePropertyPlantAndEquipment:field(100),
+    PaymentsToAcquireSoftware:field(20),
+    PaymentsToAcquireIntangibleAssets:field(30),
+  }}};
+  assert.equal(buildCashFlowFacts(payload,'USD').capex.get('2026Q1').value,130);
+  delete payload.facts['us-gaap'].PaymentsToAcquireIntangibleAssets;
+  assert.equal(buildCashFlowFacts(payload,'USD').capex.get('2026Q1').value,120);
+});
+
+test('published history parser isolates quarters and preserves the displayed precision', async () => {
+  const {parseQuarterlyHistory}=await import('../scripts/cash-flow-history.mjs');
+  const text='L1: ### Quarterly CAPEX History\nL2: Sep 2026 | $2.46 B | 5%\nL3: Jun 2026$345.00 M+5%\nL4: Show Full History\nL5: ### TTM CAPEX History\nL6: Sep 2026 | $999.00 B';
+  const rows=parseQuarterlyHistory(text,'capex');
+  assert.equal(rows.length,2);
+  assert.equal(rows[0].capex,2460000000);
+  assert.equal(rows[0].precision,10000000);
+  assert.throws(()=>parseQuarterlyHistory('### Annual CAPEX History\nL1: Sep 2026 | $5 B','capex'),/Quarterly history heading missing/);
+});
+
+test('ChronoScale cash flows reconcile to official Cloud carve-out totals and exclude legacy Ekso', () => {
+  const c=data().companies.chronoscale;
+  assert.equal(c.operatingCashFlow['2024Q3'],null);
+  assert.equal(c.operatingCashFlow['2026Q2'],-74039000);
+  assert.equal(c.capex['2025Q3'],977000);
+  const fy=['2025Q3','2025Q4','2026Q1','2026Q2'];
+  assert.equal(fy.reduce((n,p)=>n+c.operatingCashFlow[p],0),39067000);
+  assert.equal(fy.reduce((n,p)=>n+c.capex[p],0),26876000);
+  assert.equal(data().companies.sharonai.capex['2025Q3'],0);
+});
