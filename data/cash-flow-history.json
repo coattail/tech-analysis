@@ -25623,14 +25623,28 @@
       "points": {
         "2026Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/xom/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002115436.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-02",
+            "accession": "0002115436-26-000020",
+            "nativeCurrency": "USD",
+            "nativeValue": 25650000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/xom/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002115436.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-02",
+            "accession": "0002115436-26-000020",
+            "nativeCurrency": "USD",
+            "nativeValue": 7178000000,
+            "basis": "reported-cash-flow"
           }
         },
         "2026Q2": {
@@ -25699,25 +25713,25 @@
         },
         "2025Q3": {
           "operatingCashFlow": {
-            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000034088.json",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002115436.json",
             "periodEnd": "2025-09-30",
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-03",
-            "accession": "0000034088-25-000061",
+            "filed": "2026-11-02",
+            "accession": "0002115436-26-000020",
             "nativeCurrency": "USD",
             "nativeValue": 14788000000,
             "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000034088.json",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002115436.json",
             "periodEnd": "2025-09-30",
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-03",
-            "accession": "0000034088-25-000061",
+            "filed": "2026-11-02",
+            "accession": "0002115436-26-000020",
             "nativeCurrency": "USD",
             "nativeValue": 8727000000,
             "basis": "reported-cash-flow"
