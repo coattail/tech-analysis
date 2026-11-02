@@ -736,25 +736,30 @@ const rightTickerLabelsPlugin = {
   },
 };
 
-const singleCompanyTickerWatermarkPlugin = {
-  id: "singleCompanyTickerWatermark",
+const chartWatermarkPlugin = {
+  id: "chartWatermark",
   beforeDatasetsDraw(chart) {
     const { ctx, chartArea } = chart;
     if (!chartArea) return;
 
     const singleCompanyId = getSingleVisibleCompanyId();
-    if (!singleCompanyId) return;
-
+    const isComparison = state.visibleCompanies.size >= 2;
     const company = COMPANY_META.get(singleCompanyId);
-    if (!company?.ticker) return;
+    const metricAbbreviation = METRICS[state.metric]?.watermark;
+    const watermarkText = isComparison
+      ? `${isCompanySumEnabled() ? "Σ " : ""}${metricAbbreviation || ""}`
+      : company?.ticker;
+    if (!watermarkText || (isComparison && !metricAbbreviation)) return;
 
-    const hasVisibleDataset = chart.data.datasets.some((item) => item.companyId === singleCompanyId && !item.hidden);
+    const hasVisibleDataset = chart.data.datasets.some((item) => !item.hidden
+      && !item.priceOverlay && !item.growthOverlay
+      && (isComparison || item.companyId === singleCompanyId));
     if (!hasVisibleDataset) return;
 
     const themeTokens = getChartThemeTokens();
-    const ticker = company.ticker;
     const plotWidth = chartArea.right - chartArea.left;
     const plotHeight = chartArea.bottom - chartArea.top;
+    if (plotWidth <= 0 || plotHeight <= 0) return;
     const renderedGrowthOverlay = chart.data.datasets.some((dataset) => dataset.growthOverlay && !dataset.hidden);
     const hasGrowthOverlay = typeof state.pendingGrowthOverlayLayout === "boolean"
       ? state.pendingGrowthOverlayLayout
@@ -763,7 +768,7 @@ const singleCompanyTickerWatermarkPlugin = {
     const cachedLayout = state.baseWatermarkLayout;
     const canReuseBaseLayout = hasGrowthOverlay
       && cachedLayout?.companyId === singleCompanyId
-      && cachedLayout?.ticker === ticker
+      && cachedLayout?.text === watermarkText
       && cachedLayout?.compact === compact
       && Math.abs(cachedLayout.chartWidth - chart.width) < 1;
     const watermarkPlotHeight = canReuseBaseLayout
@@ -778,7 +783,7 @@ const singleCompanyTickerWatermarkPlugin = {
     const maxTextHeight = watermarkPlotHeight * 0.34;
     const baseFontSize = 100;
     const baseFont = `800 ${baseFontSize}px ${themeTokens.chartFontFamily}`;
-    const measuredWidth = Math.max(measureTextWidth(ticker, baseFont), 1);
+    const measuredWidth = Math.max(measureTextWidth(watermarkText, baseFont), 1);
     const fittedFontSize = Math.min(
       maxTextHeight,
       (maxTextWidth / measuredWidth) * baseFontSize,
@@ -788,7 +793,7 @@ const singleCompanyTickerWatermarkPlugin = {
       : SINGLE_COMPANY_WATERMARK_MIN_FONT_SIZE;
     const fontSize = canReuseBaseLayout
       ? cachedLayout.fontSize
-      : Math.max(minFontSize, fittedFontSize);
+      : isComparison ? fittedFontSize : Math.max(minFontSize, fittedFontSize);
     const centerX = canReuseBaseLayout
       ? cachedLayout.centerX
       : (chartArea.left + chartArea.right) / 2;
@@ -799,7 +804,7 @@ const singleCompanyTickerWatermarkPlugin = {
     if (!hasGrowthOverlay) {
       state.baseWatermarkLayout = {
         companyId: singleCompanyId,
-        ticker,
+        text: watermarkText,
         compact,
         chartWidth: chart.width,
         plotHeight,
@@ -813,9 +818,12 @@ const singleCompanyTickerWatermarkPlugin = {
     ctx.font = `800 ${fontSize}px ${themeTokens.chartFontFamily}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = colorToRgba(themeTokens.watermarkColor, SINGLE_COMPANY_WATERMARK_ALPHA);
+    const alpha = isComparison
+      ? (getActiveTheme() === "light" ? 0.08 : 0.065)
+      : SINGLE_COMPANY_WATERMARK_ALPHA;
+    ctx.fillStyle = colorToRgba(themeTokens.watermarkColor, alpha);
     ctx.fillText(
-      ticker,
+      watermarkText,
       centerX,
       centerY,
     );
@@ -866,56 +874,64 @@ const customYAxisTitlePlugin = {
 };
 
 const METRICS = {
-  freeCashFlow: { label: "自由现金流（美元）", axisLabel: "自由现金流（美元，USD）", sourceKey: "freeCashFlow", annualMode: "sum" },
-  capex: { label: "CapEx（美元）", axisLabel: "CapEx（美元，USD）", sourceKey: "capex", annualMode: "sum" },
-  operatingCashFlow: { label: "经营现金流（美元）", axisLabel: "经营现金流（美元，USD）", sourceKey: "operatingCashFlow", annualMode: "sum" },
+  freeCashFlow: { label: "自由现金流（美元）", axisLabel: "自由现金流（美元，USD）", sourceKey: "freeCashFlow", annualMode: "sum", watermark: "FCF" },
+  capex: { label: "CapEx（美元）", axisLabel: "CapEx（美元，USD）", sourceKey: "capex", annualMode: "sum", watermark: "CapEx" },
+  operatingCashFlow: { label: "经营现金流（美元）", axisLabel: "经营现金流（美元，USD）", sourceKey: "operatingCashFlow", annualMode: "sum", watermark: "OCF" },
   revenue: {
     label: "营收（美元）",
     axisLabel: "营收（美元，USD）",
     sourceKey: "revenue",
     annualMode: "sum",
+    watermark: "REV",
   },
   netIncome: {
     label: "净利润（美元）",
     axisLabel: "净利润（美元，USD）",
     sourceKey: "earnings",
     annualMode: "sum",
+    watermark: "NI",
   },
   operatingIncome: {
     label: "营业利润（美元）",
     axisLabel: "营业利润（美元，USD）",
     sourceKey: "operatingIncome",
     annualMode: "sum",
+    watermark: "OI",
   },
   grossMargin: {
     label: "毛利率（%）",
     axisLabel: "毛利率（%）",
     sourceKey: "grossMargin",
     annualMode: "derived",
+    watermark: "GM",
   },
   pe: {
     label: "市盈率（P/E）",
     axisLabel: "市盈率（倍）",
     sourceKey: "pe",
     annualMode: "q4",
+    watermark: "P/E",
   },
   roe: {
     label: "ROE（%）",
     axisLabel: "ROE（%）",
     sourceKey: "roe",
     annualMode: "q4",
+    watermark: "ROE",
   },
   revenueGrowth: {
     label: "营收增速（同比 %）",
     axisLabel: "营收同比增速（%）",
     sourceKey: "revenueGrowth",
     annualMode: "derived",
+    watermark: "REV YoY",
   },
   profitGrowth: {
     label: "利润增速（同比 %）",
     axisLabel: "利润同比增速（%）",
     sourceKey: "earnings",
     annualMode: "derived",
+    watermark: "NI YoY",
   },
 };
 
@@ -3861,7 +3877,8 @@ function buildChart() {
         },
       },
     },
-    plugins: [roundedSumStacksPlugin, singleCompanyTickerWatermarkPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
+    // The watermark must draw before rounded stacks clip the canvas to their columns.
+    plugins: [chartWatermarkPlugin, roundedSumStacksPlugin, rightTickerLabelsPlugin, customYAxisTitlePlugin],
   });
   state.pendingGrowthOverlayLayout = null;
   rememberChartGeometry();
