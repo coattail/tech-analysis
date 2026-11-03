@@ -6521,24 +6521,36 @@
             "periodEndPrecision": "month",
             "basis": "cash-capital-spending-including-capitalized-intangibles"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://stockanalysis.com/stocks/aapl/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-26",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://stockanalysis.com/stocks/aapl/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-26",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
@@ -53990,8 +54002,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001321655-25-000131",
+            "filed": "2026-11-03",
+            "accession": "0001321655-26-000048",
             "nativeCurrency": "USD",
             "nativeValue": 507664000,
             "basis": "reported-cash-flow"
@@ -54002,8 +54014,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001321655-25-000131",
+            "filed": "2026-11-03",
+            "accession": "0001321655-26-000048",
             "nativeCurrency": "USD",
             "nativeValue": 6792000,
             "basis": "reported-cash-flow"
