@@ -8,7 +8,7 @@ export function inEarningsWindow(company,today=new Date()) {
   if(!dates.length)return true;
   const latest=Math.max(...dates);
   if(now-latest<=21*DAY)return true;
-  const predictions=[latest+91*DAY],year=today.getUTCFullYear();
+  const predictions=[1,2,3,4].map(step=>latest+step*91*DAY),year=today.getUTCFullYear();
   for(const filed of dates) {
     if(now-filed>800*DAY)continue;
     const previous=new Date(filed);
