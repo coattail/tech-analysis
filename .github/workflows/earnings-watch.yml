@@ -2,7 +2,7 @@ name: Watch All Company Earnings
 
 on:
   schedule:
-    - cron: "4-59/5 * * * *"
+    - cron: "4 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -20,6 +20,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-node@v5
         with:
           node-version: "22"
@@ -36,10 +38,20 @@ jobs:
         run: pip install -r source-earnings/requirements.txt
       - name: Prepare every tracked company and published snapshot
         run: node scripts/earnings-watch.mjs --prepare
+      - uses: actions/cache/restore@v4
+        with:
+          path: source-earnings/output/earnings-watch-state.json
+          key: tech-earnings-state-${{ github.run_id }}
+          restore-keys: tech-earnings-state-
       - name: Check official early releases for every company
         id: collect
         continue-on-error: true
         run: python source-earnings/scripts/watch_earnings.py --universe output/earnings-universe.json --report-path output/earnings-release-report.json
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: source-earnings/output/earnings-watch-state.json
+          key: tech-earnings-state-${{ github.run_id }}
       - name: Synchronize validated quarters
         id: sync
         continue-on-error: true
@@ -74,8 +86,7 @@ jobs:
           node scripts/version-pages-data.mjs .
           git add index.html data.js data/cash-flow-history.json data/cash-flow-coverage.json
           git commit -m "chore(earnings): publish newly released quarterly data"
-          git push
-          gh workflow run pages.yml --ref main
+          python source-earnings/scripts/publish_earnings_data.py --workflow earnings-watch.yml --deploy-workflow pages.yml
       - name: Retain per-company diagnostics
         if: always()
         uses: actions/upload-artifact@v7

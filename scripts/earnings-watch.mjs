@@ -104,11 +104,12 @@ export function synchronize(data, shared, releases) {
   const failures = [];
   const fallbacks = new Set();
   for (const company of COMPANY_SOURCES) {
+    const check = releases.report.find(item => item.companyId === company.id);
+    if(check?.reason === 'outside-company-earnings-window')continue;
     const upstream = sharedMap.get(tickerKey(company.ticker));
     for (const quarter of upstream?.quarters ?? []) {
       if (applyQuarter(data, company.id, quarter, upstream.financials[quarter])) updates.add(company.id);
     }
-    const check = releases.report.find(item => item.companyId === company.id);
     if (check?.reason === "check-failed") { failures.push(`${company.ticker}: ${check.error}`); continue; }
     const candidate = check?.release;
     if (candidate?.entry && applyQuarter(data, company.id, candidate.quarter, candidate.entry)) updates.add(company.id);

@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
+import { inEarningsWindow } from './earnings-windows.mjs';
 import { HISTORICAL_CIKS, buildCoverage } from "./cash-flow-history.mjs";
 import {
   COMPANY_SOURCES, parseDataJs, formatDataJs, fetchSecQuarterlyHistory,
@@ -108,7 +109,7 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
   catch (error) { if (error.code !== 'ENOENT') throw error; supplemental = { companies: {} }; }
   const overrides = JSON.parse(await readFile(new URL("../data/cash-flow-overrides.json", import.meta.url), "utf8"));
   const periods = new Set(data.periods);
-  const selected = COMPANY_SOURCES.filter(c => !companyIds || companyIds.has(c.id));
+  const selected = COMPANY_SOURCES.filter(c => companyIds ? companyIds.has(c.id) : inEarningsWindow(data.companies?.[c.id]));
   const failures = [];
   for (const company of selected) {
     const target = data.companies[company.id] ??= {};

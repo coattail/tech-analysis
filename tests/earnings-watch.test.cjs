@@ -80,7 +80,16 @@ test("published-snapshot fallback retries a second independent endpoint", async 
 
 test("all-company watch runs in every month and exposes failed operations", () => {
   const workflow=fs.readFileSync('.github/workflows/earnings-watch.yml','utf8');
-  assert.match(workflow,/4-59\/5 \* \* \* \*/);
+  assert.match(workflow,/4 \* \* \* \*/);
   assert.match(workflow,/test "\$COLLECT" = success/);
-  assert.match(workflow,/gh workflow run pages.yml --ref main/);
+  assert.match(workflow,/publish_earnings_data.py --workflow earnings-watch.yml --deploy-workflow pages.yml/);
+});
+
+test('financial refresh windows follow individual report dates, and manual selections remain possible',async()=>{
+ const {inEarningsWindow}=await import('../scripts/earnings-windows.mjs');
+ const c={reportDates:{'2025Q3':'2025-11-19','2026Q2':'2026-08-20'}};
+ assert.equal(inEarningsWindow(c,new Date('2026-11-18')),true);
+ assert.equal(inEarningsWindow(c,new Date('2026-10-01')),false);
+ assert.equal(inEarningsWindow({...c,nextEarningsDate:'2026-10-05'},new Date('2026-10-01')),true);
+ assert.equal(inEarningsWindow({reportDates:{q:'2026-10-30'}},new Date('2026-11-03')),true);
 });
