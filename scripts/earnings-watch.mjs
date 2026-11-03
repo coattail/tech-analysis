@@ -60,10 +60,19 @@ export function applyQuarter(data, companyId, quarter, entry) {
   const previousRevenue = company.revenue?.[previous];
   if (Math.abs(entry.netIncomeBn) > entry.revenueBn * 20
     || (previousRevenue > 0 && (entry.revenueBn * scale * 1e9 / previousRevenue < .02 || entry.revenueBn * scale * 1e9 / previousRevenue > 50))) return false;
-  if (quarter < previous || (quarter === previous && filed <= (company.reportDates?.[quarter] ?? ""))) return false;
+  if (quarter < previous || (quarter === previous && filed < (company.reportDates?.[quarter] ?? ""))) return false;
   if (!entry.periodEnd || !filed || entry.periodEnd > filed) return false;
   const amounts = { revenue: entry.revenueBn, earnings: entry.netIncomeBn, operatingIncome: entry.operatingIncomeBn, netAssets: entry.netAssetsBn,
     operatingCashFlow: entry.operatingCashFlowBn, capex: entry.capexBn };
+  // The shared publisher may complete or correct extraction for the same
+  // disclosure. Its unchanged publication date must not freeze stale amounts.
+  if (quarter === previous && filed === (company.reportDates?.[quarter] ?? "")) {
+    const revised = Object.entries(amounts).some(([metric, amount]) => finite(amount)
+      && company[metric]?.[quarter] !== Math.round(amount * scale * 1e9));
+    const grossRevised = finite(entry.grossProfitBn)
+      && Math.abs((company.grossMargin?.[quarter] ?? -1) - entry.grossProfitBn / entry.revenueBn * 100) > 1e-7;
+    if (!revised && !grossRevised && company.periodEndDates?.[quarter] === entry.periodEnd) return false;
+  }
   for (const [metric, amount] of Object.entries(amounts)) {
     if (!finite(amount)) continue;
     company[metric] ??= {};

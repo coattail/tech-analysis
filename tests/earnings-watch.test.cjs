@@ -35,6 +35,15 @@ test("unconverted currencies, cumulative flows and incomplete statements cannot 
   }
 });
 
+test("same-disclosure extraction corrections synchronize once without accepting older filings", async () => {
+  const {applyQuarter}=await load();const data=fixture();
+  applyQuarter(data,'palantir','2026Q3',entry());
+  assert.equal(applyQuarter(data,'palantir','2026Q3',{...entry(),revenueBn:2.4}),true);
+  assert.equal(data.companies.palantir.revenue['2026Q3'],2400000000);
+  assert.equal(applyQuarter(data,'palantir','2026Q3',{...entry(),revenueBn:2.4}),false);
+  assert.equal(applyQuarter(data,'palantir','2026Q3',{...entry(),revenueBn:2.5,statementFilingDate:'2026-11-01'}),false);
+});
+
 test("bank earnings do not require inventing an undisclosed operating-income subtotal", async () => {
   const {applyQuarter}=await load();const data=fixture();data.companies.jpmorgan=data.companies.palantir;
   assert.equal(applyQuarter(data,'jpmorgan','2026Q3',{...entry(),operatingIncomeBn:null}),true);
