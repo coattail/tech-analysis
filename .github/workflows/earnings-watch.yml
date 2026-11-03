@@ -1,0 +1,102 @@
+name: Watch All Company Earnings
+
+on:
+  schedule:
+    - cron: "4-59/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  # Serialize with the existing daily market/history refresh.
+  group: auto-refresh-data
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - uses: actions/checkout@v5
+        with:
+          repository: coattail/Earnings-Image-Studio
+          ref: main
+          path: source-earnings
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install official earnings parsers
+        run: pip install -r source-earnings/requirements.txt
+      - name: Prepare every tracked company and published snapshot
+        run: node scripts/earnings-watch.mjs --prepare
+      - name: Check official early releases for every company
+        id: collect
+        continue-on-error: true
+        run: python source-earnings/scripts/watch_earnings.py --universe output/earnings-universe.json --report-path output/earnings-release-report.json
+      - name: Synchronize validated quarters
+        id: sync
+        continue-on-error: true
+        run: node scripts/earnings-watch.mjs
+      - name: Refresh fallback financial sources for unparsed releases
+        if: steps.sync.outputs.fallbacks != ''
+        id: fallback
+        continue-on-error: true
+        env:
+          COMPANIES: ${{ steps.sync.outputs.fallbacks }}
+        run: node scripts/auto-refresh-data.mjs --company "$COMPANIES" --latest-only
+      - name: Enrich newly updated companies' cash flows
+        if: steps.sync.outputs.companies != ''
+        id: cashflow
+        continue-on-error: true
+        env:
+          COMPANIES: ${{ steps.sync.outputs.companies }}
+        run: node scripts/auto-refresh-cash-flow.mjs --company "$COMPANIES"
+      - name: Verify every detected earnings release was incorporated
+        id: verify
+        continue-on-error: true
+        run: node scripts/earnings-watch.mjs --verify
+      - name: Publish validated updates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data.js data/cash-flow-history.json data/cash-flow-coverage.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node scripts/version-pages-data.mjs .
+          git add index.html data.js data/cash-flow-history.json data/cash-flow-coverage.json
+          git commit -m "chore(earnings): publish newly released quarterly data"
+          git push
+          gh workflow run pages.yml --ref main
+      - name: Retain per-company diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: earnings-watch-${{ github.run_id }}
+          path: |
+            output/earnings-release-report.json
+            output/earnings-sync-report.json
+          retention-days: 14
+      - name: Surface incomplete updates
+        if: always()
+        env:
+          COLLECT: ${{ steps.collect.outcome }}
+          SYNC: ${{ steps.sync.outcome }}
+          FALLBACK: ${{ steps.fallback.outcome }}
+          CASHFLOW: ${{ steps.cashflow.outcome }}
+          VERIFY: ${{ steps.verify.outcome }}
+        run: |
+          echo "Official release checks: $COLLECT; quarter sync: $SYNC; cash flow: $CASHFLOW" >> "$GITHUB_STEP_SUMMARY"
+          test "$COLLECT" = success
+          test "$SYNC" = success
+          test "$FALLBACK" != failure
+          test "$CASHFLOW" != failure
+          test "$VERIFY" = success
