@@ -1223,22 +1223,23 @@ async function loadCuratedQuarterlyDataset() {
   return byTicker;
 }
 
-async function loadPublishedAsmlQuarters(companyData) {
+async function loadPublishedCompanyQuarters(companyData, companyId = "asml") {
   try {
     const payload = await fetchJsonWithCurl(
-      "https://raw.githubusercontent.com/coattail/Earnings-Image-Studio/main/data/cache/asml.json",
+      `https://raw.githubusercontent.com/coattail/Earnings-Image-Studio/main/data/cache/${companyId}.json`,
     );
-    if (payload?.id !== "asml" || !payload.financials || !Array.isArray(payload.quarters)) return null;
+    if (payload?.id !== companyId || !payload.financials || !Array.isArray(payload.quarters)) return null;
     const quarters = payload.quarters.filter((period) => {
       const financial = payload.financials[period];
       const missing = !["revenue", "earnings", "operatingIncome", "grossMargin"]
         .every((key) => Number.isFinite(companyData[key]?.[period]));
-      return missing && ["revenueBn", "grossProfitBn", "operatingIncomeBn", "netIncomeBn"]
+      const authoritativeLatest = companyId === "palantir" && period === payload.quarters.at(-1);
+      return (missing || authoritativeLatest) && ["revenueBn", "grossProfitBn", "operatingIncomeBn", "netIncomeBn"]
         .every((key) => Number.isFinite(financial?.[key]));
     });
     return { ...payload, quarters };
   } catch (error) {
-    console.warn(`  ASML 官方财报跨平台回退失败：${error.message}`);
+    console.warn(`  ${companyId} 官方财报跨平台回退失败：${error.message}`);
     return null;
   }
 }
@@ -3184,19 +3185,34 @@ function applyCuratedQuarterlyOverrides(companyData, curatedCompany) {
       }
     }
 
+    if (Number.isFinite(financial.netAssetsBn)
+      && setSeriesValue(companyData.netAssets, period, Math.round(financial.netAssetsBn * usdScaleFactor * 1e9))) {
+      changedPoints += 1;
+      changedPeriods.add(period);
+    }
+    if (financial.periodEnd && setPeriodEndDate(companyData, period, financial.periodEnd)) {
+      changedPoints += 1;
+      changedPeriods.add(period);
+    }
+
     const operatingIncome = Number(financial.operatingIncomeBn) * usdScaleFactor * 1e9;
     if (
       isCuratedOperatingIncomeLikelyReliable(financial) &&
       Number.isFinite(operatingIncome)
     ) {
       operatingIncomePeriods.add(period);
-      if (setSeriesValueIfMissing(companyData.operatingIncome, period, Math.round(operatingIncome))) {
+      const writeOperating = financial.statementSource === "palantir-sec-earnings-release"
+        ? setSeriesValue : setSeriesValueIfMissing;
+      if (writeOperating(companyData.operatingIncome, period, Math.round(operatingIncome))) {
         changedPoints += 1;
         changedPeriods.add(period);
       }
     }
 
-    const grossMargin = Number.isFinite(financial.grossMarginPct)
+    const grossMargin = financial.statementSource === "palantir-sec-earnings-release"
+      && Number.isFinite(financial.grossProfitBn) && financial.revenueBn > 0
+      ? (financial.grossProfitBn / financial.revenueBn) * 100
+      : Number.isFinite(financial.grossMarginPct)
       ? financial.grossMarginPct
       : Number.isFinite(financial.grossProfitBn) && financial.revenueBn > 0
         ? (financial.grossProfitBn / financial.revenueBn) * 100
@@ -3943,9 +3959,11 @@ async function run() {
       }
     });
 
-    const publishedAsml = companySource.id === "asml" ? await loadPublishedAsmlQuarters(companyData) : null;
-    const curatedCompany = publishedAsml || curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
-    if (curatedCompany && (!officialOnly || companySource.id === "asml")) {
+    const publishedCompany = ["asml", "palantir"].includes(companySource.id)
+      ? await loadPublishedCompanyQuarters(companyData, companySource.id) : null;
+    const localCurated = curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
+    const curatedCompany = publishedCompany?.quarters.length ? publishedCompany : localCurated;
+    if (curatedCompany && (!officialOnly || ["asml", "palantir"].includes(companySource.id))) {
       const curatedResult = applyCuratedQuarterlyOverrides(companyData, curatedCompany);
 
       curatedResult.changedPeriods.forEach((period) => {
@@ -4134,7 +4152,7 @@ async function run() {
 
 export { parseDataJs, formatDataJs, fetchSecQuarterlyHistory, convertSecHistoryRowsToUsd,
   extractFinancialCurrency, parseStringArray, parseNumberArray, extractArrayRaw, toQuarterLabel,
-  buildSecFieldQuarterSeries };
+  buildSecFieldQuarterSeries, loadPublishedCompanyQuarters, loadCuratedQuarterlyDataset };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) run().catch((error) => {
   console.error(`自动更新失败：${error.message}`);

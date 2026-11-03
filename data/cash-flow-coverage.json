@@ -781,11 +781,11 @@
     },
     "palantir": {
       "first": "2019Q1",
-      "last": "2026Q2",
-      "expected": 30,
+      "last": "2026Q3",
+      "expected": 31,
       "metrics": {
         "operatingCashFlow": {
-          "present": 28,
+          "present": 29,
           "missing": [
             "2019Q1",
             "2019Q2"
@@ -793,7 +793,7 @@
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
-          "present": 28,
+          "present": 29,
           "missing": [
             "2019Q1",
             "2019Q2"
@@ -801,7 +801,7 @@
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
-          "present": 28,
+          "present": 29,
           "missing": [
             "2019Q1",
             "2019Q2"
