@@ -34,6 +34,7 @@ jobs:
           mkdir -p _site
           cp index.html style.css mobile-ui.js script.js data.js price-data.js price-comparison.js company-selection.js series-colors.js logo-layout.js financial-metrics.js _site/
           cp -R assets _site/
+          node scripts/version-pages-data.mjs
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
@@ -43,3 +44,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Verify actual public earnings data
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/verify-earnings-deployment.mjs "$PAGE_URL"

@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20261103-pltr-q3"],
+    ["data.js", require("node:crypto").createHash("sha256").update(fs.readFileSync(path.join(__dirname, "..", "data.js"))).digest("hex").slice(0, 16)],
     ["price-data.js", "20261101-cash-flow"],
   ]) {
     assert.match(

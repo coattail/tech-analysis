@@ -62,7 +62,7 @@ export const COMPANY_SOURCES = [
   { id: "abbvie", ticker: "ABBV", slug: "abbv", name: "艾伯维" },
   { id: "homedepot", ticker: "HD", slug: "hd", name: "家得宝" },
   { id: "ibm", ticker: "IBM", slug: "ibm", name: "IBM" },
-  { id: "sap", ticker: "SAP", slug: "sap", name: "SAP" },
+  { id: "sap", ticker: "SAP", slug: "sap", name: "SAP", reportingCurrency: "EUR" },
   { id: "crowdstrike", ticker: "CRWD", slug: "crwd", name: "CrowdStrike" },
   { id: "salesforce", ticker: "CRM", slug: "crm", name: "Salesforce" },
   { id: "servicenow", ticker: "NOW", slug: "now", name: "ServiceNow" },
@@ -1111,10 +1111,15 @@ function parseArgs(argv) {
     dryRun: false,
     companyIds: null,
     operatingIncomeOnly: false,
+    latestOnly: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
+    if (token === "--latest-only") {
+      options.latestOnly = true;
+      continue;
+    }
     if (token === "--dry-run") {
       options.dryRun = true;
       continue;
@@ -1208,9 +1213,13 @@ async function loadCuratedQuarterlyDataset() {
     const raw = await readFile(CURATED_EARNINGS_DATASET_PATH, "utf8");
     parsed = JSON.parse(raw);
   } catch (error) {
-    console.warn(`读取本地季度校验数据失败，已跳过：${error.message}`);
-    curatedQuarterlyDatasetCache = byTicker;
-    return byTicker;
+    try {
+      parsed = await fetchJsonWithCurl("https://raw.githubusercontent.com/coattail/Earnings-Image-Studio/main/data/earnings-dataset.json", undefined, 60 * 1024 * 1024);
+    } catch (remoteError) {
+      console.warn(`本地及已发布季度校验数据均不可用：${remoteError.message}`);
+      curatedQuarterlyDatasetCache = byTicker;
+      return byTicker;
+    }
   }
 
   (parsed?.companies || []).forEach((company) => {
@@ -3505,6 +3514,29 @@ function summarizeCompanyStats(companyStats) {
   };
 }
 
+export function preserveHistoricalPeriods(current, original) {
+  const latest = Object.keys(original.revenue ?? {}).filter(p => Number.isFinite(original.revenue[p])).sort().at(-1);
+  if (!latest) return;
+  for (const [key, series] of Object.entries(current)) {
+    if (!series || Array.isArray(series) || typeof series !== "object") continue;
+    for (const p of Object.keys(series)) {
+      if (!/^\d{4}Q[1-4]$/.test(p) || p >= latest) continue;
+      if (Object.hasOwn(original[key] ?? {}, p)) series[p] = original[key][p];
+      else delete series[p];
+    }
+  }
+}
+
+export function validLatestAmounts(current, original) {
+  const latest = Object.keys(current.revenue ?? {}).filter(p => Number.isFinite(current.revenue[p])).sort().at(-1);
+  const previous = Object.keys(original.revenue ?? {}).filter(p => p < latest && Number.isFinite(original.revenue[p])).sort().at(-1);
+  if (!latest) return true;
+  const revenue = current.revenue[latest], income = current.earnings?.[latest];
+  if (!(revenue > 0) || !Number.isFinite(income) || Math.abs(income) > revenue * 20) return false;
+  return !previous || !(original.revenue[previous] > 0)
+    || revenue / original.revenue[previous] >= .02 && revenue / original.revenue[previous] <= 50;
+}
+
 async function run() {
   const options = parseArgs(process.argv.slice(2));
   const curatedQuarterlyDataset = await loadCuratedQuarterlyDataset();
@@ -3627,7 +3659,8 @@ async function run() {
       financialCurrency = result.financialCurrency;
     } catch (error) {
       console.warn(`  抓取失败：${error.message}`);
-      if (!COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companySource.id]) {
+      if (!COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[companySource.id]
+        && !curatedQuarterlyDataset.has(normalizeTickerForSec(companySource.ticker))) {
         if (index < selectedCompanies.length - 1) await sleep(500);
         continue;
       }
@@ -3637,48 +3670,50 @@ async function run() {
       console.log("  将仅应用已配置的官方季度修正");
     }
 
-    try {
-      ratioRows = await fetchCompanyRatios(companySource.slug);
-    } catch (error) {
-      console.warn(`  P/E 抓取失败：${error.message}`);
-    }
-
-    try {
-      const historicalPeRows = await fetchCompaniesMarketCapPeSeries(companySource);
-      if (historicalPeRows.length > 0) {
-        ratioRows = [...ratioRows, ...historicalPeRows];
+    if (!options.latestOnly) {
+      try {
+        ratioRows = await fetchCompanyRatios(companySource.slug);
+      } catch (error) {
+        console.warn(`  P/E 抓取失败：${error.message}`);
       }
-    } catch (error) {
-      console.warn(`  CompaniesMarketCap P/E 抓取失败：${error.message}`);
-    }
 
-    try {
-      marketCapRows = await fetchCompaniesMarketCapMarketCapSeries(companySource);
-    } catch (error) {
-      console.warn(`  CompaniesMarketCap 市值抓取失败：${error.message}`);
-    }
-
-    try {
-      historicalNetAssetRows = await fetchCompaniesMarketCapNetAssetsSeries(companySource);
-    } catch (error) {
-      console.warn(`  CompaniesMarketCap 净资产抓取失败：${error.message}`);
-    }
-
-    try {
-      const result = await fetchCompanyBalanceSheetRows(companySource.slug);
-      balanceRows = result.rows;
-
-      if (result.financialCurrency !== "USD") {
-        const converted = await convertBalanceSheetRowsToUsd(balanceRows, result.financialCurrency);
-        if (!converted) {
-          console.warn(`  净资产口径为 ${result.financialCurrency}，当前无换算配置，已跳过`);
-          balanceRows = [];
-        } else {
-          balanceRows = converted.rows;
+      try {
+        const historicalPeRows = await fetchCompaniesMarketCapPeSeries(companySource);
+        if (historicalPeRows.length > 0) {
+          ratioRows = [...ratioRows, ...historicalPeRows];
         }
+      } catch (error) {
+        console.warn(`  CompaniesMarketCap P/E 抓取失败：${error.message}`);
       }
-    } catch (error) {
-      console.warn(`  净资产抓取失败：${error.message}`);
+
+      try {
+        marketCapRows = await fetchCompaniesMarketCapMarketCapSeries(companySource);
+      } catch (error) {
+        console.warn(`  CompaniesMarketCap 市值抓取失败：${error.message}`);
+      }
+
+      try {
+        historicalNetAssetRows = await fetchCompaniesMarketCapNetAssetsSeries(companySource);
+      } catch (error) {
+        console.warn(`  CompaniesMarketCap 净资产抓取失败：${error.message}`);
+      }
+
+      try {
+        const result = await fetchCompanyBalanceSheetRows(companySource.slug);
+        balanceRows = result.rows;
+
+        if (result.financialCurrency !== "USD") {
+          const converted = await convertBalanceSheetRowsToUsd(balanceRows, result.financialCurrency);
+          if (!converted) {
+            console.warn(`  净资产口径为 ${result.financialCurrency}，当前无换算配置，已跳过`);
+            balanceRows = [];
+          } else {
+            balanceRows = converted.rows;
+          }
+        }
+      } catch (error) {
+        console.warn(`  净资产抓取失败：${error.message}`);
+      }
     }
 
     if (financialCurrency !== "USD") {
@@ -3963,7 +3998,7 @@ async function run() {
       ? await loadPublishedCompanyQuarters(companyData, companySource.id) : null;
     const localCurated = curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
     const curatedCompany = publishedCompany?.quarters.length ? publishedCompany : localCurated;
-    if (curatedCompany && (!officialOnly || ["asml", "palantir"].includes(companySource.id))) {
+    if (curatedCompany) {
       const curatedResult = applyCuratedQuarterlyOverrides(companyData, curatedCompany);
 
       curatedResult.changedPeriods.forEach((period) => {
@@ -4126,6 +4161,19 @@ async function run() {
   });
 
   summary.changedPeriods = [...new Set(summary.changedPeriods)].sort(comparePeriods);
+  const original = parseDataJs(rawData);
+  const rejected = [];
+  for (const company of selectedCompanies) {
+    if (!validLatestAmounts(data.companies[company.id], original.companies[company.id] ?? {})) {
+      data.companies[company.id] = original.companies[company.id];
+      rejected.push(company.id);
+    }
+  }
+  if (options.latestOnly) {
+    for (const company of selectedCompanies) {
+      preserveHistoricalPeriods(data.companies[company.id], original.companies[company.id] ?? {});
+    }
+  }
   const nextDataContent = formatDataJs(data);
   const hasDataChanges = nextDataContent !== rawData;
 
@@ -4145,6 +4193,10 @@ async function run() {
   const refreshedAtIso = new Date().toISOString();
   updateMeta(data, summary, refreshedAtIso, options);
   await writeFile(DATA_JS_PATH, formatDataJs(data), "utf8");
+  if (rejected.length) {
+    console.error(`已回滚金额或单位异常的公司：${rejected.join(", ")}`);
+    process.exitCode = 1;
+  }
   console.log(
     `\n完成写入 data.js：更新公司 ${summary.updatedCompanyIds.length} 家，变更点 ${summary.changedPoints} 个，季度 ${summary.changedPeriods.length} 个`,
   );
@@ -4152,7 +4204,7 @@ async function run() {
 
 export { parseDataJs, formatDataJs, fetchSecQuarterlyHistory, convertSecHistoryRowsToUsd,
   extractFinancialCurrency, parseStringArray, parseNumberArray, extractArrayRaw, toQuarterLabel,
-  buildSecFieldQuarterSeries, loadPublishedCompanyQuarters, loadCuratedQuarterlyDataset };
+  buildSecFieldQuarterSeries, loadPublishedCompanyQuarters, loadCuratedQuarterlyDataset, fetchJsonWithCurl };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) run().catch((error) => {
   console.error(`自动更新失败：${error.message}`);
