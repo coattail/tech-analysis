@@ -54002,8 +54002,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001321655-25-000131",
+            "filed": "2026-11-03",
+            "accession": "0001321655-26-000048",
             "nativeCurrency": "USD",
             "nativeValue": 507664000,
             "basis": "reported-cash-flow"
@@ -54014,8 +54014,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001321655-25-000131",
+            "filed": "2026-11-03",
+            "accession": "0001321655-26-000048",
             "nativeCurrency": "USD",
             "nativeValue": 6792000,
             "basis": "reported-cash-flow"
