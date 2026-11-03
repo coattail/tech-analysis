@@ -10,9 +10,13 @@ on:
     # European issuers such as ASML publish after the baseline run. During the
     # main quarterly reporting months, poll again at 16:15 China Standard Time.
     - cron: "15 8 * 1,4,7,10 *"
+    # US after-hours earnings arrive well before the next daily baseline.
+    - cron: "37 16-22 * 1,2,4,5,7,8,10,11 1-5"
+      timezone: "America/New_York"
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: auto-refresh-data
@@ -43,6 +47,8 @@ jobs:
         run: node scripts/auto-refresh-price-data.mjs
 
       - name: Commit changes if data updated
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- data.js price-data.js data/cash-flow-history.json data/cash-flow-coverage.json; then
             echo "No data update."
@@ -54,3 +60,5 @@ jobs:
           git add data.js price-data.js data/cash-flow-history.json data/cash-flow-coverage.json
           git commit -m "chore(data): auto refresh dashboard datasets"
           git push
+          # Explicitly publish bot commits; token pushes do not trigger Actions.
+          gh workflow run pages.yml --ref main

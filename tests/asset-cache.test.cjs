@@ -42,7 +42,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   for (const [asset, expectedVersion] of [
-    ["data.js", "20261102-verified-history-adaptive-axis"],
+    ["data.js", "20261103-pltr-q3"],
     ["price-data.js", "20261101-cash-flow"],
   ]) {
     assert.match(

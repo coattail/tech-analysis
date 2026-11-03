@@ -27,8 +27,8 @@ test('published ASML fallback rejects partial quarters and preserves existing co
  '2026Q2':{revenueBn:9,grossProfitBn:5,operatingIncomeBn:3,netIncomeBn:2},
  '2026Q3':{revenueBn:11.662,grossProfitBn:6.7,operatingIncomeBn:5.173,netIncomeBn:4.96},
  '2026Q4':{revenueBn:15},}};
- const start=script.indexOf('async function loadPublishedAsmlQuarters('),end=script.indexOf('\nasync function ',start+1);
- const fn=vm.runInNewContext(script.slice(start,end)+'\nloadPublishedAsmlQuarters;', {fetchJsonWithCurl:async()=>payload,console});
+ const start=script.indexOf('async function loadPublishedCompanyQuarters('),end=script.indexOf('\nasync function ',start+1);
+ const fn=vm.runInNewContext(script.slice(start,end)+'\nloadPublishedCompanyQuarters;', {fetchJsonWithCurl:async()=>payload,console});
  const existing={revenue:{'2026Q2':9},earnings:{'2026Q2':2},operatingIncome:{'2026Q2':3},grossMargin:{'2026Q2':55}};
  const result=await fn(existing);
  assert.deepEqual(Array.from(result.quarters),['2026Q3']);

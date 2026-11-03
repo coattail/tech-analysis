@@ -54626,24 +54626,36 @@
               "https://data.sec.gov/api/xbrl/companyfacts/CIK0001321655.json"
             ]
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000045/a2026q3ex991pressrelease.htm",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000045/a2026q3ex991pressrelease.htm",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 28,
+          "count": 29,
           "first": "2019Q3",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 28,
+          "count": 29,
           "first": "2019Q3",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 28,
+          "count": 29,
           "first": "2019Q3",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },

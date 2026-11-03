@@ -8,6 +8,7 @@ import {
   COMPANY_SOURCES, parseDataJs, formatDataJs, fetchSecQuarterlyHistory,
   convertSecHistoryRowsToUsd, extractFinancialCurrency, parseStringArray,
   parseNumberArray, extractArrayRaw, toQuarterLabel,
+  loadPublishedCompanyQuarters, loadCuratedQuarterlyDataset,
 } from "./auto-refresh-data.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -139,6 +140,20 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
     }
     for (const row of overrides.companies[company.id] ?? []) {
       applyCashFlowRows(target, [row], { source: row.source, periods, minPeriod: company.minPeriod, provenance: record.points });
+    }
+    if (company.id === "palantir") {
+      const published = await loadPublishedCompanyQuarters({}, "palantir");
+      const local = (await loadCuratedQuarterlyDataset()).get("PLTR");
+      for (const official of [local, published]) {
+        for (const period of official?.quarters ?? []) {
+          const entry = official.financials[period];
+          if (![entry?.operatingCashFlowBn, entry?.capexBn].every(Number.isFinite)) continue;
+          applyCashFlowRows(target, [{ period, dateKey: entry.periodEnd,
+            operatingCashFlow: Math.round(entry.operatingCashFlowBn * 1e9), capex: Math.round(entry.capexBn * 1e9),
+          }], { source: entry.statementSourceUrl, periods, provenance: record.points });
+          fetched += 1;
+        }
+      }
     }
     applyCashFlowRows(target, [], { source: "", periods, provenance: record.points });
     record.coverage = Object.fromEntries(METRICS.map(metric => {
