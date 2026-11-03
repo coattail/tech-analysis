@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import { buildCashFlowFacts } from "./cash-flow-history.mjs";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { inEarningsWindow } from './earnings-windows.mjs';
 
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
 const CURATED_EARNINGS_DATASET_PATH = new URL("../../earnings-image-studio/data/earnings-dataset.json", import.meta.url);
@@ -3544,7 +3545,7 @@ async function run() {
     ? {}
     : await loadHistoricalSecBackfill();
 
-  const selectedCompanies = options.companyIds
+  let selectedCompanies = options.companyIds
     ? COMPANY_SOURCES.filter((company) => options.companyIds.has(company.id))
     : COMPANY_SOURCES;
 
@@ -3554,6 +3555,10 @@ async function run() {
 
   const rawData = await readFile(DATA_JS_PATH, "utf8");
   const data = parseDataJs(rawData);
+  if(!options.companyIds) {
+    selectedCompanies=selectedCompanies.filter(c=>inEarningsWindow(data.companies?.[c.id]));
+    if(!selectedCompanies.length) { console.log('Outside all company release windows; no financial refresh.');return; }
+  }
 
   if (!data.companies || typeof data.companies !== "object") {
     throw new Error("data.js 缺少 companies 对象。");
