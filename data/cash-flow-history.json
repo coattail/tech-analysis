@@ -38937,8 +38937,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-06-29",
-            "filed": "2025-11-05",
-            "accession": "0000002488-25-000166",
+            "filed": "2026-11-04",
+            "accession": "0000002488-26-000191",
             "nativeCurrency": "USD",
             "nativeValue": 2159000000,
             "basis": "reported-cash-flow"
@@ -38949,8 +38949,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-06-29",
-            "filed": "2025-11-05",
-            "accession": "0000002488-25-000166",
+            "filed": "2026-11-04",
+            "accession": "0000002488-26-000191",
             "nativeCurrency": "USD",
             "nativeValue": 258000000,
             "basis": "reported-cash-flow"
@@ -49452,14 +49452,28 @@
       "points": {
         "2026Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/cat/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000018230.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-04",
+            "accession": "0000018230-26-000057",
+            "nativeCurrency": "USD",
+            "nativeValue": 4352000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/cat/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000018230.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-04",
+            "accession": "0000018230-26-000057",
+            "nativeCurrency": "USD",
+            "nativeValue": 697000000,
+            "basis": "reported-cash-flow"
           }
         },
         "2026Q2": {
@@ -49547,8 +49561,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-03",
-            "accession": "0000018230-25-000048",
+            "filed": "2026-11-04",
+            "accession": "0000018230-26-000057",
             "nativeCurrency": "USD",
             "nativeValue": 3737000000,
             "basis": "reported-cash-flow"
@@ -49559,8 +49573,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-03",
-            "accession": "0000018230-25-000048",
+            "filed": "2026-11-04",
+            "accession": "0000018230-26-000057",
             "nativeCurrency": "USD",
             "nativeValue": 658000000,
             "basis": "reported-cash-flow"
@@ -69893,24 +69907,36 @@
               "https://www.sec.gov/Archives/edgar/data/1561550/000119312519240411/d745413ds1a.htm"
             ]
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://stockanalysis.com/stocks/ddog/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://stockanalysis.com/stocks/ddog/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
