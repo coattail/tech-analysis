@@ -2458,6 +2458,17 @@
           "https://data.sec.gov/api/xbrl/companyfacts/CIK0001373715.json"
         ]
       }
+    ],
+    "amd": [
+      {
+        "period": "2026Q3",
+        "dateKey": "2026-09-26",
+        "operatingCashFlow": 1202000000,
+        "capex": 648000000,
+        "source": "https://newsroom.amd.com/news/amd-reports-third-quarter-2026-earnings/",
+        "method": "reported-quarter",
+        "basis": "GAAP consolidated cash flow; three months ended September 26, 2026; cash purchases of property and equipment"
+      }
     ]
   }
 }

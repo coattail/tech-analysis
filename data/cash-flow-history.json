@@ -40927,24 +40927,38 @@
             "precision": 10000,
             "periodEndPrecision": "month"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://newsroom.amd.com/news/amd-reports-third-quarter-2026-earnings/",
+            "periodEnd": "2026-09-26",
+            "method": "reported-quarter",
+            "basis": "GAAP consolidated cash flow; three months ended September 26, 2026; cash purchases of property and equipment"
+          },
+          "capex": {
+            "source": "https://newsroom.amd.com/news/amd-reports-third-quarter-2026-earnings/",
+            "periodEnd": "2026-09-26",
+            "method": "reported-quarter",
+            "basis": "GAAP consolidated cash flow; three months ended September 26, 2026; cash purchases of property and equipment"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },

@@ -1012,6 +1012,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2011Q2": { earnings: 3_209_000_000 },
   },
   amd: {
+    // GAAP consolidated statements; USD, published 2026-11-03.
+    // https://newsroom.amd.com/news/amd-reports-third-quarter-2026-earnings/
+    "2026Q3": {
+      revenue: 13_377_000_000,
+      earnings: 2_428_000_000,
+      operatingIncome: 2_832_000_000,
+      grossMargin: (7_210 / 13_377) * 100,
+      netAssets: 68_389_000_000,
+      periodEndDate: "2026-09-26",
+      reportDate: "2026-11-03",
+    },
     // AMD Q2 2026 earnings release, published on 2026-08-04.
     "2026Q2": {
       revenue: 11_536_000_000,

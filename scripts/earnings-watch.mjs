@@ -3,6 +3,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { COMPANY_SOURCES, parseDataJs, formatDataJs, fetchJsonWithCurl } from "./auto-refresh-data.mjs";
+import { enrichAmdRelease } from "./amd-earnings.mjs";
 
 const DATA = new URL("../data.js", import.meta.url);
 const OUT = new URL("../output/", import.meta.url);
@@ -150,6 +151,13 @@ async function run() {
     console.log(`Verified all ${releases.checked} companies against detected releases`);
     return;
   }
+  // Keep the diagnostic file enriched so --verify checks the parsed quarter.
+  // Failure retains the vendor fallback and the final stale-release failure.
+  try {
+    if (await enrichAmdRelease(releases)) {
+      await writeFile(new URL("earnings-release-report.json", OUT), JSON.stringify(releases, null, 2));
+    }
+  } catch (error) { console.error(`AMD official HTML fallback: ${error.message}`); }
   const result = synchronize(data, shared, releases);
   if (releases.checked !== COMPANY_SOURCES.length) result.failures.push(`Only ${releases.checked}/${COMPANY_SOURCES.length} companies checked`);
   if (result.companies.length) {

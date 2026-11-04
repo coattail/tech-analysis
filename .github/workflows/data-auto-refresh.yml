@@ -31,15 +31,23 @@ jobs:
           node-version: "22"
 
       - name: Refresh data.js
+        id: financials
+        continue-on-error: true
         run: node scripts/auto-refresh-data.mjs
 
       - name: Refresh market capitalizations
+        id: marketcaps
+        continue-on-error: true
         run: node scripts/auto-refresh-market-caps.mjs
 
       - name: Refresh cash-flow data
+        id: cashflow
+        continue-on-error: true
         run: node scripts/auto-refresh-cash-flow.mjs
 
       - name: Refresh price-data.js
+        id: prices
+        continue-on-error: true
         run: node scripts/auto-refresh-price-data.mjs
 
       - name: Commit changes if data updated
@@ -59,3 +67,17 @@ jobs:
           git push
           # Explicitly publish bot commits; token pushes do not trigger Actions.
           gh workflow run pages.yml --ref main
+
+      - name: Surface incomplete refreshes after publishing valid data
+        if: always()
+        env:
+          FINANCIALS: ${{ steps.financials.outcome }}
+          MARKETCAPS: ${{ steps.marketcaps.outcome }}
+          CASHFLOW: ${{ steps.cashflow.outcome }}
+          PRICES: ${{ steps.prices.outcome }}
+        run: |
+          echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
+          test "$FINANCIALS" = success
+          test "$MARKETCAPS" = success
+          test "$CASHFLOW" = success
+          test "$PRICES" = success
