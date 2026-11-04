@@ -23091,8 +23091,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001628280-25-048859",
+            "filed": "2026-11-03",
+            "accession": "0001628280-26-069523",
             "nativeCurrency": "USD",
             "nativeValue": -45214000000,
             "basis": "reported-cash-flow"
@@ -23345,13 +23345,27 @@
               "https://www.sec.gov/Archives/edgar/data/19617/000095012308005523/y54617e10vq.htm"
             ]
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000019617.json",
+            "periodEnd": "2026-09-30",
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-03",
+            "accession": "0001628280-26-069523",
+            "nativeCurrency": "USD",
+            "nativeValue": 33161000000,
+            "basis": "reported-cash-flow"
+          }
         }
       },
       "coverage": {
         "operatingCashFlow": {
-          "count": 86,
+          "count": 87,
           "first": "2005Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
           "count": 0,
@@ -56954,8 +56968,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001551152-25-000049",
+            "filed": "2026-11-03",
+            "accession": "0001551152-26-000037",
             "nativeCurrency": "USD",
             "nativeValue": 7024000000,
             "basis": "reported-cash-flow"
@@ -56966,8 +56980,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-04",
-            "accession": "0001551152-25-000049",
+            "filed": "2026-11-03",
+            "accession": "0001551152-26-000037",
             "nativeCurrency": "USD",
             "nativeValue": 381000000,
             "basis": "reported-cash-flow"
@@ -58440,24 +58454,50 @@
             "precision": 10000,
             "periodEndPrecision": "month"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001551152.json",
+            "periodEnd": "2026-09-30",
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-03",
+            "accession": "0001551152-26-000037",
+            "nativeCurrency": "USD",
+            "nativeValue": 7606000000,
+            "basis": "reported-cash-flow"
+          },
+          "capex": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001551152.json",
+            "periodEnd": "2026-09-30",
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-03",
+            "accession": "0001551152-26-000037",
+            "nativeCurrency": "USD",
+            "nativeValue": 301000000,
+            "basis": "reported-cash-flow"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 62,
+          "count": 63,
           "first": "2011Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 62,
+          "count": 63,
           "first": "2011Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 62,
+          "count": 63,
           "first": "2011Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
