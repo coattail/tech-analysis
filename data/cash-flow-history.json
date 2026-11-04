@@ -4446,8 +4446,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-06-29",
-            "filed": "2025-10-31",
-            "accession": "0000320193-25-000079",
+            "filed": "2026-11-03",
+            "accession": "0000320193-26-000026",
             "nativeCurrency": "USD",
             "nativeValue": 29728000000,
             "basis": "reported-cash-flow"
@@ -4458,8 +4458,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-06-29",
-            "filed": "2025-10-31",
-            "accession": "0000320193-25-000079",
+            "filed": "2026-11-03",
+            "accession": "0000320193-26-000026",
             "nativeCurrency": "USD",
             "nativeValue": 3242000000,
             "basis": "reported-cash-flow"
@@ -4550,8 +4550,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2024-06-30",
-            "filed": "2025-10-31",
-            "accession": "0000320193-25-000079",
+            "filed": "2026-11-03",
+            "accession": "0000320193-26-000026",
             "nativeCurrency": "USD",
             "nativeValue": 26811000000,
             "basis": "reported-cash-flow"
@@ -4562,8 +4562,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2024-06-30",
-            "filed": "2025-10-31",
-            "accession": "0000320193-25-000079",
+            "filed": "2026-11-03",
+            "accession": "0000320193-26-000026",
             "nativeCurrency": "USD",
             "nativeValue": 2908000000,
             "basis": "reported-cash-flow"
@@ -6524,14 +6524,28 @@
         },
         "2026Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/aapl/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json",
             "periodEnd": "2026-09-26",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-06-28",
+            "filed": "2026-11-03",
+            "accession": "0000320193-26-000026",
+            "nativeCurrency": "USD",
+            "nativeValue": 28101000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/aapl/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json",
             "periodEnd": "2026-09-26",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-06-28",
+            "filed": "2026-11-03",
+            "accession": "0000320193-26-000026",
+            "nativeCurrency": "USD",
+            "nativeValue": 2242000000,
+            "basis": "reported-cash-flow"
           }
         }
       },
