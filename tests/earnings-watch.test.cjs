@@ -82,6 +82,10 @@ test("all-company watch runs in every month and exposes failed operations", () =
   const workflow=fs.readFileSync('.github/workflows/earnings-watch.yml','utf8');
   assert.match(workflow,/4 \* \* \* \*/);
   assert.match(workflow,/test "\$COLLECT" = success/);
+  assert.match(workflow,/python scripts\/resolve-earnings-releases.py/);
+  assert.match(workflow,/test "\$RESOLVE" = success/);
+  assert.match(workflow,/verification: \$VERIFY/);
+  assert.match(workflow,/if: github.ref == 'refs\/heads\/main'/);
   assert.match(workflow,/publish_earnings_data.py --workflow earnings-watch.yml --deploy-workflow pages.yml/);
 });
 

@@ -47,6 +47,10 @@ jobs:
         id: collect
         continue-on-error: true
         run: python source-earnings/scripts/watch_earnings.py --universe output/earnings-universe.json --report-path output/earnings-release-report.json
+      - name: Resolve already covered SEC announcements
+        id: resolve
+        continue-on-error: true
+        run: python scripts/resolve-earnings-releases.py --source-scripts source-earnings/scripts --universe output/earnings-universe.json --report output/earnings-release-report.json
       - uses: actions/cache/save@v4
         if: always()
         with:
@@ -75,6 +79,7 @@ jobs:
         continue-on-error: true
         run: node scripts/earnings-watch.mjs --verify
       - name: Publish validated updates
+        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -100,13 +105,15 @@ jobs:
         if: always()
         env:
           COLLECT: ${{ steps.collect.outcome }}
+          RESOLVE: ${{ steps.resolve.outcome }}
           SYNC: ${{ steps.sync.outcome }}
           FALLBACK: ${{ steps.fallback.outcome }}
           CASHFLOW: ${{ steps.cashflow.outcome }}
           VERIFY: ${{ steps.verify.outcome }}
         run: |
-          echo "Official release checks: $COLLECT; quarter sync: $SYNC; cash flow: $CASHFLOW" >> "$GITHUB_STEP_SUMMARY"
+          echo "Official release checks: $COLLECT; duplicate resolution: $RESOLVE; quarter sync: $SYNC; fallback: $FALLBACK; cash flow: $CASHFLOW; verification: $VERIFY" >> "$GITHUB_STEP_SUMMARY"
           test "$COLLECT" = success
+          test "$RESOLVE" = success
           test "$SYNC" = success
           test "$FALLBACK" != failure
           test "$CASHFLOW" != failure
