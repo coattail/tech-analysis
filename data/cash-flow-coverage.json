@@ -1036,11 +1036,11 @@
     },
     "cloudflare": {
       "first": "2017Q1",
-      "last": "2026Q2",
-      "expected": 38,
+      "last": "2026Q3",
+      "expected": 39,
       "metrics": {
         "operatingCashFlow": {
-          "present": 34,
+          "present": 35,
           "missing": [
             "2017Q1",
             "2017Q2",
@@ -1050,7 +1050,7 @@
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
-          "present": 34,
+          "present": 35,
           "missing": [
             "2017Q1",
             "2017Q2",
@@ -1060,7 +1060,7 @@
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
-          "present": 34,
+          "present": 35,
           "missing": [
             "2017Q1",
             "2017Q2",

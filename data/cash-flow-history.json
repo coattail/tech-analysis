@@ -70831,8 +70831,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-10-30",
-            "accession": "0001477333-25-000141",
+            "filed": "2026-11-05",
+            "accession": "0001477333-26-000061",
             "nativeCurrency": "USD",
             "nativeValue": 167123000,
             "basis": "reported-cash-flow"
@@ -70843,8 +70843,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToAcquireIntangibleAssets",
             "startDate": "2025-07-01",
-            "filed": "2025-10-30",
-            "accession": "0001477333-25-000141",
+            "filed": "2026-11-05",
+            "accession": "0001477333-26-000061",
             "nativeCurrency": "USD",
             "nativeValue": 92152000,
             "basis": "cash-capital-spending-including-capitalized-intangibles"
@@ -71602,24 +71602,50 @@
             "periodEndPrecision": "month",
             "basis": "cash-capital-spending-including-capitalized-intangibles"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001477333.json",
+            "periodEnd": "2026-09-30",
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-05",
+            "accession": "0001477333-26-000061",
+            "nativeCurrency": "USD",
+            "nativeValue": 215365000,
+            "basis": "reported-cash-flow"
+          },
+          "capex": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001477333.json",
+            "periodEnd": "2026-09-30",
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToAcquireIntangibleAssets",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-05",
+            "accession": "0001477333-26-000061",
+            "nativeCurrency": "USD",
+            "nativeValue": 133285000,
+            "basis": "cash-capital-spending-including-capitalized-intangibles"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
