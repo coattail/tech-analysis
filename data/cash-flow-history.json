@@ -27841,26 +27841,54 @@
       "points": {
         "2026Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001403161.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-05",
+            "accession": "0001403161-26-000134",
+            "nativeCurrency": "USD",
+            "nativeValue": 7386000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001403161.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquireProductiveAssets",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-05",
+            "accession": "0001403161-26-000134",
+            "nativeCurrency": "USD",
+            "nativeValue": 493000000,
+            "basis": "reported-cash-flow"
           }
         },
         "2026Q2": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001403161.json",
             "periodEnd": "2026-06-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-04-01",
+            "filed": "2026-07-29",
+            "accession": "0001403161-26-000104",
+            "nativeCurrency": "USD",
+            "nativeValue": 6554000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/v/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001403161.json",
             "periodEnd": "2026-06-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquireProductiveAssets",
+            "startDate": "2026-04-01",
+            "filed": "2026-07-29",
+            "accession": "0001403161-26-000104",
+            "nativeCurrency": "USD",
+            "nativeValue": 417000000,
+            "basis": "reported-cash-flow"
           }
         },
         "2026Q1": {
@@ -27922,8 +27950,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-06",
-            "accession": "0001403161-25-000089",
+            "filed": "2026-11-05",
+            "accession": "0001403161-26-000134",
             "nativeCurrency": "USD",
             "nativeValue": 6238000000,
             "basis": "reported-cash-flow"
@@ -27934,8 +27962,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquireProductiveAssets",
             "startDate": "2025-07-01",
-            "filed": "2025-11-06",
-            "accession": "0001403161-25-000089",
+            "filed": "2026-11-05",
+            "accession": "0001403161-26-000134",
             "nativeCurrency": "USD",
             "nativeValue": 389000000,
             "basis": "reported-cash-flow"
@@ -27948,8 +27976,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-04-01",
-            "filed": "2025-07-30",
-            "accession": "0001403161-25-000052",
+            "filed": "2026-07-29",
+            "accession": "0001403161-26-000104",
             "nativeCurrency": "USD",
             "nativeValue": 6730000000,
             "basis": "reported-cash-flow"
@@ -27960,8 +27988,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquireProductiveAssets",
             "startDate": "2025-04-01",
-            "filed": "2025-07-30",
-            "accession": "0001403161-25-000052",
+            "filed": "2026-07-29",
+            "accession": "0001403161-26-000104",
             "nativeCurrency": "USD",
             "nativeValue": 421000000,
             "basis": "reported-cash-flow"
@@ -28026,8 +28054,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2024-07-01",
-            "filed": "2025-11-06",
-            "accession": "0001403161-25-000089",
+            "filed": "2026-11-05",
+            "accession": "0001403161-26-000134",
             "nativeCurrency": "USD",
             "nativeValue": 6664000000,
             "basis": "reported-cash-flow"
@@ -28038,8 +28066,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquireProductiveAssets",
             "startDate": "2024-07-01",
-            "filed": "2025-11-06",
-            "accession": "0001403161-25-000089",
+            "filed": "2026-11-05",
+            "accession": "0001403161-26-000134",
             "nativeCurrency": "USD",
             "nativeValue": 309000000,
             "basis": "reported-cash-flow"
