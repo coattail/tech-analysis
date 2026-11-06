@@ -3529,6 +3529,38 @@
       "reconstructedPeriods": [],
       "missingPeriods": [],
       "source": "SEC 10-Q / prospectus (historical comparative periods also retained)"
+    },
+    "iren": {
+      "ticker": "IREN",
+      "listingPeriod": "2021Q4",
+      "latestFinancialPeriod": "2026Q3",
+      "directPeriods": [],
+      "reconstructedPeriods": [],
+      "preservedPeriods": [
+        "2021Q4",
+        "2022Q1",
+        "2022Q2",
+        "2022Q3",
+        "2022Q4",
+        "2023Q1",
+        "2023Q2",
+        "2023Q3",
+        "2023Q4",
+        "2024Q1",
+        "2024Q2",
+        "2024Q3",
+        "2024Q4",
+        "2025Q1",
+        "2025Q2",
+        "2025Q3",
+        "2025Q4",
+        "2026Q1",
+        "2026Q2",
+        "2026Q3"
+      ],
+      "missingPeriods": [],
+      "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001878848.json",
+      "note": "SEC GAAP/IFRS values, with StockAnalysis for early periods without standalone SEC operating-income facts; preserve reported impairments."
     }
   }
 }

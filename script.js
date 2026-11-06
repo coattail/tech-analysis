@@ -268,6 +268,7 @@ const FREQUENCY_META = {
 };
 
 const COMPANIES = [
+  { id: "iren", name: "IREN", ticker: "IREN", color: "#71da80", logoColor: "#71da80", preserveLightLogoColors: true, preserveOptionLogoColors: true, optionLogoFit: "wide-symbol", logoPath: "assets/logos/iren.svg?v=20261106-iren" },
   { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoColor: "#76b900", optionLogoFit: "wide-symbol", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
   { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#008894", deepColor: "#00d4e8", logoColor: "#4285f4", optionLogoFit: "symbol", preserveLightLogoColors: true, preserveOptionLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
   { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", deepColor: "#7b8490", logoColor: "#000000", optionLogoFit: "symbol", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
@@ -316,6 +317,7 @@ const COMPANIES = [
   { id: "sharonai", name: "SharonAI", ticker: "SHAZ", color: "#ffbd3f", logoColor: "#d97706", optionLogoFit: "symbol", optionLogoPath: "assets/logos/options/sharonai.svg?v=20260830-compact-marks", logoPath: "assets/logos/sharonai.svg?v=20260629-visible-area-v4" },
 ];
 const COMPANY_ENGLISH_NAMES = {
+  iren: "IREN",
   nvidia: "NVIDIA",
   alphabet: "Alphabet",
   apple: "Apple",
@@ -376,7 +378,7 @@ const COMPANY_CATEGORIES = [
   // Display order inside every group is computed from refreshed USD market caps.
   { id: "mag7", label: "MAG7", companyIds: ["nvidia", "apple", "microsoft", "alphabet", "amazon", "meta", "tsla"] },
   { id: "software", label: "软件", companyIds: ["oracle", "palantir", "ibm", "sap", "crowdstrike", "salesforce", "servicenow", "datadog", "adobe", "zoom"], labelEn: "Software" },
-  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai", "spacex"], labelEn: "Cloud" },
+  { id: "cloud", label: "云服务", companyIds: ["snowflake", "cloudflare", "coreweave", "nebius", "chronoscale", "sharonai", "iren", "spacex"], labelEn: "Cloud" },
   { id: "semiconductor", label: "半导体", companyIds: ["avgo", "tsmc", "asml", "micron", "skhynix", "amd"], labelEn: "Semiconductors" },
   { id: "other", label: "其他", companyIds: [], labelEn: "Other" },
 ];

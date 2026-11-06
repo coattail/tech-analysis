@@ -13,7 +13,7 @@ const {
   normalizeYahooChartPayload,
 } = require("../price-refresh-helpers.cjs");
 
-const { parseStockAnalysisPrices } = require("../stockanalysis-price-helpers.cjs");
+const { parseStockAnalysisPrices, parseStockAnalysisAdjustedChart } = require("../stockanalysis-price-helpers.cjs");
 
 const PRICE_DATA_JS_PATH = new URL("../price-data.js", import.meta.url);
 const YAHOO_CHART_BASE = "https://query2.finance.yahoo.com/v8/finance/chart";
@@ -22,6 +22,7 @@ const FETCH_ATTEMPTS = 3;
 const RETRY_DELAYS_MS = [2_000, 5_000];
 
 const COMPANY_SOURCES = [
+  { id: "iren", ticker: "IREN", minDate: "2021-11-17" },
   { id: "spacex", ticker: "SPCX" },
   { id: "nvidia", ticker: "NVDA" },
   { id: "alphabet", ticker: "GOOGL" },
@@ -158,12 +159,20 @@ async function fetchDailyAdjustedSeries(company) {
     }
   }
 
-  if (company.id === "skhynix" || company.id === "spacex") {
-    const slug = company.id === "spacex" ? "spcx" : "skhy";
+  if (["skhynix", "spacex", "iren"].includes(company.id)) {
+    const slug = company.id === "spacex" ? "spcx" : company.id === "iren" ? "iren" : "skhy";
     const url = `https://stockanalysis.com/stocks/${slug}/history/?range=max`;
     const { stdout } = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", url], { maxBuffer: 5 * 1024 * 1024 });
+    const recent = parseStockAnalysisPrices(stdout);
+    if (company.id === "iren") {
+      const chartUrl = `https://api.stockanalysis.com/api/symbol/s/IREN/history?type=chart&series=a`;
+      const result = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", chartUrl], { maxBuffer: 5 * 1024 * 1024 });
+      const daily = parseStockAnalysisAdjustedChart(JSON.parse(result.stdout), getLatestPriceDate(recent), company.minDate);
+      company.priceSource = chartUrl;
+      return daily;
+    }
     company.priceSource = url;
-    return parseStockAnalysisPrices(stdout);
+    return recent;
   }
   throw lastError;
 }
@@ -216,7 +225,7 @@ async function main() {
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
-      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY and SPCX",
+      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY, SPCX and IREN",
       priceType: "adjusted-close",
       latestDateRange: {
         earliest: latestDates[0] || null,

@@ -17,6 +17,7 @@ const REQUEST_HEADERS = {
 };
 
 const COMPANY_SOURCES = [
+  ["iren", "IREN"],
   ["nvidia", "NVDA"],
   ["alphabet", "GOOGL"],
   ["apple", "AAPL"],
@@ -385,10 +386,10 @@ async function run() {
     }
 
     console.log(`补齐 ${company.ticker} (${company.id})...`);
-    const history = await fetchMacrotrendsHistory(
-      company.ticker,
-      sourceCache?.companies?.[company.id],
-    );
+    // Retain IREN's primary GAAP/IFRS operating losses, including impairments.
+    const history = company.id === "iren"
+      ? { quarterly: new Map(), directQuarterly: new Map(), derivedPeriods: new Set() }
+      : await fetchMacrotrendsHistory(company.ticker, sourceCache?.companies?.[company.id]);
     const listingPeriod = getListingPeriod(priceData.companies?.[company.id], company.minPeriod);
     const latestFinancialPeriod = laterPeriod(
       lastFinitePeriod(companyData.revenue),

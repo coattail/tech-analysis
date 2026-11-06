@@ -47,10 +47,10 @@ test('does not combine cash flows from different reporting end dates', async () 
   assert.equal(c.freeCashFlow['2026Q3'], null);
 });
 
-test('all 46 companies have auditable cash-flow series; FCF reconciles wherever disclosed', () => {
+test('all 47 companies have auditable cash-flow series; FCF reconciles wherever disclosed', () => {
   const d = data();
   const h = JSON.parse(fs.readFileSync(path.join(root, 'data/cash-flow-history.json')));
-  assert.equal(Object.keys(d.companies).length, 46);
+  assert.equal(Object.keys(d.companies).length, 47);
   for (const [id, c] of Object.entries(d.companies)) {
     for (const metric of ['operatingCashFlow', 'capex', 'freeCashFlow']) {
       assert.equal(Object.keys(c[metric]).length, d.periods.length, `${id}:${metric}`);

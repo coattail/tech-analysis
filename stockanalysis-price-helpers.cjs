@@ -16,4 +16,22 @@ function parseStockAnalysisPrices(html) {
   }
   return Object.fromEntries(dates.map(date => [date, daily[date]]));
 }
-module.exports = { parseStockAnalysisPrices };
+// The chart endpoint's series=a contains daily adjusted prices back to listing.
+function parseStockAnalysisAdjustedChart(payload, expectedDate, firstDate) {
+  if (payload?.status !== 200 || !Array.isArray(payload.data)) throw new Error('StockAnalysis chart data is missing');
+  const daily = {};
+  for (const point of payload.data) {
+    if (!Array.isArray(point) || point.length !== 2 || !Number.isFinite(point[0]) || !Number.isFinite(point[1]) || point[1] <= 0) {
+      throw new Error('Invalid StockAnalysis adjusted-price point');
+    }
+    const date = new Date(point[0]).toISOString().slice(0, 10);
+    if (date in daily) throw new Error('Duplicate StockAnalysis price date');
+    daily[date] = point[1];
+  }
+  const dates = Object.keys(daily).sort();
+  if (!dates.length || dates.at(-1) !== expectedDate || dates[0] !== firstDate) {
+    throw new Error('StockAnalysis adjusted-price history is incomplete or stale');
+  }
+  return Object.fromEntries(dates.map(date => [date, daily[date]]));
+}
+module.exports = { parseStockAnalysisPrices, parseStockAnalysisAdjustedChart };

@@ -1255,6 +1255,40 @@
           "missing": []
         }
       }
+    },
+    "iren": {
+      "first": "2021Q4",
+      "last": "2026Q3",
+      "expected": 20,
+      "metrics": {
+        "operatingCashFlow": {
+          "present": 17,
+          "missing": [
+            "2021Q4",
+            "2022Q3",
+            "2022Q4"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "capex": {
+          "present": 17,
+          "missing": [
+            "2021Q4",
+            "2022Q3",
+            "2022Q4"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        },
+        "freeCashFlow": {
+          "present": 17,
+          "missing": [
+            "2021Q4",
+            "2022Q3",
+            "2022Q4"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+        }
+      }
     }
   }
 }
