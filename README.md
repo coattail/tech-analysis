@@ -38,13 +38,15 @@
 
 ## 覆盖公司
 
-截至 2026-11-01，样本覆盖 46 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI 四家 Neocloud 公司）：
+截至 2026-11-06，样本覆盖 47 家美股头部市值、企业软件与云计算公司（新增 CoreWeave、Nebius、ChronoScale、SharonAI、IREN 等 Neocloud 公司）：
 
 - NVIDIA、Alphabet、Apple、Microsoft、Amazon、Broadcom、Meta、TSMC、Tesla、Walmart
 - Berkshire Hathaway、JPMorgan Chase、Eli Lilly、Exxon Mobil、Visa、ASML、Micron、Johnson & Johnson、Oracle、AMD
 - Mastercard、Costco、Netflix、Bank of America、Caterpillar、Chevron、Palantir、Cisco、AbbVie、Home Depot
 - IBM、SAP、CrowdStrike、Salesforce、ServiceNow、Datadog、Snowflake、Cloudflare、Adobe、Zoom
-- CoreWeave、Nebius、ChronoScale、SharonAI、SK 海力士（SKHY）、SpaceX（SPCX，归入云服务）
+- CoreWeave、Nebius、ChronoScale、SharonAI、IREN、SK 海力士（SKHY）、SpaceX（SPCX，归入云服务）
+
+IREN 归入云服务，财务指标采用公司合并口径（包含 AI Cloud 和比特币挖矿业务），季度标签按自然季度末日期对齐，营业利润采用含减值损失的 SEC 报告口径。
 
 Nebius 为避免混入分拆前母公司口径，基本面仅展示 2024Q2 及之后数据，股价仅保留 2024-04-01 及之后数据。
 

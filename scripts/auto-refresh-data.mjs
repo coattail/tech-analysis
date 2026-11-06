@@ -30,6 +30,7 @@ const SEC_REQUEST_HEADERS = {
 };
 
 export const COMPANY_SOURCES = [
+  { id: "iren", ticker: "IREN", slug: "iren", name: "IREN", cik: 1878848, minPeriod: "2021Q4", preferSecFundamentals: true },
   { id: "spacex", ticker: "SPCX", slug: "spcx", name: "SpaceX" },
   { id: "nvidia", ticker: "NVDA", slug: "nvda", name: "英伟达" },
   { id: "alphabet", ticker: "GOOGL", slug: "googl", name: "谷歌" },
@@ -86,6 +87,7 @@ export const COMPANY_SOURCES = [
 ];
 
 const COMPANIES_MARKET_CAP_SLUGS = {
+  iren: "iris-energy", // /iren/ is the unrelated Italian utility.
   alphabet: "alphabet-google",
   avgo: "broadcom",
   meta: "meta-platforms",
@@ -186,6 +188,20 @@ const TSMC_OFFICIAL_QUARTERLY_OVERRIDES = {
   "2026Q3": { revenueUsdBillions: 46.720, revenueTwdBillions: 1494.243, netIncomeTwdBillions: 763.064, grossMarginPct: 66.4 },
 };
 const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
+  iren: {
+    // Original release: irisenergy.gcs-web.com/news-releases/news-release-details/iris-energy-reports-third-quarter-fy22-results
+    "2022Q1": { reportDate: "2022-05-11" },
+    // Q1 FY27 10-Q, accession 0001878848-26-000066 (USD millions).
+    "2026Q3": {
+      revenue: 228_000_000,
+      earnings: -263_000_000,
+      operatingIncome: -186_000_000,
+      grossMargin: (182 / 228) * 100,
+      netAssets: 5_116_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-11-05",
+    },
+  },
   spacex: {
     // Prospectus quarterly facts; Q4 2025 = audited FY 2025 less nine-month 10-Q.
     // https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm
@@ -1764,6 +1780,7 @@ function extractFinancialSeries(html) {
     extractOptionalArrayRawWithFallback(block, ["operatingIncome", "opinc"]) || "",
   );
   const grossMarginRatio = parseNumberArray(extractOptionalArrayRaw(block, "grossMargin") || "");
+  const grossProfit = parseNumberArray(extractOptionalArrayRaw(block, "gp") || "");
 
   const maxLength = Math.min(dateKeys.length, fiscalQuarter.length, revenue.length, netIncome.length);
   const rows = [];
@@ -1780,7 +1797,8 @@ function extractFinancialSeries(html) {
       revenue: revenue[index],
       netIncome: netIncome[index],
       operatingIncome: operatingIncome[index] ?? null,
-      grossMarginPct: Number.isFinite(grossMarginRatio[index]) ? grossMarginRatio[index] * 100 : null,
+      grossMarginPct: Number.isFinite(grossMarginRatio[index]) ? grossMarginRatio[index] * 100
+        : Number.isFinite(grossProfit[index]) && revenue[index] > 0 ? grossProfit[index] / revenue[index] * 100 : null,
     });
   }
 
@@ -1940,7 +1958,7 @@ function collectSecFieldSeries(companyfacts, reportingCurrency, cashFlowOptions 
 
   const fieldSeries = {};
 
-  Object.entries(SEC_FIELD_CONCEPTS).forEach(([fieldKey, concepts]) => {
+  Object.entries({ ...SEC_FIELD_CONCEPTS, ...cashFlowOptions.fieldConcepts }).forEach(([fieldKey, concepts]) => {
     const collectedFacts = [];
     const totalConcepts = concepts.length;
 
@@ -2013,12 +2031,34 @@ async function fetchSecQuarterlyHistory(companySource) {
     return null;
   }
 
-  const fieldSeries = collectSecFieldSeries(companyfacts, reportingCurrency, { periodEndDates: companySource.cashFlowPeriodEndDates ?? {} });
+  const fieldSeries = collectSecFieldSeries(companyfacts, reportingCurrency, { periodEndDates: companySource.cashFlowPeriodEndDates ?? {},
+    // IREN reports mining/lease revenue outside customer-contract revenue.
+    fieldConcepts: companySource.id === "iren" ? { revenue: ["Revenues", ...SEC_FIELD_CONCEPTS.revenue], netAssets: ["StockholdersEquity", "Equity"] } : undefined,
+  });
   const quarterSet = new Set();
   Object.values(fieldSeries).forEach((series) => {
     if (!(series instanceof Map)) return;
     [...series.keys()].forEach((quarter) => quarterSet.add(quarter));
   });
+
+  const firstFiledByEndDate = new Map();
+  if (companySource.id === "iren") {
+    // Comparative/restated facts can be filed years after the original release.
+    // Use the first timely primary filing; leave an unverified release date empty.
+    for (const fields of Object.values(companyfacts.facts ?? {})) {
+      for (const fact of Object.values(fields)) {
+        for (const row of fact.units?.USD ?? []) {
+          if (!SEC_ALLOWED_FORMS.has(row.form) || !row.end || !row.filed) continue;
+          const lag = (Date.parse(row.filed) - Date.parse(row.end)) / 86400000;
+          if (lag <= 0 || lag > 90) continue;
+          if (!firstFiledByEndDate.has(row.end) || row.filed < firstFiledByEndDate.get(row.end)) firstFiledByEndDate.set(row.end, row.filed);
+        }
+      }
+    }
+    // Original issuer releases predate the USD comparative CompanyFacts tags.
+    firstFiledByEndDate.set("2021-12-31", "2022-02-09");
+    firstFiledByEndDate.set("2022-03-31", "2022-05-11");
+  }
 
   const rows = [...quarterSet]
     .sort(comparePeriods)
@@ -2056,7 +2096,7 @@ async function fetchSecQuarterlyHistory(companySource) {
       return {
         period,
         dateKey: endDate,
-        reportDate,
+        reportDate: companySource.id === "iren" ? firstFiledByEndDate.get(endDate) ?? null : reportDate,
         revenue: revenueFact?.value ?? null,
         netIncome: netIncomeFact?.value ?? null,
         operatingIncome: operatingIncomeFact?.value ?? null,
@@ -3747,6 +3787,21 @@ async function run() {
         if (index < selectedCompanies.length - 1) await sleep(500);
         continue;
       }
+    }
+
+    if (companySource.preferSecFundamentals) {
+      // Preserve GAAP operating losses (including impairments), rather than
+      // the provider's standardized operating-income subtotal.
+      const primaryByPeriod = new Map(secHistoryRows.map(row => [row.period, row]));
+      rows = rows.map(row => {
+        const primary = primaryByPeriod.get(row.period);
+        if (!primary) return row;
+        const combined = { ...row };
+        for (const key of ["revenue", "netIncome", "operatingIncome", "grossMarginPct"]) {
+          if (Number.isFinite(primary[key])) combined[key] = primary[key];
+        }
+        return combined;
+      });
     }
 
     if (companySource.id === "tsmc") {

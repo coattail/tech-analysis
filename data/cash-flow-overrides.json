@@ -2469,6 +2469,20 @@
         "method": "reported-quarter",
         "basis": "GAAP consolidated cash flow; three months ended September 26, 2026; cash purchases of property and equipment"
       }
+    ],
+    "iren": [
+      {
+        "period": "2022Q3",
+        "exclude": true,
+        "source": "https://irisenergy.gcs-web.com/news-releases/news-release-details/iris-energy-reports-second-quarter-fy23-results",
+        "basis": "Only six-month cash flows disclosed; identical provider quarter values divide the half-year by two and are excluded."
+      },
+      {
+        "period": "2022Q4",
+        "exclude": true,
+        "source": "https://irisenergy.gcs-web.com/news-releases/news-release-details/iris-energy-reports-second-quarter-fy23-results",
+        "basis": "Only six-month cash flows disclosed; identical provider quarter values divide the half-year by two and are excluded."
+      }
     ]
   }
 }

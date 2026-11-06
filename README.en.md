@@ -38,13 +38,15 @@ The project focuses on three things:
 
 ## Covered Companies
 
-As of November 1, 2026, the sample covers 46 leading U.S.-listed companies across mega-cap, enterprise software, and cloud computing:
+As of November 6, 2026, the sample covers 47 leading U.S.-listed companies across mega-cap, enterprise software, and cloud computing:
 
 - NVIDIA, Alphabet, Apple, Microsoft, Amazon, Broadcom, Meta, TSMC, Tesla, Walmart
 - Berkshire Hathaway, JPMorgan Chase, Eli Lilly, Exxon Mobil, Visa, ASML, Micron, Johnson & Johnson, Oracle, AMD
 - Mastercard, Costco, Netflix, Bank of America, Caterpillar, Chevron, Palantir, Cisco, AbbVie, Home Depot
 - IBM, SAP, CrowdStrike, Salesforce, ServiceNow, Datadog, Snowflake, Cloudflare, Adobe, Zoom
-- CoreWeave, Nebius, ChronoScale, SharonAI, SK hynix, SpaceX (SPCX, Cloud)
+- CoreWeave, Nebius, ChronoScale, SharonAI, IREN, SK hynix, SpaceX (SPCX, Cloud)
+
+IREN is included in Cloud. Its financial metrics use consolidated company results, including AI Cloud and Bitcoin mining, mapped to calendar quarter-end dates. SEC-reported operating income includes impairment charges.
 
 ## Metric Definitions
 
@@ -67,7 +69,7 @@ Operating income is continuously covered from each company's listing quarter, wi
 
 ## Cash-flow metrics and SpaceX
 
-SpaceX (SPCX) is included in Cloud. All 46 companies have `operatingCashFlow`, `capex`, and `freeCashFlow` series. Quarterly amounts are in USD; CapEx is positive cash spending, and free cash flow equals operating cash flow minus CapEx. Annual and TTM views require all four quarters. Missing values remain null, including bank CapEx that is not separately disclosed.
+SpaceX (SPCX) is included in Cloud. All 47 companies have `operatingCashFlow`, `capex`, and `freeCashFlow` series. Quarterly amounts are in USD; CapEx is positive cash spending, and free cash flow equals operating cash flow minus CapEx. Annual and TTM views require all four quarters. Missing values remain null, including bank CapEx that is not separately disclosed.
 
 Run `node scripts/auto-refresh-cash-flow.mjs` to refresh SEC CompanyFacts history and StockAnalysis quarterly supplements. Cumulative flows with the same fiscal start are differenced into individual quarters. Primary non-USD facts use quarter-average FX; validated WallStreetNumbers historical supplements retain the vendor’s USD conversion and published precision. Cash CapEx includes property/equipment and separately disclosed capitalized software/intangibles, excludes business acquisitions and noncash finance leases, and may vary with source classifications.
 

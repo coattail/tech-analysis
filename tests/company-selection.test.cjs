@@ -38,7 +38,7 @@ test('index html marks the same initial view controls as checked', () => {
   assert.doesNotMatch(html, /name="chartMode" value="line" checked/);
   assert.match(html, /id="priceComparisonToggle" type="checkbox" checked/);
   assert.match(html, /<strong id="activeMetricLabel">净利润<\/strong>/);
-  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 46<\/strong>/);
+  assert.match(html, /<strong id="visibleCompaniesLabel">1 \/ 47<\/strong>/);
 });
 
 test('provides a persistent bilingual switch for page copy and chart annotations', () => {

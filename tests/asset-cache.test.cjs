@@ -43,7 +43,7 @@ test("cache-busts generated datasets after completing historical coverage", () =
 
   for (const [asset, expectedVersion] of [
     ["data.js", require("node:crypto").createHash("sha256").update(fs.readFileSync(path.join(__dirname, "..", "data.js"))).digest("hex").slice(0, 16)],
-    ["price-data.js", "20261101-cash-flow"],
+    ["price-data.js", "20261106-iren"],
   ]) {
     assert.match(
       html,
@@ -61,7 +61,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20261102-verified-history-adaptive-axis"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261102-metric-watermarks"],
+    ["script.js", "20261106-iren"],
   ]) {
     assert.match(
       html,

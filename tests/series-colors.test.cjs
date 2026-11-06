@@ -111,7 +111,7 @@ test("renders a company logo instead of a color dot for every company option", (
 
 test("keeps every possible two-company selection visually distinct", () => {
   const companies = loadCompanyColors();
-  assert.equal(companies.length, 46);
+  assert.equal(companies.length, 47);
 
   for (let leftIndex = 0; leftIndex < companies.length; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < companies.length; rightIndex += 1) {

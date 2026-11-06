@@ -659,7 +659,7 @@ test("keeps core fundamentals continuous from listing through the latest reporte
 
 test("keeps adjusted-close prices complete across normal trading-calendar gaps", () => {
   const prices = loadStockPriceSourceData();
-  assert.equal(Object.keys(prices.companies || {}).length, 46);
+  assert.equal(Object.keys(prices.companies || {}).length, 47);
 
   const invalid = [];
   for (const [companyId, company] of Object.entries(prices.companies || {})) {
