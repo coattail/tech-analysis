@@ -211,19 +211,19 @@
     },
     "berkshire": {
       "first": "2005Q1",
-      "last": "2026Q2",
-      "expected": 86,
+      "last": "2026Q3",
+      "expected": 87,
       "metrics": {
         "operatingCashFlow": {
-          "present": 86,
+          "present": 87,
           "missing": []
         },
         "capex": {
-          "present": 86,
+          "present": 87,
           "missing": []
         },
         "freeCashFlow": {
-          "present": 86,
+          "present": 87,
           "missing": []
         }
       }

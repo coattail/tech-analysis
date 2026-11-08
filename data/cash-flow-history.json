@@ -22123,24 +22123,36 @@
             "precision": 10000,
             "periodEndPrecision": "month"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://stockanalysis.com/stocks/brk.b/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://stockanalysis.com/stocks/brk.b/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 89,
+          "count": 90,
           "first": "2004Q2",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 86,
+          "count": 87,
           "first": "2005Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 86,
+          "count": 87,
           "first": "2005Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
