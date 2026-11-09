@@ -20044,8 +20044,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-03",
-            "accession": "0001193125-25-261548",
+            "filed": "2026-11-09",
+            "accession": "0001193125-26-452412",
             "nativeCurrency": "USD",
             "nativeValue": 13789000000,
             "basis": "reported-cash-flow"
@@ -20056,8 +20056,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-03",
-            "accession": "0001193125-25-261548",
+            "filed": "2026-11-09",
+            "accession": "0001193125-26-452412",
             "nativeCurrency": "USD",
             "nativeValue": 5586000000,
             "basis": "reported-cash-flow"
@@ -22126,14 +22126,28 @@
         },
         "2026Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/brk.b/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001067983.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-09",
+            "accession": "0001193125-26-452412",
+            "nativeCurrency": "USD",
+            "nativeValue": 12261000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/brk.b/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001067983.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-09",
+            "accession": "0001193125-26-452412",
+            "nativeCurrency": "USD",
+            "nativeValue": 5506000000,
+            "basis": "reported-cash-flow"
           }
         }
       },
