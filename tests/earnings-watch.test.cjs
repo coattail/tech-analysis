@@ -97,3 +97,16 @@ test('financial refresh windows follow individual report dates, and manual selec
  assert.equal(inEarningsWindow({...c,nextEarningsDate:'2026-10-05'},new Date('2026-10-01')),true);
  assert.equal(inEarningsWindow({reportDates:{q:'2026-10-30'}},new Date('2026-11-03')),true);
 });
+
+test('large losses require exact same-period SEC corroboration for new amounts', async () => {
+  const {validLatestAmounts}=await import('../scripts/auto-refresh-data.mjs');
+  const current={revenue:{'2026Q2':1931381},earnings:{'2026Q2':-428302926}};
+  const previous={revenue:{'2026Q1':294014},earnings:{'2026Q1':-19915764}};
+  const official={period:'2026Q2',revenue:1931381,netIncome:-428302926};
+  assert.equal(validLatestAmounts(current,previous),false);
+  assert.equal(validLatestAmounts(current,previous,[official]),true);
+  for(const changed of [{period:'2026Q1'},{revenue:1931},{netIncome:-428302}]) {
+    assert.equal(validLatestAmounts(current,previous,[{...official,...changed}]),false);
+  }
+  assert.equal(validLatestAmounts(current,structuredClone(current)),true);
+});
