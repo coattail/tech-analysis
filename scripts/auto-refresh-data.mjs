@@ -3579,12 +3579,20 @@ export function preserveHistoricalPeriods(current, original) {
   }
 }
 
-export function validLatestAmounts(current, original) {
+export function validLatestAmounts(current, original, officialRows = []) {
   const latest = Object.keys(current.revenue ?? {}).filter(p => Number.isFinite(current.revenue[p])).sort().at(-1);
   const previous = Object.keys(original.revenue ?? {}).filter(p => p < latest && Number.isFinite(original.revenue[p])).sort().at(-1);
   if (!latest) return true;
   const revenue = current.revenue[latest], income = current.earnings?.[latest];
-  if (!(revenue > 0) || !Number.isFinite(income) || Math.abs(income) > revenue * 20) return false;
+  if (!(revenue > 0) || !Number.isFinite(income)) return false;
+  // Large GAAP losses can be real (e.g. SHAZ acquisition/accounting charges).
+  // Require an exact same-period SEC corroboration for newly introduced outliers;
+  // an unchanged last-good value must not fail every subsequent refresh.
+  const unchanged = revenue === original.revenue?.[latest] && income === original.earnings?.[latest];
+  const corroborated = officialRows.some(row => row.period === latest
+    && Number.isFinite(row.revenue) && Number.isFinite(row.netIncome)
+    && Math.round(row.revenue) === revenue && Math.round(row.netIncome) === income);
+  if (Math.abs(income) > revenue * 20 && !unchanged && !corroborated) return false;
   return !previous || !(original.revenue[previous] > 0)
     || revenue / original.revenue[previous] >= .02 && revenue / original.revenue[previous] <= 50;
 }
@@ -3617,6 +3625,7 @@ async function run() {
 
   const periodSet = new Set((Array.isArray(data.periods) ? data.periods : []).filter(isPeriodLabel));
   const growthCompanyIds = new Set();
+  const officialValidationRows = new Map();
   const summary = {
     updatedCompanyIds: [],
     changedPoints: 0,
@@ -4067,6 +4076,7 @@ async function run() {
 
     const publishedCompany = ["asml", "palantir"].includes(companySource.id)
       ? await loadPublishedCompanyQuarters(companyData, companySource.id) : null;
+    officialValidationRows.set(companySource.id, secHistoryRows);
     const localCurated = curatedQuarterlyDataset.get(normalizeTickerForSec(companySource.ticker));
     const curatedCompany = publishedCompany?.quarters.length ? publishedCompany : localCurated;
     if (curatedCompany) {
@@ -4235,10 +4245,14 @@ async function run() {
   const original = parseDataJs(rawData);
   const rejected = [];
   for (const company of selectedCompanies) {
-    if (!validLatestAmounts(data.companies[company.id], original.companies[company.id] ?? {})) {
+    if (!validLatestAmounts(data.companies[company.id], original.companies[company.id] ?? {}, officialValidationRows.get(company.id))) {
       data.companies[company.id] = original.companies[company.id];
       rejected.push(company.id);
     }
+  }
+  if (rejected.length) {
+    console.error(`已回滚未获 SEC 同期金额确认的异常数据：${rejected.join(", ")}`);
+    process.exitCode = 1;
   }
   if (options.latestOnly) {
     for (const company of selectedCompanies) {
@@ -4264,10 +4278,6 @@ async function run() {
   const refreshedAtIso = new Date().toISOString();
   updateMeta(data, summary, refreshedAtIso, options);
   await writeFile(DATA_JS_PATH, formatDataJs(data), "utf8");
-  if (rejected.length) {
-    console.error(`已回滚金额或单位异常的公司：${rejected.join(", ")}`);
-    process.exitCode = 1;
-  }
   console.log(
     `\n完成写入 data.js：更新公司 ${summary.updatedCompanyIds.length} 家，变更点 ${summary.changedPoints} 个，季度 ${summary.changedPeriods.length} 个`,
   );
