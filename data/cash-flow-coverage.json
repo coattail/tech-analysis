@@ -1120,20 +1120,29 @@
     },
     "coreweave": {
       "first": "2023Q4",
-      "last": "2026Q2",
-      "expected": 11,
+      "last": "2026Q3",
+      "expected": 12,
       "metrics": {
         "operatingCashFlow": {
           "present": 11,
-          "missing": []
+          "missing": [
+            "2026Q3"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
         },
         "capex": {
           "present": 11,
-          "missing": []
+          "missing": [
+            "2026Q3"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
         },
         "freeCashFlow": {
           "present": 11,
-          "missing": []
+          "missing": [
+            "2026Q3"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
         }
       }
     },
