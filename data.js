@@ -1,7 +1,7 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC Company Facts + StockAnalysis + Macrotrends historical Operating Income/TTM reconstruction + SK hynix official earnings / archived statements / FRED DEXKOUS",
-    "generatedAt": "2026-11-10T23:08:37.323Z",
+    "generatedAt": "2026-11-11T05:55:11.792Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q3",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
@@ -432,22 +432,11 @@ window.FINANCIAL_SOURCE_DATA = {
       }
     },
     "earningsWatch": {
-      "updatedAt": "2026-11-10T23:08:33.143Z",
+      "updatedAt": "2026-11-11T05:55:10.282Z",
       "companies": [
-        "apple",
+        "nvidia",
         "meta",
-        "berkshire",
-        "jpmorgan",
-        "lilly",
-        "skhynix",
-        "jnj",
-        "mastercard",
-        "netflix",
-        "caterpillar",
-        "chevron",
-        "abbvie",
-        "homedepot",
-        "coreweave"
+        "chronoscale"
       ]
     }
   },
@@ -6944,7 +6933,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 62.4935864545921,
         "2026Q1": 73.21451272533116,
         "2026Q2": 85.22763378875221,
-        "2026Q3": 105.85114348672529
+        "2026Q3": 105.85114348672526
       },
       "forecastFlags": {
         "revenue": [],
@@ -7050,7 +7039,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 73.412,
         "2026Q1": 74.997,
         "2026Q2": 74.934,
-        "2026Q3": 74.975
+        "2026Q3": 74.97531723844067
       },
       "periodEndDates": {
         "2004Q2": "2004-06-30",
@@ -44762,7 +44751,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 79.87199425768632,
         "2025Q4": 83.4583197478535,
         "2026Q1": 65.26787195223088,
-        "2026Q3": -9.994696494865243
+        "2026Q3": -9.994696494865245
       },
       "revenueGrowth": {
         "2024Q3": null,
@@ -44795,7 +44784,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": "2026-01-08",
         "2026Q1": "2026-04-08",
         "2026Q2": "2026-08-19",
-        "2026Q3": "2026-10-14"
+        "2026Q3": "2026-10-15"
       },
       "forecastFlags": {
         "revenue": [],
