@@ -75144,24 +75144,36 @@
             "periodEnd": "2023-12-31",
             "method": "reported-quarter"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://stockanalysis.com/stocks/crwv/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://stockanalysis.com/stocks/crwv/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 11,
+          "count": 12,
           "first": "2023Q4",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 11,
+          "count": 12,
           "first": "2023Q4",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 11,
+          "count": 12,
           "first": "2023Q4",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
