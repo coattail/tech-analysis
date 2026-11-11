@@ -75144,24 +75144,38 @@
             "periodEnd": "2023-12-31",
             "method": "reported-quarter"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000461/coreweave3q26earningspress.htm",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter",
+            "basis": "Net cash provided by operating activities"
+          },
+          "capex": {
+            "source": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000461/coreweave3q26earningspress.htm",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter",
+            "basis": "Cash purchases of property and equipment, including capitalized internal-use software"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 11,
+          "count": 12,
           "first": "2023Q4",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 11,
+          "count": 12,
           "first": "2023Q4",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 11,
+          "count": 12,
           "first": "2023Q4",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
