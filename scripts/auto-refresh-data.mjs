@@ -630,6 +630,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   coreweave: {
+    // CoreWeave Q3 2026 earnings release, furnished on Form 8-K on 2026-11-10.
+    // https://www.sec.gov/Archives/edgar/data/1769628/000176962826000461/coreweave3q26earningspress.htm
+    "2026Q3": {
+      revenue: 3_661_000_000,
+      earnings: -709_000_000,
+      operatingIncome: 207_000_000,
+      grossMargin: ((3_661 - 1_183) / 3_661) * 100,
+      netAssets: 4_025_000_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-11-10",
+    },
     // CoreWeave Q2 2026 earnings release, published on 2026-08-11.
     "2026Q2": {
       revenue: 2_575_000_000,

@@ -1,6 +1,20 @@
 {
   "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals. ChronoScale uses Cloud carve-out cash flows, excluding unrelated legacy Ekso. Berkshire early periods use official annual/quarterly PDFs and comparative restatements. Additional historical quarters reconcile to official SEC cumulative cash-flow statements; issuer-specific cash CapEx classifications are preserved in bases.",
   "companies": {
+    "coreweave": [
+      {
+        "period": "2026Q3",
+        "dateKey": "2026-09-30",
+        "operatingCashFlow": 1975000000,
+        "capex": 9441000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000461/coreweave3q26earningspress.htm",
+        "method": "reported-quarter",
+        "bases": {
+          "operatingCashFlow": "Net cash provided by operating activities",
+          "capex": "Cash purchases of property and equipment, including capitalized internal-use software"
+        }
+      }
+    ],
     "spacex": [
       {
         "period": "2025Q1",
