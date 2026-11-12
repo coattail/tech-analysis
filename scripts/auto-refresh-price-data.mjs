@@ -13,12 +13,15 @@ const {
   getLatestPriceDate,
   keepCompletedPrices,
   normalizeYahooChartPayload,
+  parseNasdaqHistoricalClose,
+  verifyLatestClose,
 } = require("../price-refresh-helpers.cjs");
 
 const { parseStockAnalysisPrices, parseStockAnalysisAdjustedChart } = require("../stockanalysis-price-helpers.cjs");
 
 const PRICE_DATA_JS_PATH = new URL("../price-data.js", import.meta.url);
 const YAHOO_CHART_BASE = "https://query2.finance.yahoo.com/v8/finance/chart";
+const NASDAQ_HISTORICAL_BASE = "https://api.nasdaq.com/api/quote";
 const START_DATE_UNIX = Math.floor(Date.UTC(2005, 0, 1) / 1000);
 const FETCH_ATTEMPTS = 3;
 const RETRY_DELAYS_MS = [2_000, 5_000];
@@ -36,7 +39,7 @@ const COMPANY_SOURCES = [
   { id: "tsmc", ticker: "TSM" },
   { id: "tsla", ticker: "TSLA" },
   { id: "walmart", ticker: "WMT" },
-  { id: "berkshire", ticker: "BRK-B" },
+  { id: "berkshire", ticker: "BRK-B", nasdaqTicker: "BRK.B" },
   { id: "jpmorgan", ticker: "JPM" },
   { id: "lilly", ticker: "LLY" },
   { id: "exxon", ticker: "XOM" },
@@ -109,7 +112,23 @@ function pruneDailyPrices(daily, minDate) {
   return Object.fromEntries(Object.entries(daily || {}).filter(([date]) => date >= minDate));
 }
 
-async function fetchDailyAdjustedSeries(company, expectedDate) {
+async function fetchNasdaqClose(company, expectedDate) {
+  const symbol = company.nasdaqTicker ?? company.ticker;
+  const url = new URL(`${NASDAQ_HISTORICAL_BASE}/${encodeURIComponent(symbol)}/historical`);
+  const from = new Date(`${expectedDate}T00:00:00Z`);
+  from.setUTCDate(from.getUTCDate() - 7);
+  url.searchParams.set("assetclass", "stocks");
+  url.searchParams.set("fromdate", from.toISOString().slice(0, 10));
+  url.searchParams.set("todate", expectedDate);
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(15_000),
+    headers: { "user-agent": "Mozilla/5.0", accept: "application/json", "cache-control": "no-cache" },
+  });
+  if (!response.ok) throw new Error(`Nasdaq 请求失败（${symbol}）：HTTP ${response.status}`);
+  return parseNasdaqHistoricalClose(await response.json(), symbol, expectedDate);
+}
+
+async function fetchDailyAdjustedSeries(company, expectedDate, officialClose) {
   let lastError;
 
   for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt += 1) {
@@ -153,7 +172,7 @@ async function fetchDailyAdjustedSeries(company, expectedDate) {
       }
 
       company.priceSource = "Yahoo Finance chart API";
-      return daily;
+      return verifyLatestClose(daily, expectedDate, officialClose);
     } catch (error) {
       lastError = error;
       if (attempt >= FETCH_ATTEMPTS) break;
@@ -176,10 +195,10 @@ async function fetchDailyAdjustedSeries(company, expectedDate) {
       const result = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", chartUrl], { maxBuffer: 5 * 1024 * 1024 });
       const daily = parseStockAnalysisAdjustedChart(JSON.parse(result.stdout), expectedDate, company.minDate);
       company.priceSource = chartUrl;
-      return daily;
+      return verifyLatestClose(daily, expectedDate, officialClose);
     }
     company.priceSource = url;
-    return recent;
+    return verifyLatestClose(recent, expectedDate, officialClose);
   }
   throw lastError;
 }
@@ -197,14 +216,16 @@ async function main() {
 
   for (const company of selectedCompanies) {
     try {
+      const officialClose = await fetchNasdaqClose(company, expectedDate);
       companies[company.id] = {
         ...(companies[company.id] || {}),
         ...(["skhynix", "spacex"].includes(company.id) ? { ticker: company.ticker, currency: "USD" } : {}),
-        daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company, expectedDate), company.minDate),
+        daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company, expectedDate, officialClose), company.minDate),
+        verifiedCloseDate: expectedDate,
         source: company.priceSource,
       };
       updatedCompanies.push(company.id);
-      console.log(`已刷新 ${company.ticker}`);
+      console.log(`已刷新 ${company.ticker}，Nasdaq 收盘价 ${officialClose}`);
     } catch (error) {
       failedCompanies.push(company.id);
       console.warn(`跳过 ${company.ticker}，保留已有数据：${error.message}`);
@@ -235,6 +256,7 @@ async function main() {
     meta: {
       generatedAt: new Date().toISOString(),
       source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY, SPCX and IREN",
+      closeVerificationSource: NASDAQ_HISTORICAL_BASE,
       priceType: "adjusted-close",
       latestCompletedSession: expectedDate,
       latestDateRange: {

@@ -135,6 +135,30 @@ function assessYahooChartFreshness(daily, expectedDate) {
   };
 }
 
+function parseNasdaqHistoricalClose(payload, symbol, date) {
+  const [year, month, day] = date.split("-");
+  const rows = payload?.data?.tradesTable?.rows;
+  const row = Array.isArray(rows) ? rows.find(item => item?.date === `${month}/${day}/${year}`) : null;
+  const close = typeof row?.close === "string" ? Number(row.close.replace(/^\$/, "").replaceAll(",", "")) : NaN;
+  const returnedSymbol = payload?.data?.symbol?.replaceAll("/", ".");
+  if (payload?.status?.rCode !== 200 || returnedSymbol !== symbol || !Number.isFinite(close) || close <= 0) {
+    throw new Error(`Nasdaq 缺少 ${symbol} 在 ${date} 的有效收盘价`);
+  }
+  return close;
+}
+
+function verifyLatestClose(daily, date, officialClose) {
+  const candidate = daily[date];
+  // Allow half-cent display rounding and provider floating-point noise.
+  const tolerance = 0.005 + officialClose * 1e-7;
+  if (!Number.isFinite(officialClose) || officialClose <= 0 || !Number.isFinite(candidate) || candidate <= 0
+      || Math.abs(candidate - officialClose) > tolerance) {
+    throw new Error(`${date} 收盘价对账失败：股价来源 ${candidate ?? "缺失"}，Nasdaq ${officialClose}`);
+  }
+  daily[date] = officialClose;
+  return daily;
+}
+
 module.exports = {
   assessYahooChartFreshness,
   formatUnixDateInTimeZone,
@@ -143,4 +167,6 @@ module.exports = {
   keepCompletedPrices,
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
+  parseNasdaqHistoricalClose,
+  verifyLatestClose,
 };

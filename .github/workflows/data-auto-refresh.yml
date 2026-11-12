@@ -2,6 +2,11 @@ name: Auto Refresh Financial Data
 
 on:
   workflow_dispatch:
+    inputs:
+      prices_only:
+        description: Refresh prices without refreshing financial datasets
+        type: boolean
+        default: false
   schedule:
     # Price-only run 85–145 minutes after the regular US close.
     - cron: "25 22 * * 1-5"
@@ -31,19 +36,19 @@ jobs:
           node-version: "22"
 
       - name: Refresh data.js
-        if: github.event.schedule != '25 22 * * 1-5'
+        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
         id: financials
         continue-on-error: true
         run: node scripts/auto-refresh-data.mjs
 
       - name: Refresh market capitalizations
-        if: github.event.schedule != '25 22 * * 1-5'
+        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
         id: marketcaps
         continue-on-error: true
         run: node scripts/auto-refresh-market-caps.mjs
 
       - name: Refresh cash-flow data
-        if: github.event.schedule != '25 22 * * 1-5'
+        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
         id: cashflow
         continue-on-error: true
         run: node scripts/auto-refresh-cash-flow.mjs
@@ -54,6 +59,7 @@ jobs:
         run: node scripts/auto-refresh-price-data.mjs
 
       - name: Commit changes if data updated
+        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
