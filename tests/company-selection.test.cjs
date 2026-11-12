@@ -166,7 +166,7 @@ test('scheduled automation refreshes and publishes both fundamental and price da
 
   assert.match(workflow, /schedule:/);
   assert.match(workflow, /cron: "15 10 \* \* \*"/);
-  assert.match(workflow, /cron: "15 8 \* 1,4,7,10 \*"/);
+  assert.match(workflow, /cron: "25 22 \* \* 1-5"/);
   assert.match(workflow, /node scripts\/auto-refresh-data\.mjs/);
   assert.match(workflow, /node scripts\/auto-refresh-price-data\.mjs/);
   assert.match(workflow, /git add data\.js price-data\.js/);

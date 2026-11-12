@@ -9,7 +9,9 @@ const require = createRequire(import.meta.url);
 const execFileAsync = promisify(execFile);
 const {
   assessYahooChartFreshness,
+  getLatestCompletedMarketDate,
   getLatestPriceDate,
+  keepCompletedPrices,
   normalizeYahooChartPayload,
 } = require("../price-refresh-helpers.cjs");
 
@@ -107,12 +109,13 @@ function pruneDailyPrices(daily, minDate) {
   return Object.fromEntries(Object.entries(daily || {}).filter(([date]) => date >= minDate));
 }
 
-async function fetchDailyAdjustedSeries(company) {
+async function fetchDailyAdjustedSeries(company, expectedDate) {
   let lastError;
 
   for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt += 1) {
     try {
-      const endDateUnix = Math.floor(Date.now() / 1000) + 86400;
+      // Yahoo's period2 is exclusive. Keep the requested range out of the next session.
+      const endDateUnix = Date.parse(`${expectedDate}T00:00:00Z`) / 1000 + 86_400;
       const url = new URL(`${YAHOO_CHART_BASE}/${encodeURIComponent(company.ticker)}`);
       const startDateUnix = company.minDate
         ? Math.floor(Date.parse(`${company.minDate}T00:00:00Z`) / 1000)
@@ -124,6 +127,7 @@ async function fetchDailyAdjustedSeries(company) {
       url.searchParams.set("includeAdjustedClose", "true");
 
       const response = await fetch(url, {
+        signal: AbortSignal.timeout(20_000),
         headers: {
           "user-agent": "Mozilla/5.0",
           accept: "application/json",
@@ -135,13 +139,13 @@ async function fetchDailyAdjustedSeries(company) {
       }
 
       const payload = await response.json();
-      const daily = normalizeYahooChartPayload(payload);
+      const daily = keepCompletedPrices(normalizeYahooChartPayload(payload), expectedDate);
       if (Object.keys(daily).length === 0) {
         const providerMessage = payload?.chart?.error?.description || "响应缺少日线数据";
         throw new Error(`Yahoo Finance 响应异常（${company.ticker}）：${providerMessage}`);
       }
 
-      const freshness = assessYahooChartFreshness(payload, daily);
+      const freshness = assessYahooChartFreshness(daily, expectedDate);
       if (!freshness.isFresh) {
         throw new Error(
           `Yahoo Finance 日线滞后（${company.ticker}）：最新 ${freshness.latestDate || "未知"}，应到 ${freshness.expectedDate || "未知"}`,
@@ -163,11 +167,14 @@ async function fetchDailyAdjustedSeries(company) {
     const slug = company.id === "spacex" ? "spcx" : company.id === "iren" ? "iren" : "skhy";
     const url = `https://stockanalysis.com/stocks/${slug}/history/?range=max`;
     const { stdout } = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", url], { maxBuffer: 5 * 1024 * 1024 });
-    const recent = parseStockAnalysisPrices(stdout);
+    const recent = keepCompletedPrices(parseStockAnalysisPrices(stdout), expectedDate);
+    if (getLatestPriceDate(recent) !== expectedDate) {
+      throw new Error(`StockAnalysis 缺少 ${company.ticker} 在 ${expectedDate} 的收盘数据`);
+    }
     if (company.id === "iren") {
       const chartUrl = `https://api.stockanalysis.com/api/symbol/s/IREN/history?type=chart&series=a`;
       const result = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", chartUrl], { maxBuffer: 5 * 1024 * 1024 });
-      const daily = parseStockAnalysisAdjustedChart(JSON.parse(result.stdout), getLatestPriceDate(recent), company.minDate);
+      const daily = parseStockAnalysisAdjustedChart(JSON.parse(result.stdout), expectedDate, company.minDate);
       company.priceSource = chartUrl;
       return daily;
     }
@@ -185,13 +192,15 @@ async function main() {
   const argv = process.argv.slice(2);
   const selectedCompanies = getSelectedCompanies(argv);
   const allowPartial = argv.includes("--allow-partial");
+  const expectedDate = getLatestCompletedMarketDate();
+  console.log(`最新已收盘的美股交易日：${expectedDate}`);
 
   for (const company of selectedCompanies) {
     try {
       companies[company.id] = {
         ...(companies[company.id] || {}),
         ...(["skhynix", "spacex"].includes(company.id) ? { ticker: company.ticker, currency: "USD" } : {}),
-        daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company), company.minDate),
+        daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company, expectedDate), company.minDate),
         source: company.priceSource,
       };
       updatedCompanies.push(company.id);
@@ -227,6 +236,7 @@ async function main() {
       generatedAt: new Date().toISOString(),
       source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY, SPCX and IREN",
       priceType: "adjusted-close",
+      latestCompletedSession: expectedDate,
       latestDateRange: {
         earliest: latestDates[0] || null,
         latest: latestDates.at(-1) || null,

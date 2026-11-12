@@ -3,9 +3,9 @@ name: Auto Refresh Financial Data
 on:
   workflow_dispatch:
   schedule:
-    # Daily baseline at 18:15 China Standard Time / 05:15-06:15 US Eastern Time.
-    # Yahoo's adjusted-close bar can lag the US close by several hours, so the
-    # next-morning run avoids publishing a dataset that silently ends a day early.
+    # Price-only run 85–145 minutes after the regular US close.
+    - cron: "25 22 * * 1-5"
+    # Daily full refresh also retries prices that were unavailable after close.
     - cron: "15 10 * * *"
 
 permissions:
@@ -31,16 +31,19 @@ jobs:
           node-version: "22"
 
       - name: Refresh data.js
+        if: github.event.schedule != '25 22 * * 1-5'
         id: financials
         continue-on-error: true
         run: node scripts/auto-refresh-data.mjs
 
       - name: Refresh market capitalizations
+        if: github.event.schedule != '25 22 * * 1-5'
         id: marketcaps
         continue-on-error: true
         run: node scripts/auto-refresh-market-caps.mjs
 
       - name: Refresh cash-flow data
+        if: github.event.schedule != '25 22 * * 1-5'
         id: cashflow
         continue-on-error: true
         run: node scripts/auto-refresh-cash-flow.mjs
@@ -77,7 +80,7 @@ jobs:
           PRICES: ${{ steps.prices.outcome }}
         run: |
           echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
-          test "$FINANCIALS" = success
-          test "$MARKETCAPS" = success
-          test "$CASHFLOW" = success
+          test "$FINANCIALS" = success || test "$FINANCIALS" = skipped
+          test "$MARKETCAPS" = success || test "$MARKETCAPS" = skipped
+          test "$CASHFLOW" = success || test "$CASHFLOW" = skipped
           test "$PRICES" = success

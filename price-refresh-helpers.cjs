@@ -24,27 +24,91 @@ function normalizeYahooChartPayload(payload) {
   if (!Array.isArray(timestamps) || !Array.isArray(adjustedCloses)) return {};
 
   const rows = timestamps.map((timestamp, index) => ({
-    date: new Date(timestamp * 1000).toISOString().slice(0, 10),
+    date: formatUnixDateInTimeZone(timestamp, result.meta?.exchangeTimezoneName || "America/New_York"),
     adjustedClose: adjustedCloses[index],
   }));
 
   return normalizeAdjustedCloseRows(rows);
 }
 
+const DAY_MS = 86_400_000;
+const marketClock = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/New_York",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  hourCycle: "h23",
+});
+
+function weekdayInMonth(year, month, weekday, occurrence) {
+  const first = new Date(Date.UTC(year, month, 1));
+  return 1 + (weekday - first.getUTCDay() + 7) % 7 + (occurrence - 1) * 7;
+}
+
+function observedHoliday(year, month, day, observeSaturday = true) {
+  const date = new Date(Date.UTC(year, month, day));
+  if (date.getUTCDay() === 6 && observeSaturday) return date.getTime() - DAY_MS;
+  if (date.getUTCDay() === 0) return date.getTime() + DAY_MS;
+  return date.getTime();
+}
+
+function goodFriday(year) {
+  // Gregorian computus for the modern US exchange calendar (1900–2099).
+  const lunar = (19 * (year % 19) + 24) % 30;
+  const offset = (2 * (year % 4) + 4 * (year % 7) + 6 * lunar + 5) % 7;
+  const correction = offset === 6 && (lunar === 29 || (lunar === 28 && year % 19 > 10)) ? 7 : 0;
+  return Date.UTC(year, 2, 22 + lunar + offset - correction - 2);
+}
+
+function isMarketHoliday(date) {
+  const year = date.getUTCFullYear();
+  const lastMay = new Date(Date.UTC(year, 4, 31));
+  const memorialDay = 31 - (lastMay.getUTCDay() + 6) % 7;
+  return [
+    observedHoliday(year, 0, 1, false),
+    Date.UTC(year, 0, weekdayInMonth(year, 0, 1, 3)),
+    Date.UTC(year, 1, weekdayInMonth(year, 1, 1, 3)),
+    goodFriday(year),
+    Date.UTC(year, 4, memorialDay),
+    observedHoliday(year, 5, 19),
+    observedHoliday(year, 6, 4),
+    Date.UTC(year, 8, weekdayInMonth(year, 8, 1, 1)),
+    Date.UTC(year, 10, weekdayInMonth(year, 10, 4, 4)),
+    observedHoliday(year, 11, 25),
+  ].includes(date.getTime());
+}
+
+function getLatestCompletedMarketDate(now = new Date()) {
+  const { year, month, day, hour } = Object.fromEntries(
+    marketClock.formatToParts(now).map(({ type, value }) => [type, Number(value)]),
+  );
+  const date = new Date(Date.UTC(year, month - 1, day));
+  const earlyClose = (month === 11 && day === weekdayInMonth(year, 10, 4, 4) + 1)
+    || (month === 7 && day === 3) || (month === 12 && day === 24);
+  if (hour < (earlyClose ? 13 : 16)) date.setUTCDate(date.getUTCDate() - 1);
+  while (date.getUTCDay() === 0 || date.getUTCDay() === 6 || isMarketHoliday(date)) {
+    date.setUTCDate(date.getUTCDate() - 1);
+  }
+  return date.toISOString().slice(0, 10);
+}
+
+const exchangeDateFormatters = new Map();
+
 function formatUnixDateInTimeZone(timestamp, timeZone = "UTC") {
   const numericTimestamp = Number(timestamp);
   if (!Number.isFinite(numericTimestamp)) return null;
 
   try {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).formatToParts(new Date(numericTimestamp * 1000));
-    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-    if (!values.year || !values.month || !values.day) return null;
-    return `${values.year}-${values.month}-${values.day}`;
+    if (!exchangeDateFormatters.has(timeZone)) {
+      exchangeDateFormatters.set(timeZone, new Intl.DateTimeFormat("en-CA", {
+        timeZone, year: "numeric", month: "2-digit", day: "2-digit",
+      }));
+    }
+    const date = new Date(numericTimestamp * 1000);
+    const { year, month, day } = Object.fromEntries(exchangeDateFormatters.get(timeZone)
+      .formatToParts(date).map(({ type, value }) => [type, value]));
+    return `${year}-${month}-${day}`;
   } catch {
     return null;
   }
@@ -58,30 +122,25 @@ function getLatestPriceDate(daily) {
     .at(-1) || null;
 }
 
-function getYahooExpectedLatestDate(payload) {
-  const meta = payload?.chart?.result?.[0]?.meta;
-  if (!meta) return null;
-  return formatUnixDateInTimeZone(
-    meta.regularMarketTime,
-    meta.exchangeTimezoneName || "UTC",
-  );
+function keepCompletedPrices(daily, expectedDate) {
+  return Object.fromEntries(Object.entries(daily).filter(([date]) => date <= expectedDate));
 }
 
-function assessYahooChartFreshness(payload, daily = normalizeYahooChartPayload(payload)) {
+function assessYahooChartFreshness(daily, expectedDate) {
   const latestDate = getLatestPriceDate(daily);
-  const expectedDate = getYahooExpectedLatestDate(payload);
   return {
     latestDate,
     expectedDate,
-    isFresh: Boolean(latestDate && expectedDate && latestDate >= expectedDate),
+    isFresh: Boolean(latestDate && latestDate === expectedDate),
   };
 }
 
 module.exports = {
   assessYahooChartFreshness,
   formatUnixDateInTimeZone,
+  getLatestCompletedMarketDate,
   getLatestPriceDate,
-  getYahooExpectedLatestDate,
+  keepCompletedPrices,
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
 };

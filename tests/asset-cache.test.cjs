@@ -41,10 +41,9 @@ test("cache-busts the latest-any-company range behavior", () => {
 test("cache-busts generated datasets after completing historical coverage", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  for (const [asset, expectedVersion] of [
-    ["data.js", require("node:crypto").createHash("sha256").update(fs.readFileSync(path.join(__dirname, "..", "data.js"))).digest("hex").slice(0, 16)],
-    ["price-data.js", "20261106-iren"],
-  ]) {
+  for (const asset of ["data.js", "price-data.js"]) {
+    const expectedVersion = require("node:crypto").createHash("sha256")
+      .update(fs.readFileSync(path.join(__dirname, "..", asset))).digest("hex").slice(0, 16);
     assert.match(
       html,
       new RegExp(`${asset.replace(".", "\\.")}\\?v=${expectedVersion}`),
@@ -61,7 +60,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20261102-verified-history-adaptive-axis"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261106-iren-monochrome"],
+    ["script.js", "20261112-adjusted-close"],
   ]) {
     assert.match(
       html,

@@ -26,8 +26,9 @@ const {
 const {
   assessYahooChartFreshness,
   formatUnixDateInTimeZone,
+  getLatestCompletedMarketDate,
   getLatestPriceDate,
-  getYahooExpectedLatestDate,
+  keepCompletedPrices,
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
 } = require("../price-refresh-helpers.cjs");
@@ -53,64 +54,56 @@ function loadStockPriceSourceData() {
   return context.STOCK_PRICE_SOURCE_DATA;
 }
 
-test("uses the exchange date when checking the provider's latest closed session", () => {
-  const regularMarketTime = Date.parse("2026-08-28T20:00:00Z") / 1000;
-  const payload = {
-    chart: {
-      result: [{
-        meta: {
-          regularMarketTime,
-          exchangeTimezoneName: "America/New_York",
-        },
-      }],
-    },
-  };
-
-  assert.equal(formatUnixDateInTimeZone(regularMarketTime, "America/New_York"), "2026-08-28");
-  assert.equal(getYahooExpectedLatestDate(payload), "2026-08-28");
+test("uses the exchange date across UTC midnight", () => {
+  const timestamp = Date.parse("2026-08-29T00:00:00Z") / 1000;
+  assert.equal(formatUnixDateInTimeZone(timestamp, "America/New_York"), "2026-08-28");
 });
 
-test("rejects a successful provider response whose adjusted close is one session stale", () => {
-  const payload = {
-    chart: {
-      result: [{
-        meta: {
-          regularMarketTime: Date.parse("2026-08-28T20:00:00Z") / 1000,
-          exchangeTimezoneName: "America/New_York",
-        },
-      }],
-    },
+test("requires the most recent completed session, independent of provider timestamps", () => {
+  const cases = {
+    "2026-11-11T17:55:00Z": "2026-11-10",
+    "2026-11-11T20:59:59Z": "2026-11-10",
+    "2026-11-11T21:00:00Z": "2026-11-11",
+    "2026-08-28T20:00:00Z": "2026-08-28",
+    "2026-11-14T22:00:00Z": "2026-11-13",
+    "2026-04-03T22:00:00Z": "2026-04-02",
+    "2026-07-03T22:00:00Z": "2026-07-02",
+    "2026-11-27T17:59:59Z": "2026-11-25",
+    "2026-11-27T18:00:00Z": "2026-11-27",
+    "2026-12-24T18:00:00Z": "2026-12-24",
+    "2027-12-31T22:00:00Z": "2027-12-31",
   };
+  for (const [now, date] of Object.entries(cases)) {
+    assert.equal(getLatestCompletedMarketDate(new Date(now)), date, now);
+  }
+});
+
+test("drops the ongoing session and rejects stale adjusted close", () => {
+  const expectedDate = getLatestCompletedMarketDate(new Date("2026-11-11T17:55:00Z"));
   const daily = {
-    "2026-08-26": 209.66,
-    "2026-08-27": 227.98,
+    "2026-11-09": 178.67,
+    "2026-11-10": 168.89,
+    "2026-11-11": 176.59,
   };
 
-  assert.equal(getLatestPriceDate(daily), "2026-08-27");
-  assert.deepEqual(assessYahooChartFreshness(payload, daily), {
-    latestDate: "2026-08-27",
-    expectedDate: "2026-08-28",
+  const completed = keepCompletedPrices(daily, expectedDate);
+  assert.equal(getLatestPriceDate(completed), "2026-11-10");
+  assert.equal(assessYahooChartFreshness(completed, expectedDate).isFresh, true);
+  assert.equal(assessYahooChartFreshness(daily, expectedDate).isFresh, false);
+  assert.deepEqual(assessYahooChartFreshness(completed, "2026-11-11"), {
+    latestDate: "2026-11-10",
+    expectedDate: "2026-11-11",
     isFresh: false,
   });
 });
 
-test("accepts adjusted-close data through the provider's latest closed session", () => {
-  const payload = {
-    chart: {
-      result: [{
-        meta: {
-          regularMarketTime: Date.parse("2026-08-28T20:00:00Z") / 1000,
-          exchangeTimezoneName: "America/New_York",
-        },
-      }],
-    },
-  };
-  const daily = {
-    "2026-08-27": 227.98,
-    "2026-08-28": 217.55,
-  };
-
-  assert.equal(assessYahooChartFreshness(payload, daily).isFresh, true);
+test("the published price snapshot covers the latest completed session for every company", () => {
+  const { meta, companies } = loadStockPriceSourceData();
+  const expectedDate = meta.latestCompletedSession;
+  assert.ok(expectedDate <= getLatestCompletedMarketDate(new Date(meta.generatedAt)));
+  for (const id of Object.keys(loadFinancialSourceData().companies)) {
+    assert.equal(getLatestPriceDate(companies[id]?.daily), expectedDate, id);
+  }
 });
 
 test("shows price comparison only for one visible company in financial bar mode", () => {
@@ -1004,7 +997,7 @@ test("chart rendering applies adaptive bounds, adaptive badge placement, and bou
   assert.doesNotMatch(script, /pointStyleWidth:/);
   assert.match(script, /boxWidth:\s*isCompactChartLayout\(\) \? 10 : 12/);
   assert.match(script, /boxHeight:\s*8/);
-  assert.match(script, /\.map\(\(item\) => \(\{ \.\.\.item, pointStyle: "circle" \}\)\)/);
+  assert.match(script, /return \{ \.\.\.item, text, pointStyle: "circle" \}/);
   assert.match(script, /shouldPlaceCompanyBadgeAtBottom/);
   assert.match(script, /badgeVerticalPosition === "bottom"/);
   assert.match(script, /\{ min: this\.min, max: this\.max \}/);
@@ -1286,7 +1279,9 @@ test("normalizes Yahoo chart payload into adjusted-close records", () => {
     normalizeYahooChartPayload({
       chart: {
         result: [{
-          timestamp: [1735776000, 1735862400, 1735948800],
+          meta: { exchangeTimezoneName: "America/New_York" },
+          timestamp: ["2025-01-02", "2025-01-03", "2025-01-06"]
+            .map(date => Date.parse(`${date}T14:30:00Z`) / 1000),
           indicators: {
             adjclose: [{ adjclose: [101.25, null, 103.5] }],
           },
@@ -1295,7 +1290,7 @@ test("normalizes Yahoo chart payload into adjusted-close records", () => {
     }),
     {
       "2025-01-02": 101.25,
-      "2025-01-04": 103.5,
+      "2025-01-06": 103.5,
     },
   );
 });
