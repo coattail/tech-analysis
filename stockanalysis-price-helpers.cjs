@@ -25,6 +25,7 @@ function parseStockAnalysisAdjustedChart(payload, expectedDate, firstDate) {
       throw new Error('Invalid StockAnalysis adjusted-price point');
     }
     const date = new Date(point[0]).toISOString().slice(0, 10);
+    if (date > expectedDate) continue;
     if (date in daily) throw new Error('Duplicate StockAnalysis price date');
     daily[date] = point[1];
   }

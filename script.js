@@ -72,7 +72,7 @@ const UI_TRANSLATIONS = {
     endTime: "结束时间",
     loading: "正在加载数据...",
     noData: "无数据",
-    stockPrice: "股价",
+    stockPrice: "复权收盘价",
     priceAxis: "股价（USD）",
     forecastSuffix: "（预测）",
     noMatchingCompanies: "未找到匹配企业",
@@ -172,7 +172,7 @@ const UI_TRANSLATIONS = {
     endTime: "End time",
     loading: "Loading data...",
     noData: "No data",
-    stockPrice: "Stock Price",
+    stockPrice: "Adjusted Close",
     priceAxis: "Stock Price (USD)",
     forecastSuffix: " (Forecast)",
     noMatchingCompanies: "No matching companies found",
@@ -1030,6 +1030,7 @@ const frequencyInputs = Array.from(document.querySelectorAll('input[name="freque
 const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
 const presetButtons = Array.from(document.querySelectorAll("[data-company-preset]"));
 const decimalFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
+const stockPriceFormatter = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
 const BASE_Y_AXIS_TITLE_FONT_SIZE = 11;
 const Y_AXIS_TITLE_FONT_SIZE = BASE_Y_AXIS_TITLE_FONT_SIZE * 1.28;
 const CHART_PLOT_LEFT_NUDGE = 6;
@@ -3806,7 +3807,14 @@ function buildChart() {
                   const dataset = chart.data.datasets[item.datasetIndex];
                   return dataset?.priceOverlay || dataset?.growthOverlay || dataset?.companySum || state.visibleCompanies.has(dataset?.companyId);
                 })
-                .map((item) => ({ ...item, pointStyle: "circle" }))
+                .map((item) => {
+                  const dataset = chart.data.datasets[item.datasetIndex];
+                  const point = dataset.priceOverlay ? dataset.data.at(-1) : null;
+                  const text = point
+                    ? `${item.text} · ${point.date} · $${stockPriceFormatter.format(point.y)}`
+                    : item.text;
+                  return { ...item, text, pointStyle: "circle" };
+                })
                 .sort((left, right) => {
                   const leftDataset = chart.data.datasets[left.datasetIndex];
                   const rightDataset = chart.data.datasets[right.datasetIndex];
@@ -3863,7 +3871,7 @@ function buildChart() {
             label(context) {
               const separator = getLabelSeparator();
               if (context.dataset.priceOverlay) {
-                return `${t("stockPrice")}${separator}$${decimalFormatter.format(context.parsed.y)}`;
+                return `${t("stockPrice")}${separator}$${stockPriceFormatter.format(context.parsed.y)}`;
               }
               if (context.dataset.growthOverlay) {
                 return `${context.dataset.label}${separator}${decimalFormatter.format(context.parsed.y)}%`;
