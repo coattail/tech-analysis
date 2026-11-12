@@ -48,7 +48,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: "22"
-      - name: Verify actual public earnings data
+      - name: Verify public earnings and stock price data
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: node scripts/verify-earnings-deployment.mjs "$PAGE_URL"

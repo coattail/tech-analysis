@@ -21,5 +21,5 @@ jobs:
           python-version: '3.11'
       - name: Check synchronization, units and financial source contracts
         run: |
-          node --test tests/earnings-watch.test.cjs tests/amd-earnings.test.cjs tests/cash-flow.test.cjs
+          node --test tests/earnings-watch.test.cjs tests/amd-earnings.test.cjs tests/cash-flow.test.cjs tests/price-publication.test.cjs tests/asset-cache.test.cjs
           python -m unittest discover -s tests -p 'test_resolve_earnings_releases.py'
