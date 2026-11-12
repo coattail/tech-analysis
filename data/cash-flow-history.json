@@ -74935,7 +74935,7 @@
             "filed": "2026-03-02",
             "accession": "0001769628-26-000104",
             "nativeCurrency": "USD",
-            "nativeValue": 1558949000,
+            "nativeValue": 1559000000,
             "basis": "reported-cash-flow"
           },
           "capex": {
@@ -74947,7 +74947,7 @@
             "filed": "2026-03-02",
             "accession": "0001769628-26-000104",
             "nativeCurrency": "USD",
-            "nativeValue": 4059761000,
+            "nativeValue": 4060000000,
             "basis": "reported-cash-flow"
           }
         },
@@ -74958,10 +74958,10 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-07-01",
-            "filed": "2025-11-13",
-            "accession": "0001769628-25-000062",
+            "filed": "2026-11-12",
+            "accession": "0001769628-26-000465",
             "nativeCurrency": "USD",
-            "nativeValue": 1689051000,
+            "nativeValue": 1689000000,
             "basis": "reported-cash-flow"
           },
           "capex": {
@@ -74970,10 +74970,10 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
             "startDate": "2025-07-01",
-            "filed": "2025-11-13",
-            "accession": "0001769628-25-000062",
+            "filed": "2026-11-12",
+            "accession": "0001769628-26-000465",
             "nativeCurrency": "USD",
-            "nativeValue": 2389239000,
+            "nativeValue": 2389000000,
             "basis": "reported-cash-flow"
           }
         },
@@ -75147,14 +75147,28 @@
         },
         "2026Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/crwv/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001769628.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-12",
+            "accession": "0001769628-26-000465",
+            "nativeCurrency": "USD",
+            "nativeValue": 1975000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/crwv/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001769628.json",
             "periodEnd": "2026-09-30",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-12",
+            "accession": "0001769628-26-000465",
+            "nativeCurrency": "USD",
+            "nativeValue": 9441000000,
+            "basis": "reported-cash-flow"
           }
         }
       },

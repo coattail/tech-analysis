@@ -1,13 +1,13 @@
 window.FINANCIAL_SOURCE_DATA = {
   "meta": {
     "source": "SEC Company Facts + StockAnalysis + Macrotrends historical Operating Income/TTM reconstruction + SK hynix official earnings / archived statements / FRED DEXKOUS",
-    "generatedAt": "2026-11-12T12:19:54.747Z",
+    "generatedAt": "2026-11-12T18:21:25.729Z",
     "periodicity": "quarterly",
     "periodRange": "2004Q2-2026Q3",
     "note": "Sources: SEC CompanyFacts, CompaniesMarketCap, StockAnalysis, and audited historical SEC backfills. Revenue and net income are quarterly reported values in USD; P/E reflects period valuation metrics; ROE is calculated as net income divided by net assets; revenue growth is year-over-year. Views support quarterly, annual, and rolling annual (TTM). Rolling annual values are emitted only when all four source quarters are auditable and present; 2004Q2-Q4 are included as calculation context so early 2005 TTM values can be real where source coverage exists, while incomplete windows remain null. Points without auditable values remain null; forecast values are shown only when explicit company guidance exists. Microsoft net income corrected for 2005Q1-2006Q4 using SEC primary filings (10-Q/10-K, USD millions) with fiscal-year bridge for CY Q2 (FY[Jul-Jun] minus adjacent quarters); Microsoft ROE recalculated accordingly. Added Broadcom (AVGO) and Tesla (TSLA) with SEC CompanyFacts quarterly fundamentals plus CompaniesMarketCap quarterly P/E; missing fiscal-Q4 flows are bridged from annual filings minus Q1-Q3. Gross margin is added as quarterly gross profit divided by revenue (SEC primary tags, with annual bridge for missing fiscal Q4 where possible; TSMC uses IFRS annual gross margin fallback when quarterly SEC points are unavailable). Gross margin gaps backfilled from SEC CompanyFacts quarterly facts with fiscal/calendar year-end Q4 bridge where auditable annual values exist; unresolved earliest-start quarters without sufficient filing granularity remain null. TSMC quarterly gross margin corrected from SEC 6-K press release exhibits (actual quarterly margins), replacing prior annual-flat fallback where available.",
     "autoRefresh": {
       "source": "StockAnalysis quarterly financials / ratios / balance sheet + CompaniesMarketCap quarterly P/E",
-      "refreshedAt": "2026-11-11T17:54:40.433Z",
+      "refreshedAt": "2026-11-12T18:21:01.621Z",
       "updatedCompanies": [
         "iren",
         "spacex",
@@ -39,6 +39,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "homedepot",
         "ibm",
         "sap",
+        "crowdstrike",
+        "salesforce",
         "servicenow",
         "datadog",
         "cloudflare",
@@ -48,7 +50,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "chronoscale",
         "sharonai"
       ],
-      "changedPoints": 3503,
+      "changedPoints": 3545,
       "changedPeriods": [
         "2004Q2",
         "2004Q3",
@@ -150,286 +152,286 @@ window.FINANCIAL_SOURCE_DATA = {
     },
     "marketCaps": {
       "alphabet": {
-        "value": 3606936660000,
+        "value": 3708608040000,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/googl/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.587Z"
+        "retrievedAt": "2026-11-12T18:21:01.840Z"
       },
       "nvidia": {
-        "value": 4243352310000,
+        "value": 3999950550000,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/nvda/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.585Z"
+        "retrievedAt": "2026-11-12T18:21:01.825Z"
       },
       "spacex": {
-        "value": 1947388725234,
+        "value": 1946438050774,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/spcx/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.600Z"
+        "retrievedAt": "2026-11-12T18:21:01.814Z"
       },
       "apple": {
-        "value": 5139742129760,
+        "value": 5198452145040,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/aapl/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.651Z"
+        "retrievedAt": "2026-11-12T18:21:01.939Z"
       },
       "avgo": {
-        "value": 1690915170780,
+        "value": 1729295154895,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/avgo/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.650Z"
+        "retrievedAt": "2026-11-12T18:21:01.972Z"
       },
       "amazon": {
-        "value": 2885594088339,
+        "value": 2915005824531,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/amzn/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.656Z"
+        "retrievedAt": "2026-11-12T18:21:01.992Z"
       },
       "microsoft": {
-        "value": 3864740168752,
+        "value": 3920288104001,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/msft/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.650Z"
+        "retrievedAt": "2026-11-12T18:21:01.960Z"
       },
       "meta": {
-        "value": 1639828763800,
+        "value": 1596986160399,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/meta/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.705Z"
+        "retrievedAt": "2026-11-12T18:21:02.078Z"
       },
       "berkshire": {
-        "value": 1228502320996,
+        "value": 1259720464563,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/brk.b/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.784Z"
+        "retrievedAt": "2026-11-12T18:21:02.275Z"
       },
       "tsmc": {
-        "value": 1968840092772,
+        "value": 1807589009520,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/tsm/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.715Z"
+        "retrievedAt": "2026-11-12T18:21:02.072Z"
       },
       "walmart": {
-        "value": 984101883734,
+        "value": 999731363828,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/wmt/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.714Z"
+        "retrievedAt": "2026-11-12T18:21:02.130Z"
       },
       "tsla": {
-        "value": 1553157179722,
+        "value": 1546990877326,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/tsla/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.719Z"
+        "retrievedAt": "2026-11-12T18:21:02.085Z"
       },
       "exxon": {
-        "value": 676457457889,
+        "value": 689674138607,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/xom/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.792Z"
+        "retrievedAt": "2026-11-12T18:21:02.258Z"
       },
       "visa": {
-        "value": 796321662660,
+        "value": 803829148488,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/v/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.837Z"
+        "retrievedAt": "2026-11-12T18:21:02.409Z"
       },
       "jpmorgan": {
-        "value": 911697300535,
+        "value": 915229261182,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/jpm/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.775Z"
+        "retrievedAt": "2026-11-12T18:21:02.229Z"
       },
       "lilly": {
-        "value": 1261535188293,
+        "value": 1287625288744,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/lly/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.777Z"
+        "retrievedAt": "2026-11-12T18:21:02.297Z"
       },
       "jnj": {
-        "value": 667474917454,
+        "value": 685818621681,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/jnj/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.902Z"
+        "retrievedAt": "2026-11-12T18:21:02.549Z"
       },
       "micron": {
-        "value": 931727015082,
+        "value": 897388320598,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/mu/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.849Z"
+        "retrievedAt": "2026-11-12T18:21:02.390Z"
       },
       "skhynix": {
-        "value": 766642240416,
+        "value": 658804115348,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/skhy/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.840Z"
+        "retrievedAt": "2026-11-12T18:21:02.382Z"
       },
       "asml": {
-        "value": 599082214162,
+        "value": 589397592556,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/asml/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.844Z"
+        "retrievedAt": "2026-11-12T18:21:02.395Z"
       },
       "mastercard": {
-        "value": 570424340044,
+        "value": 574549358944,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/ma/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.902Z"
+        "retrievedAt": "2026-11-12T18:21:02.525Z"
       },
       "amd": {
-        "value": 912282132496,
+        "value": 947872025843,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/amd/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.910Z"
+        "retrievedAt": "2026-11-12T18:21:02.520Z"
       },
       "costco": {
-        "value": 478517658811,
+        "value": 485315263025,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/cost/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.983Z"
+        "retrievedAt": "2026-11-12T18:21:02.665Z"
       },
       "oracle": {
-        "value": 400874900555,
+        "value": 397881900831,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/orcl/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.904Z"
+        "retrievedAt": "2026-11-12T18:21:02.495Z"
       },
       "netflix": {
-        "value": 263441338307,
+        "value": 262394225202,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/nflx/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.954Z"
+        "retrievedAt": "2026-11-12T18:21:02.640Z"
       },
       "caterpillar": {
-        "value": 273873026051,
+        "value": 276780780998,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/cat/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.972Z"
+        "retrievedAt": "2026-11-12T18:21:02.651Z"
       },
       "bankofamerica": {
-        "value": 350185607055,
+        "value": 350047602874,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/bac/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.972Z"
+        "retrievedAt": "2026-11-12T18:21:02.628Z"
       },
       "chevron": {
-        "value": 414192619927,
+        "value": 423636687767,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/cvx/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.030Z"
+        "retrievedAt": "2026-11-12T18:21:02.841Z"
       },
       "abbvie": {
-        "value": 513404156078,
+        "value": 525176480676,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/abbv/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.039Z"
+        "retrievedAt": "2026-11-12T18:21:02.778Z"
       },
       "homedepot": {
-        "value": 346766983309,
+        "value": 350039405282,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/hd/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.120Z"
+        "retrievedAt": "2026-11-12T18:21:02.994Z"
       },
       "cisco": {
-        "value": 400863313578,
+        "value": 401808188802,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/csco/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.028Z"
+        "retrievedAt": "2026-11-12T18:21:02.762Z"
       },
       "palantir": {
-        "value": 417927336865,
+        "value": 414481755477,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/pltr/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.048Z"
+        "retrievedAt": "2026-11-12T18:21:02.791Z"
       },
       "sap": {
-        "value": 270892014041,
+        "value": 271191552628,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/sap/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.171Z"
+        "retrievedAt": "2026-11-12T18:21:03.030Z"
       },
       "ibm": {
-        "value": 231129292863,
+        "value": 233444838835,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/ibm/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.108Z"
+        "retrievedAt": "2026-11-12T18:21:02.916Z"
       },
       "salesforce": {
-        "value": 177850300000,
+        "value": 179109490000,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/crm/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.221Z"
+        "retrievedAt": "2026-11-12T18:21:03.146Z"
       },
       "crowdstrike": {
-        "value": 240873718407,
+        "value": 233675417586,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/crwd/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.117Z"
+        "retrievedAt": "2026-11-12T18:21:03.048Z"
       },
       "servicenow": {
-        "value": 105794879810,
+        "value": 105338196330,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/now/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.221Z"
+        "retrievedAt": "2026-11-12T18:21:03.153Z"
       },
       "datadog": {
-        "value": 67785737824,
+        "value": 66074396160,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/ddog/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.244Z"
+        "retrievedAt": "2026-11-12T18:21:03.162Z"
       },
       "snowflake": {
-        "value": 108341142450,
+        "value": 105472158750,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/snow/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.233Z"
+        "retrievedAt": "2026-11-12T18:21:03.398Z"
       },
       "cloudflare": {
-        "value": 115785785823,
+        "value": 114341465035,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/net/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.303Z"
+        "retrievedAt": "2026-11-12T18:21:03.592Z"
       },
       "adobe": {
-        "value": 92197588000,
+        "value": 92867012000,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/adbe/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.305Z"
+        "retrievedAt": "2026-11-12T18:21:03.524Z"
       },
       "zoom": {
-        "value": 28116278392,
+        "value": 28998924118,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/zm/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.308Z"
+        "retrievedAt": "2026-11-12T18:21:03.583Z"
       },
       "coreweave": {
-        "value": 33191472708,
+        "value": 31172848745,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/crwv/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.308Z"
+        "retrievedAt": "2026-11-12T18:21:03.524Z"
       },
       "nebius": {
-        "value": 43466593889,
+        "value": 35295707498,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/nbis/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.376Z"
+        "retrievedAt": "2026-11-12T18:21:03.739Z"
       },
       "sharonai": {
-        "value": 915853658,
+        "value": 907618852,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/shaz/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.366Z"
+        "retrievedAt": "2026-11-12T18:21:03.720Z"
       },
       "chronoscale": {
-        "value": 1773864165,
+        "value": 1600555597,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/chrn/statistics/",
-        "retrievedAt": "2026-11-11T17:54:41.450Z"
+        "retrievedAt": "2026-11-12T18:21:03.854Z"
       },
       "iren": {
-        "value": 9098222249,
+        "value": 8514730850,
         "currency": "USD",
         "source": "https://stockanalysis.com/stocks/iren/statistics/",
-        "retrievedAt": "2026-11-11T17:54:40.575Z"
+        "retrievedAt": "2026-11-12T18:21:01.824Z"
       }
     },
     "earningsWatch": {
@@ -1082,7 +1084,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 15.652453740949316,
         "2026Q1": 16.595182415922984,
         "2026Q2": 16.35650176528138,
-        "2026Q3": 11.721937032771844
+        "2026Q3": 11.721937032771846
       },
       "forecastFlags": {
         "revenue": [],
@@ -1186,7 +1188,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 48.159,
         "2026Q1": 49.271,
         "2026Q2": 50.056206987945195,
-        "2026Q3": 47.887348550363825
+        "2026Q3": 47.887
       },
       "periodEndDates": {
         "2004Q2": "2004-06-30",
@@ -5809,7 +5811,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 23.783739098086222,
         "2026Q1": 33.07888642057002,
         "2026Q2": 27.95900328310464,
-        "2026Q3": 26.07041099098395
+        "2026Q3": 26.070410990983962
       },
       "forecastFlags": {
         "revenue": [],
@@ -6932,7 +6934,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 62.4935864545921,
         "2026Q1": 73.21451272533116,
         "2026Q2": 85.22763378875221,
-        "2026Q3": 105.85114348672526
+        "2026Q3": 105.85114348672529
       },
       "forecastFlags": {
         "revenue": [],
@@ -7038,7 +7040,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 73.412,
         "2026Q1": 74.997,
         "2026Q2": 74.934,
-        "2026Q3": 74.97531723844067
+        "2026Q3": 74.975
       },
       "periodEndDates": {
         "2004Q2": "2004-06-30",
@@ -12647,7 +12649,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 32.9558960862552,
         "2026Q1": 28.8,
         "2026Q2": 23.374391,
-        "2026Q3": 22.213598114475563
+        "2026Q3": 22.213598
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -12739,7 +12741,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": -0.7206371949934679,
         "2026Q1": 4.402340484814712,
         "2026Q2": 10.044857590660975,
-        "2026Q3": 11.240154993050577
+        "2026Q3": 11.240154993050583
       },
       "forecastFlags": {
         "revenue": [],
@@ -13007,7 +13009,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 31055000000,
         "2026Q1": 13444000000,
         "2026Q2": 33150000000,
-        "2026Q3": 15580000000
+        "2026Q3": 27526000000
       },
       "operatingCashFlow": {
         "2004Q2": 142000000,
@@ -13781,7 +13783,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 100,
         "2026Q1": 100,
         "2026Q2": 95.614417,
-        "2026Q3": 94.53280714342662
+        "2026Q3": 94.532807
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -13873,7 +13875,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 7.0847362514029175,
         "2026Q1": 9.98896490840874,
         "2026Q2": 27.687477734235838,
-        "2026Q3": 8.066426863678466
+        "2026Q3": 8.066426863678464
       },
       "forecastFlags": {
         "revenue": [],
@@ -14971,7 +14973,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 82.523,
         "2026Q1": 81.933431,
         "2026Q2": 85.775224,
-        "2026Q3": 83.87916547116448
+        "2026Q3": 83.879
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -15332,7 +15334,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 8661300000,
         "2026Q1": 9778000000,
         "2026Q2": 12457000000,
-        "2026Q3": 8608000000
+        "2026Q3": 13092000000
       },
       "operatingCashFlow": {
         "2004Q2": 944200000,
@@ -20743,7 +20745,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 67.562,
         "2026Q1": 66.312027,
         "2026Q2": 68.190439,
-        "2026Q3": 68.12079215717154
+        "2026Q3": 68.120792
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -20835,7 +20837,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 9.076376554174068,
         "2026Q1": 9.907276298360207,
         "2026Q2": 6.5998399528282015,
-        "2026Q3": 5.860042512399444
+        "2026Q3": 5.86004251239945
       },
       "forecastFlags": {
         "revenue": [],
@@ -21106,7 +21108,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 5887000000,
         "2026Q1": 6595000000,
         "2026Q2": 7388000000,
-        "2026Q3": 5845000000
+        "2026Q3": 6537000000
       },
       "operatingCashFlow": {
         "2004Q2": 2130000000,
@@ -24310,7 +24312,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 17.5857924956603,
         "2026Q1": 15.834482758620691,
         "2026Q2": 14.066150252059511,
-        "2026Q3": 14.008370146477557
+        "2026Q3": 14.008370146477564
       },
       "forecastFlags": {
         "revenue": [],
@@ -24576,7 +24578,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 5084000000,
         "2026Q1": 5109000000,
         "2026Q2": 5669000000,
-        "2026Q3": 5862000000
+        "2026Q3": 5936000000
       },
       "operatingCashFlow": {
         "2004Q2": 132010000,
@@ -26579,7 +26581,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 45.874,
         "2026Q1": 51.932,
         "2026Q2": 51.935,
-        "2026Q3": 52.78131975203695
+        "2026Q3": 52.78132
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -26671,7 +26673,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 17.605152727627598,
         "2026Q1": 16.190837522526795,
         "2026Q2": 13.36763245780305,
-        "2026Q3": 11.852093831450915
+        "2026Q3": 11.852093831450912
       },
       "forecastFlags": {
         "revenue": [],
@@ -28903,7 +28905,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 30.45,
         "2026Q1": 35.078955,
         "2026Q2": 37.78416,
-        "2026Q3": 35.538149115172615
+        "2026Q3": 35.538149
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -29265,7 +29267,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 3066000000,
         "2026Q1": 3166000000,
         "2026Q2": 4557000000,
-        "2026Q3": 4214000000
+        "2026Q3": 4176000000
       },
       "operatingCashFlow": {
         "2004Q2": -2390000000,
@@ -30042,7 +30044,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 44.64,
         "2026Q1": 40.564808,
         "2026Q2": 45.524487,
-        "2026Q3": 46.11345467417918
+        "2026Q3": 46.113455
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -30405,7 +30407,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 4270000000,
         "2026Q1": 3496000000,
         "2026Q2": 14479000000,
-        "2026Q3": 11385000000
+        "2026Q3": 11739000000
       },
       "operatingCashFlow": {
         "2004Q2": 4450000000,
@@ -32908,7 +32910,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 72.61,
         "2026Q1": 71.883749,
         "2026Q2": 74.743967,
-        "2026Q3": 75.37922316708803
+        "2026Q3": 75.379223
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -33000,7 +33002,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 10.038405509204079,
         "2026Q1": 12.433485722850932,
         "2026Q2": 10.160150424690398,
-        "2026Q3": 10.319472616632863
+        "2026Q3": 10.31947261663286
       },
       "forecastFlags": {
         "revenue": [],
@@ -33196,7 +33198,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 5668000000,
         "2026Q1": 4824000000,
         "2026Q2": 6802000000,
-        "2026Q3": 6267000000
+        "2026Q3": 6890000000
       },
       "operatingCashFlow": {
         "2004Q2": null,
@@ -34026,7 +34028,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 33.41,
         "2026Q1": 32.64,
         "2026Q2": 32.996528193463426,
-        "2026Q3": 33.67042059296713
+        "2026Q3": 33.670421
       },
       "revenueGrowth": {
         "2004Q2": null,
@@ -34118,7 +34120,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 2.8221896213044233,
         "2026Q1": -3.7930687084424743,
         "2026Q2": 4.789743075070253,
-        "2026Q3": 5.707091900965167
+        "2026Q3": 5.70709190096517
       },
       "forecastFlags": {
         "revenue": [],
@@ -34389,7 +34391,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 5353000000,
         "2026Q1": 3849000000,
         "2026Q2": 4981000000,
-        "2026Q3": 6839000000
+        "2026Q3": 6154000000
       },
       "operatingCashFlow": {
         "2004Q2": 3140000000,
@@ -37160,11 +37162,11 @@ window.FINANCIAL_SOURCE_DATA = {
         "2024Q2": 75.57066173309187,
         "2024Q3": 75.37006988479799,
         "2024Q4": 74.74831168368347,
-        "2025Q1": 74.116186665004,
-        "2025Q2": 73.79607661174117,
-        "2025Q3": 73.45630958328486,
-        "2025Q4": 75.0612520700931,
-        "2026Q1": 76.12195729196591,
+        "2025Q1": 74.23984779006516,
+        "2025Q2": 73.91099059844086,
+        "2025Q3": 74.19543317433052,
+        "2025Q4": 75.06287249522785,
+        "2026Q1": 76.10548692904338,
         "2026Q2": 75.29807762395274,
         "2026Q3": 74.57320261037992
       },
@@ -44015,7 +44017,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": "2026-03-02",
         "2026Q1": "2026-05-08",
         "2026Q2": "2026-08-11",
-        "2026Q3": "2026-11-10"
+        "2026Q3": "2026-11-12"
       },
       "forecastFlags": {
         "revenue": [],
@@ -44129,8 +44131,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2024Q4": 186564000,
         "2025Q1": 61000000,
         "2025Q2": -251000000,
-        "2025Q3": 1689051000,
-        "2025Q4": 1558949000,
+        "2025Q3": 1689000000,
+        "2025Q4": 1559000000,
         "2026Q1": 2984000000,
         "2026Q2": 679000000,
         "2026Q3": 1975000000
@@ -44221,8 +44223,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2024Q4": 3497749000,
         "2025Q1": 1407000000,
         "2025Q2": 2453000000,
-        "2025Q3": 2389239000,
-        "2025Q4": 4059761000,
+        "2025Q3": 2389000000,
+        "2025Q4": 4060000000,
         "2026Q1": 7695000000,
         "2026Q2": 6422000000,
         "2026Q3": 9441000000
@@ -44313,8 +44315,8 @@ window.FINANCIAL_SOURCE_DATA = {
         "2024Q4": -3311185000,
         "2025Q1": -1346000000,
         "2025Q2": -2704000000,
-        "2025Q3": -700188000,
-        "2025Q4": -2500812000,
+        "2025Q3": -700000000,
+        "2025Q4": -2501000000,
         "2026Q1": -4711000000,
         "2026Q2": -5743000000,
         "2026Q3": -7466000000
@@ -44759,7 +44761,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q3": 79.87199425768632,
         "2025Q4": 83.4583197478535,
         "2026Q1": 65.26787195223088,
-        "2026Q3": -9.994696494865245
+        "2026Q3": -9.994696494865243
       },
       "revenueGrowth": {
         "2024Q3": null,
@@ -44792,7 +44794,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": "2026-01-08",
         "2026Q1": "2026-04-08",
         "2026Q2": "2026-08-19",
-        "2026Q3": "2026-10-15"
+        "2026Q3": "2026-10-14"
       },
       "forecastFlags": {
         "revenue": [],
@@ -45654,7 +45656,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 22658382328,
         "2026Q1": 35874304634,
         "2026Q2": 52862256568,
-        "2026Q3": 78775471500
+        "2026Q3": 73816434622
       },
       "earnings": {
         "2004Q2": null,
@@ -45746,7 +45748,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 10523451689,
         "2026Q1": 27529161718,
         "2026Q2": 62595082607,
-        "2026Q3": 29951026800
+        "2026Q3": 28065563678
       },
       "operatingIncome": {
         "2004Q2": null,
@@ -45838,7 +45840,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 13231672956,
         "2026Q1": 25662571983,
         "2026Q2": 40348851589,
-        "2026Q3": 62750351400
+        "2026Q3": 58800120437
       },
       "grossMargin": {
         "2004Q2": null,
@@ -45930,7 +45932,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 68.77,
         "2026Q1": 79.27,
         "2026Q2": 83.197,
-        "2026Q3": 85.69762606879478
+        "2026Q3": 85.697
       },
       "pe": {
         "2004Q2": null,
@@ -46114,7 +46116,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 12.598045452781815,
         "2026Q1": 25.514496387375914,
         "2026Q2": 36.904648352737176,
-        "2026Q3": 13.138943196866256
+        "2026Q3": 12.311826549908961
       },
       "netAssets": {
         "2004Q2": null,
@@ -46298,7 +46300,7 @@ window.FINANCIAL_SOURCE_DATA = {
         "2025Q4": 60.325306306113305,
         "2026Q1": 195.3074425027232,
         "2026Q2": 232.84438279148216,
-        "2026Q3": 346.8795788087555
+        "2026Q3": 318.7478232109776
       },
       "periodEndDates": {
         "2007Q1": "2007-03-31",
