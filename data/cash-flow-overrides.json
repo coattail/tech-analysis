@@ -1,6 +1,20 @@
 {
   "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals. ChronoScale uses Cloud carve-out cash flows, excluding unrelated legacy Ekso. Berkshire early periods use official annual/quarterly PDFs and comparative restatements. Additional historical quarters reconcile to official SEC cumulative cash-flow statements; issuer-specific cash CapEx classifications are preserved in bases.",
   "companies": {
+    "nebius": [
+      {
+        "period": "2026Q3",
+        "dateKey": "2026-09-30",
+        "operatingCashFlow": -273000000,
+        "capex": 7300400000,
+        "source": "https://assets.nebius.com/assets/508584f1-b73d-484f-b64f-f96a5bc3b515/Nebius%20Q3%202026%20Financial%20Results%20Press%20Release.pdf",
+        "method": "reported-quarter",
+        "bases": {
+          "operatingCashFlow": "Net cash used in operating activities from continuing operations",
+          "capex": "Cash purchases of property and equipment and intangible assets"
+        }
+      }
+    ],
     "spacex": [
       {
         "period": "2025Q1",
