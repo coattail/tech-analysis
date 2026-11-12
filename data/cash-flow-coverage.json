@@ -1139,25 +1139,25 @@
     },
     "nebius": {
       "first": "2024Q2",
-      "last": "2026Q2",
-      "expected": 9,
+      "last": "2026Q3",
+      "expected": 10,
       "metrics": {
         "operatingCashFlow": {
-          "present": 8,
+          "present": 9,
           "missing": [
             "2024Q2"
           ],
           "reason": "Standalone continuing-business cash flows for the first post-Yandex carve-out quarter are not separately disclosed."
         },
         "capex": {
-          "present": 8,
+          "present": 9,
           "missing": [
             "2024Q2"
           ],
           "reason": "Standalone continuing-business cash flows for the first post-Yandex carve-out quarter are not separately disclosed."
         },
         "freeCashFlow": {
-          "present": 8,
+          "present": 9,
           "missing": [
             "2024Q2"
           ],

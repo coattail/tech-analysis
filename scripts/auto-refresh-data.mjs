@@ -642,6 +642,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   nebius: {
+    // Nebius Q3 2026 earnings release, published on 2026-11-12.
+    // https://nebius.com/newsroom/nebius-reports-third-quarter-2026-financial-results
+    "2026Q3": {
+      revenue: 980_800_000,
+      earnings: -37_500_000,
+      operatingIncome: 50_400_000,
+      grossMargin: ((980.8 - 219.7) / 980.8) * 100,
+      netAssets: 12_299_200_000,
+      periodEndDate: "2026-09-30",
+      reportDate: "2026-11-12",
+    },
     // Nebius Q2 2026 earnings release, published on 2026-08-12.
     "2026Q2": {
       revenue: 582_300_000,

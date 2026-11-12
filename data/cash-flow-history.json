@@ -75274,24 +75274,38 @@
             "periodEnd": "2024-09-30",
             "method": "reported-quarter"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://assets.nebius.com/assets/508584f1-b73d-484f-b64f-f96a5bc3b515/Nebius%20Q3%202026%20Financial%20Results%20Press%20Release.pdf",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter",
+            "basis": "Net cash used in operating activities from continuing operations"
+          },
+          "capex": {
+            "source": "https://assets.nebius.com/assets/508584f1-b73d-484f-b64f-f96a5bc3b515/Nebius%20Q3%202026%20Financial%20Results%20Press%20Release.pdf",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter",
+            "basis": "Cash purchases of property and equipment and intangible assets"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 8,
+          "count": 9,
           "first": "2024Q3",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 8,
+          "count": 9,
           "first": "2024Q3",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 8,
+          "count": 9,
           "first": "2024Q3",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },
