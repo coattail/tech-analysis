@@ -72,7 +72,7 @@ const UI_TRANSLATIONS = {
     endTime: "结束时间",
     loading: "正在加载数据...",
     noData: "无数据",
-    stockPrice: "复权收盘价",
+    stockPrice: "股价",
     priceAxis: "股价（USD）",
     forecastSuffix: "（预测）",
     noMatchingCompanies: "未找到匹配企业",
@@ -172,7 +172,7 @@ const UI_TRANSLATIONS = {
     endTime: "End time",
     loading: "Loading data...",
     noData: "No data",
-    stockPrice: "Adjusted Close",
+    stockPrice: "Stock Price",
     priceAxis: "Stock Price (USD)",
     forecastSuffix: " (Forecast)",
     noMatchingCompanies: "No matching companies found",
@@ -3807,14 +3807,7 @@ function buildChart() {
                   const dataset = chart.data.datasets[item.datasetIndex];
                   return dataset?.priceOverlay || dataset?.growthOverlay || dataset?.companySum || state.visibleCompanies.has(dataset?.companyId);
                 })
-                .map((item) => {
-                  const dataset = chart.data.datasets[item.datasetIndex];
-                  const point = dataset.priceOverlay ? dataset.data.at(-1) : null;
-                  const text = point
-                    ? `${item.text} · ${point.date} · $${stockPriceFormatter.format(point.y)}`
-                    : item.text;
-                  return { ...item, text, pointStyle: "circle" };
-                })
+                .map((item) => ({ ...item, pointStyle: "circle" }))
                 .sort((left, right) => {
                   const leftDataset = chart.data.datasets[left.datasetIndex];
                   const rightDataset = chart.data.datasets[right.datasetIndex];

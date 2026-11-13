@@ -997,7 +997,7 @@ test("chart rendering applies adaptive bounds, adaptive badge placement, and bou
   assert.doesNotMatch(script, /pointStyleWidth:/);
   assert.match(script, /boxWidth:\s*isCompactChartLayout\(\) \? 10 : 12/);
   assert.match(script, /boxHeight:\s*8/);
-  assert.match(script, /return \{ \.\.\.item, text, pointStyle: "circle" \}/);
+  assert.match(script, /\.map\(\(item\) => \(\{ \.\.\.item, pointStyle: "circle" \}\)\)/);
   assert.match(script, /shouldPlaceCompanyBadgeAtBottom/);
   assert.match(script, /badgeVerticalPosition === "bottom"/);
   assert.match(script, /\{ min: this\.min, max: this\.max \}/);
