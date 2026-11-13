@@ -816,20 +816,29 @@
     },
     "cisco": {
       "first": "2005Q1",
-      "last": "2026Q3",
-      "expected": 87,
+      "last": "2026Q4",
+      "expected": 88,
       "metrics": {
         "operatingCashFlow": {
           "present": 87,
-          "missing": []
+          "missing": [
+            "2026Q4"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
         },
         "capex": {
           "present": 87,
-          "missing": []
+          "missing": [
+            "2026Q4"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
         },
         "freeCashFlow": {
           "present": 87,
-          "missing": []
+          "missing": [
+            "2026Q4"
+          ],
+          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
         }
       }
     },
