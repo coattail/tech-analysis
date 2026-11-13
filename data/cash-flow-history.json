@@ -56956,24 +56956,36 @@
             "precision": 10000,
             "periodEndPrecision": "month"
           }
+        },
+        "2026Q4": {
+          "operatingCashFlow": {
+            "source": "https://stockanalysis.com/stocks/csco/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-10-24",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://stockanalysis.com/stocks/csco/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-10-24",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 90,
+          "count": 91,
           "first": "2004Q2",
-          "last": "2026Q3"
+          "last": "2026Q4"
         },
         "capex": {
-          "count": 90,
+          "count": 91,
           "first": "2004Q2",
-          "last": "2026Q3"
+          "last": "2026Q4"
         },
         "freeCashFlow": {
-          "count": 90,
+          "count": 91,
           "first": "2004Q2",
-          "last": "2026Q3"
+          "last": "2026Q4"
         }
       }
     },

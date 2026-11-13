@@ -820,25 +820,16 @@
       "expected": 88,
       "metrics": {
         "operatingCashFlow": {
-          "present": 87,
-          "missing": [
-            "2026Q4"
-          ],
-          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+          "present": 88,
+          "missing": []
         },
         "capex": {
-          "present": 87,
-          "missing": [
-            "2026Q4"
-          ],
-          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+          "present": 88,
+          "missing": []
         },
         "freeCashFlow": {
-          "present": 87,
-          "missing": [
-            "2026Q4"
-          ],
-          "reason": "No verified standalone quarter available in SEC facts, provider history, or published overrides."
+          "present": 88,
+          "missing": []
         }
       }
     },
