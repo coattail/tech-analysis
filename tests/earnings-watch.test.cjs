@@ -16,6 +16,8 @@ test("the manifest includes every tracked company and maps the Korean listing al
 
 test("new official quarters preserve historical numbers and use their actual report date", async () => {
   const {applyQuarter}=await load();const data=fixture();
+  const {formatDataJs, parseDataJs}=await import("../scripts/auto-refresh-data.mjs");
+  data.companies.apple = { operatingCashFlow: { '2026Q2': 0 } };
   assert.equal(applyQuarter(data,"palantir","2026Q3",entry()),true);
   const c=data.companies.palantir;
   assert.equal(c.revenue['2026Q2'],1935464000);
@@ -24,6 +26,9 @@ test("new official quarters preserve historical numbers and use their actual rep
   assert.equal(c.periodEndDates['2026Q3'],'2026-09-30');
   assert.equal(c.reportDates['2026Q3'],'2026-11-02');
   assert.equal(applyQuarter(data,'palantir','2026Q3',entry()),false);
+  const published = parseDataJs(formatDataJs(data));
+  assert.deepEqual(published.companies.apple.operatingCashFlow, { '2026Q2': 0, '2026Q3': null });
+  assert.deepEqual(published.companies.apple.freeCashFlow, { '2026Q2': null, '2026Q3': null });
 });
 
 test("unconverted currencies, cumulative flows and incomplete statements cannot overwrite data", async () => {

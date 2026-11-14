@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const { createHash } = require("node:crypto");
 const test = require("node:test");
-const { parseNasdaqHistoricalClose, verifyLatestClose } = require("../price-refresh-helpers.cjs");
+const { parseNasdaqClosedQuote, parseNasdaqHistoricalClose, verifyLatestClose } = require("../price-refresh-helpers.cjs");
 
 const date = "2026-11-11";
 const nasdaq = (symbol, close) => ({
@@ -19,6 +19,21 @@ test("requires a Nasdaq close for the requested symbol and session", () => {
   assert.throws(() => parseNasdaqHistoricalClose(nasdaq("NVDA", "$173.73"), "AAPL", date), /Nasdaq/);
   assert.throws(() => parseNasdaqHistoricalClose(nasdaq("NVDA", "$173.73"), "NVDA", "2026-11-12"), /Nasdaq/);
   assert.throws(() => parseNasdaqHistoricalClose(nasdaq("NVDA", "N/A"), "NVDA", date), /Nasdaq/);
+});
+
+test("Nasdaq quote fallback accepts only the dated, closed primary market quote", () => {
+  const payload = { status: { rCode: 200 }, data: { symbol: "NVDA", marketStatus: "Closed",
+    primaryData: { lastSalePrice: "$173.73", lastTradeTimestamp: "Nov 11, 2026", isRealTime: false },
+    secondaryData: { lastSalePrice: "$176.59" },
+  } };
+  assert.equal(parseNasdaqClosedQuote(payload, "NVDA", date), 173.73);
+  assert.throws(() => parseNasdaqClosedQuote(payload, "AAPL", date), /Nasdaq/);
+  assert.throws(() => parseNasdaqClosedQuote(payload, "NVDA", "2026-11-12"), /Nasdaq/);
+  payload.data.primaryData.lastTradeTimestamp = "Nov 11, 2026 3:59 PM ET";
+  assert.throws(() => parseNasdaqClosedQuote(payload, "NVDA", date), /Nasdaq/);
+  payload.data.primaryData.lastTradeTimestamp = "Nov 11, 2026";
+  payload.data.marketStatus = "Open";
+  assert.throws(() => parseNasdaqClosedQuote(payload, "NVDA", date), /Nasdaq/);
 });
 
 test("blocks a same-date intraday quote and pins a verified endpoint to the official close", () => {

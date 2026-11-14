@@ -53,7 +53,7 @@ test('all 47 companies have auditable cash-flow series; FCF reconciles wherever 
   assert.equal(Object.keys(d.companies).length, 47);
   for (const [id, c] of Object.entries(d.companies)) {
     for (const metric of ['operatingCashFlow', 'capex', 'freeCashFlow']) {
-      assert.equal(Object.keys(c[metric]).length, d.periods.length, `${id}:${metric}`);
+      assert.deepEqual(Object.keys(c[metric]), [...d.periods], `${id}:${metric}`);
       assert.ok(h.companies[id].coverage[metric]);
     }
     assert.ok(h.companies[id].coverage.operatingCashFlow.count > 0, id);

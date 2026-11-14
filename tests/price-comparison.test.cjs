@@ -97,12 +97,14 @@ test("drops the ongoing session and rejects stale adjusted close", () => {
   });
 });
 
-test("the published price snapshot covers the latest completed session for every company", () => {
+test("the published price snapshot discloses companies pending a verified close", () => {
   const { meta, companies } = loadStockPriceSourceData();
   const expectedDate = meta.latestCompletedSession;
   assert.ok(expectedDate <= getLatestCompletedMarketDate(new Date(meta.generatedAt)));
   for (const id of Object.keys(loadFinancialSourceData().companies)) {
-    assert.equal(getLatestPriceDate(companies[id]?.daily), expectedDate, id);
+    const date = getLatestPriceDate(companies[id]?.daily);
+    assert.ok(date && date <= expectedDate, id);
+    assert.equal(date < expectedDate, meta.failedCompanies.includes(id), id);
   }
 });
 

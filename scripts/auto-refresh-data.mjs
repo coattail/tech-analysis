@@ -1340,6 +1340,14 @@ function sanitizeHistoricalBackfillRows(companyId, rows) {
 }
 
 function formatDataJs(data) {
+  // A targeted earnings refresh can extend the shared quarter calendar before
+  // other issuers report. Keep their cash-flow series aligned with that calendar.
+  for (const company of Object.values(data.companies)) {
+    for (const metric of ["operatingCashFlow", "capex", "freeCashFlow"]) {
+      const series = company[metric] ?? {};
+      company[metric] = Object.fromEntries(data.periods.map(period => [period, series[period] ?? null]));
+    }
+  }
   return `window.FINANCIAL_SOURCE_DATA = ${JSON.stringify(data, null, 2)};\n`;
 }
 

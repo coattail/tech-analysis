@@ -56,7 +56,7 @@ jobs:
       - name: Refresh price-data.js
         id: prices
         continue-on-error: true
-        run: node scripts/auto-refresh-price-data.mjs
+        run: node scripts/auto-refresh-price-data.mjs --allow-partial
 
       - name: Commit changes if data updated
         if: github.ref == 'refs/heads/main'
@@ -84,9 +84,20 @@ jobs:
           MARKETCAPS: ${{ steps.marketcaps.outcome }}
           CASHFLOW: ${{ steps.cashflow.outcome }}
           PRICES: ${{ steps.prices.outcome }}
+          PENDING_PRICES: ${{ steps.prices.outputs.pending }}
+          EARLY_PRICE_REFRESH: ${{ github.event.schedule == '25 22 * * 1-5' }}
         run: |
           echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
           test "$FINANCIALS" = success || test "$FINANCIALS" = skipped
           test "$MARKETCAPS" = success || test "$MARKETCAPS" = skipped
           test "$CASHFLOW" = success || test "$CASHFLOW" = skipped
           test "$PRICES" = success
+          if [ -n "$PENDING_PRICES" ]; then
+            echo "Pending verified closes: $PENDING_PRICES" >> "$GITHUB_STEP_SUMMARY"
+            if [ "$EARLY_PRICE_REFRESH" = true ]; then
+              echo '::warning::Some closing prices are pending. The next full refresh retries them.'
+            else
+              echo '::error::Closing prices remain unverified after the recovery window.'
+              exit 1
+            fi
+          fi
