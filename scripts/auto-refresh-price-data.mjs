@@ -13,6 +13,7 @@ const {
   getLatestPriceDate,
   keepCompletedPrices,
   normalizeYahooChartPayload,
+  parseNasdaqClosedQuote,
   parseNasdaqHistoricalClose,
   verifyLatestClose,
 } = require("../price-refresh-helpers.cjs");
@@ -120,15 +121,23 @@ async function fetchNasdaqClose(company, expectedDate) {
   url.searchParams.set("assetclass", "stocks");
   url.searchParams.set("fromdate", from.toISOString().slice(0, 10));
   url.searchParams.set("todate", expectedDate);
-  const response = await fetch(url, {
+  const options = () => ({
     signal: AbortSignal.timeout(15_000),
     headers: { "user-agent": "Mozilla/5.0", accept: "application/json", "cache-control": "no-cache" },
   });
-  if (!response.ok) throw new Error(`Nasdaq 请求失败（${symbol}）：HTTP ${response.status}`);
-  return parseNasdaqHistoricalClose(await response.json(), symbol, expectedDate);
+  try {
+    const response = await fetch(url, options());
+    if (!response.ok) throw new Error(`Nasdaq 日线请求失败（${symbol}）：HTTP ${response.status}`);
+    return { close: parseNasdaqHistoricalClose(await response.json(), symbol, expectedDate), source: url.href };
+  } catch (error) {
+    const quoteUrl = `${NASDAQ_HISTORICAL_BASE}/${encodeURIComponent(symbol)}/info?assetclass=stocks`;
+    const response = await fetch(quoteUrl, options());
+    if (!response.ok) throw new Error(`${error.message}；Nasdaq 报价请求失败（${symbol}）：HTTP ${response.status}`);
+    return { close: parseNasdaqClosedQuote(await response.json(), symbol, expectedDate), source: quoteUrl };
+  }
 }
 
-async function fetchDailyAdjustedSeries(company, expectedDate, officialClose) {
+async function fetchDailyAdjustedSeries(company, expectedDate, officialClose, previousDaily) {
   let lastError;
 
   for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt += 1) {
@@ -171,8 +180,7 @@ async function fetchDailyAdjustedSeries(company, expectedDate, officialClose) {
         );
       }
 
-      company.priceSource = "Yahoo Finance chart API";
-      return verifyLatestClose(daily, expectedDate, officialClose);
+      return { daily: verifyLatestClose(daily, expectedDate, officialClose), source: "Yahoo Finance chart API" };
     } catch (error) {
       lastError = error;
       if (attempt >= FETCH_ATTEMPTS) break;
@@ -182,25 +190,23 @@ async function fetchDailyAdjustedSeries(company, expectedDate, officialClose) {
     }
   }
 
-  if (["skhynix", "spacex", "iren"].includes(company.id)) {
-    const slug = company.id === "spacex" ? "spcx" : company.id === "iren" ? "iren" : "skhy";
-    const url = `https://stockanalysis.com/stocks/${slug}/history/?range=max`;
-    const { stdout } = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", url], { maxBuffer: 5 * 1024 * 1024 });
-    const recent = keepCompletedPrices(parseStockAnalysisPrices(stdout), expectedDate);
-    if (getLatestPriceDate(recent) !== expectedDate) {
-      throw new Error(`StockAnalysis 缺少 ${company.ticker} 在 ${expectedDate} 的收盘数据`);
+  const hasHistoryPage = ["skhynix", "spacex"].includes(company.id);
+  const source = hasHistoryPage
+    ? `https://stockanalysis.com/stocks/${company.ticker.toLowerCase()}/history/?range=max`
+    : `https://api.stockanalysis.com/api/symbol/s/${encodeURIComponent(company.ticker)}/history?type=chart&series=a`;
+  try {
+    const { stdout } = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "25", source], { maxBuffer: 5 * 1024 * 1024 });
+    const fallback = hasHistoryPage
+      ? keepCompletedPrices(parseStockAnalysisPrices(stdout), expectedDate)
+      : parseStockAnalysisAdjustedChart(JSON.parse(stdout), expectedDate, company.id === "iren" ? company.minDate : undefined);
+    const daily = pruneDailyPrices(fallback, company.minDate ?? "2005-01-01");
+    if (Object.keys(pruneDailyPrices(previousDaily, company.minDate) || {}).some(date => !Object.hasOwn(daily, date))) {
+      throw new Error("StockAnalysis 复权日线缺少已发布的历史交易日");
     }
-    if (company.id === "iren") {
-      const chartUrl = `https://api.stockanalysis.com/api/symbol/s/IREN/history?type=chart&series=a`;
-      const result = await execFileAsync("curl", ["-L", "-sS", "--fail", "--compressed", "--max-time", "45", chartUrl], { maxBuffer: 5 * 1024 * 1024 });
-      const daily = parseStockAnalysisAdjustedChart(JSON.parse(result.stdout), expectedDate, company.minDate);
-      company.priceSource = chartUrl;
-      return verifyLatestClose(daily, expectedDate, officialClose);
-    }
-    company.priceSource = url;
-    return verifyLatestClose(recent, expectedDate, officialClose);
+    return { daily: verifyLatestClose(daily, expectedDate, officialClose), source };
+  } catch (error) {
+    throw new Error(`${lastError.message}；备用日线：${error.message}`);
   }
-  throw lastError;
 }
 
 async function main() {
@@ -215,18 +221,25 @@ async function main() {
   console.log(`最新已收盘的美股交易日：${expectedDate}`);
 
   for (const company of selectedCompanies) {
+    const previous = companies[company.id];
     try {
-      const officialClose = await fetchNasdaqClose(company, expectedDate);
+      const official = await fetchNasdaqClose(company, expectedDate);
+      const { daily, source } = await fetchDailyAdjustedSeries(company, expectedDate, official.close, previous?.daily);
       companies[company.id] = {
-        ...(companies[company.id] || {}),
+        ...previous,
         ...(["skhynix", "spacex"].includes(company.id) ? { ticker: company.ticker, currency: "USD" } : {}),
-        daily: pruneDailyPrices(await fetchDailyAdjustedSeries(company, expectedDate, officialClose), company.minDate),
+        daily: pruneDailyPrices(daily, company.minDate),
         verifiedCloseDate: expectedDate,
-        source: company.priceSource,
+        closeVerificationSource: official.source,
+        source,
       };
       updatedCompanies.push(company.id);
-      console.log(`已刷新 ${company.ticker}，Nasdaq 收盘价 ${officialClose}`);
+      console.log(`已刷新 ${company.ticker}，Nasdaq 收盘价 ${official.close}`);
     } catch (error) {
+      if (previous?.verifiedCloseDate === expectedDate && getLatestPriceDate(previous.daily) === expectedDate) {
+        console.warn(`${company.ticker} 保留已核验的 ${expectedDate} 收盘价：${error.message}`);
+        continue;
+      }
       failedCompanies.push(company.id);
       console.warn(`跳过 ${company.ticker}，保留已有数据：${error.message}`);
     }
@@ -238,7 +251,10 @@ async function main() {
     companies[company.id].daily = pruneDailyPrices(companies[company.id].daily, company.minDate);
   });
 
-  if (updatedCompanies.length === 0) {
+  if (process.env.GITHUB_OUTPUT) {
+    await writeFile(process.env.GITHUB_OUTPUT, `pending=${failedCompanies.join(", ")}\n`, { flag: "a" });
+  }
+  if (updatedCompanies.length === 0 && failedCompanies.length === selectedCompanies.length) {
     throw new Error("所有公司股价刷新均失败，未写入 price-data.js");
   }
   if (failedCompanies.length > 0 && !allowPartial) {
@@ -246,6 +262,7 @@ async function main() {
       `${failedCompanies.length} 家公司股价未通过刷新/新鲜度检查，拒绝写入过期数据：${failedCompanies.join(", ")}`,
     );
   }
+  if (updatedCompanies.length === 0) return;
 
   const latestDates = COMPANY_SOURCES
     .map((company) => getLatestPriceDate(companies[company.id]?.daily))
@@ -255,7 +272,7 @@ async function main() {
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
-      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback for SKHY, SPCX and IREN",
+      source: "Yahoo Finance chart API; StockAnalysis adjusted-close fallback",
       closeVerificationSource: NASDAQ_HISTORICAL_BASE,
       priceType: "adjusted-close",
       latestCompletedSession: expectedDate,

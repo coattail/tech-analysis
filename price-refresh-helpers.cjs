@@ -147,6 +147,20 @@ function parseNasdaqHistoricalClose(payload, symbol, date) {
   return close;
 }
 
+function parseNasdaqClosedQuote(payload, symbol, date) {
+  const data = payload?.data;
+  const quote = data?.primaryData;
+  const [year, month, day] = date.split("-");
+  const monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(month) - 1];
+  const close = Number(String(quote?.lastSalePrice ?? "").replace(/^\$/, "").replaceAll(",", ""));
+  if (payload?.status?.rCode !== 200 || data?.symbol?.replaceAll("/", ".") !== symbol
+    || data?.marketStatus !== "Closed" || quote?.isRealTime !== false
+    || quote.lastTradeTimestamp !== `${monthName} ${Number(day)}, ${year}` || !Number.isFinite(close) || close <= 0) {
+    throw new Error(`Nasdaq 缺少 ${symbol} 在 ${date} 的已收盘报价`);
+  }
+  return close;
+}
+
 function verifyLatestClose(daily, date, officialClose) {
   const candidate = daily[date];
   // Allow half-cent display rounding and provider floating-point noise.
@@ -167,6 +181,7 @@ module.exports = {
   keepCompletedPrices,
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
+  parseNasdaqClosedQuote,
   parseNasdaqHistoricalClose,
   verifyLatestClose,
 };

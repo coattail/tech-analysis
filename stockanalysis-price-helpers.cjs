@@ -30,7 +30,7 @@ function parseStockAnalysisAdjustedChart(payload, expectedDate, firstDate) {
     daily[date] = point[1];
   }
   const dates = Object.keys(daily).sort();
-  if (!dates.length || dates.at(-1) !== expectedDate || dates[0] !== firstDate) {
+  if (!dates.length || dates.at(-1) !== expectedDate || (firstDate && dates[0] !== firstDate)) {
     throw new Error('StockAnalysis adjusted-price history is incomplete or stale');
   }
   return Object.fromEntries(dates.map(date => [date, daily[date]]));
