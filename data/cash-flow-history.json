@@ -75485,21 +75485,42 @@
         },
         "2025Q4": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002068385.json",
             "periodEnd": "2025-12-31",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2025-10-01",
+            "filed": "2026-08-20",
+            "accession": "0001493152-26-039475",
+            "nativeCurrency": "USD",
+            "nativeValue": -282614,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002068385.json",
             "periodEnd": "2025-12-31",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2025-10-01",
+            "filed": "2026-08-20",
+            "accession": "0001493152-26-039475",
+            "nativeCurrency": "USD",
+            "nativeValue": 10913369,
+            "basis": "reported-cash-flow"
           }
         },
         "2025Q3": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/shaz/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002068385.json",
             "periodEnd": "2025-09-30",
-            "method": "reported-quarter"
+            "method": "reported-quarter",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2025-07-01",
+            "filed": "2026-11-16",
+            "accession": "0001493152-26-052382",
+            "nativeCurrency": "USD",
+            "nativeValue": -711978,
+            "basis": "reported-cash-flow"
           },
           "capex": {
             "source": "https://www.sec.gov/Archives/edgar/data/2068385/000182912625010236/sharonaiholdings_ex99-1.htm",
@@ -75606,24 +75627,50 @@
             "periodEnd": "2024-03-31",
             "method": "reported-quarter"
           }
+        },
+        "2026Q3": {
+          "operatingCashFlow": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002068385.json",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-16",
+            "accession": "0001493152-26-052382",
+            "nativeCurrency": "USD",
+            "nativeValue": -66090364,
+            "basis": "reported-cash-flow"
+          },
+          "capex": {
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0002068385.json",
+            "periodEnd": "2026-09-30",
+            "method": "reported-quarter",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "startDate": "2026-07-01",
+            "filed": "2026-11-16",
+            "accession": "0001493152-26-052382",
+            "nativeCurrency": "USD",
+            "nativeValue": 8507319,
+            "basis": "reported-cash-flow"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 10,
+          "count": 11,
           "first": "2024Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "capex": {
-          "count": 10,
+          "count": 11,
           "first": "2024Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         },
         "freeCashFlow": {
-          "count": 10,
+          "count": 11,
           "first": "2024Q1",
-          "last": "2026Q2"
+          "last": "2026Q3"
         }
       }
     },

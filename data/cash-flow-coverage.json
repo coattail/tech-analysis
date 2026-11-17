@@ -1201,19 +1201,19 @@
     },
     "sharonai": {
       "first": "2024Q2",
-      "last": "2026Q2",
-      "expected": 9,
+      "last": "2026Q3",
+      "expected": 10,
       "metrics": {
         "operatingCashFlow": {
-          "present": 9,
+          "present": 10,
           "missing": []
         },
         "capex": {
-          "present": 9,
+          "present": 10,
           "missing": []
         },
         "freeCashFlow": {
-          "present": 9,
+          "present": 10,
           "missing": []
         }
       }
