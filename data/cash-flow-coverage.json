@@ -854,19 +854,19 @@
     },
     "homedepot": {
       "first": "2005Q1",
-      "last": "2026Q3",
-      "expected": 87,
+      "last": "2026Q4",
+      "expected": 88,
       "metrics": {
         "operatingCashFlow": {
-          "present": 87,
+          "present": 88,
           "missing": []
         },
         "capex": {
-          "present": 87,
+          "present": 88,
           "missing": []
         },
         "freeCashFlow": {
-          "present": 87,
+          "present": 88,
           "missing": []
         }
       }
