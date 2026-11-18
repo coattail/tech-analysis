@@ -2,7 +2,7 @@
 // Fast path: one shared snapshot plus official releases for every tracked issuer.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
-import { COMPANY_SOURCES, parseDataJs, formatDataJs, fetchJsonWithCurl } from "./auto-refresh-data.mjs";
+import { COMPANY_SOURCES, COMPANY_OFFICIAL_QUARTERLY_OVERRIDES, parseDataJs, formatDataJs, fetchJsonWithCurl } from "./auto-refresh-data.mjs";
 import { enrichAmdRelease } from "./amd-earnings.mjs";
 
 const DATA = new URL("../data.js", import.meta.url);
@@ -111,7 +111,7 @@ export function manifest(data, shared, now = new Date()) {
   return { companies: COMPANY_SOURCES, local };
 }
 
-export function applyQuarter(data, companyId, quarter, entry) {
+export function applyQuarter(data, companyId, quarter, entry, official = {}) {
   if (!/^\d{4}Q[1-4]$/.test(quarter) || entry.statementSpanQuarters > 1 || entry.statementValueMode === "cumulative") return false;
   const scale = releaseScale(entry);
   if (!scale || !requiredAmounts(entry).every(finite) || entry.revenueBn <= 0) return false;
@@ -124,35 +124,43 @@ export function applyQuarter(data, companyId, quarter, entry) {
     || (previousRevenue > 0 && (entry.revenueBn * scale * 1e9 / previousRevenue < .02 || entry.revenueBn * scale * 1e9 / previousRevenue > 50))) return false;
   if (quarter < previous || (quarter === previous && filed < (company.reportDates?.[quarter] ?? ""))) return false;
   if (!entry.periodEnd || !filed || entry.periodEnd > filed) return false;
+  const periodEnd = official.periodEndDate ?? entry.periodEnd;
+  const reportDate = official.reportDate ?? filed;
+  // Providers can round a fiscal end to the nearest month boundary.
+  const difference = Math.abs(Date.parse(entry.periodEnd) - Date.parse(periodEnd));
+  if (!(difference <= 7 * 86_400_000) || periodEnd > reportDate) return false;
   const amounts = { revenue: entry.revenueBn, earnings: entry.netIncomeBn, operatingIncome: entry.operatingIncomeBn, netAssets: entry.netAssetsBn,
     operatingCashFlow: entry.operatingCashFlowBn, capex: entry.capexBn };
+  const usd = Object.fromEntries(Object.entries(amounts).map(([metric, amount]) => [
+    metric, official[metric] ?? (finite(amount) ? Math.round(amount * scale * 1e9) : null),
+  ]));
+  const grossMargin = official.grossMargin ?? (finite(entry.grossProfitBn) ? entry.grossProfitBn / entry.revenueBn * 100 : null);
   // The shared publisher may complete or correct extraction for the same
   // disclosure. Its unchanged publication date must not freeze stale amounts.
-  if (quarter === previous && filed === (company.reportDates?.[quarter] ?? "")) {
-    const revised = Object.entries(amounts).some(([metric, amount]) => finite(amount)
-      && (!actual(company, metric, quarter) || company[metric]?.[quarter] !== Math.round(amount * scale * 1e9)));
-    const grossRevised = finite(entry.grossProfitBn)
-      && (!actual(company, "grossMargin", quarter)
-        || Math.abs(company.grossMargin[quarter] - entry.grossProfitBn / entry.revenueBn * 100) > 1e-7);
-    if (!revised && !grossRevised && company.periodEndDates?.[quarter] === entry.periodEnd) return false;
+  if (quarter === previous && reportDate === company.reportDates?.[quarter]) {
+    const revised = Object.entries(usd).some(([metric, amount]) => finite(amount)
+      && (!actual(company, metric, quarter) || company[metric]?.[quarter] !== amount));
+    const grossRevised = finite(grossMargin) && (!actual(company, "grossMargin", quarter)
+      || Math.abs(company.grossMargin[quarter] - grossMargin) > 1e-7);
+    if (!revised && !grossRevised && company.periodEndDates?.[quarter] === periodEnd) return false;
   }
   const clearForecast = metric => {
     const flag = flagKey(metric);
     if (company.forecastFlags?.[flag]) company.forecastFlags[flag] = company.forecastFlags[flag].filter(q => q !== quarter);
   };
-  for (const [metric, amount] of Object.entries(amounts)) {
+  for (const [metric, amount] of Object.entries(usd)) {
     if (!finite(amount)) continue;
     company[metric] ??= {};
-    company[metric][quarter] = Math.round(amount * scale * 1e9);
+    company[metric][quarter] = amount;
     clearForecast(metric);
   }
-  if (finite(entry.grossProfitBn)) {
+  if (finite(grossMargin)) {
     company.grossMargin ??= {};
-    company.grossMargin[quarter] = entry.grossProfitBn / entry.revenueBn * 100;
+    company.grossMargin[quarter] = grossMargin;
     clearForecast("grossMargin");
   }
-  company.periodEndDates ??= {}; company.periodEndDates[quarter] = entry.periodEnd;
-  company.reportDates ??= {}; company.reportDates[quarter] = filed;
+  company.periodEndDates ??= {}; company.periodEndDates[quarter] = periodEnd;
+  company.reportDates ??= {}; company.reportDates[quarter] = reportDate;
   const prior = `${Number(quarter.slice(0, 4)) - 1}${quarter.slice(4)}`;
   company.revenueGrowth ??= {};
   company.revenueGrowth[quarter] = company.revenue[prior] > 0 ? (company.revenue[quarter] / company.revenue[prior] - 1) * 100 : null;
@@ -169,7 +177,7 @@ export function applyQuarter(data, companyId, quarter, entry) {
   return true;
 }
 
-export function synchronize(data, shared, releases, now = new Date()) {
+export function synchronize(data, shared, releases, now = new Date(), overrides = {}) {
   const sharedMap = new Map(shared.companies.map(c => [tickerKey(c.ticker), c]));
   const updates = new Set();
   const failures = [];
@@ -186,11 +194,11 @@ export function synchronize(data, shared, releases, now = new Date()) {
     const upstream = sharedMap.get(tickerKey(ticker));
     for (const quarter of upstream?.quarters ?? []) {
       const entry = upstream.financials?.[quarter];
-      if (entry && applyQuarter(data, id, quarter, entry)) updates.add(id);
+      if (entry && applyQuarter(data, id, quarter, entry, overrides[id]?.[quarter])) updates.add(id);
     }
     if (check?.reason === "check-failed") failures.push(`${ticker}: ${check.error}`);
     const candidate = check?.release;
-    if (candidate?.entry && applyQuarter(data, id, candidate.quarter, candidate.entry)) updates.add(id);
+    if (candidate?.entry && applyQuarter(data, id, candidate.quarter, candidate.entry, overrides[id]?.[candidate.quarter])) updates.add(id);
 
     const latest = actualQuarters(c).at(-1);
     if (!check?.needsUpdate && !retryRecent && !updates.has(id)) continue;
@@ -205,7 +213,7 @@ export function synchronize(data, shared, releases, now = new Date()) {
   return { companies: [...updates], fallbacks: [...fallbacks], cashFlowCompanies: [...cashFlowCompanies], failures };
 }
 
-export function releaseCoverageIssues(data, releases, synchronizedCompanies = [], now = new Date()) {
+export function releaseCoverageIssues(data, releases, synchronizedCompanies = [], now = new Date(), overrides = {}) {
   const issues = [];
   const checks = new Map(releases.report.map(check => [check.companyId, check]));
   for (const { id, ticker } of COMPANY_SOURCES) {
@@ -214,16 +222,20 @@ export function releaseCoverageIssues(data, releases, synchronizedCompanies = []
     const c = data.companies[id];
     const latest = actualQuarters(c).at(-1) ?? "";
     const expected = check?.remoteQuarter;
+    const entry = check?.release?.quarter === latest ? check?.release?.entry : undefined;
+    const official = overrides[id]?.[latest];
+    const expectedFiling = entry && official?.periodEndDate === entry.periodEnd
+      ? official.reportDate ?? check?.remoteFilingDate : check?.remoteFilingDate;
     const filed = c?.reportDates?.[latest] ?? "";
     if (check?.needsUpdate && (expected
-      ? latest < expected || (latest === expected && filed < (check.remoteFilingDate ?? ""))
+      ? latest < expected || (latest === expected && filed < (expectedFiling ?? ""))
       : (!latest || latest <= (check.localQuarter ?? "")) && filed < check.remoteFilingDate)) {
       issues.push(`${ticker}: release detected but financial data still lags`);
       continue;
     }
     if (!latest || !(check?.needsUpdate || synchronizedCompanies.includes(id) || recentReport(filed, now))) continue;
-    const entry = check?.release?.quarter === latest ? check.release.entry : undefined;
-    if (entry?.periodEnd && c.periodEndDates?.[latest] !== entry.periodEnd) {
+    const expectedEnd = official?.periodEndDate ?? entry?.periodEnd;
+    if (expectedEnd && c.periodEndDates?.[latest] !== expectedEnd) {
       issues.push(`${ticker} ${latest}: period end does not match the release`);
       continue;
     }
@@ -261,7 +273,7 @@ async function run() {
   const releases = JSON.parse(await readFile(new URL("earnings-release-report.json", OUT), "utf8"));
   if (process.argv.includes("--verify")) {
     const sync = JSON.parse(await readFile(new URL("earnings-sync-report.json", OUT), "utf8"));
-    const missing = releaseCoverageIssues(data, releases, sync.companies);
+    const missing = releaseCoverageIssues(data, releases, sync.companies, new Date(), COMPANY_OFFICIAL_QUARTERLY_OVERRIDES);
     if (missing.length) throw Error(missing.join("\n"));
     console.log(`Verified all ${releases.checked} companies against detected releases`);
     return;
@@ -273,7 +285,7 @@ async function run() {
       await writeFile(new URL("earnings-release-report.json", OUT), JSON.stringify(releases, null, 2));
     }
   } catch (error) { console.error(`AMD official HTML fallback: ${error.message}`); }
-  const result = synchronize(data, shared, releases);
+  const result = synchronize(data, shared, releases, new Date(), COMPANY_OFFICIAL_QUARTERLY_OVERRIDES);
   if (releases.checked !== COMPANY_SOURCES.length) result.failures.push(`Only ${releases.checked}/${COMPANY_SOURCES.length} companies checked`);
   if (result.companies.length) {
     data.meta.generatedAt = new Date().toISOString();

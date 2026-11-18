@@ -604,9 +604,13 @@ test("uses official ChronoScale history and fills SharonAI 2025Q2 fundamentals",
   const sharonai = data.companies.sharonai;
 
   assert.deepEqual(
-    Object.keys(chronoscale.revenue),
-    ["2024Q3", "2024Q4", "2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1"],
+    Object.keys(chronoscale.revenue).filter(period => period <= "2026Q3"),
+    ["2024Q3", "2024Q4", "2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1", "2026Q2", "2026Q3"],
   );
+  assert.equal(chronoscale.revenue["2026Q2"], 18_396_000);
+  assert.equal(chronoscale.operatingIncome["2026Q2"], -12_118_000);
+  const cloudPeriods = ["2025Q3", "2025Q4", "2026Q1", "2026Q2"];
+  assert.equal(cloudPeriods.reduce((total, period) => total + chronoscale.earnings[period], 0), -49_300_000);
   assert.equal(chronoscale.revenue["2025Q4"], 18_402_000);
   assert.equal(chronoscale.earnings["2026Q1"], -54_252_000);
   assert.equal(chronoscale.revenue["2013Q1"], undefined);

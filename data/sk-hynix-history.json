@@ -3,7 +3,7 @@
   "ticker": "SKHY",
   "primaryTicker": "000660.KS",
   "displayCurrency": "USD",
-  "note": "2018Q1–2026Q2: archived reported quarterly statements; 2026Q3: official preliminary consolidated K-IFRS earnings release. Flow amounts use FRED DEXKOUS quarter-average rates. Gaps in equity, margins and valuation remain null; no pre-IPO ADR prices are synthesized. Provider historical net income may use parent-attributable earnings; official consolidated figures take precedence for 2025Q4 onward.",
+  "note": "2018Q1–2026Q2: archived reported quarterly statements; 2026Q3: consolidated K-IFRS interim statements furnished on Form 6-K. Flow amounts use FRED DEXKOUS quarter-average rates. September 2026 equity uses FRED DEXKOUS on the balance-sheet date. Unverified metrics remain null; no pre-IPO ADR prices are synthesized. Provider historical net income may use parent-attributable earnings; official consolidated figures take precedence for 2025Q4 onward.",
   "quarters": [
     {
       "period": "2018Q1",
@@ -691,21 +691,26 @@
       "period": "2026Q3",
       "periodEnd": "2026-09-30",
       "reportDate": "2026-10-28",
-      "sourceUrl": "https://news.skhynix.com/en/q3-2026-business-results/",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2120882/000119312526461909/d166755d6k.htm",
       "statementCurrency": "KRW",
       "fxSource": "https://fred.stlouisfed.org/series/DEXKOUS",
       "krwPerUsdQuarterAverage": 1417.23859375,
       "fxObservationCount": 64,
-      "revenue": 104615500000000,
-      "operatingIncome": 83333800000000,
-      "netIncome": 39775600000000,
+      "revenue": 104615483000000,
+      "operatingIncome": 83333818000000,
+      "netIncome": 39775593000000,
       "usd": {
-        "revenue": 73816434622,
-        "earnings": 28065563678,
-        "operatingIncome": 58800120437,
+        "revenue": 73816422627,
+        "earnings": 28065558739,
+        "operatingIncome": 58800133137,
         "periodEnd": "2026-09-30",
-        "reportDate": "2026-10-28"
-      }
+        "reportDate": "2026-10-28",
+        "grossMargin": 85.69757881823287,
+        "netAssets": 227955823764
+      },
+      "grossProfit": 89652936000000,
+      "netAssets": 309087581000000,
+      "krwPerUsdClosing": 1355.91
     }
   ]
 }

@@ -19,7 +19,7 @@ for (const [id, v] of Object.entries(expected)) {
     for (const metric of ['revenue', 'earnings', 'operatingIncome', 'netAssets']) assert.equal(c[metric][p], v[metric]);
     assert.equal(c.grossMargin[p], v.grossProfit / v.revenue * 100);
     assert.equal(c.roe[p], v.earnings / v.netAssets * 100);
-    assert.equal(c.revenueGrowth[p], (v.revenue / c.revenue['2025Q3'] - 1) * 100);
+    assert.ok(Math.abs(c.revenueGrowth[p] - ((v.revenue / c.revenue['2025Q3'] - 1) * 100)) < 1e-10);
     assert.equal(c.periodEndDates[p], '2026-09-30');
     assert.equal(c.reportDates[p], '2026-10-28');
     for (const flags of Object.values(c.forecastFlags)) assert.ok(!flags.includes(p));
