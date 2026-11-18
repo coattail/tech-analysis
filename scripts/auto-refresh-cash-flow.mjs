@@ -100,7 +100,37 @@ async function fetchCashFlow(company) {
   return { rows, source: url, currency };
 }
 
-export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOnly = false, secOnly = false } = {}) {
+export function applyReleaseCashFlow(company, release, periods, provenance) {
+  const entry = release?.entry;
+  const period = release?.quarter;
+  if (!entry || !entry.periodEnd || company.periodEndDates?.[period] !== entry.periodEnd
+    || !entry.statementFilingDate || entry.statementFilingDate !== company.reportDates?.[period]
+    || entry.statementSpanQuarters > 1 || entry.statementValueMode === "cumulative") return 0;
+  const scale = !entry.statementCurrency || entry.statementCurrency === "USD" ? 1
+    : entry.displayCurrency === "USD" ? entry.displayScaleFactor : null;
+  if (!Number.isFinite(scale) || scale <= 0) return 0;
+
+  let written = 0;
+  for (const [metric, field] of [["operatingCashFlow", "operatingCashFlowBn"], ["capex", "capexBn"]]) {
+    const value = entry[field];
+    const source = entry.supplementalFieldSources?.[field] ?? entry.statementSourceUrl;
+    if (!source || !Number.isFinite(value) || (metric === "capex" && value < 0)
+      || (provenance[period]?.[metric]?.filed ?? "") > entry.statementFilingDate) continue;
+    applyCashFlowRows(company, [{
+      period, dateKey: entry.periodEnd, [metric]: Math.round(value * scale * 1e9),
+      method: "earnings-release", basis: "reported-quarter",
+    }], { source, periods, provenance });
+    if (provenance[period]?.[metric]?.source === source) {
+      provenance[period][metric].filed = entry.statementFilingDate;
+      written += 1;
+    }
+  }
+  return written;
+}
+
+export async function refreshCashFlow(data, {
+  companyIds = null, stockAnalysisOnly = false, secOnly = false, releases = new Map(),
+} = {}) {
   let history;
   try { history = JSON.parse(await readFile(HISTORY_PATH, "utf8")); }
   catch (error) { if (error.code !== "ENOENT") throw error; history = { companies: {} }; }
@@ -122,7 +152,11 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
     // Provider backfills recent quarters; SEC replaces them with primary facts where available.
     if (!secOnly) try {
       const result = await fetchCashFlow(company);
-      applyCashFlowRows(target, result.rows, { source: result.source, periods, minPeriod: company.minPeriod, provenance: record.points });
+      const rows = result.rows.map(row => ({ ...row, ...Object.fromEntries(
+        ["operatingCashFlow", "capex"].filter(metric => record.points[row.period]?.[metric]?.method === "earnings-release"
+          && Number.isFinite(target[metric]?.[row.period])).map(metric => [metric, null]),
+      ) }));
+      applyCashFlowRows(target, rows, { source: result.source, periods, minPeriod: company.minPeriod, provenance: record.points });
       record.reportingCurrency = result.currency;
       fetched += result.rows.filter(r => Number.isFinite(r.operatingCashFlow)).length;
     } catch (error) { errors.push(`StockAnalysis: ${error.message}`); }
@@ -156,6 +190,7 @@ export async function refreshCashFlow(data, { companyIds = null, stockAnalysisOn
         }
       }
     }
+    fetched += applyReleaseCashFlow(target, releases.get(company.id), periods, record.points);
     applyCashFlowRows(target, [], { source: "", periods, provenance: record.points });
     record.coverage = Object.fromEntries(METRICS.map(metric => {
       const keys = Object.keys(target[metric]).filter(p => Number.isFinite(target[metric][p])).sort();
@@ -176,7 +211,12 @@ async function run() {
   const companyIds = tokens ? new Set(COMPANY_SOURCES.filter(c => [c.id, c.ticker.toLowerCase(), c.slug].some(v => tokens.has(v))).map(c => c.id)) : null;
   if (companyIds?.size === 0) throw new Error("No companies matched --company");
   const data = parseDataJs(await readFile(DATA_PATH, "utf8"));
-  const result = await refreshCashFlow(data, { companyIds, stockAnalysisOnly: args.includes("--stockanalysis-only"), secOnly: args.includes("--sec-only") });
+  const reportIndex = args.indexOf("--earnings-report");
+  const report = reportIndex < 0 ? null : JSON.parse(await readFile(args[reportIndex + 1], "utf8"));
+  const releases = new Map(report?.report.map(check => [check.companyId, check.release]));
+  const result = await refreshCashFlow(data, {
+    companyIds, stockAnalysisOnly: args.includes("--stockanalysis-only"), secOnly: args.includes("--sec-only"), releases,
+  });
   // A total fetch failure preserves the prior files and fails the scheduled job.
   if (result.failures.length) throw new Error(`No fresh cash-flow data: ${result.failures.join(", ")}`);
   if (args.includes("--dry-run")) return;

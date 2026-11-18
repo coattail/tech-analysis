@@ -53,6 +53,12 @@ jobs:
         continue-on-error: true
         run: node scripts/auto-refresh-cash-flow.mjs
 
+      - name: Verify coverage of recent financial reports
+        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
+        id: coverage
+        continue-on-error: true
+        run: node scripts/earnings-watch.mjs --verify-coverage
+
       - name: Refresh price-data.js
         id: prices
         continue-on-error: true
@@ -83,14 +89,16 @@ jobs:
           FINANCIALS: ${{ steps.financials.outcome }}
           MARKETCAPS: ${{ steps.marketcaps.outcome }}
           CASHFLOW: ${{ steps.cashflow.outcome }}
+          COVERAGE: ${{ steps.coverage.outcome }}
           PRICES: ${{ steps.prices.outcome }}
           PENDING_PRICES: ${{ steps.prices.outputs.pending }}
           EARLY_PRICE_REFRESH: ${{ github.event.schedule == '25 22 * * 1-5' }}
         run: |
-          echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
+          echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; coverage: $COVERAGE; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
           test "$FINANCIALS" = success || test "$FINANCIALS" = skipped
           test "$MARKETCAPS" = success || test "$MARKETCAPS" = skipped
           test "$CASHFLOW" = success || test "$CASHFLOW" = skipped
+          test "$COVERAGE" = success || test "$COVERAGE" = skipped
           test "$PRICES" = success
           if [ -n "$PENDING_PRICES" ]; then
             echo "Pending verified closes: $PENDING_PRICES" >> "$GITHUB_STEP_SUMMARY"

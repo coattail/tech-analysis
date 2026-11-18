@@ -115,3 +115,53 @@ test('large losses require exact same-period SEC corroboration for new amounts',
   }
   assert.equal(validLatestAmounts(current,structuredClone(current)),true);
 });
+
+test("a recent partial release is retried and fails verification across tracked companies", async () => {
+  const { applyQuarter, manifest, releaseCoverageIssues, synchronize } = await load();
+  const data = fixture();
+  const c = data.companies.palantir;
+  Object.assign(c, {
+    revenue: { "2026Q1": 1.6e9, "2026Q2": 1.9e9 },
+    earnings: { "2026Q1": 0.8e9, "2026Q2": 1.0e9 },
+    netAssets: { "2026Q1": 4.0e9, "2026Q2": 4.5e9 },
+    operatingCashFlow: { "2026Q1": 700e6, "2026Q2": 900e6 },
+    capex: { "2026Q1": 5e6, "2026Q2": 6e6 },
+  });
+  const quarter = "2026Q3";
+  const now = new Date("2026-11-03T00:00:00Z");
+  const partial = { ...entry(), automaticEarnings: { accession: "new" } };
+  const shared = { companies: [{ ticker: "PLTR", quarters: [quarter], financials: { [quarter]: partial } }] };
+  assert.equal(manifest(data, shared, now).local.palantir.financials[quarter].statementFilingDate, "2026-08-03");
+  applyQuarter(data, "palantir", quarter, partial);
+
+  const archived = { report: [{ companyId: "palantir", needsUpdate: false, reason: "no-new-earnings-release" }] };
+  const candidate = manifest(data, shared, now).local.palantir.financials[quarter];
+  assert.equal(candidate.statementFilingDate, "2026-11-01");
+  assert.equal(candidate.automaticEarnings, undefined);
+  assert.match(releaseCoverageIssues(data, archived, [], now).join(), /PLTR 2026Q3.*netAssets.*operatingCashFlow.*capex/);
+  const retry = synchronize(data, shared, archived, now);
+  assert.deepEqual(retry.fallbacks, ["palantir"]);
+  assert.deepEqual(retry.cashFlowCompanies, ["palantir"]);
+
+  applyQuarter(data, "palantir", quarter, { ...partial, netAssetsBn: 5, operatingCashFlowBn: 1.1, capexBn: .008 });
+  assert.deepEqual(releaseCoverageIssues(data, archived, [], now), []);
+  assert.equal(c.freeCashFlow[quarter], 1_092_000_000);
+  c.freeCashFlow[quarter] += 1;
+  assert.match(releaseCoverageIssues(data, archived, [], now).join(), /free cash flow does not reconcile/);
+});
+
+test("verified zero cash amounts replace forecasts and absent bank subtotals stay optional", async () => {
+  const { applyQuarter, releaseCoverageIssues } = await load();
+  const data = fixture();
+  const c = data.companies.palantir;
+  const quarter = "2026Q3";
+  c.forecastFlags = { revenue: [quarter], netIncome: [quarter], grossMargin: [quarter] };
+  const release = { quarter, entry: { ...entry(), operatingIncomeBn: null, operatingCashFlowBn: 0, capexBn: 0 } };
+  assert.equal(applyQuarter(data, "palantir", quarter, release.entry), true);
+  assert.deepEqual(c.forecastFlags, { revenue: [], netIncome: [], grossMargin: [] });
+  assert.equal(c.freeCashFlow[quarter], 0);
+  const check = { companyId: "palantir", needsUpdate: true, remoteQuarter: quarter, remoteFilingDate: "2026-11-02", release };
+  assert.deepEqual(releaseCoverageIssues(data, { report: [check] }), []);
+  delete c.operatingCashFlow[quarter];
+  assert.match(releaseCoverageIssues(data, { report: [check] }).join(), /operatingCashFlow/);
+});
