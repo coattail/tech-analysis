@@ -505,7 +505,23 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       reportDate: "2026-10-14",
     },
   },
+  bankofamerica: {
+    // 10-Q consolidated balance sheet, USD millions. Use period-end total equity.
+    // https://investor.bankofamerica.com/regulatory-and-other-filings/select-sec-filings/content/0000070858-26-000548/0000070858-26-000548.pdf
+    "2026Q3": { netAssets: 296_749_000_000 },
+  },
   nvidia: {
+    // FY2027 Q3 supplemental consolidated statements, SEC 8-K Exhibit 99.3.
+    // https://www.sec.gov/Archives/edgar/data/1045810/000104581026000088/supplementalfinancialinfor.htm
+    "2026Q4": {
+      revenue: 115_844_000_000,
+      earnings: 65_287_000_000,
+      operatingIncome: 77_520_000_000,
+      grossMargin: (86_676 / 115_844) * 100,
+      netAssets: 266_666_000_000,
+      periodEndDate: "2026-10-25",
+      reportDate: "2026-11-17",
+    },
     // NVIDIA FY2006-FY2009 Forms 10-K quarterly summaries. Values are GAAP
     // Revenue and Net income, replacing annual averages and an incorrect FY2009 Q1 plug.
     "2005Q1": { revenue: 583_846_000, earnings: 65_522_000, periodEndDate: "2005-04-30" },

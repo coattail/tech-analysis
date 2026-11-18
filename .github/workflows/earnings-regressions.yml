@@ -19,7 +19,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
+      - run: pip install beautifulsoup4
       - name: Check synchronization, units and financial source contracts
         run: |
-          node --test tests/earnings-watch.test.cjs tests/amd-earnings.test.cjs tests/cash-flow.test.cjs tests/price-publication.test.cjs tests/asset-cache.test.cjs
-          python -m unittest discover -s tests -p 'test_resolve_earnings_releases.py'
+          node --test tests/earnings-watch.test.cjs tests/amd-earnings.test.cjs tests/cash-flow.test.cjs tests/price-publication.test.cjs tests/asset-cache.test.cjs tests/latest-nvidia-update.test.cjs
+          python -m unittest discover -s tests -p 'test_*earnings_releases.py'

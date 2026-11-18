@@ -1,6 +1,20 @@
 {
   "note": "USD. SpaceX cash PP&E excludes separately reported capitalized interest and product rebates. Bridges reconcile to official full-year / YTD totals. ChronoScale uses Cloud carve-out cash flows, excluding unrelated legacy Ekso. Berkshire early periods use official annual/quarterly PDFs and comparative restatements. Additional historical quarters reconcile to official SEC cumulative cash-flow statements; issuer-specific cash CapEx classifications are preserved in bases.",
   "companies": {
+    "nvidia": [
+      {
+        "period": "2026Q4",
+        "dateKey": "2026-10-25",
+        "operatingCashFlow": 48253000000,
+        "capex": 4422000000,
+        "source": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000088/supplementalfinancialinfor.htm",
+        "method": "reported-quarter",
+        "bases": {
+          "operatingCashFlow": "Net cash provided by operating activities",
+          "capex": "Cash purchases related to property and equipment and intangible assets"
+        }
+      }
+    ],
     "nebius": [
       {
         "period": "2026Q3",

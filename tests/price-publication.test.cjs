@@ -64,3 +64,18 @@ test("checks both the public page's price version and the content fetched at its
   await assert.rejects(verifyPublicPriceAsset(base, expected, fetchAsset("old", expected)), /wrong price-data\.js version/);
   await assert.rejects(verifyPublicPriceAsset(base, expected, fetchAsset(version, "stale prices")), /does not match/);
 });
+
+test("verifies the earnings asset the browser loads, including all metric bytes", async () => {
+  const { verifyPublicEarningsAsset } = await import("../scripts/verify-earnings-deployment.mjs");
+  const base = "https://example.test/tech-analysis/";
+  const expected = Buffer.from("all financial metrics");
+  const version = createHash("sha256").update(expected).digest("hex").slice(0, 16);
+  const fetcher = (key, body) => async url => {
+    if (url.pathname === "/tech-analysis/") return new Response(`<script defer src="data.js?v=${key}"></script>`);
+    assert.equal(url.href, `${base}data.js?v=${version}`);
+    return new Response(body);
+  };
+  await verifyPublicEarningsAsset(base, expected, fetcher(version, expected));
+  await assert.rejects(verifyPublicEarningsAsset(base, expected, fetcher("previous", expected)), /wrong data\.js version/);
+  await assert.rejects(verifyPublicEarningsAsset(base, expected, fetcher(version, "stale equity or cash flow")), /does not match/);
+});
