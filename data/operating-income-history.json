@@ -668,11 +668,17 @@
         "2025Q3",
         "2025Q4",
         "2026Q1",
+        "2026Q2",
         "2026Q3"
       ],
       "reconstructedPeriods": [],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2026Q2": {
+          "operatingIncome": 18775000000
+        }
+      }
     },
     "tsmc": {
       "ticker": "TSM",
@@ -3448,7 +3454,7 @@
     "chronoscale": {
       "ticker": "CHRN",
       "listingPeriod": "2024Q3",
-      "latestFinancialPeriod": "2026Q1",
+      "latestFinancialPeriod": "2026Q3",
       "directPeriods": [
         "2024Q3",
         "2024Q4",
@@ -3456,11 +3462,42 @@
         "2025Q2",
         "2025Q3",
         "2025Q4",
-        "2026Q1"
+        "2026Q1",
+        "2026Q2",
+        "2026Q3"
       ],
       "reconstructedPeriods": [],
       "preservedPeriods": [],
-      "missingPeriods": []
+      "missingPeriods": [],
+      "officialQuarterlySources": {
+        "2024Q3": {
+          "operatingIncome": -15810000
+        },
+        "2024Q4": {
+          "operatingIncome": -5810000
+        },
+        "2025Q1": {
+          "operatingIncome": -10308000
+        },
+        "2025Q2": {
+          "operatingIncome": -23402000
+        },
+        "2025Q3": {
+          "operatingIncome": 12531000
+        },
+        "2025Q4": {
+          "operatingIncome": 14742000
+        },
+        "2026Q1": {
+          "operatingIncome": -52194000
+        },
+        "2026Q2": {
+          "operatingIncome": -12118000
+        },
+        "2026Q3": {
+          "operatingIncome": -24887000
+        }
+      }
     },
     "sharonai": {
       "ticker": "SHAZ",

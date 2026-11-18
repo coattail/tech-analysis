@@ -18,7 +18,7 @@ test('TSMC Q3 uses official quarterly USD income and closing-rate parent equity'
   assert.equal(c.periodEndDates[p], '2026-09-30');
   assert.equal(c.reportDates[p], '2026-10-15');
   assert.ok(Math.abs(c.grossMargin[p] - 66.4) < 1e-12);
-  assert.ok(Math.abs(c.revenueGrowth[p] - (46_720 / 33_100 - 1) * 100) < 1e-12);
+  assert.ok(Math.abs(c.revenueGrowth[p] - (46_720_000_000 / c.revenue['2025Q3'] - 1) * 100) < 1e-12);
   assert.ok(Math.abs(c.roe[p] - 23_858 / 219_507 * 100) < 1e-12);
   for (const key of ['revenue', 'netIncome', 'operatingIncome', 'grossMargin']) {
     assert.ok(!c.forecastFlags[key].includes(p));

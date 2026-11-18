@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { readFile, writeFile } from "node:fs/promises";
+import { COMPANY_OFFICIAL_QUARTERLY_OVERRIDES } from "./auto-refresh-data.mjs";
 import process from "node:process";
 
 const DATA_JS_PATH = new URL("../data.js", import.meta.url);
@@ -386,8 +387,9 @@ async function run() {
     }
 
     console.log(`补齐 ${company.ticker} (${company.id})...`);
-    // Retain IREN's primary GAAP/IFRS operating losses, including impairments.
-    const history = company.id === "iren"
+    // The old ChronoScale ticker history contains Ekso, a different business.
+    // IREN also uses its own GAAP/IFRS history including impairments.
+    const history = ["iren", "chronoscale"].includes(company.id)
       ? { quarterly: new Map(), directQuarterly: new Map(), derivedPeriods: new Set() }
       : await fetchMacrotrendsHistory(company.ticker, sourceCache?.companies?.[company.id]);
     const listingPeriod = getListingPeriod(priceData.companies?.[company.id], company.minPeriod);
@@ -405,7 +407,16 @@ async function run() {
     const directPeriods = [];
     const reconstructedPeriods = [];
     const preservedPeriods = [];
+    const officialQuarterlySources = {};
     requiredPeriods.forEach((period) => {
+      const official = COMPANY_OFFICIAL_QUARTERLY_OVERRIDES[company.id]?.[period];
+      if (Number.isFinite(official?.operatingIncome)) {
+        if (companyData.operatingIncome[period] !== official.operatingIncome) changedPoints += 1;
+        companyData.operatingIncome[period] = official.operatingIncome;
+        directPeriods.push(period);
+        officialQuarterlySources[period] = { operatingIncome: official.operatingIncome };
+        return;
+      }
       const value = history.quarterly.get(period);
       if (!Number.isFinite(value)) {
         if (Number.isFinite(companyData.operatingIncome[period])) {
@@ -442,6 +453,7 @@ async function run() {
       reconstructedPeriods,
       preservedPeriods,
       missingPeriods,
+      ...(Object.keys(officialQuarterlySources).length ? { officialQuarterlySources } : {}),
     };
     console.log(
       `  要求 ${requiredPeriods.length} 季度；直接 ${directPeriods.length}，反推 ${reconstructedPeriods.length}，剩余缺口 ${missingPeriods.length}`,

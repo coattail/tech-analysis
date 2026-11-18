@@ -165,3 +165,40 @@ test("verified zero cash amounts replace forecasts and absent bank subtotals sta
   delete c.operatingCashFlow[quarter];
   assert.match(releaseCoverageIssues(data, { report: [check] }).join(), /operatingCashFlow/);
 });
+
+test("the watch preserves locally verified figures and the original release date", async () => {
+  const { synchronize, releaseCoverageIssues } = await load();
+  const data = fixture();
+  const period = "2026Q3";
+  const laterFiling = {
+    ...entry(), statementFilingDate: "2026-11-03", operatingIncomeBn: 1.4, netAssetsBn: 5,
+  };
+  const overrides = { palantir: { [period]: {
+    reportDate: "2026-11-02", periodEndDate: "2026-09-30", operatingIncome: 1_084_845_000,
+  } } };
+  const releases = { report: [{
+    companyId: "palantir", needsUpdate: true, remoteQuarter: period,
+    remoteFilingDate: laterFiling.statementFilingDate, release: { quarter: period, entry: laterFiling },
+  }] };
+  const now = new Date("2026-11-04");
+  const empty = { companies: [] };
+  const result = synchronize(data, empty, releases, now, overrides);
+  const company = data.companies.palantir;
+  assert.equal(company.operatingIncome[period], 1_084_845_000);
+  assert.equal(company.netAssets[period], 5_000_000_000);
+  assert.equal(company.reportDates[period], "2026-11-02");
+  assert.deepEqual(releaseCoverageIssues(data, releases, result.companies, now, overrides), []);
+  assert.deepEqual(synchronize(data, empty, releases, now, overrides).companies, []);
+});
+
+test("a later SEC comparative value does not replace the period's timely filing date", async () => {
+  const { firstTimelySecFilings } = await import("../scripts/auto-refresh-data.mjs");
+  const end = "2025-06-30";
+  const fact = (form, filed) => ({ start: "2025-04-01", end, form, filed, val: 100e6 });
+  const facts = { facts: { "us-gaap": { Revenues: { units: { USD: [
+    fact("10-Q", "2026-08-03"), fact("10-Q", "2025-08-04"), fact("10-Q/A", "2025-08-15"),
+    fact("S-1", "2025-07-11"), fact("10-Q", end),
+  ] } } } } };
+  assert.equal(firstTimelySecFilings(facts, "USD", "exxon").get(end), "2025-08-04");
+  assert.equal(firstTimelySecFilings(facts, "EUR", "exxon").has(end), false);
+});

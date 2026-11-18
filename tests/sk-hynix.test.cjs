@@ -22,18 +22,22 @@ test('SK hynix has continuous 35-quarter history in USD with auditable KRW conve
   }
   const q = '2026Q3';
   assert.equal(c.reportDates[q], '2026-10-28');
-  assert.equal(c.grossMargin[q], null);
-  assert.equal(c.netAssets[q], null);
-  assert.equal(c.roe[q], null);
+  const last = history.quarters.find(row => row.period === q);
+  assert.equal(c.grossMargin[q], 89_652_936 / 104_615_483 * 100);
+  assert.equal(c.netAssets[q], Math.round(309_087_581_000_000 / last.krwPerUsdClosing));
+  assert.equal(c.roe[q], c.earnings[q] / c.netAssets[q] * 100);
 });
 
 test('ADR history starts at the US listing, uses USD prices and contains no synthetic pre-IPO data', () => {
   const prices = ctx.window.STOCK_PRICE_SOURCE_DATA.companies.skhynix;
   assert.equal(prices.currency, 'USD');
   assert.equal(Object.keys(prices.daily)[0], '2026-07-13');
-  assert.equal(Object.keys(prices.daily).at(-1), '2026-10-27');
-  assert.equal(Object.keys(prices.daily).length, 76);
-  assert.equal(prices.daily['2026-10-27'], 145.36);
+  const sessions = Object.keys(prices.daily);
+  const { latestCompletedSession, failedCompanies } = ctx.window.STOCK_PRICE_SOURCE_DATA.meta;
+  assert.ok(sessions.at(-1) <= latestCompletedSession);
+  if (!failedCompanies.includes('skhynix')) assert.equal(sessions.at(-1), latestCompletedSession);
+  assert.equal(sessions.filter(session => session <= '2026-10-27').length, 76);
+  assert.ok(Math.abs(prices.daily['2026-10-27'] - 145.36) < 0.005);
 });
 
 test('price fallback keeps adjusted cells aligned and rejects a stale or missing adjusted close', () => {

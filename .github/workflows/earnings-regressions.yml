@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install beautifulsoup4
-      - name: Check synchronization, units and financial source contracts
+      - name: Run all dashboard and earnings regression tests
         run: |
-          node --test tests/earnings-watch.test.cjs tests/amd-earnings.test.cjs tests/cash-flow.test.cjs tests/price-publication.test.cjs tests/asset-cache.test.cjs tests/latest-nvidia-update.test.cjs
+          node --test tests/*.test.cjs
           python -m unittest discover -s tests -p 'test_*earnings_releases.py'

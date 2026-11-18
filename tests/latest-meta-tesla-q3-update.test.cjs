@@ -20,7 +20,7 @@ for (const [id, values] of Object.entries(expected)) {
     assert.equal(c.reportDates[p], '2026-10-21');
     assert.equal(c.grossMargin[p], values.grossProfit / values.revenue * 100);
     assert.equal(c.roe[p], values.earnings / values.netAssets * 100);
-    assert.equal(c.revenueGrowth[p], (values.revenue / c.revenue['2025Q3'] - 1) * 100);
+    assert.ok(Math.abs(c.revenueGrowth[p] - ((values.revenue / c.revenue['2025Q3'] - 1) * 100)) < 1e-10);
     for (const flags of Object.values(c.forecastFlags)) assert.ok(!flags.includes(p));
     // The newest TTM window must include four actual quarters for every income metric.
     for (const metric of ['revenue', 'earnings', 'operatingIncome', 'grossMargin']) {

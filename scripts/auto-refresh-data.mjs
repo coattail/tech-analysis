@@ -471,14 +471,19 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "reportDate": "2026-07-29"
   },
   "2026Q3": {
-    "revenue": 73816434622,
-    "earnings": 28065563678,
-    "operatingIncome": 58800120437,
+    "revenue": 73816422627,
+    "earnings": 28065558739,
+    "operatingIncome": 58800133137,
+    "grossMargin": 85.69757881823287,
+    "netAssets": 227955823764,
     "periodEndDate": "2026-09-30",
     "reportDate": "2026-10-28"
   }
 },
   meta: {
+    // GAAP operating income includes litigation charges.
+    // https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Second-Quarter-2026-Results/
+    "2026Q2": { operatingIncome: 18_775_000_000, periodEndDate: "2026-06-30", reportDate: "2026-07-29" },
     // Meta Q3 2026 official results, released on 2026-10-21.
     // https://www.prnewswire.com/news-releases/meta-reports-third-quarter-2026-results-302915964.html
     "2026Q3": {
@@ -492,6 +497,20 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   asml: {
+    // Actual fiscal quarter ends from ASML US GAAP quarterly statements.
+    // https://investor.asml.com/quarterly-results
+    "2021Q1": { periodEndDate: "2021-04-04" },
+    "2021Q2": { periodEndDate: "2021-07-04" },
+    "2021Q3": { periodEndDate: "2021-10-03" },
+    "2021Q4": { periodEndDate: "2021-12-31" },
+    "2022Q1": { periodEndDate: "2022-04-03" },
+    "2022Q2": { periodEndDate: "2022-07-03" },
+    "2022Q3": { periodEndDate: "2022-10-02" },
+    "2022Q4": { periodEndDate: "2022-12-31" },
+    "2023Q1": { periodEndDate: "2023-04-02" },
+    "2023Q2": { periodEndDate: "2023-07-02" },
+    "2023Q3": { periodEndDate: "2023-10-01" },
+    "2023Q4": { periodEndDate: "2023-12-31" },
     // ASML Q3 2026 US GAAP statements, pages 2 and 4, released 2026-10-14.
     // https://investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0
     // Income uses FRED DEXUSEU Q3 average 1.1505734375; equity uses 9/25 close 1.1400.
@@ -634,6 +653,9 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   palantir: {
+    // The Q3 earnings release was furnished on November 2.
+    // https://www.sec.gov/Archives/edgar/data/1321655/000132165526000045/pltr-20261102.htm
+    "2026Q3": { periodEndDate: "2026-09-30", reportDate: "2026-11-02" },
     // Palantir Q2 2026 earnings release, furnished on Form 8-K on 2026-08-03.
     "2026Q2": {
       revenue: 1_935_464_000,
@@ -683,13 +705,17 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
   chronoscale: {
     // Applied Digital Cloud (ChronoScale predecessor) quarterly results.
     // Sources: APLD FY2025 10-K, FY2025/FY2026 10-Q segment and discontinued-operation tables,
-    // plus the ChronoScale DEF 14C carve-out financial statements. USD values below are exact.
+    // plus the ChronoScale DEF 14C carve-out financial statements.
+    // APLD comparative Aug./Nov. 2025 and Feb. 2026 Cloud Services operating results:
+    // https://www.sec.gov/Archives/edgar/data/1144879/000114487926000006/apld-20251130.htm
+    // https://www.sec.gov/Archives/edgar/data/1144879/000114487926000030/apld-20260228.htm
     "2024Q3": {
       revenue: 25_855_000,
       earnings: -20_159_000,
       grossMargin: ((25_855 - 38_317) / 25_855) * 100,
       periodEndDate: "2024-08-31",
       reportDate: "2024-10-09",
+      operatingIncome: -15_810_000,
     },
     "2024Q4": {
       revenue: 27_705_000,
@@ -697,6 +723,7 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       grossMargin: ((27_705 - 29_700) / 27_705) * 100,
       periodEndDate: "2024-11-30",
       reportDate: "2025-01-14",
+      operatingIncome: -5_810_000,
     },
     "2025Q1": {
       revenue: 17_754_000,
@@ -704,6 +731,7 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       grossMargin: ((17_754 - 23_342) / 17_754) * 100,
       periodEndDate: "2025-02-28",
       reportDate: "2025-04-14",
+      operatingIncome: -10_308_000,
     },
     "2025Q2": {
       revenue: 13_063_000,
@@ -712,6 +740,7 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       netAssets: 76_152_000,
       periodEndDate: "2025-05-31",
       reportDate: "2025-07-30",
+      operatingIncome: -23_402_000,
     },
     "2025Q3": {
       revenue: 16_718_000,
@@ -719,6 +748,7 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       grossMargin: ((16_718 - 3_365) / 16_718) * 100,
       periodEndDate: "2025-08-31",
       reportDate: "2025-10-09",
+      operatingIncome: 12_531_000,
     },
     "2025Q4": {
       revenue: 18_402_000,
@@ -727,6 +757,7 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       netAssets: 98_481_000,
       periodEndDate: "2025-11-30",
       reportDate: "2026-01-08",
+      operatingIncome: 14_742_000,
     },
     "2026Q1": {
       revenue: 18_087_000,
@@ -734,7 +765,22 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
       grossMargin: ((18_087 - 6_282) / 18_087) * 100,
       periodEndDate: "2026-02-28",
       reportDate: "2026-04-08",
+      operatingIncome: -52_194_000,
     },
+    // APLD discloses the May 2026 quarter's Cloud revenue and operating loss.
+    // https://www.sec.gov/Archives/edgar/data/1144879/000114487926000044/apldq426earningsreleaseasf.htm
+    // Continuing net loss bridges the CHRN audited FY2026 total less the first three periods.
+    // https://www.sec.gov/Archives/edgar/data/1549084/000162828026058018/chrn-20260531.htm
+    "2026Q2": {
+      revenue: 18_396_000,
+      earnings: (-49_300 - (9_321 + 12_113 - 54_252)) * 1000,
+      operatingIncome: -12_118_000,
+      netAssets: 180_025_000,
+      periodEndDate: "2026-05-31",
+      reportDate: "2026-08-19",
+    },
+    // https://www.sec.gov/Archives/edgar/data/1549084/000162828026065876/chrn-20260831.htm
+    "2026Q3": { operatingIncome: -24_887_000, periodEndDate: "2026-08-31", reportDate: "2026-10-15" },
   },
   sharonai: {
     // SHAZ FY2025 Form 10-K and Q1 2026 Form 10-Q. Q2 is the annual total less
@@ -780,6 +826,19 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     },
   },
   apple: {
+    // Fiscal 2023 Q3 and Q4 were shifted by the provider's first-of-month dates.
+    // https://www.apple.com/newsroom/pdfs/fy2023-q3/FY23_Q3_Consolidated_Financial_Statements.pdf
+    // https://www.apple.com/newsroom/pdfs/fy2023-q4/FY23_Q4_Consolidated_Financial_Statements.pdf
+    "2023Q2": {
+      revenue: 81_797_000_000, earnings: 19_881_000_000, operatingIncome: 22_998_000_000,
+      grossMargin: (36_413 / 81_797) * 100, netAssets: 60_274_000_000,
+      periodEndDate: "2023-07-01", reportDate: "2023-08-04",
+    },
+    "2023Q3": {
+      revenue: 89_498_000_000, earnings: 22_956_000_000, operatingIncome: 26_969_000_000,
+      grossMargin: (40_427 / 89_498) * 100, netAssets: 62_146_000_000,
+      periodEndDate: "2023-09-30", reportDate: "2023-11-03",
+    },
     // FY2004 Form 10-K, Note 13 selected quarterly financial information.
     "2004Q3": { earnings: 106_000_000, grossMargin: (634 / 2_350) * 100 },
     // Apple FY2026 Q3 earnings release, furnished on Form 8-K on 2026-07-30.
@@ -975,6 +1034,14 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2015Q3": { revenue: 1_735_000_000 },
   },
   exxon: {
+    // Original Forms 10-K/10-Q. Subsequent comparative filings postdate these releases.
+    // https://investor.exxonmobil.com/earnings/financial-results
+    "2024Q4": { reportDate: "2025-02-19" },
+    "2025Q1": { reportDate: "2025-05-05" },
+    "2025Q2": { reportDate: "2025-08-04" },
+    "2025Q3": { reportDate: "2025-11-03" },
+    "2025Q4": { reportDate: "2026-02-18" },
+    "2026Q1": { reportDate: "2026-05-04" },
     "2005Q1": { revenue: 79_475_000_000 },
     "2005Q2": { revenue: 86_622_000_000 },
     "2005Q3": { revenue: 96_731_000_000 },
@@ -990,6 +1057,20 @@ const COMPANY_OFFICIAL_QUARTERLY_OVERRIDES = {
     "2008Q1": { revenue: 113_223_000_000 },
   },
   jnj: {
+    // Actual fiscal quarter ends from the corresponding Forms 10-Q and 10-K.
+    // https://www.sec.gov/edgar/browse/?CIK=200406
+    "2021Q1": { periodEndDate: "2021-04-04" },
+    "2021Q2": { periodEndDate: "2021-07-04" },
+    "2021Q3": { periodEndDate: "2021-10-03" },
+    "2021Q4": { periodEndDate: "2022-01-02" },
+    "2022Q1": { periodEndDate: "2022-04-03" },
+    "2022Q2": { periodEndDate: "2022-07-03" },
+    "2022Q3": { periodEndDate: "2022-10-02" },
+    "2022Q4": { periodEndDate: "2023-01-01" },
+    "2023Q1": { periodEndDate: "2023-04-02" },
+    "2023Q2": { periodEndDate: "2023-07-02" },
+    "2023Q3": { periodEndDate: "2023-10-01" },
+    "2023Q4": { periodEndDate: "2023-12-31" },
     // FY2004 annual report selected quarterly financial data.
     "2004Q4": { revenue: 12_752_000_000, earnings: 1_217_000_000, grossMargin: (9_046 / 12_752) * 100 },
     "2005Q4": { revenue: 12_610_000_000, earnings: 2_183_000_000 },
@@ -2049,6 +2130,32 @@ function collectSecFieldSeries(companyfacts, reportingCurrency, cashFlowOptions 
   return fieldSeries;
 }
 
+export function firstTimelySecFilings(companyfacts, currency, companyId) {
+  const dates = new Map();
+  // Select the original disclosure independently of the fact used for amounts.
+  // Comparative columns can refresh amounts without moving their chart date.
+  const incomeConcepts = new Set([
+    ...SEC_FIELD_CONCEPTS.revenue, ...SEC_FIELD_CONCEPTS.netIncome, ...SEC_FIELD_CONCEPTS.operatingIncome,
+  ]);
+  for (const fields of Object.values(companyfacts.facts ?? {})) {
+    const concepts = companyId === "iren" ? Object.keys(fields) : incomeConcepts;
+    for (const concept of concepts) {
+      for (const row of fields[concept]?.units?.[currency] ?? []) {
+        if (!SEC_ALLOWED_FORMS.has(row.form) || !isIsoDateKey(row.end) || !isIsoDateKey(row.filed)) continue;
+        const lag = (Date.parse(row.filed) - Date.parse(row.end)) / 86_400_000;
+        if (!(lag > 0 && lag <= 90)) continue;
+        if (!dates.has(row.end) || row.filed < dates.get(row.end)) dates.set(row.end, row.filed);
+      }
+    }
+  }
+  if (companyId === "iren") {
+    // The original releases predate the USD comparative CompanyFacts tags.
+    dates.set("2021-12-31", "2022-02-09");
+    dates.set("2022-03-31", "2022-05-11");
+  }
+  return dates;
+}
+
 async function fetchSecQuarterlyHistory(companySource) {
   const secTickerMap = companySource.cik ? null : await getSecTickerMap();
   const cik = companySource.cik ?? secTickerMap.get(normalizeTickerForSec(companySource.ticker));
@@ -2076,24 +2183,7 @@ async function fetchSecQuarterlyHistory(companySource) {
     [...series.keys()].forEach((quarter) => quarterSet.add(quarter));
   });
 
-  const firstFiledByEndDate = new Map();
-  if (companySource.id === "iren") {
-    // Comparative/restated facts can be filed years after the original release.
-    // Use the first timely primary filing; leave an unverified release date empty.
-    for (const fields of Object.values(companyfacts.facts ?? {})) {
-      for (const fact of Object.values(fields)) {
-        for (const row of fact.units?.USD ?? []) {
-          if (!SEC_ALLOWED_FORMS.has(row.form) || !row.end || !row.filed) continue;
-          const lag = (Date.parse(row.filed) - Date.parse(row.end)) / 86400000;
-          if (lag <= 0 || lag > 90) continue;
-          if (!firstFiledByEndDate.has(row.end) || row.filed < firstFiledByEndDate.get(row.end)) firstFiledByEndDate.set(row.end, row.filed);
-        }
-      }
-    }
-    // Original issuer releases predate the USD comparative CompanyFacts tags.
-    firstFiledByEndDate.set("2021-12-31", "2022-02-09");
-    firstFiledByEndDate.set("2022-03-31", "2022-05-11");
-  }
+  const firstFiledByEndDate = firstTimelySecFilings(companyfacts, reportingCurrency, companySource.id);
 
   const rows = [...quarterSet]
     .sort(comparePeriods)
@@ -2113,15 +2203,7 @@ async function fetchSecQuarterlyHistory(companySource) {
         fieldSeries.operatingCashFlow?.get(period)?.endDate ||
         fieldSeries.capex?.get(period)?.endDate ||
         null;
-      const reportDate =
-        revenueFact?.filed ||
-        netIncomeFact?.filed ||
-        operatingIncomeFact?.filed ||
-        grossProfitFact?.filed ||
-        netAssetsFact?.filed ||
-        fieldSeries.operatingCashFlow?.get(period)?.filed ||
-        fieldSeries.capex?.get(period)?.filed ||
-        null;
+      const reportDate = firstFiledByEndDate.get(endDate) ?? null;
       const grossProfitValue = grossProfitFact?.value ?? (
         Number.isFinite(revenueFact?.value) && Number.isFinite(costOfRevenueFact?.value)
           ? revenueFact.value - costOfRevenueFact.value
@@ -2131,7 +2213,7 @@ async function fetchSecQuarterlyHistory(companySource) {
       return {
         period,
         dateKey: endDate,
-        reportDate: companySource.id === "iren" ? firstFiledByEndDate.get(endDate) ?? null : reportDate,
+        reportDate,
         revenue: revenueFact?.value ?? null,
         netIncome: netIncomeFact?.value ?? null,
         operatingIncome: operatingIncomeFact?.value ?? null,
@@ -3988,7 +4070,9 @@ async function run() {
         }
       }
 
-      if (setReportDate(companyData, row.period, row.reportDate)) {
+      const previousReportDate = companyData.reportDates[row.period];
+      if ((!previousReportDate || row.reportDate < previousReportDate || previousReportDate <= row.dateKey)
+        && setReportDate(companyData, row.period, row.reportDate)) {
         companyStats.periodEndDateChanges += 1;
         companyStats.changedPeriods.add(row.period);
       }
@@ -3996,11 +4080,13 @@ async function run() {
 
     rows.forEach((row) => {
       periodSet.add(row.period);
-      if (setPeriodEndDate(companyData, row.period, row.dateKey)) {
+      // SEC supplies the actual fiscal end. A provider may normalize it to
+      // a month boundary or attach the earlier quarter's date.
+      if (!companyData.periodEndDates[row.period] && setPeriodEndDate(companyData, row.period, row.dateKey)) {
         companyStats.periodEndDateChanges += 1;
         companyStats.changedPeriods.add(row.period);
       }
-      if (setReportDate(companyData, row.period, row.reportDate)) {
+      if (!companyData.reportDates[row.period] && setReportDate(companyData, row.period, row.reportDate)) {
         companyStats.periodEndDateChanges += 1;
         companyStats.changedPeriods.add(row.period);
       }
@@ -4318,7 +4404,7 @@ async function run() {
   );
 }
 
-export { parseDataJs, formatDataJs, fetchSecQuarterlyHistory, convertSecHistoryRowsToUsd,
+export { COMPANY_OFFICIAL_QUARTERLY_OVERRIDES, parseDataJs, formatDataJs, fetchSecQuarterlyHistory, convertSecHistoryRowsToUsd,
   extractFinancialCurrency, parseStringArray, parseNumberArray, extractArrayRaw, toQuarterLabel,
   buildSecFieldQuarterSeries, loadPublishedCompanyQuarters, loadCuratedQuarterlyDataset, fetchJsonWithCurl };
 
