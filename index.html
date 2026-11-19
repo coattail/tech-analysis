@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20261119-wrap-metrics" />
+    <link rel="stylesheet" href="style.css?v=20261119-metric-single-row" />
     <script defer src="assets/vendor/chartjs-4.4.1/chart.umd.js"></script>
     <script defer src="data.js?v=f4b3c9d10e3187fd"></script>
     <script defer src="price-data.js?v=cf98731f9c5edd35"></script>
@@ -20,7 +20,7 @@
     <script defer src="series-colors.js?v=20260830-hybrid-comparison-palette"></script>
     <script defer src="logo-layout.js?v=20260629-visible-area"></script>
     <script defer src="financial-metrics.js?v=20261102-verified-history-adaptive-axis"></script>
-    <script defer src="script.js?v=20261113-price-legend"></script>
+    <script defer src="script.js?v=20261119-metric-single-row"></script>
     <script defer src="./mobile-ui.js?v=20261101-company-sum"></script>
   </head>
   <body data-theme="deep">
@@ -154,71 +154,84 @@
               <strong id="generatedAtLabel">-</strong>
             </div>
           </div>
-          <div class="metric-toolbar" role="radiogroup" aria-label="指标切换" data-i18n-aria-label="metricSwitch">
-            <div class="metric-pill metric-pill-with-overlay" data-metric-pill="revenue">
-              <label class="metric-pill-control">
-                <input type="radio" name="metric" value="revenue" />
-                <span data-i18n="revenue">营收</span>
+          <div class="metric-toolbar">
+            <div class="metric-options" role="radiogroup" aria-label="指标切换" data-i18n-aria-label="metricSwitch">
+              <div class="metric-pill metric-pill-with-overlay" data-metric-pill="revenue">
+                <label class="metric-pill-control">
+                  <input type="radio" name="metric" value="revenue" />
+                  <span data-i18n="revenue">营收</span>
+                </label>
+                <button
+                  class="growth-overlay-toggle"
+                  type="button"
+                  data-growth-overlay-for="revenue"
+                  data-i18n="growthOverlayShort"
+                  aria-pressed="false"
+                  hidden
+                >增速</button>
+              </div>
+              <div class="metric-pill metric-pill-with-overlay" data-metric-pill="netIncome">
+                <label class="metric-pill-control">
+                  <input type="radio" name="metric" value="netIncome" checked />
+                  <span data-i18n="netIncome">净利润</span>
+                </label>
+                <button
+                  class="growth-overlay-toggle"
+                  type="button"
+                  data-growth-overlay-for="netIncome"
+                  data-i18n="growthOverlayShort"
+                  aria-pressed="false"
+                  hidden
+                >增速</button>
+              </div>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="operatingIncome" />
+                <span data-i18n="operatingIncome">营业利润</span>
               </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="operatingCashFlow" />
+                <span data-i18n="operatingCashFlow">经营现金流</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="capex" />
+                <span data-i18n="capex">CapEx</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="freeCashFlow" />
+                <span data-i18n="freeCashFlow">自由现金流</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="grossMargin" />
+                <span data-i18n="grossMargin">毛利率</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="pe" />
+                <span>P/E</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="roe" />
+                <span>ROE</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="revenueGrowth" />
+                <span data-i18n="revenueGrowth">营收增速</span>
+              </label>
+              <label class="metric-pill">
+                <input type="radio" name="metric" value="profitGrowth" />
+                <span data-i18n="profitGrowth">利润增速</span>
+              </label>
+            </div>
+            <div class="metric-compact">
+              <select id="metricSelect" aria-label="指标切换" data-i18n-aria-label="metricSwitch"></select>
               <button
                 class="growth-overlay-toggle"
                 type="button"
-                data-growth-overlay-for="revenue"
+                data-growth-overlay-for=""
                 data-i18n="growthOverlay"
                 aria-pressed="false"
                 hidden
               >增速</button>
             </div>
-            <div class="metric-pill metric-pill-with-overlay" data-metric-pill="netIncome">
-              <label class="metric-pill-control">
-                <input type="radio" name="metric" value="netIncome" checked />
-                <span data-i18n="netIncome">净利润</span>
-              </label>
-              <button
-                class="growth-overlay-toggle"
-                type="button"
-                data-growth-overlay-for="netIncome"
-                data-i18n="growthOverlay"
-                aria-pressed="false"
-                hidden
-              >增速</button>
-            </div>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="operatingIncome" />
-              <span data-i18n="operatingIncome">营业利润</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="operatingCashFlow" />
-              <span data-i18n="operatingCashFlow">经营现金流</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="capex" />
-              <span data-i18n="capex">CapEx</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="freeCashFlow" />
-              <span data-i18n="freeCashFlow">自由现金流</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="grossMargin" />
-              <span data-i18n="grossMargin">毛利率</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="pe" />
-              <span>P/E</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="roe" />
-              <span>ROE</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="revenueGrowth" />
-              <span data-i18n="revenueGrowth">营收增速</span>
-            </label>
-            <label class="metric-pill">
-              <input type="radio" name="metric" value="profitGrowth" />
-              <span data-i18n="profitGrowth">利润增速</span>
-            </label>
           </div>
           <div class="chart-wrap">
             <canvas id="financeChart" aria-label="美股头部市值公司财务指标对比图" data-i18n-aria-label="chartAria"></canvas>
