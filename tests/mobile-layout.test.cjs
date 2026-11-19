@@ -36,33 +36,21 @@ test("uses compact mobile controls and a bounded chart canvas", () => {
   assert.match(css, /\.chart-wrap canvas\s*\{[^}]*display:\s*block[^}]*width:\s*100% !important[^}]*height:\s*100% !important/);
 });
 
-test("wraps the metric toolbar without horizontal scrolling at every breakpoint", () => {
-  const toolbarRules = [...css.matchAll(/\.metric-toolbar\s*\{([^}]*)\}/g)].map(match => match[1]);
-  assert.match(toolbarRules[0], /display:\s*flex[^}]*flex-wrap:\s*wrap/);
-  for (const rule of toolbarRules) {
-    assert.doesNotMatch(rule, /(?:overflow(?:-x)?\s*:|scroll-snap-type\s*:|flex-wrap\s*:\s*nowrap)/);
+test("shows a single row of metrics or a compact picker without horizontal scrolling", () => {
+  assert.match(css, /\.metric-toolbar\s*\{[^}]*container:\s*metric-toolbar \/ inline-size/);
+  assert.match(css, /\.metric-options\s*\{[^}]*grid-template-columns:[^}]*repeat\(5, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@container metric-toolbar \(min-width: 51\.25rem\)\s*\{\s*\.metric-options\s*\{\s*display:\s*grid;\s*\}\s*\.metric-compact\s*\{\s*display:\s*none/);
+  assert.match(css, /\.metric-compact\s*\{[^}]*display:\s*flex/);
+  assert.match(html, /<select id="metricSelect"[^>]*data-i18n-aria-label="metricSwitch"/);
+  for (const match of css.matchAll(/\.metric-(?:toolbar|options|compact)\s*\{([^}]*)\}/g)) {
+    assert.doesNotMatch(match[1], /overflow(?:-x)?\s*:|scroll-snap-type\s*:|flex-wrap\s*:\s*wrap/);
   }
-  assert.match(css, /\.metric-toolbar > \*\s*\{[^}]*min-inline-size:\s*44px/);
 });
 
-test("keeps metric labels on one responsive line", () => {
-  assert.match(css, /\.metric-toolbar\s*\{[^}]*container-type:\s*inline-size/);
-  assert.match(
-    css,
-    /\.metric-pill span\s*\{[^}]*font-size:\s*clamp\(0\.68rem, 1\.25cqi, 0\.88rem\)[^}]*white-space:\s*nowrap[^}]*overflow-wrap:\s*normal[^}]*word-break:\s*normal/,
-  );
-  assert.match(
-    css,
-    /html\[lang="en"\] \.metric-pill span:is\([\s\S]*?\[data-i18n="operatingIncome"\][\s\S]*?\[data-i18n="revenueGrowth"\][\s\S]*?\[data-i18n="profitGrowth"\][\s\S]*?font-size:\s*clamp\(0\.56rem, 1\.25cqi, 0\.8rem\)/,
-  );
-  assert.match(
-    css,
-    /\.metric-pill-with-overlay\.is-growth-available \.metric-pill-control > span\s*\{[^}]*justify-content:\s*flex-start[^}]*padding-right:\s*34px[^}]*font-size:\s*clamp\(0\.48rem, 1cqi, 0\.68rem\)/,
-  );
-  assert.match(
-    css,
-    /\.growth-overlay-toggle\s*\{[^}]*min-width:\s*28px[^}]*padding:\s*0 3px[^}]*font-size:\s*0\.48rem/,
-  );
+test("keeps metric labels readable and leaves space for the growth control", () => {
+  assert.match(css, /\.metric-pill span,\s*\.metric-compact select\s*\{[^}]*font-size:\s*clamp\(0\.75rem, 1\.4cqi, 0\.88rem\)[^}]*white-space:\s*nowrap/);
+  assert.match(css, /\.metric-pill-with-overlay\.is-growth-available \.metric-pill-control > span\s*\{[^}]*padding-inline-end:\s*34px/);
+  assert.match(css, /\.metric-compact select\s*\{[^}]*min-height:\s*44px[^}]*font-size:\s*1rem/);
 });
 
 test("keeps landscape tablet columns inside the available width", () => {

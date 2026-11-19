@@ -56,6 +56,7 @@ const UI_TRANSLATIONS = {
     currentCompanies: "当前公司",
     dataUpdated: "数据更新",
     metricSwitch: "指标切换",
+    growthOverlayShort: "增速",
     revenue: "营收",
     operatingIncome: "营业利润",
     freeCashFlow: "自由现金流",
@@ -156,6 +157,7 @@ const UI_TRANSLATIONS = {
     currentCompanies: "Companies",
     dataUpdated: "Data Updated",
     metricSwitch: "Metric switch",
+    growthOverlayShort: "YoY",
     revenue: "Revenue",
     operatingIncome: "Operating Income",
     freeCashFlow: "Free Cash Flow",
@@ -984,6 +986,14 @@ const METRIC_TRANSLATIONS = {
   },
 };
 
+const ENGLISH_METRIC_BUTTON_LABELS = {
+  operatingIncome: "Op. Income",
+  operatingCashFlow: "Op. CF",
+  freeCashFlow: "FCF",
+  revenueGrowth: "Rev. YoY",
+  profitGrowth: "Profit YoY",
+};
+
 function getMetricTranslation(metricKey) {
   return METRIC_TRANSLATIONS[metricKey]?.[currentLanguage]
     ?? METRIC_TRANSLATIONS.revenue[currentLanguage];
@@ -1026,6 +1036,7 @@ const priceComparisonControlEl = document.getElementById("priceComparisonControl
 const priceComparisonToggleEl = document.getElementById("priceComparisonToggle");
 const growthOverlayButtons = Array.from(document.querySelectorAll("[data-growth-overlay-for]"));
 const metricInputs = Array.from(document.querySelectorAll('input[name="metric"]'));
+const metricSelectEl = document.getElementById("metricSelect");
 const frequencyInputs = Array.from(document.querySelectorAll('input[name="frequency"]'));
 const chartModeInputs = Array.from(document.querySelectorAll('input[name="chartMode"]'));
 const presetButtons = Array.from(document.querySelectorAll("[data-company-preset]"));
@@ -1221,6 +1232,19 @@ function applyStaticTranslations() {
   document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
     element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
   });
+
+  const metricOptions = metricInputs.map((input) => {
+    const { name } = getMetricTranslation(input.value);
+    input.setAttribute("aria-label", name);
+    const label = input.nextElementSibling;
+    label.title = name;
+    if (currentLanguage === "en" && ENGLISH_METRIC_BUTTON_LABELS[input.value]) {
+      label.textContent = ENGLISH_METRIC_BUTTON_LABELS[input.value];
+    }
+    return new Option(name, input.value);
+  });
+  metricSelectEl.replaceChildren(...metricOptions);
+  metricSelectEl.value = state.metric;
 
   if (languageToggleLabelEl) {
     languageToggleLabelEl.textContent = t("switchLanguageLabel");
@@ -2119,7 +2143,7 @@ function syncGrowthOverlayControl() {
   });
 
   growthOverlayButtons.forEach((button) => {
-    const metric = button.dataset.growthOverlayFor;
+    const metric = button.dataset.growthOverlayFor || state.metric;
     const isCurrentMetric = metric === state.metric;
     const canShow = isCurrentMetric && canEnableGrowthOverlayForCurrentView(metric);
     const isActive = canShow && state.growthOverlayEnabled;
@@ -3887,6 +3911,20 @@ function buildChart() {
   rememberChartGeometry();
 }
 
+function selectMetric(input) {
+  input.checked = true;
+  metricSelectEl.value = input.value;
+  state.growthOverlayEnabled = FinancialMetricsUtils.shouldCarryGrowthOverlay({
+    enabled: state.growthOverlayEnabled,
+    nextMetric: input.value,
+  });
+  state.metric = input.value;
+  if (!FinancialMetricsUtils.canSumCompanies(state.metric, state.visibleCompanies.size)) state.companySumEnabled = false;
+  setRangeToVisibleDataBounds();
+  syncRangeControls();
+  rebuildChartForCurrentView();
+}
+
 function bindEvents() {
   generateBtn.addEventListener("click", generateSelectedCompanies);
   sumCompaniesBtn?.addEventListener("click", () => {
@@ -3906,17 +3944,12 @@ function bindEvents() {
 
   metricInputs.forEach((input) => {
     input.addEventListener("change", () => {
-      if (!input.checked) return;
-      state.growthOverlayEnabled = FinancialMetricsUtils.shouldCarryGrowthOverlay({
-        enabled: state.growthOverlayEnabled,
-        nextMetric: input.value,
-      });
-      state.metric = input.value;
-      if (!FinancialMetricsUtils.canSumCompanies(state.metric, state.visibleCompanies.size)) state.companySumEnabled = false;
-      setRangeToVisibleDataBounds();
-      syncRangeControls();
-      rebuildChartForCurrentView();
+      if (input.checked) selectMetric(input);
     });
+  });
+  metricSelectEl.addEventListener("change", () => {
+    const input = metricInputs.find((item) => item.value === metricSelectEl.value);
+    if (input) selectMetric(input);
   });
 
   frequencyInputs.forEach((input) => {
@@ -3949,7 +3982,7 @@ function bindEvents() {
 
   growthOverlayButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      if (button.dataset.growthOverlayFor !== state.metric) return;
+      if (button.hidden) return;
       setGrowthOverlayEnabled(!state.growthOverlayEnabled);
     });
   });

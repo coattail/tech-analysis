@@ -1454,24 +1454,37 @@ body:not([data-theme="deep"]) .chart-panel {
 }
 
 .metric-toolbar {
-  display: flex;
-  flex-wrap: wrap;
   padding: 6px;
-  gap: 7px;
   margin: 10px 2px 0;
   position: relative;
   z-index: 1;
-  container-type: inline-size;
+  container: metric-toolbar / inline-size;
 }
 
-.metric-toolbar > * {
-  flex: 0 0 auto;
-  min-inline-size: 44px;
+.metric-options {
+  display: none;
+  grid-template-columns: 1.05fr 1.12fr 1fr 1.1fr 1fr 1.1fr repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+html[lang="en"] .metric-options {
+  grid-template-columns: 0.95fr 1.12fr 0.84fr 0.57fr 0.53fr 0.39fr 0.92fr 0.41fr 0.44fr 0.66fr 0.74fr;
+}
+
+.metric-compact {
+  display: flex;
+  gap: 6px;
+}
+
+@container metric-toolbar (min-width: 51.25rem) {
+  .metric-options { display: grid; }
+  .metric-compact { display: none; }
 }
 
 .metric-pill {
   display: block;
   position: relative;
+  min-inline-size: 0;
 }
 
 .metric-pill-control {
@@ -1484,34 +1497,35 @@ body:not([data-theme="deep"]) .chart-panel {
   pointer-events: none;
 }
 
-.metric-pill span {
-  min-height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  padding: 0 clamp(5px, 0.65cqi, 10px);
+.metric-pill span,
+.metric-compact select {
+  min-height: 42px;
+  padding-inline: 6px;
   border-radius: 9px;
   border: 1px solid rgba(112, 128, 151, 0.14);
   background: linear-gradient(180deg, rgba(22, 30, 42, 0.92), rgba(17, 24, 34, 0.96));
   color: var(--text-body);
-  font-size: clamp(0.68rem, 1.25cqi, 0.88rem);
+  font-family: inherit;
+  font-size: clamp(0.75rem, 1.4cqi, 0.88rem);
   font-weight: 600;
-  line-height: 1;
   white-space: nowrap;
-  overflow-wrap: normal;
-  word-break: normal;
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
   cursor: pointer;
 }
 
-html[lang="en"] .metric-pill span:is(
-  [data-i18n="operatingIncome"],
-  [data-i18n="revenueGrowth"],
-  [data-i18n="profitGrowth"]
-) {
-  font-size: clamp(0.56rem, 1.25cqi, 0.8rem);
-  letter-spacing: -0.01em;
+.metric-pill span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.metric-compact select {
+  flex: 1;
+  min-inline-size: 0;
+  min-height: 44px;
+  padding-inline: 12px;
+  font-size: 1rem;
 }
 
 .metric-pill:hover span {
@@ -1527,36 +1541,46 @@ html[lang="en"] .metric-pill span:is(
   box-shadow: var(--option-active-shadow);
 }
 
-.metric-pill input:focus-visible + span {
+.metric-pill input:focus-visible + span,
+.metric-compact :is(select, button):focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 .metric-pill-with-overlay.is-growth-available .metric-pill-control > span {
-  justify-content: flex-start;
-  padding-left: 6px;
-  padding-right: 34px;
-  font-size: clamp(0.48rem, 1cqi, 0.68rem);
+  padding-inline-end: 34px;
 }
 
 .growth-overlay-toggle {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  z-index: 2;
-  min-width: 28px;
-  min-height: 18px;
-  padding: 0 3px;
+  min-width: 26px;
+  min-height: 24px;
+  padding: 0 4px;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
   background: rgba(7, 11, 17, 0.82);
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-terminal);
-  font-size: 0.48rem;
+  font-size: 0.625rem;
   font-weight: 700;
-  line-height: 16px;
+  line-height: 1;
   cursor: pointer;
   transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.metric-pill .growth-overlay-toggle {
+  position: absolute;
+  inset-inline-end: 4px;
+  inline-size: 28px;
+  padding-inline: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.metric-compact .growth-overlay-toggle {
+  padding-inline: 12px;
+  border-radius: 9px;
+  font-size: 0.75rem;
 }
 
 .growth-overlay-toggle[hidden] {
@@ -2242,13 +2266,7 @@ body:not([data-theme="deep"]) .range-panel {
   }
 
   .metric-toolbar {
-    gap: 6px;
     margin-top: 8px;
-  }
-
-  .metric-pill span {
-    min-height: 44px;
-    padding: 0 6px;
   }
 
   .range-panel {
@@ -2510,7 +2528,8 @@ html[data-theme="light"] {
 :is(html[data-theme="light"] body, body[data-theme="light"]) .toggle-item,
 :is(html[data-theme="light"] body, body[data-theme="light"]) .chart-mode-pill span,
 :is(html[data-theme="light"] body, body[data-theme="light"]) .price-comparison-toggle span,
-:is(html[data-theme="light"] body, body[data-theme="light"]) .metric-pill span {
+:is(html[data-theme="light"] body, body[data-theme="light"]) .metric-pill span,
+:is(html[data-theme="light"] body, body[data-theme="light"]) .metric-compact select {
   border-color: rgba(85, 106, 133, 0.18);
   background: linear-gradient(180deg, #ffffff 0%, #f3f6f9 100%);
   box-shadow: inset 0 1px 0 #ffffff;

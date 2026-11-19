@@ -931,7 +931,10 @@ test("company generation rebuilds the chart after applying pending selection", (
 
 test("metric changes rebuild the chart to avoid stale dataset shapes", () => {
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
-  const metricHandlerBody = script.match(/metricInputs\.forEach\(\(input\) => \{([\s\S]*?)\n  \}\);\n\n  frequencyInputs/)?.[1] ?? "";
+  const metricHandlerBody = script.match(/function selectMetric\(input\) \{([\s\S]*?)\n\}/)?.[1] ?? "";
+  assert.match(script, /if \(input.checked\) selectMetric\(input\);/);
+  assert.match(script, /metricSelectEl\.addEventListener\("change", \(\) => \{[^}]*if \(input\) selectMetric\(input\);/);
+  assert.match(metricHandlerBody, /metricSelectEl\.value = input\.value;/);
 
   assert.match(metricHandlerBody, /state\.metric = input\.value;/);
   assert.match(metricHandlerBody, /setRangeToVisibleDataBounds\(\);/);

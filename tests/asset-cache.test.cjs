@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after wrapping the metric toolbar", () => {
+test("cache-busts the stylesheet after making the metric toolbar single-row", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20261119-wrap-metrics/);
+  assert.match(html, /style\.css\?v=20261119-metric-single-row/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {
@@ -60,7 +60,7 @@ test("cache-busts chart scripts after their latest behavior changes", () => {
     ["logo-layout.js", "20260629-visible-area"],
     ["financial-metrics.js", "20261102-verified-history-adaptive-axis"],
     ["series-colors.js", "20260830-hybrid-comparison-palette"],
-    ["script.js", "20261113-price-legend"],
+    ["script.js", "20261119-metric-single-row"],
   ]) {
     assert.match(
       html,
