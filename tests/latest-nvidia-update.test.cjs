@@ -16,7 +16,8 @@ test("NVIDIA 2026Q3 metrics match the fiscal Q2 2027 filing", () => {
   assert.equal(nvidia.revenue["2026Q3"], 96_221_000_000);
   assert.equal(nvidia.operatingIncome["2026Q3"], 63_734_000_000);
   assert.equal(nvidia.earnings["2026Q3"], 59_688_000_000);
-  assert.ok(Math.abs(nvidia.grossMargin["2026Q3"] - 72_142 / 96_221 * 100) < 1e-8);
+  // The scheduled sources publish this ratio at three decimal places or full precision.
+  assert.equal(nvidia.grossMargin["2026Q3"].toFixed(3), (72_142 / 96_221 * 100).toFixed(3));
   assert.equal(nvidia.periodEndDates["2026Q3"], "2026-07-26");
   assert.equal(nvidia.reportDates["2026Q3"], "2026-08-26");
   assert.ok(Math.abs(nvidia.revenueGrowth["2026Q3"] - 105.85114348672529) < 1e-12);

@@ -3,10 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
 
-test("cache-busts the stylesheet after tightening the chart header", () => {
+test("cache-busts the stylesheet after wrapping the metric toolbar", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(html, /style\.css\?v=20261101-company-sum/);
+  assert.match(html, /style\.css\?v=20261119-wrap-metrics/);
 });
 
 test("cache-busts the latest-any-company range behavior", () => {

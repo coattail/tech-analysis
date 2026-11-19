@@ -1455,11 +1455,7 @@ body:not([data-theme="deep"]) .chart-panel {
 
 .metric-toolbar {
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  /* Keep hover lift, active shadows and keyboard focus inside the scrollport. */
+  flex-wrap: wrap;
   padding: 6px;
   gap: 7px;
   margin: 10px 2px 0;
@@ -1469,8 +1465,8 @@ body:not([data-theme="deep"]) .chart-panel {
 }
 
 .metric-toolbar > * {
-  flex: 1 0 max-content;
-  min-width: max-content;
+  flex: 0 0 auto;
+  min-inline-size: 44px;
 }
 
 .metric-pill {
@@ -2730,9 +2726,6 @@ html[data-theme="light"] {
   .chart-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
   .summary-card { min-width: 0; padding: 8px; min-height: 54px; }
   .summary-card strong { font-size: 14px; overflow-wrap: anywhere; }
-  .metric-toolbar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
-  .metric-toolbar > * { flex: 0 0 auto; min-width: 88px; scroll-snap-align: start; }
-  .metric-pill-with-overlay { display: flex; }
   .chart-wrap { --chart-base-height: 360px; }
   .chart-wrap canvas { touch-action: pan-y; }
   .chart-actions { display: flex; flex-wrap: wrap; gap: 6px; }
