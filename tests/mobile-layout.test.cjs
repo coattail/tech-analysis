@@ -29,12 +29,20 @@ test("uses compact mobile controls and a bounded chart canvas", () => {
   assert.match(mobileCss, /\.chart-side-tools\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(mobileCss, /\.chart-summary\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /#generatedAtLabel\s*\{[^}]*font-size:\s*clamp\(0\.64rem, 1\.05vw, 0\.78rem\)[^}]*white-space:\s*nowrap/);
-  assert.match(css, /\.metric-toolbar\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*nowrap[^}]*overflow-x:\s*auto/);
   assert.match(css, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*660px/);
   assert.match(stackedCss, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*560px/);
   assert.match(mobileCss, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*clamp\(390px, 118vw, 510px\)/);
   assert.match(narrowMobileCss, /\.chart-wrap\s*\{[^}]*--chart-base-height:\s*420px/);
   assert.match(css, /\.chart-wrap canvas\s*\{[^}]*display:\s*block[^}]*width:\s*100% !important[^}]*height:\s*100% !important/);
+});
+
+test("wraps the metric toolbar without horizontal scrolling at every breakpoint", () => {
+  const toolbarRules = [...css.matchAll(/\.metric-toolbar\s*\{([^}]*)\}/g)].map(match => match[1]);
+  assert.match(toolbarRules[0], /display:\s*flex[^}]*flex-wrap:\s*wrap/);
+  for (const rule of toolbarRules) {
+    assert.doesNotMatch(rule, /(?:overflow(?:-x)?\s*:|scroll-snap-type\s*:|flex-wrap\s*:\s*nowrap)/);
+  }
+  assert.match(css, /\.metric-toolbar > \*\s*\{[^}]*min-inline-size:\s*44px/);
 });
 
 test("keeps metric labels on one responsive line", () => {
