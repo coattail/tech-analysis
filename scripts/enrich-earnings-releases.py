@@ -11,6 +11,7 @@ from urllib.parse import quote, urlparse
 BALANCE = r"\b(?:balance sheets?|statements? of financial position)\b"
 CASH_FLOW = r"\b(?:statements? of cash flows?|cash flow statements?)\b"
 UNITS = {"thousands": 1e-6, "millions": 1e-3, "billions": 1}
+UNIT_HEADER = r"\b(?:in|USD)\s+(thousands|millions|billions)\b"
 EQUITY = r"(?:total )?(?:shareholders|stockholders)'? equity|total equity"
 OPERATING_CASH = r"net cash (?:provided by|used in|from)(?: \(?used in\)?)? operating activities"
 CAPEX = (r"(?:(?:purchases?|payments?)(?: related to| to acquire| of| for) (?:property,? plant,? and equipment|"
@@ -58,16 +59,22 @@ def parse_supplement(html, period_end):
                           if (value := clean(cell.get_text(" ", strip=True)))])
         ]
         header = rows[:10]
-        # A split date row must be paired column-for-column with its year row.
+        # A split date row must align with its year row. Some filers print the
+        # units in the stub column next to the years, not above the table.
         columns = 0
         for i, row in enumerate(header):
+            units_stub = None
             if re.fullmatch(MONTH_DAY, row[0]) and i + 1 < len(header):
                 years = header[i + 1]
+                if re.search(UNIT_HEADER, years[0], re.I):
+                    units_stub, *years = years
                 if len(years) == len(row) and all(re.fullmatch(r"20\d{2}", year) for year in years):
                     row = [f"{day} {year}" for day, year in zip(row, years)]
             if re.fullmatch(target_date, row[0], re.I):
                 columns = len(row)
                 header = header[:i]
+                if units_stub:
+                    header.append([units_stub])
                 break
         if not columns:
             continue
@@ -83,9 +90,20 @@ def parse_supplement(html, period_end):
         context = " ".join([*reversed(preceding), *(" ".join(row) for row in header)])
         heading = list(re.finditer(rf"{BALANCE}|{CASH_FLOW}", context, re.I))
         if not heading:
-            continue
+            # Some releases put the statement heading in a separate banner
+            # table. Only read a short, text-only banner adjacent to this table.
+            banner = table.find_previous("table")
+            if not banner or (banner.parent is not table.parent and banner.parent.parent is not table.parent.parent):
+                continue
+            title = clean(banner.get_text(" ", strip=True))
+            if len(title) > 200 or re.search(r"\d", title):
+                continue
+            context = f"{title} {context}"
+            heading = list(re.finditer(rf"{BALANCE}|{CASH_FLOW}", context, re.I))
+            if len(heading) != 1:
+                continue
         statement = heading[-1][0]
-        units = re.search(r"\b(?:in|USD)\s+(thousands|millions|billions)\b", context[heading[-1].end():], re.I)
+        units = re.search(UNIT_HEADER, context[heading[-1].end():], re.I)
         if not units:
             continue
         scale = UNITS[units[1].lower()]
