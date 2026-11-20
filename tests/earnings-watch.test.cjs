@@ -84,14 +84,20 @@ test("published-snapshot fallback retries a second independent endpoint", async 
 });
 
 test("all-company watch runs in every month and exposes failed operations", () => {
-  const workflow=fs.readFileSync('.github/workflows/earnings-watch.yml','utf8');
-  assert.match(workflow,/4 \* \* \* \*/);
-  assert.match(workflow,/test "\$COLLECT" = success/);
-  assert.match(workflow,/python scripts\/resolve-earnings-releases.py/);
-  assert.match(workflow,/test "\$RESOLVE" = success/);
-  assert.match(workflow,/verification: \$VERIFY/);
-  assert.match(workflow,/if: github.ref == 'refs\/heads\/main'/);
-  assert.match(workflow,/publish_earnings_data.py --workflow earnings-watch.yml --deploy-workflow pages.yml/);
+  const workflow = fs.readFileSync('.github/workflows/earnings-watch.yml', 'utf8');
+  const daily = fs.readFileSync('.github/workflows/data-auto-refresh.yml', 'utf8');
+  const action = fs.readFileSync('.github/actions/sync-earnings/action.yml', 'utf8');
+  assert.match(workflow, /4 \* \* \* \*/);
+  assert.match(workflow, /uses: \.\/\.github\/actions\/sync-earnings/);
+  assert.match(workflow, /test "\$EARNINGS" = success/);
+  assert.match(workflow, /if: github.ref == 'refs\/heads\/main'/);
+  assert.match(workflow, /publish_earnings_data.py --workflow earnings-watch.yml --deploy-workflow pages.yml/);
+  assert.match(action, /test "\$COLLECT" = success/);
+  assert.match(action, /python scripts\/resolve-earnings-releases.py/);
+  assert.match(action, /test "\$RESOLVE" = success/);
+  assert.match(action, /test "\$VERIFY" = success/);
+  assert.match(daily, /if: steps.coverage_probe.outcome == 'failure'\s+id: earnings_recovery\s+continue-on-error: true\s+uses: \.\/\.github\/actions\/sync-earnings/);
+  assert.match(daily, /test "\$EARNINGS_RECOVERY" = success\s+node scripts\/earnings-watch.mjs --verify-coverage/);
 });
 
 test('financial refresh windows follow individual report dates, and manual selections remain possible',async()=>{

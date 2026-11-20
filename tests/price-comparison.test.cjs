@@ -698,6 +698,7 @@ test("preserves audited historical starts and does not invent pre-IPO prices", (
     snowflake: "2020-09-16",
     cloudflare: "2019-09-13",
     zoom: "2019-04-18",
+    sharonai: "2026-02-18",
   };
 
   for (const [companyId, expectedPeriod] of Object.entries(expectedRevenueStarts)) {

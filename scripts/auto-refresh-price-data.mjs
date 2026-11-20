@@ -74,7 +74,9 @@ const COMPANY_SOURCES = [
   { id: "coreweave", ticker: "CRWV" },
   { id: "nebius", ticker: "NBIS", minDate: "2024-04-01" },
   { id: "chronoscale", ticker: "CHRN" },
-  { id: "sharonai", ticker: "SHAZ" },
+  // SEC FY2025 Form 10-K, Item 5: Nasdaq trading began on February 18, 2026.
+  // The dashboard price series starts with that listing.
+  { id: "sharonai", ticker: "SHAZ", minDate: "2026-02-18" },
 ];
 
 function parsePriceDataJs(raw) {
