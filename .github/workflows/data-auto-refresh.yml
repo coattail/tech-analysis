@@ -53,11 +53,17 @@ jobs:
         continue-on-error: true
         run: node scripts/auto-refresh-cash-flow.mjs
 
-      - name: Verify coverage of recent financial reports
+      - name: Check coverage of recent financial reports
         if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
-        id: coverage
+        id: coverage_probe
         continue-on-error: true
         run: node scripts/earnings-watch.mjs --verify-coverage
+
+      - name: Recover missing actuals from official earnings releases
+        if: steps.coverage_probe.outcome == 'failure'
+        id: earnings_recovery
+        continue-on-error: true
+        uses: ./.github/actions/sync-earnings
 
       - name: Refresh price-data.js
         id: prices
@@ -89,16 +95,20 @@ jobs:
           FINANCIALS: ${{ steps.financials.outcome }}
           MARKETCAPS: ${{ steps.marketcaps.outcome }}
           CASHFLOW: ${{ steps.cashflow.outcome }}
-          COVERAGE: ${{ steps.coverage.outcome }}
+          COVERAGE: ${{ steps.coverage_probe.outcome }}
+          EARNINGS_RECOVERY: ${{ steps.earnings_recovery.outcome }}
           PRICES: ${{ steps.prices.outcome }}
           PENDING_PRICES: ${{ steps.prices.outputs.pending }}
           EARLY_PRICE_REFRESH: ${{ github.event.schedule == '25 22 * * 1-5' }}
         run: |
-          echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; coverage: $COVERAGE; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
+          echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; initial coverage: $COVERAGE; earnings recovery: $EARNINGS_RECOVERY; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
           test "$FINANCIALS" = success || test "$FINANCIALS" = skipped
           test "$MARKETCAPS" = success || test "$MARKETCAPS" = skipped
           test "$CASHFLOW" = success || test "$CASHFLOW" = skipped
-          test "$COVERAGE" = success || test "$COVERAGE" = skipped
+          if [ "$COVERAGE" = failure ]; then
+            test "$EARNINGS_RECOVERY" = success
+            node scripts/earnings-watch.mjs --verify-coverage
+          fi
           test "$PRICES" = success
           if [ -n "$PENDING_PRICES" ]; then
             echo "Pending verified closes: $PENDING_PRICES" >> "$GITHUB_STEP_SUMMARY"

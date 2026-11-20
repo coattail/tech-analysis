@@ -25,63 +25,11 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: "22"
-      - uses: actions/checkout@v5
-        with:
-          repository: coattail/Earnings-Image-Studio
-          ref: main
-          path: source-earnings
-          persist-credentials: false
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
-      - name: Install official earnings parsers
-        run: pip install -r source-earnings/requirements.txt
-      - name: Prepare every tracked company and published snapshot
-        run: node scripts/earnings-watch.mjs --prepare
-      - uses: actions/cache/restore@v4
-        with:
-          path: source-earnings/output/earnings-watch-state.json
-          key: tech-earnings-state-${{ github.run_id }}
-          restore-keys: tech-earnings-state-
-      - name: Check official early releases for every company
-        id: collect
+      - name: Synchronize and verify official earnings
+        id: earnings
         continue-on-error: true
-        run: python source-earnings/scripts/watch_earnings.py --universe output/earnings-universe.json --report-path output/earnings-release-report.json
-      - name: Resolve already covered SEC announcements
-        id: resolve
-        continue-on-error: true
-        run: python scripts/resolve-earnings-releases.py --source-scripts source-earnings/scripts --universe output/earnings-universe.json --report output/earnings-release-report.json
-      - uses: actions/cache/save@v4
-        if: always()
-        with:
-          path: source-earnings/output/earnings-watch-state.json
-          key: tech-earnings-state-${{ github.run_id }}
-      - name: Read supplemental financial statements from official releases
-        id: supplement
-        continue-on-error: true
-        run: python scripts/enrich-earnings-releases.py --source-scripts source-earnings/scripts --report output/earnings-release-report.json
-      - name: Synchronize validated quarters
-        id: sync
-        continue-on-error: true
-        run: node scripts/earnings-watch.mjs
-      - name: Refresh fallback financial sources for unparsed releases
-        if: steps.sync.outputs.fallbacks != ''
-        id: fallback
-        continue-on-error: true
-        env:
-          COMPANIES: ${{ steps.sync.outputs.fallbacks }}
-        run: node scripts/auto-refresh-data.mjs --company "$COMPANIES" --latest-only
-      - name: Enrich newly updated companies' cash flows
-        if: steps.sync.outputs.companies != ''
-        id: cashflow
-        continue-on-error: true
-        env:
-          COMPANIES: ${{ steps.sync.outputs.companies }}
-        run: node scripts/auto-refresh-cash-flow.mjs --company "$COMPANIES" --earnings-report output/earnings-release-report.json
-      - name: Verify every detected earnings release was incorporated
-        id: verify
-        continue-on-error: true
-        run: node scripts/earnings-watch.mjs --verify
+        uses: ./.github/actions/sync-earnings
+
       - name: Publish validated updates
         if: github.ref == 'refs/heads/main'
         env:
@@ -96,31 +44,8 @@ jobs:
           git add index.html data.js data/cash-flow-history.json data/cash-flow-coverage.json
           git commit -m "chore(earnings): publish newly released quarterly data"
           python source-earnings/scripts/publish_earnings_data.py --workflow earnings-watch.yml --deploy-workflow pages.yml
-      - name: Retain per-company diagnostics
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: earnings-watch-${{ github.run_id }}
-          path: |
-            output/earnings-release-report.json
-            output/earnings-sync-report.json
-          retention-days: 14
-      - name: Surface incomplete updates
+      - name: Require successful earnings synchronization
         if: always()
         env:
-          COLLECT: ${{ steps.collect.outcome }}
-          RESOLVE: ${{ steps.resolve.outcome }}
-          SUPPLEMENT: ${{ steps.supplement.outcome }}
-          SYNC: ${{ steps.sync.outcome }}
-          FALLBACK: ${{ steps.fallback.outcome }}
-          CASHFLOW: ${{ steps.cashflow.outcome }}
-          VERIFY: ${{ steps.verify.outcome }}
-        run: |
-          echo "Official release checks: $COLLECT; duplicate resolution: $RESOLVE; supplemental statements: $SUPPLEMENT; quarter sync: $SYNC; fallback: $FALLBACK; cash flow: $CASHFLOW; verification: $VERIFY" >> "$GITHUB_STEP_SUMMARY"
-          test "$COLLECT" = success
-          test "$RESOLVE" = success
-          test "$SUPPLEMENT" = success
-          test "$SYNC" = success
-          test "$FALLBACK" != failure
-          test "$CASHFLOW" != failure
-          test "$VERIFY" = success
+          EARNINGS: ${{ steps.earnings.outcome }}
+        run: test "$EARNINGS" = success

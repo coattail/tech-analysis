@@ -31,6 +31,22 @@ CASH = """
 
 
 class SupplementTest(unittest.TestCase):
+    def test_balance_sheet_with_units_in_split_year_row_uses_consolidated_equity(self):
+        release = """
+<div><table><tr><td>Walmart Inc. Condensed Consolidated Balance Sheets (Unaudited)</td><td></td></tr></table></div>
+<div><table>
+ <tr><td></td><td>October 31,</td><td>January 31,</td><td>October 31,</td></tr>
+ <tr><td>(Amounts in millions)</td><td>2026</td><td>2026</td><td>2025</td></tr>
+ <tr><td>Total Walmart shareholders’ equity</td><td>100,223</td><td>99,617</td><td>96,094</td></tr>
+ <tr><td>Noncontrolling interest</td><td>6,245</td><td>6,270</td><td>6,112</td></tr>
+ <tr><td>Total shareholders’ equity</td><td>106,468</td><td>105,887</td><td>102,206</td></tr>
+</table></div>
+"""
+        self.assertEqual(supplement.parse_supplement(release, "2026-10-31"), {"netAssetsBn": 106.468})
+        self.assertEqual(supplement.parse_supplement(release, "2025-10-31"), {})
+        self.assertEqual(supplement.parse_supplement(release.replace("2026</td><td>2025", "2025"), "2026-10-31"), {})
+        self.assertEqual(supplement.parse_supplement(release.replace("(Unaudited)", "1,234"), "2026-10-31"), {})
+
     def test_extracts_nvidia_style_tables_with_period_and_unit_checks(self):
         self.assertEqual(supplement.parse_supplement(BALANCE + CASH, "2026-10-25"),
                          {"netAssetsBn": 266.666, "operatingCashFlowBn": 48.253, "capexBn": 4.422})
