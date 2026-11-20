@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -21,6 +22,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      PAGES_ARTIFACT_NAME: github-pages-${{ github.run_attempt }}
 
     steps:
       - name: Checkout
@@ -37,13 +40,32 @@ jobs:
           node scripts/version-pages-data.mjs
 
       - name: Upload site artifact
+        id: upload
         uses: actions/upload-pages-artifact@v3
         with:
+          name: ${{ env.PAGES_ARTIFACT_NAME }}
           path: _site
+
+      - name: Wait for uploaded artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact_id }}
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if name=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" --jq 'select(.expired == false) | .name') &&
+              [ "$name" = "$PAGES_ARTIFACT_NAME" ]; then
+              exit 0
+            fi
+            if [ "$attempt" != 5 ]; then sleep 3; fi
+          done
+          echo "::error::Uploaded Pages artifact $ARTIFACT_ID is not visible to the Actions API."
+          exit 1
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
 
       - uses: actions/setup-node@v5
         with:
