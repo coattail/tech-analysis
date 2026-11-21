@@ -88,6 +88,8 @@ This backfill adds 2,518 quarterly metric values (876 operating cash flow, 743 C
 
 This is a no-build static site. No frontend dependency installation is required for local preview.
 
+Light mode preserves the colors in each logo SVG by default. When adding or replacing a logo, set `logoIsMask: true` in `script.js` only for a monochrome template that needs a tint. If the company picker uses its own asset, mark that asset separately with `optionLogoIsMask: true`.
+
 ## Quick Start
 
 ### 1. Clone the repository

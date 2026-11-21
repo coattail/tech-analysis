@@ -92,6 +92,8 @@ SpaceX 使用合并口径，包含 Space、Connectivity 和 AI/SI 业务，官�
 
 这是一个无构建步骤的静态站点，不需要安装前端依赖即可运行。
 
+新增或替换 Logo 时，明亮模式默认保留 SVG 原色。只有确实需要着色的单色模板才在 `script.js` 中设置 `logoIsMask: true`。若公司选择器使用独立素材，则用 `optionLogoIsMask: true` 单独标记。
+
 ## 快速开始
 
 ### 1. 克隆仓库

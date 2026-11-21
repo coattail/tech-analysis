@@ -47,19 +47,16 @@ test("adapts chart series and overlays for a light background", () => {
   assert.match(script, /watermarkColor:\s*css\.getPropertyValue\("--chart-watermark-color"\)/);
   assert.match(script, /getPropertyValue\("--chart-export-bg"\)/);
   assert.match(script, /const logoColor = isLightTheme[\s\S]*?company\.logoColor \|\| getChartThemeTokens\(\)\.logoColor/);
-  assert.match(script, /const useOriginalLogoColors = company\.preserveLogoColors[\s\S]*?isLightTheme && company\.preserveLightLogoColors/);
+  assert.match(script, /const useOriginalLogoColors = company\.preserveLogoColors\s*\|\| \(isLightTheme && !company\.logoIsMask\)/);
   assert.match(script, /useOriginalLogoColors[\s\S]*?drawOriginalLogo/);
   assert.match(script, /useOriginalLogoColors[\s\S]*?drawMonochromeLogo/);
-  assert.match(script, /id: "nvidia"[^\n]*logoColor: "#76b900"/);
-  assert.match(script, /id: "alphabet"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "microsoft"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "amazon"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "walmart"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "mastercard"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "costco"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "bankofamerica"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "caterpillar"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "chevron"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "cloudflare"[^\n]*preserveLightLogoColors: true/);
-  assert.match(script, /id: "adobe"[^\n]*preserveLightLogoColors: true/);
+  assert.match(script, /id: "nvidia"[^\n]*logoIsMask: true, logoColor: "#76b900"/);
+});
+
+test("picker keeps asset colors in light mode unless its own asset is a mask", () => {
+  assert.match(script, /const optionLogoIsMask = company\.optionLogoPath \? company\.optionLogoIsMask : company\.logoIsMask/);
+  assert.match(script, /if \(preserveOptionLogoColors \|\| !optionLogoIsMask\) \{/);
+  assert.match(script, /logo\.classList\.toggle\("preserve-light-logo-colors", !preserveOptionLogoColors\)/);
+  assert.match(css, /data-theme="light"[^{}]* \.company-option-logo\.preserve-light-logo-colors \.company-option-logo-mark\s*\{\s*display: none/);
+  assert.match(css, /data-theme="light"[^{}]* \.company-option-logo\.preserve-light-logo-colors img\s*\{\s*display: block/);
 });
