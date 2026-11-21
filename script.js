@@ -271,7 +271,7 @@ const FREQUENCY_META = {
 
 const COMPANIES = [
   { id: "iren", name: "IREN", ticker: "IREN", color: "#71da80", logoIsMask: true, logoColor: "#0b344f", preserveOptionLogoColors: true, optionLogoFit: "wide-symbol", optionLogoPath: "assets/logos/options/iren.svg?v=20261106-iren-original", logoPath: "assets/logos/iren.svg?v=20261106-iren-monochrome" },
-  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", logoIsMask: true, logoColor: "#76b900", optionLogoFit: "wide-symbol", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
+  { id: "nvidia", name: "英伟达", ticker: "NVDA", color: "#9be000", preserveSeriesColor: true, logoIsMask: true, logoColor: "#76b900", optionLogoFit: "wide-symbol", logoPath: "assets/logos/nvidia.svg?v=20260629-visible-area-v4" },
   { id: "alphabet", name: "谷歌", ticker: "GOOGL", color: "#008894", deepColor: "#00d4e8", logoColor: "#4285f4", optionLogoFit: "symbol", preserveOptionLogoColors: true, logoPath: "assets/logos/alphabet.svg?v=20260717-brand-colors-v5" },
   { id: "apple", name: "苹果", ticker: "AAPL", color: "#4b5563", deepColor: "#7b8490", logoColor: "#000000", optionLogoFit: "symbol", logoPath: "assets/logos/apple.svg?v=20260629-visible-area-v4" },
   { id: "microsoft", name: "微软", ticker: "MSFT", color: "#57a0ff", preserveSeriesColor: true, logoColor: "#737373", optionLogoFit: "symbol", preserveOptionLogoColors: true, optionLogoPath: "assets/logos/options/microsoft.svg?v=20260830-compact-marks", logoPath: "assets/logos/microsoft.svg?v=20260629-visible-area-v4" },

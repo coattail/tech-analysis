@@ -41,7 +41,7 @@ test("keeps MAG7 colors distinct with Microsoft's reference blue", () => {
   assert.equal(expectedColors.nvidia, "#9be000", "NVIDIA should retain its current lime green");
   assert.equal(expectedColors.apple, "#7b8490", "Apple should retain its current slate gray");
   const script = fs.readFileSync(path.join(__dirname, "../script.js"), "utf8");
-  assert.match(script, /id: "nvidia"[^\n]*color: "#9be000"/);
+  assert.match(script, /id: "nvidia"[^\n]*color: "#9be000", preserveSeriesColor: true/);
   assert.match(script, /id: "apple"[^\n]*color: "#4b5563", deepColor: "#7b8490"/);
   assert.match(script, /id: "microsoft"[^\n]*color: "#57a0ff", preserveSeriesColor: true/);
 
