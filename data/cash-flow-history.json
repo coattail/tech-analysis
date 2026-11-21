@@ -58736,8 +58736,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-08-04",
-            "filed": "2025-11-25",
-            "accession": "0001628280-25-053868",
+            "filed": "2026-11-20",
+            "accession": "0001628280-26-075287",
             "nativeCurrency": "USD",
             "nativeValue": 4010000000,
             "basis": "reported-cash-flow"
@@ -58748,8 +58748,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquireProductiveAssets",
             "startDate": "2025-08-04",
-            "filed": "2025-11-25",
-            "accession": "0001628280-25-053868",
+            "filed": "2026-11-20",
+            "accession": "0001628280-26-075287",
             "nativeCurrency": "USD",
             "nativeValue": 898000000,
             "basis": "reported-cash-flow"
@@ -60813,14 +60813,28 @@
         },
         "2026Q4": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/hd/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000354950.json",
             "periodEnd": "2026-11-01",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-08-03",
+            "filed": "2026-11-20",
+            "accession": "0001628280-26-075287",
+            "nativeCurrency": "USD",
+            "nativeValue": 4074000000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/hd/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000354950.json",
             "periodEnd": "2026-11-01",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquireProductiveAssets",
+            "startDate": "2026-08-03",
+            "filed": "2026-11-20",
+            "accession": "0001628280-26-075287",
+            "nativeCurrency": "USD",
+            "nativeValue": 955000000,
+            "basis": "reported-cash-flow"
           }
         }
       },
