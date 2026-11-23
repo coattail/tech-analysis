@@ -911,19 +911,19 @@
     },
     "crowdstrike": {
       "first": "2018Q1",
-      "last": "2026Q3",
-      "expected": 35,
+      "last": "2026Q4",
+      "expected": 36,
       "metrics": {
         "operatingCashFlow": {
-          "present": 35,
+          "present": 36,
           "missing": []
         },
         "capex": {
-          "present": 35,
+          "present": 36,
           "missing": []
         },
         "freeCashFlow": {
-          "present": 35,
+          "present": 36,
           "missing": []
         }
       }

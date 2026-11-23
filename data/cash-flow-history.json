@@ -65329,24 +65329,36 @@
             "periodEndPrecision": "month",
             "basis": "cash-capital-spending-including-capitalized-intangibles"
           }
+        },
+        "2026Q4": {
+          "operatingCashFlow": {
+            "source": "https://stockanalysis.com/stocks/crwd/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-10-31",
+            "method": "reported-quarter"
+          },
+          "capex": {
+            "source": "https://stockanalysis.com/stocks/crwd/financials/cash-flow-statement/?p=quarterly",
+            "periodEnd": "2026-10-31",
+            "method": "reported-quarter"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 35,
+          "count": 36,
           "first": "2018Q1",
-          "last": "2026Q3"
+          "last": "2026Q4"
         },
         "capex": {
-          "count": 35,
+          "count": 36,
           "first": "2018Q1",
-          "last": "2026Q3"
+          "last": "2026Q4"
         },
         "freeCashFlow": {
-          "count": 35,
+          "count": 36,
           "first": "2018Q1",
-          "last": "2026Q3"
+          "last": "2026Q4"
         }
       }
     },
