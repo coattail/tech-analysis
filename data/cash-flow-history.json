@@ -64498,7 +64498,7 @@
             "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001535527.json",
             "periodEnd": "2026-01-31",
             "method": "cumulative-difference",
-            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToDevelopSoftware",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToDevelopSoftware + PaymentsToAcquireIntangibleAssets",
             "startDate": "2025-11-01",
             "filed": "2026-03-05",
             "accession": "0001535527-26-000010",
@@ -64514,8 +64514,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-08-01",
-            "filed": "2025-12-03",
-            "accession": "0001535527-25-000033",
+            "filed": "2026-11-23",
+            "accession": "0001535527-26-000038",
             "nativeCurrency": "USD",
             "nativeValue": 397541000,
             "basis": "reported-cash-flow"
@@ -64524,10 +64524,10 @@
             "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001535527.json",
             "periodEnd": "2025-10-31",
             "method": "cumulative-difference",
-            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToDevelopSoftware",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToDevelopSoftware + PaymentsToAcquireIntangibleAssets",
             "startDate": "2025-08-01",
-            "filed": "2025-12-03",
-            "accession": "0001535527-25-000033",
+            "filed": "2026-11-23",
+            "accession": "0001535527-26-000038",
             "nativeCurrency": "USD",
             "nativeValue": 100165000,
             "basis": "cash-capital-spending-including-capitalized-intangibles"
@@ -65332,14 +65332,28 @@
         },
         "2026Q4": {
           "operatingCashFlow": {
-            "source": "https://stockanalysis.com/stocks/crwd/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001535527.json",
             "periodEnd": "2026-10-31",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-08-01",
+            "filed": "2026-11-23",
+            "accession": "0001535527-26-000038",
+            "nativeCurrency": "USD",
+            "nativeValue": 665176000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://stockanalysis.com/stocks/crwd/financials/cash-flow-statement/?p=quarterly",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001535527.json",
             "periodEnd": "2026-10-31",
-            "method": "reported-quarter"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToDevelopSoftware + PaymentsToAcquireIntangibleAssets",
+            "startDate": "2026-08-01",
+            "filed": "2026-11-23",
+            "accession": "0001535527-26-000038",
+            "nativeCurrency": "USD",
+            "nativeValue": 311617000,
+            "basis": "cash-capital-spending-including-capitalized-intangibles"
           }
         }
       },
