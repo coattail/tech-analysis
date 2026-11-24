@@ -32,6 +32,7 @@ function normalizeYahooChartPayload(payload) {
 }
 
 const DAY_MS = 86_400_000;
+const CLOSE_PUBLICATION_WINDOW_MS = 150 * 60_000;
 const marketClock = new Intl.DateTimeFormat("en-CA", {
   timeZone: "America/New_York",
   year: "numeric",
@@ -93,6 +94,11 @@ function getLatestCompletedMarketDate(now = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 
+function getPriorSessionDuringClosePublication(now, expectedDate) {
+  const priorSession = getLatestCompletedMarketDate(new Date(now.getTime() - CLOSE_PUBLICATION_WINDOW_MS));
+  return priorSession < expectedDate ? priorSession : null;
+}
+
 const exchangeDateFormatters = new Map();
 
 function formatUnixDateInTimeZone(timestamp, timeZone = "UTC") {
@@ -135,13 +141,19 @@ function assessYahooChartFreshness(daily, expectedDate) {
   };
 }
 
+class NasdaqClosePending extends Error {}
+
 function parseNasdaqHistoricalClose(payload, symbol, date) {
   const [year, month, day] = date.split("-");
   const rows = payload?.data?.tradesTable?.rows;
-  const row = Array.isArray(rows) ? rows.find(item => item?.date === `${month}/${day}/${year}`) : null;
-  const close = typeof row?.close === "string" ? Number(row.close.replace(/^\$/, "").replaceAll(",", "")) : NaN;
   const returnedSymbol = payload?.data?.symbol?.replaceAll("/", ".");
-  if (payload?.status?.rCode !== 200 || returnedSymbol !== symbol || !Number.isFinite(close) || close <= 0) {
+  if (payload?.status?.rCode !== 200 || returnedSymbol !== symbol || !Array.isArray(rows)) {
+    throw new Error(`Nasdaq 日线响应无效：${symbol}`);
+  }
+  const row = rows.find(item => item?.date === `${month}/${day}/${year}`);
+  if (!row) throw new NasdaqClosePending(`Nasdaq 尚未发布 ${symbol} 在 ${date} 的收盘日线`);
+  const close = typeof row?.close === "string" ? Number(row.close.replace(/^\$/, "").replaceAll(",", "")) : NaN;
+  if (!Number.isFinite(close) || close <= 0) {
     throw new Error(`Nasdaq 缺少 ${symbol} 在 ${date} 的有效收盘价`);
   }
   return close;
@@ -154,9 +166,13 @@ function parseNasdaqClosedQuote(payload, symbol, date) {
   const monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(month) - 1];
   const close = Number(String(quote?.lastSalePrice ?? "").replace(/^\$/, "").replaceAll(",", ""));
   if (payload?.status?.rCode !== 200 || data?.symbol?.replaceAll("/", ".") !== symbol
-    || data?.marketStatus !== "Closed" || quote?.isRealTime !== false
-    || quote.lastTradeTimestamp !== `${monthName} ${Number(day)}, ${year}` || !Number.isFinite(close) || close <= 0) {
-    throw new Error(`Nasdaq 缺少 ${symbol} 在 ${date} 的已收盘报价`);
+    || typeof data.marketStatus !== "string" || typeof quote?.isRealTime !== "boolean"
+    || typeof quote.lastTradeTimestamp !== "string" || !Number.isFinite(close) || close <= 0) {
+    throw new Error(`Nasdaq 报价响应无效：${symbol}`);
+  }
+  if (data.marketStatus !== "Closed" || quote.isRealTime
+    || quote.lastTradeTimestamp !== `${monthName} ${Number(day)}, ${year}`) {
+    throw new NasdaqClosePending(`Nasdaq 尚未提供 ${symbol} 在 ${date} 的已收盘报价`);
   }
   return close;
 }
@@ -177,10 +193,12 @@ module.exports = {
   assessYahooChartFreshness,
   formatUnixDateInTimeZone,
   getLatestCompletedMarketDate,
+  getPriorSessionDuringClosePublication,
   getLatestPriceDate,
   keepCompletedPrices,
   normalizeAdjustedCloseRows,
   normalizeYahooChartPayload,
+  NasdaqClosePending,
   parseNasdaqClosedQuote,
   parseNasdaqHistoricalClose,
   verifyLatestClose,

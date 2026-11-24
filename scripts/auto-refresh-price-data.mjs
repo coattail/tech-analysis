@@ -11,8 +11,10 @@ const {
   assessYahooChartFreshness,
   getLatestCompletedMarketDate,
   getLatestPriceDate,
+  getPriorSessionDuringClosePublication,
   keepCompletedPrices,
   normalizeYahooChartPayload,
+  NasdaqClosePending,
   parseNasdaqClosedQuote,
   parseNasdaqHistoricalClose,
   verifyLatestClose,
@@ -133,9 +135,17 @@ async function fetchNasdaqClose(company, expectedDate) {
     return { close: parseNasdaqHistoricalClose(await response.json(), symbol, expectedDate), source: url.href };
   } catch (error) {
     const quoteUrl = `${NASDAQ_HISTORICAL_BASE}/${encodeURIComponent(symbol)}/info?assetclass=stocks`;
-    const response = await fetch(quoteUrl, options());
-    if (!response.ok) throw new Error(`${error.message}；Nasdaq 报价请求失败（${symbol}）：HTTP ${response.status}`);
-    return { close: parseNasdaqClosedQuote(await response.json(), symbol, expectedDate), source: quoteUrl };
+    try {
+      const response = await fetch(quoteUrl, options());
+      if (!response.ok) throw new Error(`Nasdaq 报价请求失败（${symbol}）：HTTP ${response.status}`);
+      return { close: parseNasdaqClosedQuote(await response.json(), symbol, expectedDate), source: quoteUrl };
+    } catch (quoteError) {
+      const message = `${error.message}；${quoteError.message}`;
+      if (error instanceof NasdaqClosePending && quoteError instanceof NasdaqClosePending) {
+        throw new NasdaqClosePending(message);
+      }
+      throw new Error(message, { cause: quoteError });
+    }
   }
 }
 
@@ -216,14 +226,22 @@ async function main() {
   const companies = { ...(existing.companies || {}) };
   const updatedCompanies = [];
   const failedCompanies = [];
+  const awaitingClose = [];
   const argv = process.argv.slice(2);
   const selectedCompanies = getSelectedCompanies(argv);
   const allowPartial = argv.includes("--allow-partial");
-  const expectedDate = getLatestCompletedMarketDate();
+  const now = new Date();
+  const expectedDate = getLatestCompletedMarketDate(now);
+  const priorSession = allowPartial && argv.includes("--defer-pending-close")
+    ? getPriorSessionDuringClosePublication(now, expectedDate) : null;
+  const onlyUnverified = argv.includes("--only-unverified");
   console.log(`最新已收盘的美股交易日：${expectedDate}`);
 
   for (const company of selectedCompanies) {
     const previous = companies[company.id];
+    const lastPublishedDate = getLatestPriceDate(previous?.daily);
+    const verifiedCurrent = previous?.verifiedCloseDate === expectedDate && lastPublishedDate === expectedDate;
+    if (onlyUnverified && verifiedCurrent) continue;
     try {
       const official = await fetchNasdaqClose(company, expectedDate);
       const { daily, source } = await fetchDailyAdjustedSeries(company, expectedDate, official.close, previous?.daily);
@@ -238,11 +256,15 @@ async function main() {
       updatedCompanies.push(company.id);
       console.log(`已刷新 ${company.ticker}，Nasdaq 收盘价 ${official.close}`);
     } catch (error) {
-      if (previous?.verifiedCloseDate === expectedDate && getLatestPriceDate(previous.daily) === expectedDate) {
+      if (verifiedCurrent) {
         console.warn(`${company.ticker} 保留已核验的 ${expectedDate} 收盘价：${error.message}`);
         continue;
       }
       failedCompanies.push(company.id);
+      if (priorSession && error instanceof NasdaqClosePending
+          && previous?.verifiedCloseDate === priorSession && lastPublishedDate === priorSession) {
+        awaitingClose.push(company.id);
+      }
       console.warn(`跳过 ${company.ticker}，保留已有数据：${error.message}`);
     }
     await sleep(250);
@@ -253,10 +275,11 @@ async function main() {
     companies[company.id].daily = pruneDailyPrices(companies[company.id].daily, company.minDate);
   });
 
+  const deferred = failedCompanies.length > 0 && failedCompanies.length === awaitingClose.length;
   if (process.env.GITHUB_OUTPUT) {
-    await writeFile(process.env.GITHUB_OUTPUT, `pending=${failedCompanies.join(", ")}\n`, { flag: "a" });
+    await writeFile(process.env.GITHUB_OUTPUT, `pending=${failedCompanies.join(", ")}\ndeferred=${deferred}\n`, { flag: "a" });
   }
-  if (updatedCompanies.length === 0 && failedCompanies.length === selectedCompanies.length) {
+  if (updatedCompanies.length === 0 && failedCompanies.length === selectedCompanies.length && !deferred) {
     throw new Error("所有公司股价刷新均失败，未写入 price-data.js");
   }
   if (failedCompanies.length > 0 && !allowPartial) {

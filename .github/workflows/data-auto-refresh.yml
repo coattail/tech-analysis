@@ -10,6 +10,8 @@ on:
   schedule:
     # Price-only run 85–145 minutes after the regular US close.
     - cron: "25 22 * * 1-5"
+    # Retry unverified closes at 09:15 Beijing time after each US weekday.
+    - cron: "15 1 * * 2-6"
     # Daily full refresh also retries prices that were unavailable after close.
     - cron: "15 10 * * *"
 
@@ -24,6 +26,8 @@ concurrency:
 jobs:
   refresh-data:
     runs-on: ubuntu-latest
+    env:
+      PRICE_ONLY: ${{ inputs.prices_only || github.event.schedule == '25 22 * * 1-5' || github.event.schedule == '15 1 * * 2-6' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -36,25 +40,25 @@ jobs:
           node-version: "22"
 
       - name: Refresh data.js
-        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
+        if: env.PRICE_ONLY != 'true'
         id: financials
         continue-on-error: true
         run: node scripts/auto-refresh-data.mjs
 
       - name: Refresh market capitalizations
-        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
+        if: env.PRICE_ONLY != 'true'
         id: marketcaps
         continue-on-error: true
         run: node scripts/auto-refresh-market-caps.mjs
 
       - name: Refresh cash-flow data
-        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
+        if: env.PRICE_ONLY != 'true'
         id: cashflow
         continue-on-error: true
         run: node scripts/auto-refresh-cash-flow.mjs
 
       - name: Check coverage of recent financial reports
-        if: github.event.schedule != '25 22 * * 1-5' && !inputs.prices_only
+        if: env.PRICE_ONLY != 'true'
         id: coverage_probe
         continue-on-error: true
         run: node scripts/earnings-watch.mjs --verify-coverage
@@ -68,7 +72,12 @@ jobs:
       - name: Refresh price-data.js
         id: prices
         continue-on-error: true
-        run: node scripts/auto-refresh-price-data.mjs --allow-partial
+        env:
+          RETRY_UNVERIFIED: ${{ github.event.schedule == '15 1 * * 2-6' }}
+        run: |
+          args=(--allow-partial --defer-pending-close)
+          if [ "$RETRY_UNVERIFIED" = true ]; then args+=(--only-unverified); fi
+          node scripts/auto-refresh-price-data.mjs "${args[@]}"
 
       - name: Commit changes if data updated
         if: github.ref == 'refs/heads/main'
@@ -99,7 +108,7 @@ jobs:
           EARNINGS_RECOVERY: ${{ steps.earnings_recovery.outcome }}
           PRICES: ${{ steps.prices.outcome }}
           PENDING_PRICES: ${{ steps.prices.outputs.pending }}
-          EARLY_PRICE_REFRESH: ${{ github.event.schedule == '25 22 * * 1-5' }}
+          DEFERRED_PRICES: ${{ steps.prices.outputs.deferred }}
         run: |
           echo "Financials: $FINANCIALS; market caps: $MARKETCAPS; cash flow: $CASHFLOW; initial coverage: $COVERAGE; earnings recovery: $EARNINGS_RECOVERY; prices: $PRICES" >> "$GITHUB_STEP_SUMMARY"
           test "$FINANCIALS" = success || test "$FINANCIALS" = skipped
@@ -112,8 +121,8 @@ jobs:
           test "$PRICES" = success
           if [ -n "$PENDING_PRICES" ]; then
             echo "Pending verified closes: $PENDING_PRICES" >> "$GITHUB_STEP_SUMMARY"
-            if [ "$EARLY_PRICE_REFRESH" = true ]; then
-              echo '::warning::Some closing prices are pending. The next full refresh retries them.'
+            if [ "$DEFERRED_PRICES" = true ]; then
+              echo '::warning::Nasdaq close publication is pending. The next recovery run retries missing closes.'
             else
               echo '::error::Closing prices remain unverified after the recovery window.'
               exit 1
