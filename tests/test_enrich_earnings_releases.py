@@ -1,6 +1,11 @@
 import importlib.util
+import json
 from pathlib import Path
+import sys
+import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import Mock, patch
 
 
 spec = importlib.util.spec_from_file_location(
@@ -79,6 +84,28 @@ class SupplementTest(unittest.TestCase):
         self.assertEqual(entry["supplementalFieldSources"],
                          {"netAssetsBn": primary, "operatingCashFlowBn": sibling, "capexBn": sibling})
         self.assertEqual(entry["capexBn"], 4.422)
+
+    def test_cli_uses_the_shared_sec_filing_inventory_to_complete_cash_flow(self):
+        base = "https://www.sec.gov/Archives/edgar/data/1585521/000158552126000170/"
+        source, companion = base + "release.htm", base + "cash flow.htm"
+        entry = {"statementSourceUrl": source, "statementCurrency": "USD", "periodEnd": "2026-10-25"}
+        report = {"report": [{"needsUpdate": True, "release": {"entry": entry}}]}
+        request = Mock(side_effect={source: BALANCE.encode(), base + "cash%20flow.htm": CASH.encode()}.__getitem__)
+        discover = Mock(return_value=["release.htm", "slides.pdf", "cash flow.htm"])
+        modules = {"official_segments": SimpleNamespace(_request=request),
+                   "earnings_release": SimpleNamespace(discover_filing_exhibits=discover)}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            path.write_text(json.dumps(report))
+            args = ["enrich-earnings-releases.py", "--source-scripts", directory, "--report", str(path)]
+            with patch.dict(sys.modules, modules), patch.object(sys, "argv", args), patch.object(sys, "path", list(sys.path)):
+                supplement.main()
+            check = json.loads(path.read_text())["report"][0]
+        updated = check["release"]["entry"]
+        self.assertNotIn("supplementalWarnings", check)
+        self.assertEqual(updated["operatingCashFlowBn"], 48.253)
+        self.assertEqual(updated["supplementalFieldSources"]["operatingCashFlowBn"], companion.replace(" ", "%20"))
+        discover.assert_called_once_with(base)
 
 
 if __name__ == "__main__":

@@ -176,15 +176,15 @@ def main():
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     sys.path.insert(0, str(args.source_scripts.resolve()))
-    from official_segments import _request, _request_json
-    from earnings_release import earnings_exhibit_names
+    from official_segments import _request
+    from earnings_release import discover_filing_exhibits
 
     def sibling_urls(url):
         match = re.fullmatch(r"(https://www\.sec\.gov/Archives/edgar/data/\d+/\d{18}/)[^/?#]+", url)
         if not match:
             return []
         base = match[1]
-        names = earnings_exhibit_names(_request_json(base + "index.json"))
+        names = discover_filing_exhibits(base)
         return [base + quote(name) for name in names if name.lower().endswith((".htm", ".html"))
                 and base + quote(name) != url][:3]
 
