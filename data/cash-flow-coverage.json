@@ -1092,27 +1092,30 @@
     },
     "zoom": {
       "first": "2018Q1",
-      "last": "2026Q3",
-      "expected": 35,
+      "last": "2026Q4",
+      "expected": 36,
       "metrics": {
         "operatingCashFlow": {
           "present": 34,
           "missing": [
-            "2018Q1"
+            "2018Q1",
+            "2026Q4"
           ],
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "capex": {
           "present": 34,
           "missing": [
-            "2018Q1"
+            "2018Q1",
+            "2026Q4"
           ],
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         },
         "freeCashFlow": {
           "present": 34,
           "missing": [
-            "2018Q1"
+            "2018Q1",
+            "2026Q4"
           ],
           "reason": "Public IPO filings and released drafts disclose annual or half-year cash flows for these early periods, without sufficient standalone-quarter facts to separate them accurately."
         }
