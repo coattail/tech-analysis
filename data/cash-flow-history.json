@@ -74954,24 +74954,40 @@
             "nativeValue": 12975000,
             "basis": "cash-capital-spending-including-capitalized-intangibles"
           }
+        },
+        "2026Q4": {
+          "operatingCashFlow": {
+            "source": "https://www.sec.gov/Archives/edgar/data/1585521/000158552126000170/zm-20261031ex991.htm",
+            "periodEnd": "2026-10-31",
+            "method": "earnings-release",
+            "basis": "reported-quarter",
+            "filed": "2026-11-23"
+          },
+          "capex": {
+            "source": "https://www.sec.gov/Archives/edgar/data/1585521/000158552126000170/zm-20261031ex991.htm",
+            "periodEnd": "2026-10-31",
+            "method": "earnings-release",
+            "basis": "reported-quarter",
+            "filed": "2026-11-23"
+          }
         }
       },
       "reportingCurrency": "USD",
       "coverage": {
         "operatingCashFlow": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q2",
-          "last": "2026Q3"
+          "last": "2026Q4"
         },
         "capex": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q2",
-          "last": "2026Q3"
+          "last": "2026Q4"
         },
         "freeCashFlow": {
-          "count": 34,
+          "count": 35,
           "first": "2018Q2",
-          "last": "2026Q3"
+          "last": "2026Q4"
         }
       }
     },
