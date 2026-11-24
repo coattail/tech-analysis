@@ -31,6 +31,23 @@ CASH = """
 
 
 class SupplementTest(unittest.TestCase):
+    def test_cash_flow_matches_grouped_quarter_heading_and_ignores_ytd_columns(self):
+        zoom_cash = """
+<h2>Condensed Consolidated Statements of Cash Flows</h2><p>(Unaudited, in thousands)</p>
+<table>
+ <tr><td></td><td colspan="2">Three Months Ended October 31,</td><td colspan="2">Nine Months Ended October 31,</td></tr>
+ <tr><td></td><td>2026</td><td>2025</td><td>2026</td><td>2025</td></tr>
+ <tr><td>Net cash provided by operating activities</td><td>587,885</td><td>629,326</td><td>1,604,246</td><td>1,634,527</td></tr>
+ <tr><td>Purchases of property and equipment</td><td>(29,785)</td><td>(15,009)</td><td>(73,251)</td><td>(48,885)</td></tr>
+</table>
+"""
+        amounts = supplement.parse_supplement(zoom_cash, "2026-10-31")
+        self.assertAlmostEqual(amounts["operatingCashFlowBn"], .587885)
+        self.assertAlmostEqual(amounts["capexBn"], .029785)
+        self.assertEqual(supplement.parse_supplement(zoom_cash, "2025-10-31"), {})
+        ytd_first = zoom_cash.replace("Three Months Ended", "Six Months Ended", 1)
+        self.assertEqual(supplement.parse_supplement(ytd_first, "2026-10-31"), {})
+
     def test_balance_sheet_with_units_in_split_year_row_uses_consolidated_equity(self):
         release = """
 <div><table><tr><td>Walmart Inc. Condensed Consolidated Balance Sheets (Unaudited)</td><td></td></tr></table></div>

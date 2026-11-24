@@ -20,6 +20,7 @@ NUMBER = r"\(?-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?\)?"
 QUARTER = r"(?:three months|quarter|13 weeks|thirteen weeks) ended"
 MONTH_DAY = r"[A-Za-z]{3,9}\.? \d{1,2},?"
 OTHER_DURATION = r"(?:six|nine|twelve) months ended|(?:fiscal )?year ended"
+GROUPED_PERIOD_DATE = rf"({QUARTER}|{OTHER_DURATION})\s+({MONTH_DAY})"
 
 
 def clean(value):
@@ -64,17 +65,31 @@ def parse_supplement(html, period_end):
         columns = 0
         for i, row in enumerate(header):
             units_stub = None
-            if re.fullmatch(MONTH_DAY, row[0]) and i + 1 < len(header):
+            date_label = row[0]
+            duration = None
+            column_count = len(row)
+            plain_date = re.fullmatch(MONTH_DAY, date_label)
+            grouped_date = re.fullmatch(GROUPED_PERIOD_DATE, date_label, re.I)
+            if i + 1 < len(header) and (plain_date or grouped_date):
                 years = header[i + 1]
                 if re.search(UNIT_HEADER, years[0], re.I):
                     units_stub, *years = years
-                if len(years) == len(row) and all(re.fullmatch(r"20\d{2}", year) for year in years):
-                    row = [f"{day} {year}" for day, year in zip(row, years)]
-            if re.fullmatch(target_date, row[0], re.I):
-                columns = len(row)
+                if years and all(re.fullmatch(r"20\d{2}", year) for year in years):
+                    if plain_date and len(years) == len(row):
+                        date_label = f"{date_label} {years[0]}"
+                    elif grouped_date and len(years) >= len(row):
+                        # Duration and month/day can share a header spanning several year columns.
+                        if all(re.fullmatch(GROUPED_PERIOD_DATE, cell, re.I) for cell in row[1:]):
+                            duration, end = grouped_date.groups()
+                            date_label = f"{end} {years[0]}"
+                            column_count = len(years)
+            if re.fullmatch(target_date, date_label, re.I):
+                columns = column_count
                 header = header[:i]
                 if units_stub:
                     header.append([units_stub])
+                if duration:
+                    header.append([duration])
                 break
         if not columns:
             continue

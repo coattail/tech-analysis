@@ -20,7 +20,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     env:
       PAGES_ARTIFACT_NAME: github-pages-${{ github.run_attempt }}
@@ -63,6 +63,18 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
+
+      - name: Allow Pages artifact lookup to catch up
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 10
+
+      - name: Retry deployment with the same artifact
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v4
         with:
           artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
@@ -72,5 +84,5 @@ jobs:
           node-version: "22"
       - name: Verify public earnings and stock price data
         env:
-          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          PAGE_URL: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
         run: node scripts/verify-earnings-deployment.mjs "$PAGE_URL"
