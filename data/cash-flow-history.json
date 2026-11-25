@@ -74156,8 +74156,8 @@
             "method": "cumulative-difference",
             "concept": "NetCashProvidedByUsedInOperatingActivities",
             "startDate": "2025-08-01",
-            "filed": "2025-11-25",
-            "accession": "0001585521-25-000202",
+            "filed": "2026-11-24",
+            "accession": "0001585521-26-000173",
             "nativeCurrency": "USD",
             "nativeValue": 629326000,
             "basis": "reported-cash-flow"
@@ -74168,8 +74168,8 @@
             "method": "cumulative-difference",
             "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToAcquireIntangibleAssets",
             "startDate": "2025-08-01",
-            "filed": "2025-11-25",
-            "accession": "0001585521-25-000202",
+            "filed": "2026-11-24",
+            "accession": "0001585521-26-000173",
             "nativeCurrency": "USD",
             "nativeValue": 15009000,
             "basis": "cash-capital-spending-including-capitalized-intangibles"
@@ -74957,18 +74957,28 @@
         },
         "2026Q4": {
           "operatingCashFlow": {
-            "source": "https://www.sec.gov/Archives/edgar/data/1585521/000158552126000170/zm-20261031ex991.htm",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001585521.json",
             "periodEnd": "2026-10-31",
-            "method": "earnings-release",
-            "basis": "reported-quarter",
-            "filed": "2026-11-23"
+            "method": "cumulative-difference",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "startDate": "2026-08-01",
+            "filed": "2026-11-24",
+            "accession": "0001585521-26-000173",
+            "nativeCurrency": "USD",
+            "nativeValue": 587885000,
+            "basis": "reported-cash-flow"
           },
           "capex": {
-            "source": "https://www.sec.gov/Archives/edgar/data/1585521/000158552126000170/zm-20261031ex991.htm",
+            "source": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001585521.json",
             "periodEnd": "2026-10-31",
-            "method": "earnings-release",
-            "basis": "reported-quarter",
-            "filed": "2026-11-23"
+            "method": "cumulative-difference",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment + PaymentsToAcquireIntangibleAssets",
+            "startDate": "2026-08-01",
+            "filed": "2026-11-24",
+            "accession": "0001585521-26-000173",
+            "nativeCurrency": "USD",
+            "nativeValue": 29785000,
+            "basis": "cash-capital-spending-including-capitalized-intangibles"
           }
         }
       },
